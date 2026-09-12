@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IngSoft · Tap Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 36px;
+            letter-spacing: 4px;
+            color: #4facfe;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
+        }
+        .score {
+            font-size: 64px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .tap-button {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
+            border: none;
+            cursor: pointer;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 10px 40px rgba(79, 172, 254, 0.5);
+            transition: transform 0.1s;
+        }
+        .tap-button:active {
+            transform: scale(0.95);
+        }
+        .hint {
+            margin-top: 40px;
+            font-size: 16px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <h1>INGSOFT</h1>
+    <div class="score" id="score">0</div>
+    <button class="tap-button" id="tapBtn">TAP</button>
+    <div class="hint">Нажимай на кнопку!</div>
+
+    <script>
+        let score = 0;
+        const scoreEl = document.getElementById('score');
+        const tapBtn = document.getElementById('tapBtn');
+
+        tapBtn.addEventListener('click', () => {
+            score += 1;
+            scoreEl.textContent = score;
+        });
+    </script>
+</body>
+</html>
