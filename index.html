@@ -2,8 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>IngSoft · Tap Game</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -27,8 +29,13 @@
             font-size: 36px;
             letter-spacing: 4px;
             color: #4facfe;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             text-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
+        }
+        .user {
+            font-size: 16px;
+            color: #aaa;
+            margin-bottom: 20px;
         }
         .score {
             font-size: 64px;
@@ -53,28 +60,146 @@
         .tap-button:active {
             transform: scale(0.95);
         }
-        .hint {
-            margin-top: 40px;
-            font-size: 16px;
-            color: #888;
+        .status {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <h1>INGSOFT</h1>
+    <div class="user" id="user">Загрузка...</div>
     <div class="score" id="score">0</div>
     <button class="tap-button" id="tapBtn">TAP</button>
-    <div class="hint">Нажимай на кнопку!</div>
+    <div class="status" id="status">Подключение...</div>
 
     <script>
-        let score = 0;
-        const scoreEl = document.getElementById('score');
-        const tapBtn = document.getElementById('tapBtn');
+        // === НАСТРОЙКИ ===
+        // Вставь сюда свои ключи из supabase.json
+        const SUPABASE_URL = "https://gkibkizbdzvdhgbjvgjwl.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_ydcvpJDgSxghwV8wkBfkOw_dFsiKvRw ";
 
-        tapBtn.addEventListener('click', () => {
+        // === ИНИЦИАЛИЗАЦИЯ ===
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const tg = window.Telegram?.WebApp;
+
+        let telegramId = null;
+        let username = null;
+        let firstName = null;
+        let score = 0;
+
+        const scoreEl = document.getElementById('score');
+        const userEl = document.getElementById('user');
+        const statusEl = document.getElementById('status');
+
+        // === ОПРЕДЕЛЯЕМ ПОЛЬЗОВАТЕЛЯ ===
+        function getTelegramUser() {
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const u = tg.initDataUnsafe.user;
+                telegramId = u.id;
+                username = u.username || null;
+                firstName = u.first_name || null;
+                return true;
+            }
+            // Если открыто в браузере — используем случайный ID для теста
+            telegramId = 999999999;
+            username = 'test_user';
+            firstName = 'Test';
+            return false;
+        }
+
+        // === ЗАГРУЗКА ИГРОКА ИЗ БАЗЫ ===
+        async function loadPlayer() {
+            const { data, error } = await supabaseClient
+                .from('players')
+                .select('*')
+                .eq('telegram_id', telegramId)
+                .maybeSingle();
+
+            if (error) {
+                console.error('Ошибка загрузки:', error);
+                statusEl.textContent = 'Ошибка загрузки: ' + error.message;
+                return;
+            }
+
+            if (data) {
+                // Игрок найден — загружаем счёт
+                score = data.score || 0;
+                scoreEl.textContent = score;
+                statusEl.textContent = 'Игрок найден. Счёт загружен.';
+            } else {
+                // Новый игрок — создаём запись
+                const { error: insertError } = await supabaseClient
+                    .from('players')
+                    .insert({
+                        telegram_id: telegramId,
+                        username: username,
+                        first_name: firstName,
+                        score: 0
+                    });
+
+                if (insertError) {
+                    console.error('Ошибка создания:', insertError);
+                    statusEl.textContent = 'Ошибка создания: ' + insertError.message;
+                    return;
+                }
+                score = 0;
+                scoreEl.textContent = 0;
+                statusEl.textContent = 'Новый игрок создан.';
+            }
+
+            userEl.textContent = firstName || username || 'Игрок';
+        }
+
+        // === СОХРАНЕНИЕ СЧЁТА ===
+        let saveTimeout = null;
+        async function saveScore() {
+            const { error } = await supabaseClient
+                .from('players')
+                .update({ score: score, updated_at: new Date().toISOString() })
+                .eq('telegram_id', telegramId);
+
+            if (error) {
+                console.error('Ошибка сохранения:', error);
+            }
+        }
+
+        function scheduleSave() {
+            // Сохраняем не чаще раза в секунду, чтобы не спамить сервер
+            if (saveTimeout) return;
+            saveTimeout = setTimeout(async () => {
+                await saveScore();
+                saveTimeout = null;
+            }, 1000);
+        }
+
+        // === ТАП ===
+        document.getElementById('tapBtn').addEventListener('click', () => {
             score += 1;
             scoreEl.textContent = score;
+            scheduleSave();
         });
+
+        // === СТАРТ ===
+        async function init() {
+            if (tg) {
+                tg.ready();
+                tg.expand();
+            }
+
+            getTelegramUser();
+
+            if (!SUPABASE_URL.startsWith('https://')) {
+                statusEl.textContent = 'Ошибка: вставь SUPABASE_URL в код!';
+                return;
+            }
+
+            await loadPlayer();
+            statusEl.textContent = 'Готово. Играй!';
+        }
+
+        init();
     </script>
 </body>
 </html>
