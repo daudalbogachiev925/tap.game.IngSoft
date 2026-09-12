@@ -8,94 +8,310 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --ing-red: #e63946;
+  --ing-red-dark: #c1121f;
+  --ing-white: #ffffff;
+  --ing-bg: #0a0a0f;
+  --ing-card: #15151f;
+  --ing-border: rgba(230, 57, 70, 0.2);
+  --ing-gold: #ffd700;
+}
+
 body {
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-  color:#fff; font-family:'Segoe UI', Arial, sans-serif;
-  min-height:100vh; overflow-x:hidden; padding-bottom:80px;
+  background: radial-gradient(ellipse at top, #1a0a0f 0%, #0a0a0f 60%);
+  color: #fff; font-family: 'Segoe UI', Arial, sans-serif;
+  min-height: 100vh; overflow-x: hidden; padding-bottom: 20px;
 }
+
+/* HEADER */
 .header {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:16px 20px; background:rgba(0,0,0,0.3);
-  backdrop-filter: blur(10px); position:sticky; top:0; z-index:100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; background: rgba(10,10,15,0.9);
+  backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid var(--ing-border);
 }
-.logo { font-size:22px; font-weight:bold; letter-spacing:3px; color:#4facfe; text-shadow:0 0 20px rgba(79,172,254,0.6); }
-.user-info { display:flex; align-items:center; gap:10px; font-size:14px; color:#ccc; }
-.avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#4facfe,#00f2fe); display:flex; align-items:center; justify-content:center; font-weight:bold; }
+.logo-box { display: flex; align-items: center; gap: 10px; }
+.logo-mark {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--ing-red), var(--ing-red-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 20px; color: white;
+  box-shadow: 0 4px 20px rgba(230,57,70,0.5);
+}
+.logo-text { font-size: 18px; font-weight: 800; letter-spacing: 2px; }
+.logo-text span { color: var(--ing-red); }
+.burger {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: rgba(230,57,70,0.1); border: 1px solid var(--ing-border);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; cursor: pointer; transition: all 0.2s;
+}
+.burger:active { transform: scale(0.95); }
+.burger span { display: block; width: 20px; height: 2px; background: var(--ing-red); border-radius: 2px; transition: 0.3s; }
 
-.stats { display:flex; justify-content:space-around; padding:16px 20px; margin:10px; background:rgba(255,255,255,0.05); border-radius:16px; backdrop-filter: blur(10px); }
-.stat { text-align:center; }
-.stat-value { font-size:20px; font-weight:bold; color:#ffd700; }
-.stat-label { font-size:12px; color:#888; margin-top:4px; }
+/* SIDE MENU */
+.side-menu {
+  position: fixed; top: 0; right: -300px; width: 300px; height: 100vh;
+  background: linear-gradient(180deg, #15151f, #0a0a0f);
+  z-index: 1000; transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+  padding: 24px 20px; overflow-y: auto; border-left: 1px solid var(--ing-border);
+}
+.side-menu.open { right: 0; }
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  backdrop-filter: blur(4px);
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+.menu-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.menu-close { background: none; border: none; color: #888; font-size: 28px; cursor: pointer; }
+.menu-item {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+  border-radius: 14px; margin-bottom: 6px; cursor: pointer; transition: all 0.2s;
+  border: 1px solid transparent;
+}
+.menu-item:active { background: rgba(230,57,70,0.1); border-color: var(--ing-border); transform: scale(0.98); }
+.menu-item-icon { font-size: 22px; width: 30px; text-align: center; }
+.menu-item-text { font-size: 15px; font-weight: 600; }
+.menu-item-badge {
+  margin-left: auto; background: var(--ing-red); color: white;
+  font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 700;
+}
 
-.score-block { text-align:center; padding:20px; }
-.score-big { font-size:64px; font-weight:bold; color:#ffd700; text-shadow:0 0 30px rgba(255,215,0,0.6); transition:transform 0.1s; }
-.score-big.pop { transform:scale(1.1); }
-.score-label { font-size:14px; color:#888; margin-top:4px; }
+/* STATS BAR */
+.stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  margin: 16px; padding: 0;
+}
+.stat-card {
+  background: var(--ing-card); border: 1px solid var(--ing-border);
+  border-radius: 16px; padding: 14px 8px; text-align: center;
+  transition: transform 0.2s;
+}
+.stat-value { font-size: 20px; font-weight: 800; color: var(--ing-gold); }
+.stat-label { font-size: 11px; color: #777; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-.tap-container { display:flex; justify-content:center; padding:20px; }
+/* SCORE */
+.score-block { text-align: center; padding: 24px 20px 8px; }
+.score-big {
+  font-size: 72px; font-weight: 900; color: var(--ing-white);
+  text-shadow: 0 0 40px rgba(230,57,70,0.6);
+  transition: transform 0.1s; font-family: 'Segoe UI', sans-serif;
+}
+.score-big.pop { transform: scale(1.15); color: var(--ing-red); }
+.score-label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+
+/* TAP */
+.tap-container { display: flex; justify-content: center; padding: 20px; position: relative; }
 .tap-button {
-  width:240px; height:240px; border-radius:50%;
-  background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
-  border:none; cursor:pointer; font-size:36px; font-weight:bold; color:#fff;
-  box-shadow: 0 10px 50px rgba(79,172,254,0.6), inset 0 -5px 20px rgba(0,0,0,0.2);
-  transition: transform 0.1s; position:relative;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff5c6c, var(--ing-red), var(--ing-red-dark));
+  border: 4px solid rgba(255,255,255,0.1);
+  cursor: pointer; font-size: 30px; font-weight: 900; color: white;
+  letter-spacing: 3px;
+  box-shadow: 0 15px 60px rgba(230,57,70,0.6), inset 0 -8px 30px rgba(0,0,0,0.4), inset 0 8px 20px rgba(255,255,255,0.15);
+  transition: transform 0.08s; position: relative; overflow: hidden;
 }
-.tap-button:active { transform:scale(0.93); }
-.tap-button::after {
-  content:''; position:absolute; inset:-10px; border-radius:50%;
-  border:2px solid rgba(79,172,254,0.4); animation: pulse 2s infinite;
+.tap-button:active { transform: scale(0.92); box-shadow: 0 8px 40px rgba(230,57,70,0.8), inset 0 -8px 30px rgba(0,0,0,0.4); }
+.tap-button::before {
+  content: ''; position: absolute; inset: -20px; border-radius: 50%;
+  border: 2px solid rgba(230,57,70,0.4); animation: pulse 2.5s infinite;
 }
-@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.6;} 50%{transform:scale(1.05);opacity:0.2;} }
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.7;} 50%{transform:scale(1.08);opacity:0.1;} }
 
-.energy-bar { margin:0 20px 20px; background:rgba(0,0,0,0.3); border-radius:12px; overflow:hidden; height:24px; position:relative; }
-.energy-fill { height:100%; background:linear-gradient(90deg,#ffd700,#ff8c00); transition:width 0.3s; }
-.energy-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:bold; color:#000; }
-
-.menu { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:0 20px 20px; }
-.menu-btn {
-  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1);
-  border-radius:14px; padding:14px 8px; color:#fff; cursor:pointer;
-  font-size:12px; text-align:center; transition:all 0.2s;
+/* FLOATING +1 */
+.float-plus {
+  position: absolute; pointer-events: none; font-weight: 900; font-size: 28px;
+  color: var(--ing-red); animation: floatUp 1s ease-out forwards; z-index: 10;
+  text-shadow: 0 0 20px rgba(230,57,70,0.8);
 }
-.menu-btn:active { background:rgba(79,172,254,0.3); transform:scale(0.95); }
-.menu-icon { font-size:24px; display:block; margin-bottom:4px; }
+@keyframes floatUp {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -150%) scale(1.6); }
+}
 
-.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; padding:20px; }
-.modal.active { display:flex; }
-.modal-content { background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:20px; padding:24px; max-width:400px; width:100%; max-height:80vh; overflow-y:auto; border:1px solid rgba(79,172,254,0.3); }
-.modal-title { font-size:22px; color:#4facfe; margin-bottom:16px; text-align:center; }
-.modal-close { float:right; background:none; border:none; color:#888; font-size:24px; cursor:pointer; }
+/* ENERGY */
+.energy-bar {
+  margin: 0 20px 20px; background: rgba(0,0,0,0.5);
+  border-radius: 14px; overflow: hidden; height: 28px; position: relative;
+  border: 1px solid var(--ing-border);
+}
+.energy-fill {
+  height: 100%; background: linear-gradient(90deg, var(--ing-red), #ff8c00);
+  transition: width 0.3s; box-shadow: 0 0 20px rgba(230,57,70,0.5);
+}
+.energy-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-size: 12px; font-weight: 800; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
 
-.leader-item { display:flex; align-items:center; padding:10px; border-bottom:1px solid rgba(255,255,255,0.05); }
-.leader-rank { font-size:18px; font-weight:bold; width:40px; color:#ffd700; }
-.leader-name { flex:1; font-size:14px; }
-.leader-score { font-size:14px; color:#4facfe; font-weight:bold; }
+/* QUICK ACTIONS */
+.quick-actions {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  padding: 0 16px;
+}
+.quick-btn {
+  background: var(--ing-card); border: 1px solid var(--ing-border);
+  border-radius: 16px; padding: 14px 6px; color: #fff; cursor: pointer;
+  font-size: 11px; text-align: center; transition: all 0.2s; font-weight: 600;
+}
+.quick-btn:active { background: rgba(230,57,70,0.2); transform: scale(0.95); border-color: var(--ing-red); }
+.quick-icon { font-size: 24px; display: block; margin-bottom: 5px; }
 
-.boost-item, .quest-item { display:flex; justify-content:space-between; align-items:center; padding:14px; margin-bottom:10px; background:rgba(255,255,255,0.05); border-radius:12px; }
-.boost-info { flex:1; }
-.boost-name { font-size:15px; font-weight:bold; }
-.boost-desc { font-size:12px; color:#888; margin-top:2px; }
-.boost-buy { background:linear-gradient(135deg,#4facfe,#00f2fe); border:none; color:#fff; padding:8px 16px; border-radius:10px; cursor:pointer; font-weight:bold; }
-.boost-buy:disabled { opacity:0.4; cursor:not-allowed; }
+/* MODAL */
+.modal {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+  z-index: 2000; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(6px);
+}
+.modal.active { display: flex; }
+.modal-content {
+  background: linear-gradient(180deg, #15151f, #0a0a0f);
+  border-radius: 24px 24px 0 0; padding: 24px;
+  max-width: 500px; width: 100%; max-height: 85vh; overflow-y: auto;
+  border-top: 2px solid var(--ing-red); animation: slideUp 0.3s;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-title { font-size: 20px; font-weight: 800; color: var(--ing-white); }
+.modal-title span { color: var(--ing-red); }
+.modal-close {
+  background: rgba(230,57,70,0.1); border: 1px solid var(--ing-border);
+  color: #fff; width: 34px; height: 34px; border-radius: 10px;
+  font-size: 20px; cursor: pointer;
+}
 
-.toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(100px); background:rgba(0,0,0,0.9); color:#fff; padding:12px 24px; border-radius:12px; transition:transform 0.3s; z-index:2000; font-size:14px; }
-.toast.show { transform:translateX(-50%) translateY(0); }
+/* LEADERBOARD */
+.leader-item {
+  display: flex; align-items: center; padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px; margin-bottom: 4px;
+}
+.leader-item.top1 { background: linear-gradient(90deg, rgba(255,215,0,0.15), transparent); border: 1px solid rgba(255,215,0,0.4); }
+.leader-item.top2 { background: linear-gradient(90deg, rgba(192,192,192,0.12), transparent); }
+.leader-item.top3 { background: linear-gradient(90deg, rgba(205,127,50,0.12), transparent); }
+.leader-rank {
+  font-size: 18px; font-weight: 900; width: 40px; color: var(--ing-red);
+}
+.leader-item.top1 .leader-rank { color: var(--ing-gold); font-size: 22px; }
+.leader-name { flex: 1; font-size: 14px; font-weight: 600; }
+.leader-score { font-size: 14px; color: var(--ing-gold); font-weight: 800; }
+
+/* QUESTS / BOOSTS */
+.item-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px; margin-bottom: 10px; background: var(--ing-card);
+  border-radius: 16px; border: 1px solid var(--ing-border);
+  transition: all 0.2s;
+}
+.item-info { flex: 1; }
+.item-name { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.item-desc { font-size: 12px; color: #777; }
+.item-reward { font-size: 12px; color: var(--ing-gold); margin-top: 4px; font-weight: 700; }
+.btn-buy {
+  background: linear-gradient(135deg, var(--ing-red), var(--ing-red-dark));
+  border: none; color: #fff; padding: 10px 18px; border-radius: 12px;
+  cursor: pointer; font-weight: 700; font-size: 13px;
+  box-shadow: 0 4px 15px rgba(230,57,70,0.4);
+  transition: transform 0.1s;
+}
+.btn-buy:active { transform: scale(0.95); }
+.btn-buy:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 30px; left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: linear-gradient(135deg, var(--ing-red), var(--ing-red-dark));
+  color: white; padding: 14px 24px; border-radius: 14px;
+  transition: transform 0.3s; z-index: 3000; font-size: 14px; font-weight: 700;
+  box-shadow: 0 10px 40px rgba(230,57,70,0.6); max-width: 90%;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* PROGRESS BAR */
+.progress-bar {
+  background: rgba(0,0,0,0.4); border-radius: 10px; height: 10px;
+  overflow: hidden; margin-top: 8px; border: 1px solid var(--ing-border);
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--ing-red), var(--ing-gold));
+  border-radius: 10px; transition: width 0.4s;
+}
+
+/* ACHIEVEMENT */
+.achievement {
+  display: flex; align-items: center; gap: 12px; padding: 14px;
+  background: var(--ing-card); border-radius: 14px; margin-bottom: 8px;
+  border: 1px solid var(--ing-border);
+}
+.achievement.locked { opacity: 0.4; }
+.ach-icon { font-size: 32px; }
+.ach-text { flex: 1; }
+.ach-name { font-size: 14px; font-weight: 700; }
+.ach-desc { font-size: 12px; color: #777; margin-top: 2px; }
+
+/* REFERRAL */
+.ref-link-box {
+  background: rgba(230,57,70,0.08); padding: 14px; border-radius: 14px;
+  word-break: break-all; font-size: 12px; color: var(--ing-red);
+  margin-bottom: 12px; border: 1px solid var(--ing-border);
+  font-family: monospace;
+}
+
+/* PROFILE */
+.profile-avatar {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--ing-red), var(--ing-red-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 38px; font-weight: 900; color: white;
+  margin: 0 auto 16px; box-shadow: 0 8px 30px rgba(230,57,70,0.5);
+}
+.profile-row {
+  display: flex; justify-content: space-between; padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px;
+}
+.profile-row span:first-child { color: #888; }
+.profile-row span:last-child { font-weight: 700; color: var(--ing-gold); }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="logo">INGSOFT</div>
-  <div class="user-info">
-    <div class="avatar" id="avatar">?</div>
-    <div id="userName">Загрузка...</div>
+  <div class="logo-box">
+    <div class="logo-mark">I</div>
+    <div class="logo-text">ING<span>SOFT</span></div>
+  </div>
+  <div class="burger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
   </div>
 </div>
 
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<div class="side-menu" id="sideMenu">
+  <div class="menu-header">
+    <div class="logo-text" style="font-size:16px;">МЕНЮ</div>
+    <button class="menu-close" onclick="toggleMenu()">×</button>
+  </div>
+  <div class="menu-item" onclick="openModal('leaderboard');toggleMenu()"><span class="menu-item-icon">🏆</span><span class="menu-item-text">Лидерборд</span></div>
+  <div class="menu-item" onclick="openModal('quests');toggleMenu()"><span class="menu-item-icon">📋</span><span class="menu-item-text">Квесты</span><span class="menu-item-badge" id="questsBadge">3</span></div>
+  <div class="menu-item" onclick="openModal('boosts');toggleMenu()"><span class="menu-item-icon">⚡</span><span class="menu-item-text">Бусты</span></div>
+  <div class="menu-item" onclick="openModal('achievements');toggleMenu()"><span class="menu-item-icon">🏅</span><span class="menu-item-text">Достижения</span></div>
+  <div class="menu-item" onclick="openModal('referral');toggleMenu()"><span class="menu-item-icon">👥</span><span class="menu-item-text">Друзья</span></div>
+  <div class="menu-item" onclick="openModal('daily');toggleMenu()"><span class="menu-item-icon">🎁</span><span class="menu-item-text">Награда дня</span></div>
+  <div class="menu-item" onclick="openModal('stats');toggleMenu()"><span class="menu-item-icon">📊</span><span class="menu-item-text">Статистика</span></div>
+  <div class="menu-item" onclick="openModal('profile');toggleMenu()"><span class="menu-item-icon">👤</span><span class="menu-item-text">Профиль</span></div>
+  <div class="menu-item" onclick="shareGame();toggleMenu()"><span class="menu-item-icon">📤</span><span class="menu-item-text">Поделиться</span></div>
+  <div class="menu-item" onclick="openModal('about');toggleMenu()"><span class="menu-item-icon">ℹ️</span><span class="menu-item-text">О игре</span></div>
+</div>
+
 <div class="stats">
-  <div class="stat"><div class="stat-value" id="statScore">0</div><div class="stat-label">Очки</div></div>
-  <div class="stat"><div class="stat-value" id="statMult">x1</div><div class="stat-label">Множитель</div></div>
-  <div class="stat"><div class="stat-value" id="statRank">-</div><div class="stat-label">Место</div></div>
+  <div class="stat-card"><div class="stat-value" id="statScore">0</div><div class="stat-label">Очки</div></div>
+  <div class="stat-card"><div class="stat-value" id="statMult">x1</div><div class="stat-label">Множ.</div></div>
+  <div class="stat-card"><div class="stat-value" id="statRank">-</div><div class="stat-label">Место</div></div>
 </div>
 
 <div class="score-block">
@@ -103,7 +319,7 @@ body {
   <div class="score-label">Всего очков</div>
 </div>
 
-<div class="tap-container">
+<div class="tap-container" id="tapContainer">
   <button class="tap-button" id="tapBtn">TAP</button>
 </div>
 
@@ -112,92 +328,76 @@ body {
   <div class="energy-text" id="energyText">1000 / 1000</div>
 </div>
 
-<div class="menu">
-  <button class="menu-btn" onclick="openModal('leaderboard')"><span class="menu-icon">🏆</span>Топ</button>
-  <button class="menu-btn" onclick="openModal('quests')"><span class="menu-icon">📋</span>Квесты</button>
-  <button class="menu-btn" onclick="openModal('boosts')"><span class="menu-icon">⚡</span>Бусты</button>
-  <button class="menu-btn" onclick="openModal('referral')"><span class="menu-icon">👥</span>Друзья</button>
-  <button class="menu-btn" onclick="openModal('daily')"><span class="menu-icon">🎁</span>Награда</button>
-  <button class="menu-btn" onclick="openModal('profile')"><span class="menu-icon">👤</span>Профиль</button>
-  <button class="menu-btn" onclick="shareGame()"><span class="menu-icon">📤</span>Поделиться</button>
-  <button class="menu-btn" onclick="openModal('about')"><span class="menu-icon">ℹ️</span>О игре</button>
+<div class="quick-actions">
+  <button class="quick-btn" onclick="openModal('leaderboard')"><span class="quick-icon">🏆</span>Топ</button>
+  <button class="quick-btn" onclick="openModal('quests')"><span class="quick-icon">📋</span>Квесты</button>
+  <button class="quick-btn" onclick="openModal('boosts')"><span class="quick-icon">⚡</span>Бусты</button>
+  <button class="quick-btn" onclick="openModal('referral')"><span class="quick-icon">👥</span>Друзья</button>
 </div>
 
-<!-- Лидерборд -->
-<div class="modal" id="modal-leaderboard">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('leaderboard')">×</button>
-    <div class="modal-title">🏆 Топ игроков</div>
-    <div id="leaderList">Загрузка...</div>
-  </div>
-</div>
+<!-- МОДАЛЬНЫЕ ОКНА -->
+<div class="modal" id="modal-leaderboard"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🏆 <span>Топ игроков</span></div><button class="modal-close" onclick="closeModal('leaderboard')">×</button></div>
+  <div id="leaderList">Загрузка...</div>
+</div></div>
 
-<!-- Квесты -->
-<div class="modal" id="modal-quests">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('quests')">×</button>
-    <div class="modal-title">📋 Квесты</div>
-    <div id="questsList"></div>
-  </div>
-</div>
+<div class="modal" id="modal-quests"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">📋 <span>Квесты</span></div><button class="modal-close" onclick="closeModal('quests')">×</button></div>
+  <div id="questsList"></div>
+</div></div>
 
-<!-- Бусты -->
-<div class="modal" id="modal-boosts">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('boosts')">×</button>
-    <div class="modal-title">⚡ Бусты</div>
-    <div id="boostsList"></div>
-  </div>
-</div>
+<div class="modal" id="modal-boosts"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">⚡ <span>Бусты</span></div><button class="modal-close" onclick="closeModal('boosts')">×</button></div>
+  <div id="boostsList"></div>
+</div></div>
 
-<!-- Рефералка -->
-<div class="modal" id="modal-referral">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('referral')">×</button>
-    <div class="modal-title">👥 Пригласи друзей</div>
-    <p style="color:#aaa; font-size:14px; margin-bottom:16px; text-align:center;">За каждого друга — +5000 очков!</p>
-    <div id="refLink" style="background:rgba(79,172,254,0.1); padding:12px; border-radius:10px; word-break:break-all; font-size:12px; color:#4facfe; margin-bottom:12px;"></div>
-    <button class="boost-buy" style="width:100%;" onclick="copyRefLink()">📋 Копировать ссылку</button>
-    <div style="margin-top:16px; text-align:center; font-size:14px; color:#888;">Приглашено: <span id="refCount" style="color:#4facfe; font-weight:bold;">0</span></div>
-  </div>
-</div>
+<div class="modal" id="modal-achievements"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🏅 <span>Достижения</span></div><button class="modal-close" onclick="closeModal('achievements')">×</button></div>
+  <div id="achList"></div>
+</div></div>
 
-<!-- Ежедневная награда -->
-<div class="modal" id="modal-daily">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('daily')">×</button>
-    <div class="modal-title">🎁 Ежедневная награда</div>
-    <div id="dailyContent" style="text-align:center;"></div>
-  </div>
-</div>
+<div class="modal" id="modal-referral"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">👥 <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
+  <p style="color:#888; font-size:13px; margin-bottom:14px; text-align:center;">За каждого друга — <b style="color:var(--ing-gold)">+5000 очков</b></p>
+  <div class="ref-link-box" id="refLink"></div>
+  <button class="btn-buy" style="width:100%; padding:14px;" onclick="copyRefLink()">📋 Копировать ссылку</button>
+  <div style="margin-top:16px; text-align:center; font-size:14px; color:#888;">Приглашено: <span id="refCount" style="color:var(--ing-red); font-weight:800;">0</span></div>
+</div></div>
 
-<!-- Профиль -->
-<div class="modal" id="modal-profile">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('profile')">×</button>
-    <div class="modal-title">👤 Профиль</div>
-    <div id="profileContent"></div>
-  </div>
-</div>
+<div class="modal" id="modal-daily"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎁 <span>Награда дня</span></div><button class="modal-close" onclick="closeModal('daily')">×</button></div>
+  <div id="dailyContent" style="text-align:center;"></div>
+</div></div>
 
-<!-- О игре -->
-<div class="modal" id="modal-about">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeModal('about')">×</button>
-    <div class="modal-title">ℹ️ О игре</div>
-    <p style="color:#ccc; line-height:1.6; font-size:14px;">
-      <b>IngSoft Tap</b> — это тапалка внутри Telegram.<br><br>
-      Нажимай TAP, получай очки, приглашай друзей, выполняй квесты и покупай бусты.<br><br>
-      Чем больше тапаешь — тем выше в лидерборде!
-    </p>
-  </div>
-</div>
+<div class="modal" id="modal-stats"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">📊 <span>Статистика</span></div><button class="modal-close" onclick="closeModal('stats')">×</button></div>
+  <div id="statsContent"></div>
+</div></div>
+
+<div class="modal" id="modal-profile"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">👤 <span>Профиль</span></div><button class="modal-close" onclick="closeModal('profile')">×</button></div>
+  <div id="profileContent"></div>
+</div></div>
+
+<div class="modal" id="modal-about"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">ℹ️ <span>О игре</span></div><button class="modal-close" onclick="closeModal('about')">×</button></div>
+  <p style="color:#ccc; line-height:1.7; font-size:14px;">
+    <b style="color:var(--ing-red);">IngSoft Tap</b> — тапалка внутри Telegram.<br><br>
+    Нажимай TAP, получай очки, приглашай друзей, выполняй квесты и покупай бусты.<br><br>
+    <b style="color:var(--ing-gold);">Как играть:</b><br>
+    • Тапай кнопку — получай очки<br>
+    • Следи за энергией — она восстанавливается<br>
+    • Покупай бусты — увеличивай множитель<br>
+    • Приглашай друзей — получай бонусы<br>
+    • Заходи каждый день — забирай награду
+  </p>
+</div></div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// === НАСТРОЙКИ (вставь свои) ===
-const SUPABASE_URL = "https://daudalbogachiev925.github.io/tap.game.IngSoft/";
+// === НАСТРОЙКИ ===
+const SUPABASE_URL = "https://gkibkizbdzvdhgbjvgjwl.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_ydcvpJDgSxghwV8wkBfkOw_dFsiKvRw ";
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -207,21 +407,26 @@ let telegramId = null, username = null, firstName = null;
 let score = 0, energy = 1000, maxEnergy = 1000, multiplier = 1;
 let referrerId = null, lastDaily = null, rank = '-';
 
-// === ЗАГРУЗКА ПОЛЬЗОВАТЕЛЯ ===
+// === МЕНЮ ===
+function toggleMenu() {
+  document.getElementById('sideMenu').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+
+// === ПОЛЬЗОВАТЕЛЬ ===
 function getTelegramUser() {
   if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
     const u = tg.initDataUnsafe.user;
-    telegramId = u.id; username = u.username || null; firstName = u.first_name || null;
+    telegramId = u.id; username = u.username; firstName = u.first_name;
     return true;
   }
   telegramId = 999999999; username = 'test_user'; firstName = 'Test';
   return false;
 }
 
+// === ЗАГРУЗКА ===
 async function loadPlayer() {
-  const { data, error } = await supabaseClient
-    .from('players').select('*').eq('telegram_id', telegramId).maybeSingle();
-
+  const { data, error } = await supabaseClient.from('players').select('*').eq('telegram_id', telegramId).maybeSingle();
   if (error) { showToast('Ошибка загрузки'); console.error(error); return; }
 
   if (data) {
@@ -230,31 +435,21 @@ async function loadPlayer() {
     maxEnergy = data.max_energy ?? 1000;
     multiplier = data.multiplier ?? 1;
     lastDaily = data.last_daily;
-    // Восстановление энергии
     const now = Date.now();
     const last = data.last_energy_update ? new Date(data.last_energy_update).getTime() : now;
-    const secondsPassed = Math.floor((now - last) / 1000);
-    const regen = Math.floor(secondsPassed / 3);
+    const regen = Math.floor((now - last) / 3000);
     energy = Math.min(maxEnergy, energy + regen);
   } else {
-    // Новый игрок
     const startParam = tg?.initDataUnsafe?.start_param;
-    if (startParam && startParam.startsWith('ref_')) {
-      referrerId = parseInt(startParam.replace('ref_', ''));
-    }
-    const { error: e2 } = await supabaseClient.from('players').insert({
+    if (startParam && startParam.startsWith('ref_')) referrerId = parseInt(startParam.replace('ref_', ''));
+    await supabaseClient.from('players').insert({
       telegram_id: telegramId, username, first_name: firstName,
       score: 0, energy: 1000, max_energy: 1000, multiplier: 1,
       referrer_id: referrerId, last_energy_update: new Date().toISOString()
     });
-    if (e2) console.error(e2);
-
-    // Бонус рефереру
     if (referrerId) {
       const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', referrerId).maybeSingle();
-      if (ref) {
-        await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', referrerId);
-      }
+      if (ref) await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', referrerId);
     }
     score = 0; energy = 1000; maxEnergy = 1000; multiplier = 1;
   }
@@ -262,14 +457,12 @@ async function loadPlayer() {
 }
 
 function updateUI() {
-  document.getElementById('scoreBig').textContent = score;
-  document.getElementById('statScore').textContent = score;
+  document.getElementById('scoreBig').textContent = score.toLocaleString();
+  document.getElementById('statScore').textContent = score.toLocaleString();
   document.getElementById('statMult').textContent = 'x' + multiplier;
   document.getElementById('statRank').textContent = rank;
   document.getElementById('energyFill').style.width = (energy / maxEnergy * 100) + '%';
   document.getElementById('energyText').textContent = energy + ' / ' + maxEnergy;
-  document.getElementById('userName').textContent = firstName || username || 'Игрок';
-  document.getElementById('avatar').textContent = (firstName || '?')[0].toUpperCase();
 }
 
 // === СОХРАНЕНИЕ ===
@@ -285,13 +478,23 @@ function scheduleSave() {
 }
 
 // === ТАП ===
-document.getElementById('tapBtn').addEventListener('click', () => {
+document.getElementById('tapBtn').addEventListener('click', (e) => {
   if (energy <= 0) { showToast('Энергия кончилась!'); return; }
   score += multiplier; energy -= 1;
   updateUI();
   const el = document.getElementById('scoreBig');
   el.classList.add('pop');
   setTimeout(() => el.classList.remove('pop'), 100);
+  // Летящий +1
+  const rect = document.getElementById('tapContainer').getBoundingClientRect();
+  const plus = document.createElement('div');
+  plus.className = 'float-plus';
+  plus.textContent = '+' + multiplier;
+  plus.style.left = (e.clientX - rect.left) + 'px';
+  plus.style.top = (e.clientY - rect.top) + 'px';
+  document.getElementById('tapContainer').appendChild(plus);
+  setTimeout(() => plus.remove(), 1000);
+  if (tg) tg.HapticFeedback?.impactOccurred('light');
   scheduleSave();
 });
 
@@ -301,8 +504,10 @@ function openModal(name) {
   if (name === 'leaderboard') loadLeaderboard();
   if (name === 'quests') loadQuests();
   if (name === 'boosts') loadBoosts();
+  if (name === 'achievements') loadAchievements();
   if (name === 'referral') loadReferral();
   if (name === 'daily') loadDaily();
+  if (name === 'stats') loadStats();
   if (name === 'profile') loadProfile();
 }
 function closeModal(name) { document.getElementById('modal-' + name).classList.remove('active'); }
@@ -312,55 +517,63 @@ async function loadLeaderboard() {
   const { data } = await supabaseClient.from('players').select('first_name, username, score').order('score', { ascending: false }).limit(10);
   const el = document.getElementById('leaderList');
   if (!data || !data.length) { el.innerHTML = '<p style="color:#888;text-align:center;">Пока никого нет</p>'; return; }
-  el.innerHTML = data.map((p, i) => `
-    <div class="leader-item">
+  el.innerHTML = data.map((p, i) => {
+    const cls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+    return `<div class="leader-item ${cls}">
       <div class="leader-rank">${i+1}</div>
       <div class="leader-name">${p.first_name || p.username || 'Игрок'}</div>
       <div class="leader-score">${p.score.toLocaleString()}</div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // === КВЕСТЫ ===
 const QUESTS = [
-  { id:'tap100',  name:'Натапать 100 раз',   reward:1000,  check: () => score >= 100 },
-  { id:'tap1000', name:'Натапать 1000 раз',  reward:5000,  check: () => score >= 1000 },
-  { id:'tap10000',name:'Натапать 10 000 раз',reward:50000, check: () => score >= 10000 },
-  { id:'inv1',    name:'Пригласить 1 друга', reward:5000,  check: () => false },
-  { id:'inv5',    name:'Пригласить 5 друзей',reward:30000, check: () => false },
+  { id:'tap100', name:'Первые шаги', desc:'Натапать 100 раз', reward:1000, check: () => score >= 100 },
+  { id:'tap1000', name:'Тапальщик', desc:'Натапать 1000 раз', reward:5000, check: () => score >= 1000 },
+  { id:'tap10000', name:'Мастер тапа', desc:'Натапать 10 000 раз', reward:50000, check: () => score >= 10000 },
+  { id:'tap100000', name:'Легенда', desc:'Натапать 100 000 раз', reward:500000, check: () => score >= 100000 },
+  { id:'inv1', name:'Первый друг', desc:'Пригласить 1 друга', reward:5000, check: () => false },
+  { id:'inv5', name:'Компания', desc:'Пригласить 5 друзей', reward:30000, check: () => false },
+  { id:'inv10', name:'Лидер', desc:'Пригласить 10 друзей', reward:100000, check: () => false },
 ];
 function loadQuests() {
   const el = document.getElementById('questsList');
   el.innerHTML = QUESTS.map(q => `
-    <div class="quest-item">
-      <div class="boost-info">
-        <div class="boost-name">${q.name}</div>
-        <div class="boost-desc">Награда: +${q.reward.toLocaleString()}</div>
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-name">${q.name}</div>
+        <div class="item-desc">${q.desc}</div>
+        <div class="item-reward">💰 +${q.reward.toLocaleString()}</div>
       </div>
-      <button class="boost-buy" ${q.check() ? '' : 'disabled'} onclick="claimQuest('${q.id}')">Забрать</button>
+      <button class="btn-buy" ${q.check() ? '' : 'disabled'} onclick="claimQuest('${q.id}')">Забрать</button>
     </div>`).join('');
 }
 function claimQuest(id) {
   const q = QUESTS.find(x => x.id === id);
   if (!q || !q.check()) return;
   score += q.reward; updateUI(); scheduleSave();
-  showToast('+' + q.reward + ' очков!');
+  showToast('+' + q.reward.toLocaleString() + ' очков!');
 }
 
 // === БУСТЫ ===
 const BOOSTS = [
-  { id:'mult2', name:'Множитель x2', desc:'Удваивает очки за тап', price:10000, apply: () => multiplier = Math.max(multiplier, 2) },
-  { id:'mult3', name:'Множитель x3', desc:'Утраивает очки за тап', price:50000, apply: () => multiplier = Math.max(multiplier, 3) },
-  { id:'energy', name:'Макс. энергия +500', desc:'Увеличивает лимит', price:20000, apply: () => maxEnergy += 500 },
+  { id:'mult2', name:'⚡ Множитель x2', desc:'Удваивает очки за тап', price:10000, apply: () => multiplier = Math.max(multiplier, 2) },
+  { id:'mult3', name:'🔥 Множитель x3', desc:'Утраивает очки за тап', price:50000, apply: () => multiplier = Math.max(multiplier, 3) },
+  { id:'mult5', name:'💎 Множитель x5', desc:'Пятикратный множитель', price:200000, apply: () => multiplier = Math.max(multiplier, 5) },
+  { id:'mult10', name:'👑 Множитель x10', desc:'Максимальный множитель', price:1000000, apply: () => multiplier = Math.max(multiplier, 10) },
+  { id:'energy500', name:'🔋 Энергия +500', desc:'Увеличивает макс. энергию', price:20000, apply: () => maxEnergy += 500 },
+  { id:'energy1000', name:'🔋 Энергия +1000', desc:'Больше энергии', price:50000, apply: () => maxEnergy += 1000 },
 ];
 function loadBoosts() {
   const el = document.getElementById('boostsList');
   el.innerHTML = BOOSTS.map(b => `
-    <div class="boost-item">
-      <div class="boost-info">
-        <div class="boost-name">${b.name}</div>
-        <div class="boost-desc">${b.desc}</div>
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-name">${b.name}</div>
+        <div class="item-desc">${b.desc}</div>
       </div>
-      <button class="boost-buy" ${score >= b.price ? '' : 'disabled'} onclick="buyBoost('${b.id}')">${b.price.toLocaleString()}</button>
+      <button class="btn-buy" ${score >= b.price ? '' : 'disabled'} onclick="buyBoost('${b.id}')">${b.price.toLocaleString()}</button>
     </div>`).join('');
 }
 function buyBoost(id) {
@@ -369,6 +582,27 @@ function buyBoost(id) {
   score -= b.price; b.apply(); updateUI(); scheduleSave();
   showToast('Куплено: ' + b.name);
   loadBoosts();
+}
+
+// === ДОСТИЖЕНИЯ ===
+const ACHIEVEMENTS = [
+  { id:'first', icon:'🌟', name:'Первый тап', desc:'Сделать первый тап', check: () => score >= 1 },
+  { id:'hundred', icon:'💯', name:'Сотня', desc:'100 очков', check: () => score >= 100 },
+  { id:'thousand', icon:'🔥', name:'Тысячник', desc:'1000 очков', check: () => score >= 1000 },
+  { id:'tenthousand', icon:'⚡', name:'Десятка', desc:'10 000 очков', check: () => score >= 10000 },
+  { id:'million', icon:'💎', name:'Миллионер', desc:'1 000 000 очков', check: () => score >= 1000000 },
+  { id:'mult5', icon:'👑', name:'Магнат', desc:'Множитель x5', check: () => multiplier >= 5 },
+];
+function loadAchievements() {
+  const el = document.getElementById('achList');
+  el.innerHTML = ACHIEVEMENTS.map(a => `
+    <div class="achievement ${a.check() ? '' : 'locked'}">
+      <div class="ach-icon">${a.icon}</div>
+      <div class="ach-text">
+        <div class="ach-name">${a.name}</div>
+        <div class="ach-desc">${a.desc}</div>
+      </div>
+    </div>`).join('');
 }
 
 // === РЕФЕРАЛКА ===
@@ -380,7 +614,7 @@ function loadReferral() {
 }
 function copyRefLink() {
   const link = document.getElementById('refLink').textContent;
-  navigator.clipboard.writeText(link).then(() => showToast('Ссылка скопирована!'));
+  navigator.clipboard.writeText(link).then(() => showToast('✅ Ссылка скопирована!'));
 }
 
 // === ЕЖЕДНЕВНАЯ НАГРАДА ===
@@ -388,13 +622,17 @@ function loadDaily() {
   const el = document.getElementById('dailyContent');
   const now = Date.now();
   const last = lastDaily ? new Date(lastDaily).getTime() : 0;
-  const hoursPassed = (now - last) / 3600000;
-  if (hoursPassed >= 24) {
-    el.innerHTML = `<p style="color:#ccc;margin-bottom:16px;">Награда доступна!</p>
-      <button class="boost-buy" style="font-size:16px;padding:14px 30px;" onclick="claimDaily()">🎁 Получить 5000</button>`;
+  const hours = (now - last) / 3600000;
+  if (hours >= 24) {
+    el.innerHTML = `
+      <div style="font-size:70px; margin:20px 0;">🎁</div>
+      <p style="color:#ccc; margin-bottom:20px; font-size:16px;">Награда доступна!</p>
+      <button class="btn-buy" style="font-size:16px; padding:16px 40px;" onclick="claimDaily()">Получить 5000</button>`;
   } else {
-    const left = 24 - hoursPassed;
-    el.innerHTML = `<p style="color:#888;">Приходи через ${Math.ceil(left)} ч.</p>`;
+    el.innerHTML = `
+      <div style="font-size:70px; margin:20px 0; opacity:0.4;">🎁</div>
+      <p style="color:#888; font-size:15px;">Следующая награда через</p>
+      <p style="color:var(--ing-red); font-size:32px; font-weight:900; margin-top:8px;">${Math.ceil(24 - hours)} ч.</p>`;
   }
 }
 async function claimDaily() {
@@ -402,30 +640,37 @@ async function claimDaily() {
   lastDaily = new Date().toISOString();
   updateUI();
   await supabaseClient.from('players').update({ score, last_daily: lastDaily }).eq('telegram_id', telegramId);
-  showToast('+5000 очков!');
+  showToast('🎁 +5000 очков!');
   loadDaily();
+}
+
+// === СТАТИСТИКА ===
+function loadStats() {
+  document.getElementById('statsContent').innerHTML = `
+    <div class="profile-row"><span>Всего очков</span><span>${score.toLocaleString()}</span></div>
+    <div class="profile-row"><span>Множитель</span><span>x${multiplier}</span></div>
+    <div class="profile-row"><span>Энергия</span><span>${energy} / ${maxEnergy}</span></div>
+    <div class="profile-row"><span>Место в топе</span><span>${rank}</span></div>
+    <div class="profile-row"><span>Квестов выполнено</span><span>${QUESTS.filter(q => q.check()).length}</span></div>
+    <div class="profile-row"><span>Достижений</span><span>${ACHIEVEMENTS.filter(a => a.check()).length} / ${ACHIEVEMENTS.length}</span></div>`;
 }
 
 // === ПРОФИЛЬ ===
 function loadProfile() {
   document.getElementById('profileContent').innerHTML = `
-    <div style="text-align:center;padding:16px;">
-      <div class="avatar" style="width:80px;height:80px;font-size:32px;margin:0 auto 16px;">${(firstName || '?')[0].toUpperCase()}</div>
-      <div style="font-size:20px;font-weight:bold;">${firstName || 'Игрок'}</div>
-      <div style="color:#888;font-size:14px;margin-top:4px;">@${username || 'нет'}</div>
-      <div style="margin-top:20px;font-size:14px;color:#ccc;line-height:1.8;">
-        Очки: <b style="color:#ffd700;">${score.toLocaleString()}</b><br>
-        Множитель: <b style="color:#4facfe;">x${multiplier}</b><br>
-        Энергия: <b style="color:#ff8c00;">${energy} / ${maxEnergy}</b><br>
-        Место: <b>${rank}</b>
-      </div>
-    </div>`;
+    <div class="profile-avatar">${(firstName || '?')[0].toUpperCase()}</div>
+    <div style="text-align:center; font-size:22px; font-weight:800; margin-bottom:4px;">${firstName || 'Игрок'}</div>
+    <div style="text-align:center; color:#888; font-size:13px; margin-bottom:20px;">@${username || 'аноним'}</div>
+    <div class="profile-row"><span>Очки</span><span>${score.toLocaleString()}</span></div>
+    <div class="profile-row"><span>Множитель</span><span>x${multiplier}</span></div>
+    <div class="profile-row"><span>Энергия</span><span>${energy}/${maxEnergy}</span></div>
+    <div class="profile-row"><span>Место</span><span>${rank}</span></div>`;
 }
 
 // === ПОДЕЛИТЬСЯ ===
 function shareGame() {
   const link = `https://t.me/ingsoft_tap_bot/ingsoft_tap?startapp=ref_${telegramId}`;
-  if (tg) tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Играй в IngSoft Tap!')}`);
+  if (tg) tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('🔥 Играй в IngSoft Tap!')}`);
 }
 
 // === УТИЛИТЫ ===
@@ -439,9 +684,7 @@ function showToast(msg) {
 async function init() {
   if (tg) { tg.ready(); tg.expand(); }
   getTelegramUser();
-  if (!SUPABASE_URL.startsWith('https')) { showToast('Вставь SUPABASE_URL!'); return; }
   await loadPlayer();
-  // Регенерация энергии каждые 3 сек
   setInterval(() => {
     if (energy < maxEnergy) { energy++; updateUI(); scheduleSave(); }
   }, 3000);
