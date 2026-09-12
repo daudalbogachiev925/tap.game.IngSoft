@@ -1,205 +1,452 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IngSoft · Tap Game</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        h1 {
-            font-size: 36px;
-            letter-spacing: 4px;
-            color: #4facfe;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
-        }
-        .user {
-            font-size: 16px;
-            color: #aaa;
-            margin-bottom: 20px;
-        }
-        .score {
-            font-size: 64px;
-            font-weight: bold;
-            margin-bottom: 40px;
-            color: #ffd700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-        .tap-button {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
-            border: none;
-            cursor: pointer;
-            font-size: 32px;
-            font-weight: bold;
-            color: white;
-            box-shadow: 0 10px 40px rgba(79, 172, 254, 0.5);
-            transition: transform 0.1s;
-        }
-        .tap-button:active {
-            transform: scale(0.95);
-        }
-        .status {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #666;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>IngSoft · Tap Game</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
+body {
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color:#fff; font-family:'Segoe UI', Arial, sans-serif;
+  min-height:100vh; overflow-x:hidden; padding-bottom:80px;
+}
+.header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 20px; background:rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px); position:sticky; top:0; z-index:100;
+}
+.logo { font-size:22px; font-weight:bold; letter-spacing:3px; color:#4facfe; text-shadow:0 0 20px rgba(79,172,254,0.6); }
+.user-info { display:flex; align-items:center; gap:10px; font-size:14px; color:#ccc; }
+.avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#4facfe,#00f2fe); display:flex; align-items:center; justify-content:center; font-weight:bold; }
+
+.stats { display:flex; justify-content:space-around; padding:16px 20px; margin:10px; background:rgba(255,255,255,0.05); border-radius:16px; backdrop-filter: blur(10px); }
+.stat { text-align:center; }
+.stat-value { font-size:20px; font-weight:bold; color:#ffd700; }
+.stat-label { font-size:12px; color:#888; margin-top:4px; }
+
+.score-block { text-align:center; padding:20px; }
+.score-big { font-size:64px; font-weight:bold; color:#ffd700; text-shadow:0 0 30px rgba(255,215,0,0.6); transition:transform 0.1s; }
+.score-big.pop { transform:scale(1.1); }
+.score-label { font-size:14px; color:#888; margin-top:4px; }
+
+.tap-container { display:flex; justify-content:center; padding:20px; }
+.tap-button {
+  width:240px; height:240px; border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
+  border:none; cursor:pointer; font-size:36px; font-weight:bold; color:#fff;
+  box-shadow: 0 10px 50px rgba(79,172,254,0.6), inset 0 -5px 20px rgba(0,0,0,0.2);
+  transition: transform 0.1s; position:relative;
+}
+.tap-button:active { transform:scale(0.93); }
+.tap-button::after {
+  content:''; position:absolute; inset:-10px; border-radius:50%;
+  border:2px solid rgba(79,172,254,0.4); animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.6;} 50%{transform:scale(1.05);opacity:0.2;} }
+
+.energy-bar { margin:0 20px 20px; background:rgba(0,0,0,0.3); border-radius:12px; overflow:hidden; height:24px; position:relative; }
+.energy-fill { height:100%; background:linear-gradient(90deg,#ffd700,#ff8c00); transition:width 0.3s; }
+.energy-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:bold; color:#000; }
+
+.menu { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:0 20px 20px; }
+.menu-btn {
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px; padding:14px 8px; color:#fff; cursor:pointer;
+  font-size:12px; text-align:center; transition:all 0.2s;
+}
+.menu-btn:active { background:rgba(79,172,254,0.3); transform:scale(0.95); }
+.menu-icon { font-size:24px; display:block; margin-bottom:4px; }
+
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; align-items:center; justify-content:center; padding:20px; }
+.modal.active { display:flex; }
+.modal-content { background:linear-gradient(135deg,#1a1a2e,#16213e); border-radius:20px; padding:24px; max-width:400px; width:100%; max-height:80vh; overflow-y:auto; border:1px solid rgba(79,172,254,0.3); }
+.modal-title { font-size:22px; color:#4facfe; margin-bottom:16px; text-align:center; }
+.modal-close { float:right; background:none; border:none; color:#888; font-size:24px; cursor:pointer; }
+
+.leader-item { display:flex; align-items:center; padding:10px; border-bottom:1px solid rgba(255,255,255,0.05); }
+.leader-rank { font-size:18px; font-weight:bold; width:40px; color:#ffd700; }
+.leader-name { flex:1; font-size:14px; }
+.leader-score { font-size:14px; color:#4facfe; font-weight:bold; }
+
+.boost-item, .quest-item { display:flex; justify-content:space-between; align-items:center; padding:14px; margin-bottom:10px; background:rgba(255,255,255,0.05); border-radius:12px; }
+.boost-info { flex:1; }
+.boost-name { font-size:15px; font-weight:bold; }
+.boost-desc { font-size:12px; color:#888; margin-top:2px; }
+.boost-buy { background:linear-gradient(135deg,#4facfe,#00f2fe); border:none; color:#fff; padding:8px 16px; border-radius:10px; cursor:pointer; font-weight:bold; }
+.boost-buy:disabled { opacity:0.4; cursor:not-allowed; }
+
+.toast { position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(100px); background:rgba(0,0,0,0.9); color:#fff; padding:12px 24px; border-radius:12px; transition:transform 0.3s; z-index:2000; font-size:14px; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+</style>
 </head>
 <body>
-    <h1>INGSOFT</h1>
-    <div class="user" id="user">Загрузка...</div>
-    <div class="score" id="score">0</div>
-    <button class="tap-button" id="tapBtn">TAP</button>
-    <div class="status" id="status">Подключение...</div>
 
-    <script>
-        // === НАСТРОЙКИ ===
-        // Вставь сюда свои ключи из supabase.json
-        const SUPABASE_URL = "https://gkibkizbdzvdhgbjvgjwl.supabase.co";
-        const SUPABASE_ANON_KEY = "sb_publishable_ydcvpJDgSxghwV8wkBfkOw_dFsiKvRw ";
+<div class="header">
+  <div class="logo">INGSOFT</div>
+  <div class="user-info">
+    <div class="avatar" id="avatar">?</div>
+    <div id="userName">Загрузка...</div>
+  </div>
+</div>
 
-        // === ИНИЦИАЛИЗАЦИЯ ===
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const tg = window.Telegram?.WebApp;
+<div class="stats">
+  <div class="stat"><div class="stat-value" id="statScore">0</div><div class="stat-label">Очки</div></div>
+  <div class="stat"><div class="stat-value" id="statMult">x1</div><div class="stat-label">Множитель</div></div>
+  <div class="stat"><div class="stat-value" id="statRank">-</div><div class="stat-label">Место</div></div>
+</div>
 
-        let telegramId = null;
-        let username = null;
-        let firstName = null;
-        let score = 0;
+<div class="score-block">
+  <div class="score-big" id="scoreBig">0</div>
+  <div class="score-label">Всего очков</div>
+</div>
 
-        const scoreEl = document.getElementById('score');
-        const userEl = document.getElementById('user');
-        const statusEl = document.getElementById('status');
+<div class="tap-container">
+  <button class="tap-button" id="tapBtn">TAP</button>
+</div>
 
-        // === ОПРЕДЕЛЯЕМ ПОЛЬЗОВАТЕЛЯ ===
-        function getTelegramUser() {
-            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                const u = tg.initDataUnsafe.user;
-                telegramId = u.id;
-                username = u.username || null;
-                firstName = u.first_name || null;
-                return true;
-            }
-            // Если открыто в браузере — используем случайный ID для теста
-            telegramId = 999999999;
-            username = 'test_user';
-            firstName = 'Test';
-            return false;
-        }
+<div class="energy-bar">
+  <div class="energy-fill" id="energyFill" style="width:100%"></div>
+  <div class="energy-text" id="energyText">1000 / 1000</div>
+</div>
 
-        // === ЗАГРУЗКА ИГРОКА ИЗ БАЗЫ ===
-        async function loadPlayer() {
-            const { data, error } = await supabaseClient
-                .from('players')
-                .select('*')
-                .eq('telegram_id', telegramId)
-                .maybeSingle();
+<div class="menu">
+  <button class="menu-btn" onclick="openModal('leaderboard')"><span class="menu-icon">🏆</span>Топ</button>
+  <button class="menu-btn" onclick="openModal('quests')"><span class="menu-icon">📋</span>Квесты</button>
+  <button class="menu-btn" onclick="openModal('boosts')"><span class="menu-icon">⚡</span>Бусты</button>
+  <button class="menu-btn" onclick="openModal('referral')"><span class="menu-icon">👥</span>Друзья</button>
+  <button class="menu-btn" onclick="openModal('daily')"><span class="menu-icon">🎁</span>Награда</button>
+  <button class="menu-btn" onclick="openModal('profile')"><span class="menu-icon">👤</span>Профиль</button>
+  <button class="menu-btn" onclick="shareGame()"><span class="menu-icon">📤</span>Поделиться</button>
+  <button class="menu-btn" onclick="openModal('about')"><span class="menu-icon">ℹ️</span>О игре</button>
+</div>
 
-            if (error) {
-                console.error('Ошибка загрузки:', error);
-                statusEl.textContent = 'Ошибка загрузки: ' + error.message;
-                return;
-            }
+<!-- Лидерборд -->
+<div class="modal" id="modal-leaderboard">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('leaderboard')">×</button>
+    <div class="modal-title">🏆 Топ игроков</div>
+    <div id="leaderList">Загрузка...</div>
+  </div>
+</div>
 
-            if (data) {
-                // Игрок найден — загружаем счёт
-                score = data.score || 0;
-                scoreEl.textContent = score;
-                statusEl.textContent = 'Игрок найден. Счёт загружен.';
-            } else {
-                // Новый игрок — создаём запись
-                const { error: insertError } = await supabaseClient
-                    .from('players')
-                    .insert({
-                        telegram_id: telegramId,
-                        username: username,
-                        first_name: firstName,
-                        score: 0
-                    });
+<!-- Квесты -->
+<div class="modal" id="modal-quests">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('quests')">×</button>
+    <div class="modal-title">📋 Квесты</div>
+    <div id="questsList"></div>
+  </div>
+</div>
 
-                if (insertError) {
-                    console.error('Ошибка создания:', insertError);
-                    statusEl.textContent = 'Ошибка создания: ' + insertError.message;
-                    return;
-                }
-                score = 0;
-                scoreEl.textContent = 0;
-                statusEl.textContent = 'Новый игрок создан.';
-            }
+<!-- Бусты -->
+<div class="modal" id="modal-boosts">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('boosts')">×</button>
+    <div class="modal-title">⚡ Бусты</div>
+    <div id="boostsList"></div>
+  </div>
+</div>
 
-            userEl.textContent = firstName || username || 'Игрок';
-        }
+<!-- Рефералка -->
+<div class="modal" id="modal-referral">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('referral')">×</button>
+    <div class="modal-title">👥 Пригласи друзей</div>
+    <p style="color:#aaa; font-size:14px; margin-bottom:16px; text-align:center;">За каждого друга — +5000 очков!</p>
+    <div id="refLink" style="background:rgba(79,172,254,0.1); padding:12px; border-radius:10px; word-break:break-all; font-size:12px; color:#4facfe; margin-bottom:12px;"></div>
+    <button class="boost-buy" style="width:100%;" onclick="copyRefLink()">📋 Копировать ссылку</button>
+    <div style="margin-top:16px; text-align:center; font-size:14px; color:#888;">Приглашено: <span id="refCount" style="color:#4facfe; font-weight:bold;">0</span></div>
+  </div>
+</div>
 
-        // === СОХРАНЕНИЕ СЧЁТА ===
-        let saveTimeout = null;
-        async function saveScore() {
-            const { error } = await supabaseClient
-                .from('players')
-                .update({ score: score, updated_at: new Date().toISOString() })
-                .eq('telegram_id', telegramId);
+<!-- Ежедневная награда -->
+<div class="modal" id="modal-daily">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('daily')">×</button>
+    <div class="modal-title">🎁 Ежедневная награда</div>
+    <div id="dailyContent" style="text-align:center;"></div>
+  </div>
+</div>
 
-            if (error) {
-                console.error('Ошибка сохранения:', error);
-            }
-        }
+<!-- Профиль -->
+<div class="modal" id="modal-profile">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('profile')">×</button>
+    <div class="modal-title">👤 Профиль</div>
+    <div id="profileContent"></div>
+  </div>
+</div>
 
-        function scheduleSave() {
-            // Сохраняем не чаще раза в секунду, чтобы не спамить сервер
-            if (saveTimeout) return;
-            saveTimeout = setTimeout(async () => {
-                await saveScore();
-                saveTimeout = null;
-            }, 1000);
-        }
+<!-- О игре -->
+<div class="modal" id="modal-about">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('about')">×</button>
+    <div class="modal-title">ℹ️ О игре</div>
+    <p style="color:#ccc; line-height:1.6; font-size:14px;">
+      <b>IngSoft Tap</b> — это тапалка внутри Telegram.<br><br>
+      Нажимай TAP, получай очки, приглашай друзей, выполняй квесты и покупай бусты.<br><br>
+      Чем больше тапаешь — тем выше в лидерборде!
+    </p>
+  </div>
+</div>
 
-        // === ТАП ===
-        document.getElementById('tapBtn').addEventListener('click', () => {
-            score += 1;
-            scoreEl.textContent = score;
-            scheduleSave();
-        });
+<div class="toast" id="toast"></div>
 
-        // === СТАРТ ===
-        async function init() {
-            if (tg) {
-                tg.ready();
-                tg.expand();
-            }
+<script>
+// === НАСТРОЙКИ (вставь свои) ===
+const SUPABASE_URL = "https://daudalbogachiev925.github.io/tap.game.IngSoft/";
+const SUPABASE_ANON_KEY = "sb_publishable_ydcvpJDgSxghwV8wkBfkOw_dFsiKvRw ";
 
-            getTelegramUser();
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const tg = window.Telegram?.WebApp;
 
-            if (!SUPABASE_URL.startsWith('https://')) {
-                statusEl.textContent = 'Ошибка: вставь SUPABASE_URL в код!';
-                return;
-            }
+let telegramId = null, username = null, firstName = null;
+let score = 0, energy = 1000, maxEnergy = 1000, multiplier = 1;
+let referrerId = null, lastDaily = null, rank = '-';
 
-            await loadPlayer();
-            statusEl.textContent = 'Готово. Играй!';
-        }
+// === ЗАГРУЗКА ПОЛЬЗОВАТЕЛЯ ===
+function getTelegramUser() {
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    const u = tg.initDataUnsafe.user;
+    telegramId = u.id; username = u.username || null; firstName = u.first_name || null;
+    return true;
+  }
+  telegramId = 999999999; username = 'test_user'; firstName = 'Test';
+  return false;
+}
 
-        init();
-    </script>
+async function loadPlayer() {
+  const { data, error } = await supabaseClient
+    .from('players').select('*').eq('telegram_id', telegramId).maybeSingle();
+
+  if (error) { showToast('Ошибка загрузки'); console.error(error); return; }
+
+  if (data) {
+    score = data.score || 0;
+    energy = data.energy ?? 1000;
+    maxEnergy = data.max_energy ?? 1000;
+    multiplier = data.multiplier ?? 1;
+    lastDaily = data.last_daily;
+    // Восстановление энергии
+    const now = Date.now();
+    const last = data.last_energy_update ? new Date(data.last_energy_update).getTime() : now;
+    const secondsPassed = Math.floor((now - last) / 1000);
+    const regen = Math.floor(secondsPassed / 3);
+    energy = Math.min(maxEnergy, energy + regen);
+  } else {
+    // Новый игрок
+    const startParam = tg?.initDataUnsafe?.start_param;
+    if (startParam && startParam.startsWith('ref_')) {
+      referrerId = parseInt(startParam.replace('ref_', ''));
+    }
+    const { error: e2 } = await supabaseClient.from('players').insert({
+      telegram_id: telegramId, username, first_name: firstName,
+      score: 0, energy: 1000, max_energy: 1000, multiplier: 1,
+      referrer_id: referrerId, last_energy_update: new Date().toISOString()
+    });
+    if (e2) console.error(e2);
+
+    // Бонус рефереру
+    if (referrerId) {
+      const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', referrerId).maybeSingle();
+      if (ref) {
+        await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', referrerId);
+      }
+    }
+    score = 0; energy = 1000; maxEnergy = 1000; multiplier = 1;
+  }
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById('scoreBig').textContent = score;
+  document.getElementById('statScore').textContent = score;
+  document.getElementById('statMult').textContent = 'x' + multiplier;
+  document.getElementById('statRank').textContent = rank;
+  document.getElementById('energyFill').style.width = (energy / maxEnergy * 100) + '%';
+  document.getElementById('energyText').textContent = energy + ' / ' + maxEnergy;
+  document.getElementById('userName').textContent = firstName || username || 'Игрок';
+  document.getElementById('avatar').textContent = (firstName || '?')[0].toUpperCase();
+}
+
+// === СОХРАНЕНИЕ ===
+let saveTimer = null;
+function scheduleSave() {
+  if (saveTimer) return;
+  saveTimer = setTimeout(async () => {
+    await supabaseClient.from('players').update({
+      score, energy, multiplier, last_energy_update: new Date().toISOString()
+    }).eq('telegram_id', telegramId);
+    saveTimer = null;
+  }, 800);
+}
+
+// === ТАП ===
+document.getElementById('tapBtn').addEventListener('click', () => {
+  if (energy <= 0) { showToast('Энергия кончилась!'); return; }
+  score += multiplier; energy -= 1;
+  updateUI();
+  const el = document.getElementById('scoreBig');
+  el.classList.add('pop');
+  setTimeout(() => el.classList.remove('pop'), 100);
+  scheduleSave();
+});
+
+// === МОДАЛЬНЫЕ ОКНА ===
+function openModal(name) {
+  document.getElementById('modal-' + name).classList.add('active');
+  if (name === 'leaderboard') loadLeaderboard();
+  if (name === 'quests') loadQuests();
+  if (name === 'boosts') loadBoosts();
+  if (name === 'referral') loadReferral();
+  if (name === 'daily') loadDaily();
+  if (name === 'profile') loadProfile();
+}
+function closeModal(name) { document.getElementById('modal-' + name).classList.remove('active'); }
+
+// === ЛИДЕРБОРД ===
+async function loadLeaderboard() {
+  const { data } = await supabaseClient.from('players').select('first_name, username, score').order('score', { ascending: false }).limit(10);
+  const el = document.getElementById('leaderList');
+  if (!data || !data.length) { el.innerHTML = '<p style="color:#888;text-align:center;">Пока никого нет</p>'; return; }
+  el.innerHTML = data.map((p, i) => `
+    <div class="leader-item">
+      <div class="leader-rank">${i+1}</div>
+      <div class="leader-name">${p.first_name || p.username || 'Игрок'}</div>
+      <div class="leader-score">${p.score.toLocaleString()}</div>
+    </div>`).join('');
+}
+
+// === КВЕСТЫ ===
+const QUESTS = [
+  { id:'tap100',  name:'Натапать 100 раз',   reward:1000,  check: () => score >= 100 },
+  { id:'tap1000', name:'Натапать 1000 раз',  reward:5000,  check: () => score >= 1000 },
+  { id:'tap10000',name:'Натапать 10 000 раз',reward:50000, check: () => score >= 10000 },
+  { id:'inv1',    name:'Пригласить 1 друга', reward:5000,  check: () => false },
+  { id:'inv5',    name:'Пригласить 5 друзей',reward:30000, check: () => false },
+];
+function loadQuests() {
+  const el = document.getElementById('questsList');
+  el.innerHTML = QUESTS.map(q => `
+    <div class="quest-item">
+      <div class="boost-info">
+        <div class="boost-name">${q.name}</div>
+        <div class="boost-desc">Награда: +${q.reward.toLocaleString()}</div>
+      </div>
+      <button class="boost-buy" ${q.check() ? '' : 'disabled'} onclick="claimQuest('${q.id}')">Забрать</button>
+    </div>`).join('');
+}
+function claimQuest(id) {
+  const q = QUESTS.find(x => x.id === id);
+  if (!q || !q.check()) return;
+  score += q.reward; updateUI(); scheduleSave();
+  showToast('+' + q.reward + ' очков!');
+}
+
+// === БУСТЫ ===
+const BOOSTS = [
+  { id:'mult2', name:'Множитель x2', desc:'Удваивает очки за тап', price:10000, apply: () => multiplier = Math.max(multiplier, 2) },
+  { id:'mult3', name:'Множитель x3', desc:'Утраивает очки за тап', price:50000, apply: () => multiplier = Math.max(multiplier, 3) },
+  { id:'energy', name:'Макс. энергия +500', desc:'Увеличивает лимит', price:20000, apply: () => maxEnergy += 500 },
+];
+function loadBoosts() {
+  const el = document.getElementById('boostsList');
+  el.innerHTML = BOOSTS.map(b => `
+    <div class="boost-item">
+      <div class="boost-info">
+        <div class="boost-name">${b.name}</div>
+        <div class="boost-desc">${b.desc}</div>
+      </div>
+      <button class="boost-buy" ${score >= b.price ? '' : 'disabled'} onclick="buyBoost('${b.id}')">${b.price.toLocaleString()}</button>
+    </div>`).join('');
+}
+function buyBoost(id) {
+  const b = BOOSTS.find(x => x.id === id);
+  if (!b || score < b.price) return;
+  score -= b.price; b.apply(); updateUI(); scheduleSave();
+  showToast('Куплено: ' + b.name);
+  loadBoosts();
+}
+
+// === РЕФЕРАЛКА ===
+function loadReferral() {
+  const link = `https://t.me/ingsoft_tap_bot/ingsoft_tap?startapp=ref_${telegramId}`;
+  document.getElementById('refLink').textContent = link;
+  supabaseClient.from('players').select('telegram_id', { count: 'exact', head: true }).eq('referrer_id', telegramId)
+    .then(({ count }) => document.getElementById('refCount').textContent = count || 0);
+}
+function copyRefLink() {
+  const link = document.getElementById('refLink').textContent;
+  navigator.clipboard.writeText(link).then(() => showToast('Ссылка скопирована!'));
+}
+
+// === ЕЖЕДНЕВНАЯ НАГРАДА ===
+function loadDaily() {
+  const el = document.getElementById('dailyContent');
+  const now = Date.now();
+  const last = lastDaily ? new Date(lastDaily).getTime() : 0;
+  const hoursPassed = (now - last) / 3600000;
+  if (hoursPassed >= 24) {
+    el.innerHTML = `<p style="color:#ccc;margin-bottom:16px;">Награда доступна!</p>
+      <button class="boost-buy" style="font-size:16px;padding:14px 30px;" onclick="claimDaily()">🎁 Получить 5000</button>`;
+  } else {
+    const left = 24 - hoursPassed;
+    el.innerHTML = `<p style="color:#888;">Приходи через ${Math.ceil(left)} ч.</p>`;
+  }
+}
+async function claimDaily() {
+  score += 5000;
+  lastDaily = new Date().toISOString();
+  updateUI();
+  await supabaseClient.from('players').update({ score, last_daily: lastDaily }).eq('telegram_id', telegramId);
+  showToast('+5000 очков!');
+  loadDaily();
+}
+
+// === ПРОФИЛЬ ===
+function loadProfile() {
+  document.getElementById('profileContent').innerHTML = `
+    <div style="text-align:center;padding:16px;">
+      <div class="avatar" style="width:80px;height:80px;font-size:32px;margin:0 auto 16px;">${(firstName || '?')[0].toUpperCase()}</div>
+      <div style="font-size:20px;font-weight:bold;">${firstName || 'Игрок'}</div>
+      <div style="color:#888;font-size:14px;margin-top:4px;">@${username || 'нет'}</div>
+      <div style="margin-top:20px;font-size:14px;color:#ccc;line-height:1.8;">
+        Очки: <b style="color:#ffd700;">${score.toLocaleString()}</b><br>
+        Множитель: <b style="color:#4facfe;">x${multiplier}</b><br>
+        Энергия: <b style="color:#ff8c00;">${energy} / ${maxEnergy}</b><br>
+        Место: <b>${rank}</b>
+      </div>
+    </div>`;
+}
+
+// === ПОДЕЛИТЬСЯ ===
+function shareGame() {
+  const link = `https://t.me/ingsoft_tap_bot/ingsoft_tap?startapp=ref_${telegramId}`;
+  if (tg) tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Играй в IngSoft Tap!')}`);
+}
+
+// === УТИЛИТЫ ===
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// === СТАРТ ===
+async function init() {
+  if (tg) { tg.ready(); tg.expand(); }
+  getTelegramUser();
+  if (!SUPABASE_URL.startsWith('https')) { showToast('Вставь SUPABASE_URL!'); return; }
+  await loadPlayer();
+  // Регенерация энергии каждые 3 сек
+  setInterval(() => {
+    if (energy < maxEnergy) { energy++; updateUI(); scheduleSave(); }
+  }, 3000);
+}
+init();
+</script>
 </body>
 </html>
