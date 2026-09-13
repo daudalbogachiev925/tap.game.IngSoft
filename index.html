@@ -432,7 +432,7 @@ body::before {
 
 <div class="energy-bar">
   <div class="energy-fill" id="energyFill" style="width:100%"></div>
-  <div class="energy-text" id="energyText">1000 / 1000</div>
+<div class="energy-text" id="energyText">500 / 500</div>
 </div>
 
 <div class="quick-actions">
@@ -618,25 +618,26 @@ const PROMOS = {
   'VIP': { coins: 1000000, mult: 3, desc: '+1 000 000 и x3' },
   'MEGA': { coins: 5000000, desc: '+5 000 000 очков' },
 };
-const DAILY_REWARDS = [{coins:1000},{coins:2000},{coins:3000},{coins:5000},{coins:10000},{coins:20000},{coins:50000}];
+const DAILY_REWARDS = [{coins:100},{coins:200},{coins:300},{coins:500},{coins:1000},{coins:2000},{coins:5000}];
 
 const QUESTS = [
-  { id:'tap1k', name:'🌟 Новичок', desc:'1 000 тапов', reward:5000, check: () => totalTaps >= 1000 },
-  { id:'tap10k', name:'🔥 Любитель', desc:'10 000 тапов', reward:50000, check: () => totalTaps >= 10000 },
-  { id:'tap100k', name:'💎 Про', desc:'100 000 тапов', reward:1000000, check: () => totalTaps >= 100000 },
-  { id:'tap1m', name:'🏆 Гуру', desc:'1 000 000 тапов', reward:20000000, check: () => totalTaps >= 1000000 },
-  { id:'tap10m', name:'👑 Легенда', desc:'10 000 000 тапов', reward:250000000, check: () => totalTaps >= 10000000 },
-  { id:'tap100m', name:'🌟 100 млн', desc:'100 000 000 тапов', reward:5000000000, check: () => totalTaps >= 100000000 },
-  { id:'tap1b', name:'💫 Миллиард', desc:'1 000 000 000 тапов', reward:50000000000, check: () => totalTaps >= 1000000000 },
-  { id:'tap100b', name:'🌠 100 млрд', desc:'100 000 000 000 тапов', reward:5000000000000, check: () => totalTaps >= 100000000000 },
-  { id:'tap1t', name:'✨ Триллион', desc:'1 000 000 000 000 тапов', reward:50000000000000, check: () => totalTaps >= 1000000000000 },
-  { id:'lvl5', name:'⬆️ Ур. 5', desc:'Достичь 5 уровня', reward:10000, check: () => level >= 5 },
-  { id:'lvl25', name:'⬆️ Ур. 25', desc:'Достичь 25 уровня', reward:1000000, check: () => level >= 25 },
-  { id:'lvl100', name:'⬆️ Ур. 100', desc:'Достичь 100 уровня', reward:1000000000, check: () => level >= 100 },
-  { id:'mult2', name:'⚡ x2', desc:'Купить множитель x2', reward:50000, check: () => multiplier >= 2 },
-  { id:'mult5', name:'🔥 x5', desc:'Купить множитель x5', reward:500000, check: () => multiplier >= 5 },
-  { id:'mult10', name:'💎 x10', desc:'Купить множитель x10', reward:5000000, check: () => multiplier >= 10 },
-  { id:'promo', name:'🎫 Промокод', desc:'Активировать промокод', reward:25000, check: () => claimedPromos.length >= 1 },
+  { id:'tap100', name:'🌟 Первые шаги', desc:'100 тапов', reward:100, check: () => totalTaps >= 100 },
+  { id:'tap1k', name:'🔥 Новичок', desc:'1 000 тапов', reward:500, check: () => totalTaps >= 1000 },
+  { id:'tap10k', name:'⚡ Любитель', desc:'10 000 тапов', reward:5000, check: () => totalTaps >= 10000 },
+  { id:'tap100k', name:'💎 Про', desc:'100 000 тапов', reward:50000, check: () => totalTaps >= 100000 },
+  { id:'tap1m', name:'🏆 Гуру', desc:'1 000 000 тапов', reward:500000, check: () => totalTaps >= 1000000 },
+  { id:'tap10m', name:'👑 Легенда', desc:'10 000 000 тапов', reward:5000000, check: () => totalTaps >= 10000000 },
+  { id:'tap100m', name:'🌟 100 млн', desc:'100 000 000 тапов', reward:50000000, check: () => totalTaps >= 100000000 },
+  { id:'tap1b', name:'💫 Миллиард', desc:'1 000 000 000 тапов', reward:500000000, check: () => totalTaps >= 1000000000 },
+  { id:'tap100b', name:'🌠 100 млрд', desc:'100 000 000 000 тапов', reward:5000000000, check: () => totalTaps >= 100000000000 },
+  { id:'tap1t', name:'✨ Триллион', desc:'1 000 000 000 000 тапов', reward:50000000000, check: () => totalTaps >= 1000000000000 },
+  { id:'lvl5', name:'⬆️ Ур. 5', desc:'Достичь 5 уровня', reward:500, check: () => level >= 5 },
+  { id:'lvl25', name:'⬆️ Ур. 25', desc:'Достичь 25 уровня', reward:50000, check: () => level >= 25 },
+  { id:'lvl100', name:'⬆️ Ур. 100', desc:'Достичь 100 уровня', reward:5000000, check: () => level >= 100 },
+  { id:'mult2', name:'⚡ x2', desc:'Купить множитель x2', reward:1000, check: () => multiplier >= 2 },
+  { id:'mult5', name:'🔥 x5', desc:'Купить множитель x5', reward:10000, check: () => multiplier >= 5 },
+  { id:'mult10', name:'💎 x10', desc:'Купить множитель x10', reward:100000, check: () => multiplier >= 10 },
+  { id:'promo', name:'🎫 Промокод', desc:'Активировать промокод', reward:1000, check: () => claimedPromos.length >= 1 },
 ];
 
 const ACHIEVEMENTS = [
@@ -762,7 +763,7 @@ function loadPlayer() {
     const u = JSON.parse(saved);
     nickname = u.nickname; phone = u.phone; region = u.region; fullName = u.fullName;
     avatarData = u.avatarData || null;
-    score = u.score || 0; energy = u.energy ?? 1000; maxEnergy = u.maxEnergy ?? 1000;
+    score = u.score || 0; energy = u.energy ?? 500; maxEnergy = u.maxEnergy ?? 500;
     multiplier = u.multiplier ?? 1; dailyStreak = u.dailyStreak ?? 0;
     lastDailyClaim = u.lastDailyClaim; totalTaps = u.totalTaps ?? 0; level = u.level ?? 1;
     claimedQuests = u.claimedQuests || []; claimedPromos = u.claimedPromos || [];
@@ -790,7 +791,7 @@ function updateUI() {
   document.getElementById('statPerSec').textContent = fmt(autotapLevel * multiplier) + '/с';
   document.getElementById('energyFill').style.width = Math.min(100, (energy / maxEnergy * 100)) + '%';
   document.getElementById('energyText').textContent = Math.floor(energy) + ' / ' + maxEnergy;
-  const levelCost = level * 1000;
+  const levelCost = level * 10000;
   document.getElementById('levelFill').style.width = Math.min(100, (score / levelCost) * 100) + '%';
   document.getElementById('levelText').textContent = 'Ур. ' + level + ' — ' + fmt(score) + ' / ' + fmt(levelCost);
   document.getElementById('userName').textContent = nickname || firstName || 'Игрок';
@@ -801,8 +802,8 @@ function updateUI() {
 
 document.getElementById('tapBtn').addEventListener('click', (e) => {
   if (energy <= 0) { showToast('⚡ Энергия кончилась!'); return; }
-  score += multiplier; energy -= 1; totalTaps += 1;
-  const newLevel = Math.floor(score / 1000) + 1;
+  score += multiplier * 0.1; energy -= 1; totalTaps += 1;
+  const newLevel = Math.floor(score / 10000) + 1;
   if (newLevel > level) { level = newLevel; showToast('🎉 Уровень ' + level + '!'); }
   updateUI();
   const el = document.getElementById('scoreBig'); el.classList.add('pop'); setTimeout(() => el.classList.remove('pop'), 100);
@@ -904,7 +905,7 @@ function backToReg() {
 function completeRegistration() {
   if (!regData.nickname) { showToast('Заполни данные'); return; }
   nickname = regData.nickname; phone = regData.phone; region = regData.region; fullName = regData.fullName;
-  score = 1000; energy = 1000; maxEnergy = 1000; multiplier = 1;
+  score = 0; energy = 500; maxEnergy = 500; multiplier = 1;
   level = 1; totalTaps = 0; dailyStreak = 0; autotapLevel = 0;
   claimedQuests = []; claimedPromos = [];
   passiveIncome = 0; walletBalance = 0; walletTotal = 0;
@@ -1199,7 +1200,7 @@ function runPassive() {
 }
 function regenEnergy() {
   if (energy < maxEnergy) {
-    energy = Math.min(maxEnergy, energy + maxEnergy / 300);
+    energy = Math.min(maxEnergy, energy + maxEnergy / 900);
     updateUI();
   }
 }
