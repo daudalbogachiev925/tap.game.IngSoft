@@ -95,14 +95,34 @@ body { background: radial-gradient(ellipse at top, #1a0a0f 0%, #0a0a0f 60%); col
 </head>
 <body>
 
-<div id="regScreen" style="position:fixed; inset:0; background:linear-gradient(135deg,#1a0a0f,#0a0a0f); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
+<div id="regScreen" style="position:fixed; inset:0; background:linear-gradient(135deg,#1a0a0f,#0a0a0f); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:24px; overflow-y:auto;">
+  <div style="text-align:center; max-width:400px; width:100%; padding-top:20px;">
+    <img src="logo.png" alt="IngSoft" style="height:50px; margin-bottom:20px;" onerror="this.style.display='none'">
+    <h1 style="font-size:24px; margin-bottom:8px; color:#fff;">Регистрация</h1>
+    <p style="color:#888; font-size:13px; margin-bottom:24px;">Заполни данные, чтобы получать подарки</p>
+
+    <input type="text" id="regNickname" placeholder="Никнейм" maxlength="20" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
+    <input type="tel" id="regPhone" placeholder="Номер телефона (+7...)" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
+    <input type="text" id="regRegion" placeholder="Город / регион (Россия, Ингушетия)" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
+    <input type="text" id="regFullName" placeholder="ФИО полностью" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:16px; outline:none;">
+
+    <button onclick="checkRegistration()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#e63946,#c1121f); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(230,57,70,0.5);">Далее</button>
+    <p style="color:#666; font-size:11px; margin-top:16px;">Данные видны только тебе. Телефон нужен для верификации.</p>
+  </div>
+</div>
+
+<div id="confirmScreen" style="position:fixed; inset:0; background:linear-gradient(135deg,#1a0a0f,#0a0a0f); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
   <div style="text-align:center; max-width:400px; width:100%;">
-    <img src="logo.png" alt="IngSoft" style="height:60px; margin-bottom:30px;" onerror="this.style.display='none'">
-    <h1 style="font-size:28px; margin-bottom:10px; color:#fff;">Добро пожаловать!</h1>
-    <p style="color:#888; font-size:14px; margin-bottom:30px;">Придумай свой никнейм для игры</p>
-    <input type="text" id="nicknameInput" placeholder="Твой никнейм" maxlength="20" style="width:100%; padding:16px; border-radius:14px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:16px; text-align:center; margin-bottom:16px; outline:none;">
-    <button id="regBtn" onclick="completeRegistration()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#e63946,#c1121f); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(230,57,70,0.5);">Начать играть</button>
-    <p style="color:#666; font-size:12px; margin-top:20px;">Нажимая кнопку, ты соглашаешься с правилами игры</p>
+    <h1 style="font-size:22px; margin-bottom:20px; color:#fff;">Проверь данные</h1>
+    <div style="background:#15151f; border:1px solid rgba(230,57,70,0.3); border-radius:14px; padding:16px; margin-bottom:20px; text-align:left; font-size:14px;">
+      <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Никнейм:</span> <b id="confNickname"></b></div>
+      <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Телефон:</span> <b id="confPhone"></b></div>
+      <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Регион:</span> <b id="confRegion"></b></div>
+      <div style="padding:8px 0;"><span style="color:#888;">ФИО:</span> <b id="confFullName"></b></div>
+    </div>
+    <p style="color:#ffd700; font-size:13px; margin-bottom:20px;">Если данные верны — ты получишь доступ ко всем подаркам.<br>Если нет — подарки не получишь.</p>
+    <button onclick="completeRegistration()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:800; cursor:pointer; margin-bottom:10px;">✅ Всё верно</button>
+    <button onclick="backToReg()" style="width:100%; padding:14px; border-radius:14px; border:1px solid rgba(230,57,70,0.3); background:transparent; color:#888; font-size:14px; cursor:pointer;">← Изменить данные</button>
   </div>
 </div>
 
@@ -234,6 +254,8 @@ let referrerId=null, lastDaily=null, rank='-';
 let dailyStreak=0, lastDailyClaim=null, totalTaps=0, level=1;
 let claimedQuests = [];
 let nickname = null;
+let autotapLevel = 0;
+let lastAutotapClaim = null;
 const DAILY_REWARDS = [
   { day:1, coins:1000, icon:'🪙' },
   { day:2, coins:2000, icon:'💰' },
@@ -281,6 +303,8 @@ async function loadPlayer() {
     level = data.level ?? 1;
     claimedQuests = data.claimed_quests || [];
     nickname = data.nickname || null;
+    autotapLevel = data.autotap_level ?? 0;
+    lastAutotapClaim = data.last_autotap_claim;
     const now = Date.now();
     const last = data.last_energy_update ? new Date(data.last_energy_update).getTime() : now;
     const regen = Math.floor((now - last) / 3000);
@@ -375,19 +399,30 @@ async function loadLeaderboard() {
 }
 
 const QUESTS = [
-  { id:'tap100', name:'🌟 Первые шаги', desc:'100 очков', reward:1000, check: () => score >= 100 },
-  { id:'tap1000', name:'🔥 Тапальщик', desc:'1000 очков', reward:5000, check: () => score >= 1000 },
-  { id:'tap10000', name:'⚡ Мастер тапа', desc:'10 000 очков', reward:50000, check: () => score >= 10000 },
-  { id:'tap100000', name:'💎 Легенда', desc:'100 000 очков', reward:500000, check: () => score >= 100000 },
-  { id:'tap1m', name:'👑 Миллионер', desc:'1 000 000 очков', reward:5000000, check: () => score >= 1000000 },
-  { id:'taps500', name:'🖐 500 тапов', desc:'500 тапов', reward:3000, check: () => totalTaps >= 500 },
-  { id:'taps5000', name:'🖐 5000 тапов', desc:'5000 тапов', reward:50000, check: () => totalTaps >= 5000 },
+  { id:'tap1k', name:'🌟 Новичок', desc:'1 000 тапов', reward:5000, check: () => totalTaps >= 1000 },
+  { id:'tap10k', name:'🔥 Любитель', desc:'10 000 тапов', reward:50000, check: () => totalTaps >= 10000 },
+  { id:'tap50k', name:'⚡ Тапальщик', desc:'50 000 тапов', reward:300000, check: () => totalTaps >= 50000 },
+  { id:'tap100k', name:'💎 Про', desc:'100 000 тапов', reward:1000000, check: () => totalTaps >= 100000 },
+  { id:'tap300k', name:'💠 Мастер', desc:'300 000 тапов', reward:3000000, check: () => totalTaps >= 300000 },
+  { id:'tap600k', name:'🏆 Гуру', desc:'600 000 тапов', reward:8000000, check: () => totalTaps >= 600000 },
+  { id:'tap1m', name:'👑 Легенда', desc:'1 000 000 тапов', reward:20000000, check: () => totalTaps >= 1000000 },
+  { id:'tap5m', name:'🚀 Титан', desc:'5 000 000 тапов', reward:100000000, check: () => totalTaps >= 5000000 },
+  { id:'tap10m', name:'🌌 Космос', desc:'10 000 000 тапов', reward:250000000, check: () => totalTaps >= 10000000 },
+  { id:'tap100m', name:'🌟 100 млн', desc:'100 000 000 тапов', reward:5000000000, check: () => totalTaps >= 100000000 },
+  { id:'tap1b', name:'💫 Миллиард', desc:'1 000 000 000 тапов', reward:50000000000, check: () => totalTaps >= 1000000000 },
+  { id:'tap100b', name:'🌠 100 млрд', desc:'100 000 000 000 тапов', reward:5000000000000, check: () => totalTaps >= 100000000000 },
+  { id:'tap100t', name:'✨ 100 трлн', desc:'100 000 000 000 000 тапов', reward:500000000000000, check: () => totalTaps >= 100000000000000 },
   { id:'inv1', name:'👥 Первый друг', desc:'Пригласить 1 друга', reward:5000, check: () => false },
-  { id:'inv5', name:'👥 Компания', desc:'Пригласить 5 друзей', reward:30000, check: () => false },
-  { id:'inv10', name:'👥 Команда', desc:'Пригласить 10 друзей', reward:100000, check: () => false },
-  { id:'inv25', name:'👥 Армия', desc:'Пригласить 25 друзей', reward:500000, check: () => false },
-  { id:'lvl5', name:'⬆️ Уровень 5', desc:'Достичь 5 ур.', reward:10000, check: () => level >= 5 },
-  { id:'lvl10', name:'⬆️ Уровень 10', desc:'Достичь 10 ур.', reward:100000, check: () => level >= 10 },
+  { id:'inv5', name:'👥 Компания', desc:'Пригласить 5 друзей', reward:50000, check: () => false },
+  { id:'inv10', name:'👥 Команда', desc:'Пригласить 10 друзей', reward:200000, check: () => false },
+  { id:'inv15', name:'👥 Отряд', desc:'Пригласить 15 друзей', reward:500000, check: () => false },
+  { id:'inv25', name:'👥 Армия', desc:'Пригласить 25 друзей', reward:2000000, check: () => false },
+  { id:'inv50', name:'👥 Легион', desc:'Пригласить 50 друзей', reward:10000000, check: () => false },
+  { id:'inv100', name:'👥 Империя', desc:'Пригласить 100 друзей', reward:100000000, check: () => false },
+  { id:'lvl5', name:'⬆️ Уровень 5', desc:'Достичь 5 уровня', reward:10000, check: () => level >= 5 },
+  { id:'lvl10', name:'⬆️ Уровень 10', desc:'Достичь 10 уровня', reward:100000, check: () => level >= 10 },
+  { id:'lvl25', name:'⬆️ Уровень 25', desc:'Достичь 25 уровня', reward:1000000, check: () => level >= 25 },
+  { id:'lvl50', name:'⬆️ Уровень 50', desc:'Достичь 50 уровня', reward:10000000, check: () => level >= 50 },
 ];
 
 function loadQuests() {
@@ -419,14 +454,17 @@ async function claimQuest(id) {
   loadQuests();
 }
 const BOOSTS = [
-  { id:'mult2', name:'⚡ Множитель x2', desc:'Удваивает очки', price:10000, apply: () => multiplier = Math.max(multiplier, 2) },
-  { id:'mult3', name:'🔥 Множитель x3', desc:'Утраивает очки', price:50000, apply: () => multiplier = Math.max(multiplier, 3) },
-  { id:'mult5', name:'💎 Множитель x5', desc:'Пятикратный', price:200000, apply: () => multiplier = Math.max(multiplier, 5) },
-  { id:'mult10', name:'👑 Множитель x10', desc:'Десятикратный', price:1000000, apply: () => multiplier = Math.max(multiplier, 10) },
-  { id:'mult25', name:'🌟 Множитель x25', desc:'Мега-множитель', price:10000000, apply: () => multiplier = Math.max(multiplier, 25) },
-  { id:'energy500', name:'🔋 Энергия +500', desc:'Больше энергии', price:20000, apply: () => maxEnergy += 500 },
-  { id:'energy1000', name:'🔋 Энергия +1000', desc:'Много энергии', price:50000, apply: () => maxEnergy += 1000 },
-  { id:'energy5000', name:'🔋 Энергия +5000', desc:'Огромный запас', price:500000, apply: () => maxEnergy += 5000 },
+  { id:'autotap1', name:'🤖 Автоклик +1/сек', desc:'Автоматически тапает', price:100000000, apply: () => autotapLevel = Math.max(autotapLevel, 1) },
+  { id:'autotap2', name:'🤖 Автоклик +2/сек', desc:'Ускоренный автоклик', price:300000000, apply: () => autotapLevel = Math.max(autotapLevel, 2) },
+  { id:'autotap5', name:'🤖 Автоклик +5/сек', desc:'Быстрый автоклик', price:1000000000, apply: () => autotapLevel = Math.max(autotapLevel, 5) },
+  { id:'autotap10', name:'🤖 Автоклик +10/сек', desc:'Очень быстрый', price:5000000000, apply: () => autotapLevel = Math.max(autotapLevel, 10) },
+  { id:'autotap20', name:'🤖 Автоклик +20/сек', desc:'Максимальный', price:50000000000, apply: () => autotapLevel = Math.max(autotapLevel, 20) },
+  { id:'mult2', name:'⚡ Множитель x2', desc:'Удваивает очки', price:100000, apply: () => multiplier = Math.max(multiplier, 2) },
+  { id:'mult5', name:'🔥 Множитель x5', desc:'Пятикратный', price:5000000, apply: () => multiplier = Math.max(multiplier, 5) },
+  { id:'mult10', name:'💎 Множитель x10', desc:'Десятикратный', price:500000000, apply: () => multiplier = Math.max(multiplier, 10) },
+  { id:'mult25', name:'👑 Множитель x25', desc:'Мега', price:5000000000, apply: () => multiplier = Math.max(multiplier, 25) },
+  { id:'energy1000', name:'🔋 +1000 энергии', desc:'Больше запас', price:50000, apply: () => maxEnergy += 1000 },
+  { id:'energy10000', name:'🔋 +10 000 энергии', desc:'Огромный запас', price:5000000, apply: () => maxEnergy += 10000 },
 ];
 
 function loadBoosts() {
@@ -515,6 +553,9 @@ function loadStats() {
     '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
     '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
     '<div class="profile-row"><span>Энергия</span><span>' + energy + ' / ' + maxEnergy + '</span></div>' +
+    '<div class="profile-row"><span>Автоклик</span><span>+' + autotapLevel + '/сек</span></div>' +
+    '<div class="profile-row"><span>Телефон</span><span>' + (nickname ? '✓' : '—') + '</span></div>' +
+    '<div class="profile-row"><span>Регион</span><span>' + (nickname ? '✓' : '—') + '</span></div>' +
     '<div class="profile-row"><span>Серия входов</span><span>' + dailyStreak + ' дн.</span></div>' +
     '<div class="profile-row"><span>Достижений</span><span>' + ACHIEVEMENTS.filter(a => a.check()).length + ' / ' + ACHIEVEMENTS.length + '</span></div>';
 }
@@ -542,12 +583,85 @@ function showToast(msg) {
   setTimeout(() => el.classList.remove('show'), 2000);
 }
 
+let regData = {};
+
+function checkRegistration() {
+  const nickname = document.getElementById('regNickname').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const region = document.getElementById('regRegion').value.trim();
+  const fullName = document.getElementById('regFullName').value.trim();
+
+  if (!nickname || nickname.length < 2) { showToast('Введи никнейм'); return; }
+  if (!phone || phone.length < 10) { showToast('Введи номер телефона'); return; }
+  if (!region || region.length < 3) { showToast('Введи регион'); return; }
+  if (!fullName || fullName.length < 5) { showToast('Введи ФИО'); return; }
+
+  regData = { nickname, phone, region, fullName };
+
+  document.getElementById('confNickname').textContent = nickname;
+  document.getElementById('confPhone').textContent = phone;
+  document.getElementById('confRegion').textContent = region;
+  document.getElementById('confFullName').textContent = fullName;
+
+  document.getElementById('regScreen').style.display = 'none';
+  document.getElementById('confirmScreen').style.display = 'flex';
+}
+
+function backToReg() {
+  document.getElementById('confirmScreen').style.display = 'none';
+  document.getElementById('regScreen').style.display = 'flex';
+}
+
 async function completeRegistration() {
-  const nickname = document.getElementById('nicknameInput').value.trim();
-  if (!nickname || nickname.length < 2) {
-    showToast('Введи никнейм (мин. 2 символа)');
-    return;
+  if (!regData.nickname) { showToast('Заполни данные'); return; }
+
+  const startParam = tg?.initDataUnsafe?.start_param;
+  let refId = null;
+  if (startParam && startParam.startsWith('ref_')) refId = parseInt(startParam.replace('ref_', ''));
+
+  const { data: existing } = await supabaseClient.from('players').select('telegram_id').eq('telegram_id', telegramId).maybeSingle();
+
+  const payload = {
+    nickname: regData.nickname,
+    phone: regData.phone,
+    region: regData.region,
+    full_name: regData.fullName,
+    username: username,
+    first_name: firstName,
+    welcome_bonus_claimed: true,
+    verified: true
+  };
+
+  if (existing) {
+    await supabaseClient.from('players').update(payload).eq('telegram_id', telegramId);
+  } else {
+    await supabaseClient.from('players').insert({
+      telegram_id: telegramId,
+      ...payload,
+      score: 1000,
+      energy: 1000,
+      max_energy: 1000,
+      multiplier: 1,
+      referrer_id: refId,
+      last_energy_update: new Date().toISOString(),
+      last_autotap_claim: new Date().toISOString(),
+      level: 1,
+      total_taps: 0,
+      daily_streak: 0,
+      autotap_level: 0
+    });
+    if (refId) {
+      const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', refId).maybeSingle();
+      if (ref) await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', refId);
+    }
   }
+
+  showToast('🎉 Добро пожаловать, ' + regData.nickname + '! +1000 бонус');
+  document.getElementById('confirmScreen').style.display = 'none';
+  document.getElementById('regScreen').style.display = 'none';
+  await loadPlayer();
+  updateUI();
+}
   if (nickname.length > 20) {
     showToast('Слишком длинный никнейм');
     return;
@@ -593,11 +707,39 @@ async function completeRegistration() {
   updateUI();
 }
 
+async function applyOfflineAutotap() {
+  if (!lastAutotapClaim || autotapLevel <= 0) return;
+  const now = Date.now();
+  const last = new Date(lastAutotapClaim).getTime();
+  const seconds = Math.floor((now - last) / 1000);
+  if (seconds < 5) return;
+  const earned = seconds * autotapLevel * multiplier;
+  score += earned;
+  lastAutotapClaim = new Date().toISOString();
+  updateUI();
+  await supabaseClient.from('players').update({
+    score, last_autotap_claim: lastAutotapClaim
+  }).eq('telegram_id', telegramId);
+  if (earned > 0) showToast('🤖 Автоклик начислил ' + earned.toLocaleString());
+}
+
+async function runAutotap() {
+  if (autotapLevel <= 0) return;
+  score += autotapLevel * multiplier;
+  totalTaps += autotapLevel;
+  lastAutotapClaim = new Date().toISOString();
+  updateUI();
+  await supabaseClient.from('players').update({
+    score, total_taps: totalTaps, last_autotap_claim: lastAutotapClaim
+  }).eq('telegram_id', telegramId);
+}
 
 async function init() {
   if (tg) { tg.ready(); tg.expand(); }
   getTelegramUser();
   await loadPlayer();
+  await applyOfflineAutotap();
+  setInterval(runAutotap, 1000);
   setInterval(() => {
     if (energy < maxEnergy) { energy++; updateUI(); scheduleSave(); }
   }, 3000);
