@@ -662,51 +662,7 @@ async function completeRegistration() {
   await loadPlayer();
   updateUI();
 }
-  if (nickname.length > 20) {
-    showToast('Слишком длинный никнейм');
-    return;
-  }
-
-  const startParam = tg?.initDataUnsafe?.start_param;
-  let refId = null;
-  if (startParam && startParam.startsWith('ref_')) refId = parseInt(startParam.replace('ref_', ''));
-
-  const { data: existing } = await supabaseClient.from('players').select('telegram_id').eq('telegram_id', telegramId).maybeSingle();
-
-  if (existing) {
-    await supabaseClient.from('players').update({
-      nickname: nickname,
-      welcome_bonus_claimed: true
-    }).eq('telegram_id', telegramId);
-  } else {
-    await supabaseClient.from('players').insert({
-      telegram_id: telegramId,
-      username: username,
-      first_name: firstName,
-      nickname: nickname,
-      score: 1000,
-      energy: 1000,
-      max_energy: 1000,
-      multiplier: 1,
-      referrer_id: refId,
-      last_energy_update: new Date().toISOString(),
-      level: 1,
-      total_taps: 0,
-      daily_streak: 0,
-      welcome_bonus_claimed: true
-    });
-    if (refId) {
-      const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', refId).maybeSingle();
-      if (ref) await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', refId);
-    }
-  }
-
-  showToast('🎉 Добро пожаловать, ' + nickname + '! +1000 бонус');
-  document.getElementById('regScreen').style.display = 'none';
-  await loadPlayer();
-  updateUI();
-}
-
+      
 async function applyOfflineAutotap() {
   if (!lastAutotapClaim || autotapLevel <= 0) return;
   const now = Date.now();
