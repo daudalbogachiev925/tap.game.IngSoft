@@ -3,158 +3,344 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f0c29">
 <title>IngSoft · Tap Game</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
-:root { --ing-red:#e63946; --ing-red-dark:#c1121f; --ing-white:#fff; --ing-card:#15151f; --ing-border:rgba(230,57,70,0.2); --ing-gold:#ffd700; }
-body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 70%, #0a0a0f 100%); background-attachment: fixed; color:#fff; font-family:'Segoe UI',Arial,sans-serif; min-height:100vh; overflow-x:hidden; padding-bottom:20px; }
-.header { display:flex; align-items:center; justify-content:space-between; padding:12px 18px; background:rgba(10,10,15,0.9); backdrop-filter:blur(20px); position:sticky; top:0; z-index:100; border-bottom:1px solid var(--ing-border); }
-.logo-box img { height:34px; display:block; }
-.burger { width:42px; height:42px; border-radius:12px; background:rgba(230,57,70,0.1); border:1px solid var(--ing-border); display:flex; flex-direction:column; justify-content:center; align-items:center; gap:5px; cursor:pointer; }
-.burger span { display:block; width:20px; height:2px; background:var(--ing-red); border-radius:2px; }
-.side-menu { position:fixed; top:0; right:-300px; width:300px; height:100vh; background:linear-gradient(180deg,#15151f,#0a0a0f); z-index:1000; transition:right 0.3s; padding:24px 20px; overflow-y:auto; border-left:1px solid var(--ing-border); }
-.side-menu.open { right:0; }
-.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:999; opacity:0; pointer-events:none; transition:opacity 0.3s; }
-.overlay.open { opacity:1; pointer-events:all; }
-.menu-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
-.menu-close { background:none; border:none; color:#888; font-size:28px; cursor:pointer; }
-.menu-item { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:14px; margin-bottom:6px; cursor:pointer; }
-.menu-item:active { background:rgba(230,57,70,0.1); }
-.menu-item-icon { font-size:22px; width:30px; text-align:center; }
-.menu-item-text { font-size:15px; font-weight:600; }
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px; }
-.stat-card { background:var(--ing-card); border:1px solid var(--ing-border); border-radius:16px; padding:14px 8px; text-align:center; }
-.stat-value { font-size:20px; font-weight:800; color:var(--ing-gold); }
-.stat-label { font-size:11px; color:#777; margin-top:3px; text-transform:uppercase; }
-.level-bar { margin:0 20px 16px; background:rgba(0,0,0,0.5); border-radius:14px; overflow:hidden; height:26px; position:relative; border:1px solid var(--ing-border); }
-.level-fill { height:100%; background: linear-gradient(90deg, #4facfe, #00f2fe, #ffd700, #ff5c6c); background-size: 300% 100%; animation: gradientMove 3s ease infinite; transition:width 0.4s; }
-@keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-.level-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; font-weight:800; color:white; }
-.score-block { text-align:center; padding:20px 20px 8px; }
-.score-big { font-size:72px; font-weight:900; background: linear-gradient(135deg, #fff 0%, #ffd700 50%, #ff5c6c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 0 40px rgba(255,215,0,0.3); transition:transform 0.1s; filter: drop-shadow(0 0 15px rgba(255,215,0,0.5)); }
-.score-big.pop { transform:scale(1.15); color:var(--ing-red); }
+:root {
+  --ing-red:#e63946; --ing-red-dark:#c1121f; --ing-white:#fff;
+  --ing-bg:#0a0a0f; --ing-card:#15151f; --ing-border:rgba(230,57,70,0.2);
+  --ing-gold:#ffd700; --ing-green:#22c55e; --ing-blue:#4facfe;
+}
+html, body {
+  background: linear-gradient(135deg,#0f0c29 0%,#302b63 35%,#24243e 70%,#0a0a0f 100%);
+  background-attachment: fixed; color:#fff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  min-height:100vh; overflow-x:hidden;
+}
+.app { display:flex; min-height:100vh; }
+
+/* LEFT SIDEBAR */
+.sidebar {
+  width:72px; background:rgba(10,10,15,0.95);
+  backdrop-filter:blur(20px); border-right:1px solid var(--ing-border);
+  padding:12px 0; display:flex; flex-direction:column; gap:4px;
+  position:fixed; left:0; top:0; height:100vh; z-index:500;
+  overflow-y:auto; overflow-x:hidden; transition:width 0.3s;
+}
+.sidebar-item {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:10px 4px; cursor:pointer; border-radius:12px; margin:0 6px;
+  transition:all 0.2s; min-width:60px;
+}
+.sidebar-item:hover, .sidebar-item:active { background:rgba(230,57,70,0.15); }
+.sidebar-item.active { background:linear-gradient(135deg,rgba(230,57,70,0.3),rgba(193,18,31,0.2)); border:1px solid var(--ing-red); }
+.sidebar-icon { font-size:22px; line-height:1; }
+.sidebar-label { font-size:9px; color:#888; margin-top:3px; font-weight:600; text-align:center; white-space:nowrap; }
+.sidebar-item.active .sidebar-label { color:#fff; }
+
+/* MAIN */
+.main { flex:1; margin-left:72px; padding-bottom:40px; max-width:100%; }
+
+/* HEADER */
+.header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 18px; background:rgba(10,10,15,0.9);
+  backdrop-filter:blur(20px); position:sticky; top:0; z-index:400;
+  border-bottom:1px solid var(--ing-border);
+}
+.logo-box img { height:32px; display:block; }
+.user-info { display:flex; align-items:center; gap:10px; }
+.avatar {
+  width:36px; height:36px; border-radius:50%;
+  background:linear-gradient(135deg,var(--ing-red),var(--ing-red-dark));
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; color:#fff; font-size:16px;
+}
+.user-name { font-size:13px; color:#ccc; font-weight:600; }
+
+/* STATS */
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px; }
+.stat-card {
+  background:var(--ing-card); border:1px solid var(--ing-border);
+  border-radius:14px; padding:12px 6px; text-align:center;
+}
+.stat-value { font-size:18px; font-weight:800; color:var(--ing-gold); word-break:break-word; }
+.stat-label { font-size:10px; color:#777; margin-top:3px; text-transform:uppercase; }
+
+/* LEVEL */
+.level-bar { margin:0 12px 12px; background:rgba(0,0,0,0.5); border-radius:14px; overflow:hidden; height:26px; position:relative; border:1px solid var(--ing-border); }
+.level-fill { height:100%; background:linear-gradient(90deg,#4facfe,#00f2fe,#ffd700,#ff5c6c); background-size:300% 100%; animation:gradientMove 3s ease infinite; transition:width 0.4s; }
+@keyframes gradientMove { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+.level-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; font-weight:800; color:white; text-shadow:0 1px 3px rgba(0,0,0,0.8); }
+
+/* SCORE */
+.score-block { text-align:center; padding:16px 12px 8px; }
+.score-big {
+  font-size:64px; font-weight:900;
+  background:linear-gradient(135deg,#fff 0%,#ffd700 50%,#ff5c6c 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  transition:transform 0.1s; filter:drop-shadow(0 0 15px rgba(255,215,0,0.5));
+}
+.score-big.pop { transform:scale(1.15); }
 .score-label { font-size:12px; color:#666; text-transform:uppercase; letter-spacing:2px; margin-top:4px; }
-.tap-container { display:flex; justify-content:center; padding:20px; position:relative; }
-.tap-button { width:220px; height:220px; border-radius:50%; background: conic-gradient(from 0deg, #ff5c6c, #ffd700, #4facfe, #c1121f, #ff5c6c); padding: 5px; border:none; cursor:pointer; font-size:30px; font-weight:900; color:white; letter-spacing:3px; box-shadow:0 20px 70px rgba(230,57,70,0.6), 0 0 40px rgba(255,215,0,0.3), inset 0 -8px 30px rgba(0,0,0,0.4); transition:transform 0.08s; position:relative; animation: rotateHue 8s linear infinite; }
-.tap-button::after { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff5c6c, #c1121f, #8b0d14); z-index: 1; }
-.tap-button span { position: relative; z-index: 2; }
-@keyframes rotateHue { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+
+/* TAP */
+.tap-container { display:flex; justify-content:center; padding:16px; position:relative; }
+.tap-button {
+  width:200px; height:200px; border-radius:50%;
+  background:conic-gradient(from 0deg,#ff5c6c,#ffd700,#4facfe,#c1121f,#ff5c6c);
+  padding:5px; border:none; cursor:pointer; font-size:28px; font-weight:900;
+  color:white; letter-spacing:3px;
+  box-shadow:0 20px 70px rgba(230,57,70,0.6),0 0 40px rgba(255,215,0,0.3),inset 0 -8px 30px rgba(0,0,0,0.4);
+  transition:transform 0.08s; position:relative;
+  animation:rotateHue 8s linear infinite;
+}
+.tap-button::after { content:''; position:absolute; inset:5px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ff5c6c,#c1121f,#8b0d14); z-index:1; }
+.tap-button span { position:relative; z-index:2; }
+@keyframes rotateHue { from{filter:hue-rotate(0deg);} to{filter:hue-rotate(360deg);} }
 .tap-button:active { transform:scale(0.92); }
-.tap-button::before { content:''; position:absolute; inset:-20px; border-radius:50%; border:2px solid rgba(230,57,70,0.4); animation:pulse 2.5s infinite; }
+.tap-button::before { content:''; position:absolute; inset:-20px; border-radius:50%; border:2px solid rgba(230,57,70,0.4); animation:pulse 2.5s infinite; z-index:0; }
 @keyframes pulse { 0%,100%{transform:scale(1);opacity:0.7;} 50%{transform:scale(1.08);opacity:0.1;} }
-.float-plus { position:absolute; pointer-events:none; font-weight:900; font-size:28px; color:var(--ing-red); animation:floatUp 1s ease-out forwards; z-index:10; }
+.float-plus { position:absolute; pointer-events:none; font-weight:900; font-size:26px; color:var(--ing-red); animation:floatUp 1s ease-out forwards; z-index:10; text-shadow:0 0 15px rgba(230,57,70,0.8); }
 @keyframes floatUp { 0%{opacity:1;transform:translate(-50%,-50%) scale(1);} 100%{opacity:0;transform:translate(-50%,-150%) scale(1.6);} }
-.energy-bar { margin:0 20px 20px; background:rgba(0,0,0,0.5); border-radius:14px; overflow:hidden; height:28px; position:relative; border:1px solid var(--ing-border); }
+
+/* ENERGY */
+.energy-bar { margin:0 12px 12px; background:rgba(0,0,0,0.5); border-radius:14px; overflow:hidden; height:26px; position:relative; border:1px solid var(--ing-border); }
 .energy-fill { height:100%; background:linear-gradient(90deg,var(--ing-red),#ff8c00); transition:width 0.3s; }
-.energy-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:800; color:white; }
-.quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:0 16px; }
-.quick-btn { background:var(--ing-card); border:1px solid var(--ing-border); border-radius:16px; padding:14px 6px; color:#fff; cursor:pointer; font-size:11px; text-align:center; font-weight:600; }
+.energy-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; font-weight:800; color:white; text-shadow:0 1px 3px rgba(0,0,0,0.8); }
+
+/* QUICK */
+.quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:0 12px; }
+.quick-btn {
+  background:var(--ing-card); border:1px solid var(--ing-border);
+  border-radius:14px; padding:12px 4px; color:#fff; cursor:pointer;
+  font-size:10px; text-align:center; font-weight:600; transition:all 0.2s;
+}
 .quick-btn:active { background:rgba(230,57,70,0.2); transform:scale(0.95); }
-.quick-icon { font-size:24px; display:block; margin-bottom:5px; }
+.quick-icon { font-size:22px; display:block; margin-bottom:4px; }
+
+/* MODAL */
 .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; align-items:flex-end; justify-content:center; backdrop-filter:blur(6px); }
 .modal.active { display:flex; }
-.modal-content { background:linear-gradient(180deg,#15151f,#0a0a0f); border-radius:24px 24px 0 0; padding:24px; max-width:500px; width:100%; max-height:85vh; overflow-y:auto; border-top:2px solid var(--ing-red); animation:slideUp 0.3s; }
+.modal-content {
+  background:linear-gradient(180deg,#15151f,#0a0a0f);
+  border-radius:24px 24px 0 0; padding:20px;
+  max-width:560px; width:100%; max-height:88vh; overflow-y:auto;
+  border-top:2px solid var(--ing-red); animation:slideUp 0.3s;
+}
 @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
-.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-.modal-title { font-size:20px; font-weight:800; }
+.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; position:sticky; top:0; background:linear-gradient(180deg,#15151f 70%,transparent); padding-bottom:8px; z-index:10; }
+.modal-title { font-size:18px; font-weight:800; }
 .modal-title span { color:var(--ing-red); }
-.modal-close { background:rgba(230,57,70,0.1); border:1px solid var(--ing-border); color:#fff; width:34px; height:34px; border-radius:10px; font-size:20px; cursor:pointer; }
-.leader-item { display:flex; align-items:center; padding:14px; border-bottom:1px solid rgba(255,255,255,0.05); border-radius:12px; margin-bottom:4px; }
+.modal-close { background:rgba(230,57,70,0.1); border:1px solid var(--ing-border); color:#fff; width:32px; height:32px; border-radius:10px; font-size:20px; cursor:pointer; }
+
+/* ITEM ROW */
+.item-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px; margin-bottom:8px; background:var(--ing-card);
+  border-radius:14px; border:1px solid var(--ing-border);
+}
+.item-info { flex:1; min-width:0; }
+.item-name { font-size:14px; font-weight:700; margin-bottom:3px; }
+.item-desc { font-size:11px; color:#777; }
+.item-reward { font-size:11px; color:var(--ing-gold); margin-top:3px; font-weight:700; }
+.btn-buy {
+  background:linear-gradient(135deg,var(--ing-red),var(--ing-red-dark));
+  border:none; color:#fff; padding:8px 14px; border-radius:10px;
+  cursor:pointer; font-weight:700; font-size:12px;
+  box-shadow:0 4px 15px rgba(230,57,70,0.4); white-space:nowrap;
+}
+.btn-buy:active { transform:scale(0.95); }
+.btn-buy:disabled { opacity:0.35; cursor:not-allowed; }
+.btn-buy.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
+.btn-buy.blue { background:linear-gradient(135deg,#4facfe,#2563eb); }
+
+/* LEADERBOARD */
+.leader-item { display:flex; align-items:center; padding:12px; border-bottom:1px solid rgba(255,255,255,0.05); border-radius:12px; margin-bottom:4px; }
 .leader-item.top1 { background:linear-gradient(90deg,rgba(255,215,0,0.15),transparent); border:1px solid rgba(255,215,0,0.4); }
 .leader-item.top2 { background:linear-gradient(90deg,rgba(192,192,192,0.12),transparent); }
 .leader-item.top3 { background:linear-gradient(90deg,rgba(205,127,50,0.12),transparent); }
-.leader-rank { font-size:18px; font-weight:900; width:40px; color:var(--ing-red); }
-.leader-item.top1 .leader-rank { color:var(--ing-gold); font-size:22px; }
-.leader-name { flex:1; font-size:14px; font-weight:600; }
-.leader-score { font-size:14px; color:var(--ing-gold); font-weight:800; }
-.item-row { display:flex; justify-content:space-between; align-items:center; padding:16px; margin-bottom:10px; background:var(--ing-card); border-radius:16px; border:1px solid var(--ing-border); }
-.item-info { flex:1; }
-.item-name { font-size:15px; font-weight:700; margin-bottom:3px; }
-.item-desc { font-size:12px; color:#777; }
-.item-reward { font-size:12px; color:var(--ing-gold); margin-top:4px; font-weight:700; }
-.btn-buy { background:linear-gradient(135deg,var(--ing-red),var(--ing-red-dark)); border:none; color:#fff; padding:10px 18px; border-radius:12px; cursor:pointer; font-weight:700; font-size:13px; box-shadow:0 4px 15px rgba(230,57,70,0.4); }
-.btn-buy:active { transform:scale(0.95); }
-.btn-buy:disabled { opacity:0.35; cursor:not-allowed; }
-.toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(120px); background:linear-gradient(135deg,var(--ing-red),var(--ing-red-dark)); color:white; padding:14px 24px; border-radius:14px; transition:transform 0.3s; z-index:3000; font-size:14px; font-weight:700; max-width:90%; }
-.toast.show { transform:translateX(-50%) translateY(0); }
-.profile-avatar { width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,var(--ing-red),var(--ing-red-dark)); display:flex; align-items:center; justify-content:center; font-size:38px; font-weight:900; color:white; margin:0 auto 16px; box-shadow:0 8px 30px rgba(230,57,70,0.5); }
-.profile-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:14px; }
+.leader-rank { font-size:16px; font-weight:900; width:36px; color:var(--ing-red); }
+.leader-item.top1 .leader-rank { color:var(--ing-gold); font-size:20px; }
+.leader-name { flex:1; font-size:13px; font-weight:600; }
+.leader-score { font-size:13px; color:var(--ing-gold); font-weight:800; }
+
+/* PROFILE */
+.profile-avatar {
+  width:80px; height:80px; border-radius:50%;
+  background:linear-gradient(135deg,var(--ing-red),var(--ing-red-dark));
+  display:flex; align-items:center; justify-content:center;
+  font-size:34px; font-weight:900; color:white;
+  margin:0 auto 16px; box-shadow:0 8px 30px rgba(230,57,70,0.5);
+}
+.profile-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:13px; }
 .profile-row span:first-child { color:#888; }
 .profile-row span:last-child { font-weight:700; color:var(--ing-gold); }
-.daily-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px; }
-.daily-day { aspect-ratio:1; background:var(--ing-card); border:1px solid var(--ing-border); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:10px; color:#888; padding:4px; }
+
+/* DAILY */
+.daily-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:16px; }
+.daily-day {
+  aspect-ratio:1; background:var(--ing-card); border:1px solid var(--ing-border);
+  border-radius:12px; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; font-size:9px; color:#888; padding:4px;
+}
 .daily-day.claimed { background:rgba(255,215,0,0.15); border-color:var(--ing-gold); color:var(--ing-gold); }
 .daily-day.today { background:rgba(230,57,70,0.2); border-color:var(--ing-red); color:white; }
-.daily-reward { font-size:14px; font-weight:900; color:var(--ing-gold); margin-top:2px; }
-.achieve-item { display:flex; align-items:center; gap:12px; padding:14px; background:var(--ing-card); border-radius:14px; margin-bottom:8px; border:1px solid var(--ing-border); }
+.daily-reward { font-size:12px; font-weight:900; color:var(--ing-gold); margin-top:2px; }
+
+/* ACHIEVEMENT */
+.achieve-item { display:flex; align-items:center; gap:10px; padding:12px; background:var(--ing-card); border-radius:14px; margin-bottom:6px; border:1px solid var(--ing-border); }
 .achieve-item.locked { opacity:0.4; }
 .achieve-item.unlocked { background:linear-gradient(90deg,rgba(255,215,0,0.15),var(--ing-card)); border-color:var(--ing-gold); }
-.achieve-icon { font-size:32px; }
+.achieve-icon { font-size:26px; }
 .achieve-text { flex:1; }
-.achieve-name { font-size:14px; font-weight:700; }
-.achieve-desc { font-size:12px; color:#777; margin-top:2px; }
+.achieve-name { font-size:13px; font-weight:700; }
+.achieve-desc { font-size:11px; color:#777; margin-top:2px; }
+
+/* WALLET */
+.wallet-balance {
+  background:linear-gradient(135deg,#1a3a2a,#0a1a10);
+  border:1px solid rgba(34,197,94,0.3);
+  border-radius:16px; padding:20px; text-align:center; margin-bottom:16px;
+}
+.wallet-balance-val { font-size:42px; font-weight:900; color:#22c55e; }
+.wallet-balance-lbl { font-size:12px; color:#888; margin-top:4px; text-transform:uppercase; letter-spacing:2px; }
+
+/* PROMO */
+.promo-input {
+  width:100%; padding:14px; border-radius:12px;
+  border:1px solid var(--ing-border); background:#15151f; color:#fff;
+  font-size:14px; text-align:center; margin-bottom:12px; outline:none;
+  text-transform:uppercase; letter-spacing:2px;
+}
+
+/* MINI GAMES */
+.game-area {
+  background:var(--ing-card); border:1px solid var(--ing-border);
+  border-radius:16px; padding:20px; text-align:center; margin-bottom:16px;
+  min-height:200px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.game-result { font-size:32px; font-weight:900; margin:16px 0; }
+.dice { font-size:80px; margin:16px 0; }
+.roulette-wheel {
+  width:200px; height:200px; border-radius:50%;
+  background:conic-gradient(#e63946 0deg 60deg,#ffd700 60deg 120deg,#22c55e 120deg 180deg,#4facfe 180deg 240deg,#a855f7 240deg 300deg,#ec4899 300deg 360deg);
+  margin:16px auto; border:4px solid #fff;
+  transition:transform 3s cubic-bezier(0.2,0.8,0.3,1);
+}
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:30px; left:50%;
+  transform:translateX(-50%) translateY(120px);
+  background:linear-gradient(135deg,var(--ing-red),var(--ing-red-dark));
+  color:white; padding:12px 20px; border-radius:14px;
+  transition:transform 0.3s; z-index:3000; font-size:13px; font-weight:700;
+  max-width:90%; text-align:center;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* REG */
+.reg-screen {
+  position:fixed; inset:0; background:linear-gradient(135deg,#1a0a0f,#0a0a0f);
+  z-index:9999; display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-start;
+  padding:20px; overflow-y:auto;
+}
+.reg-input {
+  width:100%; padding:14px; border-radius:12px;
+  border:1px solid rgba(230,57,70,0.3); background:#15151f;
+  color:#fff; font-size:15px; margin-bottom:10px; outline:none;
+}
+.reg-btn {
+  width:100%; padding:16px; border-radius:14px; border:none;
+  background:linear-gradient(135deg,#e63946,#c1121f);
+  color:#fff; font-size:16px; font-weight:800; cursor:pointer;
+  box-shadow:0 8px 30px rgba(230,57,70,0.5);
+}
+.reg-btn.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
+
+/* TABLET */
+@media (min-width: 768px) {
+  .sidebar { width:88px; }
+  .sidebar-icon { font-size:26px; }
+  .sidebar-label { font-size:10px; }
+  .main { margin-left:88px; }
+  .score-big { font-size:88px; }
+  .tap-button { width:240px; height:240px; font-size:32px; }
+  .modal-content { border-radius:24px; margin:auto; max-height:90vh; }
+  .modal { align-items:center; }
+  .stats { gap:12px; margin:16px; }
+  .stat-value { font-size:22px; }
+  .quick-actions { gap:12px; padding:0 16px; }
+}
+
+/* DESKTOP */
+@media (min-width: 1100px) {
+  .sidebar { width:200px; padding:16px 0; }
+  .sidebar-item { flex-direction:row; gap:12px; justify-content:flex-start; padding:12px 16px; margin:0 12px; }
+  .sidebar-label { font-size:14px; margin-top:0; }
+  .sidebar-icon { font-size:22px; }
+  .main { margin-left:200px; max-width:900px; margin-right:auto; margin-left:auto; padding-left:220px; }
+  .score-big { font-size:96px; }
+  .tap-button { width:260px; height:260px; font-size:36px; }
+}
 </style>
 </head>
 <body>
 
-<div id="regScreen" style="position:fixed; inset:0; background:linear-gradient(135deg,#1a0a0f,#0a0a0f); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:24px; overflow-y:auto;">
-  <div style="text-align:center; max-width:400px; width:100%; padding-top:20px;">
-    <img src="logo.png" alt="IngSoft" style="height:50px; margin-bottom:20px;" onerror="this.style.display='none'">
-    <h1 style="font-size:24px; margin-bottom:8px; color:#fff;">Регистрация</h1>
-    <p style="color:#888; font-size:13px; margin-bottom:24px;">Заполни данные, чтобы получать подарки</p>
-    <input type="text" id="regNickname" placeholder="Никнейм" maxlength="20" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
-    <input type="tel" id="regPhone" placeholder="Номер телефона (+7...)" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
-    <input type="text" id="regRegion" placeholder="Город / регион (Россия, Ингушетия)" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
-    <input type="text" id="regFullName" placeholder="ФИО полностью" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:16px; outline:none;">
-    <button onclick="checkRegistration()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#e63946,#c1121f); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(230,57,70,0.5);">Далее</button>
-    <p style="color:#666; font-size:11px; margin-top:16px;">Данные видны только тебе. Телефон нужен для верификации.</p>
+<div id="regScreen" class="reg-screen">
+  <div style="text-align:center; max-width:420px; width:100%; padding-top:20px;">
+    <img src="logo.png" alt="IngSoft" style="height:50px; margin-bottom:16px;" onerror="this.style.display='none'">
+    <h1 style="font-size:24px; margin-bottom:6px;">Регистрация</h1>
+    <p style="color:#888; font-size:13px; margin-bottom:20px;">Заполни данные, чтобы получать подарки</p>
+    <input type="text" id="regNickname" class="reg-input" placeholder="Никнейм" maxlength="20">
+    <input type="tel" id="regPhone" class="reg-input" placeholder="Номер телефона (+7...)">
+    <input type="text" id="regRegion" class="reg-input" placeholder="Город / регион">
+    <input type="text" id="regFullName" class="reg-input" placeholder="ФИО полностью">
+    <button onclick="checkRegistration()" class="reg-btn">Далее</button>
+    <p style="color:#666; font-size:11px; margin-top:16px;">Данные видны только тебе.</p>
   </div>
 </div>
 
-<div id="confirmScreen" style="position:fixed; inset:0; background:linear-gradient(135deg,#1a0a0f,#0a0a0f); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
-  <div style="text-align:center; max-width:400px; width:100%;">
-    <h1 style="font-size:22px; margin-bottom:20px; color:#fff;">Проверь данные</h1>
-    <div style="background:#15151f; border:1px solid rgba(230,57,70,0.3); border-radius:14px; padding:16px; margin-bottom:20px; text-align:left; font-size:14px;">
+<div id="confirmScreen" class="reg-screen" style="display:none;">
+  <div style="text-align:center; max-width:420px; width:100%;">
+    <h1 style="font-size:22px; margin-bottom:16px;">Проверь данные</h1>
+    <div style="background:#15151f; border:1px solid rgba(230,57,70,0.3); border-radius:14px; padding:16px; margin-bottom:16px; text-align:left; font-size:13px;">
       <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Никнейм:</span> <b id="confNickname"></b></div>
       <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Телефон:</span> <b id="confPhone"></b></div>
       <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Регион:</span> <b id="confRegion"></b></div>
       <div style="padding:8px 0;"><span style="color:#888;">ФИО:</span> <b id="confFullName"></b></div>
     </div>
-    <p style="color:#ffd700; font-size:13px; margin-bottom:20px;">Если данные верны — ты получишь доступ ко всем подаркам.<br>Если нет — подарки не получишь.</p>
-    <button onclick="completeRegistration()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:800; cursor:pointer; margin-bottom:10px;">✅ Всё верно</button>
-    <button onclick="backToReg()" style="width:100%; padding:14px; border-radius:14px; border:1px solid rgba(230,57,70,0.3); background:transparent; color:#888; font-size:14px; cursor:pointer;">← Изменить данные</button>
+    <p style="color:#ffd700; font-size:12px; margin-bottom:16px;">Если данные верны — получишь подарки.<br>Если нет — не получишь.</p>
+    <button onclick="completeRegistration()" class="reg-btn green" style="margin-bottom:10px;">✅ Всё верно</button>
+    <button onclick="backToReg()" style="width:100%; padding:14px; border-radius:14px; border:1px solid rgba(230,57,70,0.3); background:transparent; color:#888; font-size:14px; cursor:pointer;">← Изменить</button>
   </div>
 </div>
+
+<div class="app" id="app" style="display:none;">
+
+<aside class="sidebar" id="sidebar">
+  <!-- Автогенерация через JS -->
+</aside>
+
+<main class="main">
 
 <div class="header">
-  <div class="logo-box"><img src="logo.png" alt="IngSoft" onerror="this.style.display='none';this.parentNode.innerHTML='<div style=\'font-size:20px;font-weight:900;color:#e63946;\'>INGSOFT</div>'"></div>
-  <div class="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
-</div>
-
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-<div class="side-menu" id="sideMenu">
-  <div class="menu-header">
-    <div style="font-size:16px;font-weight:800;">МЕНЮ</div>
-    <button class="menu-close" onclick="toggleMenu()">×</button>
+  <div class="logo-box"><img src="logo.png" alt="IngSoft" onerror="this.style.display='none';this.parentNode.innerHTML='<div style=\'font-size:18px;font-weight:900;color:#e63946;\'>INGSOFT</div>'"></div>
+  <div class="user-info">
+    <div class="avatar" id="avatar">?</div>
+    <div class="user-name" id="userName">Игрок</div>
   </div>
-  <div class="menu-item" onclick="openModal('leaderboard');toggleMenu()"><span class="menu-item-icon">🏆</span><span class="menu-item-text">Лидерборд</span></div>
-  <div class="menu-item" onclick="openModal('quests');toggleMenu()"><span class="menu-item-icon">📋</span><span class="menu-item-text">Квесты</span></div>
-  <div class="menu-item" onclick="openModal('boosts');toggleMenu()"><span class="menu-item-icon">⚡</span><span class="menu-item-text">Бусты</span></div>
-  <div class="menu-item" onclick="openModal('achievements');toggleMenu()"><span class="menu-item-icon">🏅</span><span class="menu-item-text">Достижения</span></div>
-  <div class="menu-item" onclick="openModal('referral');toggleMenu()"><span class="menu-item-icon">👥</span><span class="menu-item-text">Друзья</span></div>
-  <div class="menu-item" onclick="openModal('daily');toggleMenu()"><span class="menu-item-icon">🎁</span><span class="menu-item-text">Награды</span></div>
-  <div class="menu-item" onclick="openModal('stats');toggleMenu()"><span class="menu-item-icon">📊</span><span class="menu-item-text">Статистика</span></div>
-  <div class="menu-item" onclick="openModal('profile');toggleMenu()"><span class="menu-item-icon">👤</span><span class="menu-item-text">Профиль</span></div>
-  <div class="menu-item" onclick="shareGame();toggleMenu()"><span class="menu-item-icon">📤</span><span class="menu-item-text">Поделиться</span></div>
-  <div class="menu-item" onclick="openModal('about');toggleMenu()"><span class="menu-item-icon">ℹ️</span><span class="menu-item-text">О игре</span></div>
 </div>
 
 <div class="stats">
   <div class="stat-card"><div class="stat-value" id="statScore">0</div><div class="stat-label">Очки</div></div>
   <div class="stat-card"><div class="stat-value" id="statMult">x1</div><div class="stat-label">Множ.</div></div>
-  <div class="stat-card"><div class="stat-value" id="statRank">-</div><div class="stat-label">Место</div></div>
+  <div class="stat-card"><div class="stat-value" id="statPerSec">0/с</div><div class="stat-label">В секунду</div></div>
 </div>
 
 <div class="level-bar">
@@ -168,7 +354,7 @@ body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 70%,
 </div>
 
 <div class="tap-container" id="tapContainer">
-<button class="tap-button" id="tapBtn"><span>TAP</span></button>
+  <button class="tap-button" id="tapBtn"><span>TAP</span></button>
 </div>
 
 <div class="energy-bar">
@@ -177,12 +363,13 @@ body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 70%,
 </div>
 
 <div class="quick-actions">
-  <button class="quick-btn" onclick="openModal('leaderboard')"><span class="quick-icon">🏆</span>Топ</button>
   <button class="quick-btn" onclick="openModal('quests')"><span class="quick-icon">📋</span>Квесты</button>
   <button class="quick-btn" onclick="openModal('boosts')"><span class="quick-icon">⚡</span>Бусты</button>
   <button class="quick-btn" onclick="openModal('daily')"><span class="quick-icon">🎁</span>Награды</button>
+  <button class="quick-btn" onclick="openModal('promo')"><span class="quick-icon">🎫</span>Промокод</button>
 </div>
 
+<!-- МОДАЛЬНЫЕ ОКНА -->
 <div class="modal" id="modal-leaderboard"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">🏆 <span>Топ игроков</span></div><button class="modal-close" onclick="closeModal('leaderboard')">×</button></div>
   <div id="leaderList">Загрузка...</div>
@@ -205,10 +392,10 @@ body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 70%,
 
 <div class="modal" id="modal-referral"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">👥 <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
-  <p style="color:#888;font-size:13px;margin-bottom:14px;text-align:center;">За каждого друга — <b style="color:var(--ing-gold)">+5000 очков</b></p>
-  <div style="background:rgba(230,57,70,0.08);padding:14px;border-radius:14px;word-break:break-all;font-size:12px;color:var(--ing-red);margin-bottom:12px;border:1px solid var(--ing-border);font-family:monospace;" id="refLink"></div>
-  <button class="btn-buy" style="width:100%;padding:14px;" onclick="copyRefLink()">📋 Копировать</button>
-  <div style="margin-top:16px;text-align:center;font-size:14px;color:#888;">Приглашено: <span id="refCount" style="color:var(--ing-red);font-weight:800;">0</span></div>
+  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">За каждого друга — <b style="color:var(--ing-gold)">+5000</b></p>
+  <div style="background:rgba(230,57,70,0.08);padding:12px;border-radius:12px;word-break:break-all;font-size:11px;color:var(--ing-red);margin-bottom:10px;border:1px solid var(--ing-border);font-family:monospace;" id="refLink"></div>
+  <button class="btn-buy" style="width:100%;padding:12px;" onclick="copyRefLink()">📋 Копировать</button>
+  <div style="margin-top:12px;text-align:center;font-size:13px;color:#888;">Приглашено: <span id="refCount" style="color:var(--ing-red);font-weight:800;">0</span></div>
 </div></div>
 
 <div class="modal" id="modal-daily"><div class="modal-content">
@@ -226,51 +413,247 @@ body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 70%,
   <div id="profileContent"></div>
 </div></div>
 
+<div class="modal" id="modal-promo"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎫 <span>Промокод</span></div><button class="modal-close" onclick="closeModal('promo')">×</button></div>
+  <p style="color:#888;font-size:13px;margin-bottom:14px;text-align:center;">Введи промокод и получи награду</p>
+  <input type="text" id="promoInput" class="promo-input" placeholder="ВВЕДИ КОД" maxlength="20">
+  <button class="btn-buy green" style="width:100%;padding:14px;font-size:15px;" onclick="redeemPromo()">🎁 Активировать</button>
+  <div id="promoHistory" style="margin-top:16px;"></div>
+</div></div>
+
+<div class="modal" id="modal-wallet"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">💰 <span>Кошелёк</span></div><button class="modal-close" onclick="closeModal('wallet')">×</button></div>
+  <div class="wallet-balance">
+    <div class="wallet-balance-val" id="walletVal">0 ₽</div>
+    <div class="wallet-balance-lbl">Реальный баланс</div>
+  </div>
+  <p style="color:#888;font-size:12px;text-align:center;margin-bottom:16px;">Здесь будут храниться деньги, которые ты заработаешь в игре.</p>
+  <div class="profile-row"><span>К выводу</span><span id="walletAvail">0 ₽</span></div>
+  <div class="profile-row"><span>В ожидании</span><span id="walletPending">0 ₽</span></div>
+  <div class="profile-row"><span>Заработано всего</span><span id="walletTotal">0 ₽</span></div>
+  <button class="btn-buy blue" style="width:100%;padding:14px;margin-top:14px;font-size:14px;" onclick="showToast('Вывод станет доступен позже')">💸 Вывести</button>
+</div></div>
+
 <div class="modal" id="modal-about"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">ℹ️ <span>О игре</span></div><button class="modal-close" onclick="closeModal('about')">×</button></div>
-  <p style="color:#ccc;line-height:1.7;font-size:14px;">
+  <p style="color:#ccc;line-height:1.7;font-size:13px;">
     <b style="color:var(--ing-red);">IngSoft Tap</b> — тапалка внутри Telegram.<br><br>
     • Тапай — получай очки<br>
-    • Следи за энергией<br>
-    • Покупай бусты<br>
-    • Приглашай друзей<br>
-    • Заходи каждый день<br>
-    • Прокачивай уровень<br>
-    • Собирай достижения
+    • Покупай бусты — пассивный доход<br>
+    • Играй в мини-игры<br>
+    • Вводи промокоды<br>
+    • Копи реальные деньги в кошелёк
   </p>
 </div></div>
 
+<div class="modal" id="modal-roulette"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎰 <span>Рулетка</span></div><button class="modal-close" onclick="closeModal('roulette')">×</button></div>
+  <div class="game-area">
+    <div class="roulette-wheel" id="rouletteWheel"></div>
+    <div class="game-result" id="rouletteResult">Крути!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinRoulette()">🎰 Крутить (1000)</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-dice"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎲 <span>Кубик</span></div><button class="modal-close" onclick="closeModal('dice')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="diceValue">🎲</div>
+    <div class="game-result" id="diceResult">Бросай!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="rollDice()">🎲 Бросить (500)</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-coin"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🪙 <span>Монетка</span></div><button class="modal-close" onclick="closeModal('coin')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="coinValue">🪙</div>
+    <div class="game-result" id="coinResult">Орёл или решка?</div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-buy" style="padding:12px 20px;" onclick="flipCoin('heads')">Орёл</button>
+      <button class="btn-buy" style="padding:12px 20px;" onclick="flipCoin('tails')">Решка</button>
+    </div>
+  </div>
+</div></div>
+
 <div class="toast" id="toast"></div>
+</main>
+</div>
 
 <script>
+// ============ ПЕРЕМЕННЫЕ ============
 const tg = window.Telegram?.WebApp;
-
 let telegramId=null, username=null, firstName=null;
 let score=0, energy=1000, maxEnergy=1000, multiplier=1;
-let referrerId=null, rank='-';
 let dailyStreak=0, lastDailyClaim=null, totalTaps=0, level=1;
-let claimedQuests = [];
-let nickname = null;
-let phone = null, region = null, fullName = null;
-let autotapLevel = 0;
-let lastAutotapClaim = null;
-let saveTimer = null;
+let claimedQuests=[], claimedPromos=[];
+let nickname=null, phone=null, region=null, fullName=null;
+let autotapLevel=0, lastAutotapClaim=null, lastTick=Date.now();
+let passiveIncome=0; // очков в час
+let walletBalance=0, walletTotal=0;
+let saveTimer=null, tickTimer=null;
+let upgrades = {}; // купленные бусты
+
+const PROMOS = {
+  'INGSOFT': { coins: 50000, mult: 1, desc: '+50 000 очков' },
+  'DAUD': { coins: 100000, mult: 1, desc: '+100 000 очков' },
+  'WELCOME': { coins: 10000, mult: 1, desc: '+10 000 очков' },
+  'BOOST2': { coins: 0, mult: 2, desc: 'Множитель x2' },
+  'GIFT': { coins: 500000, mult: 1, desc: '+500 000 очков' },
+  'VIP': { coins: 1000000, mult: 3, desc: '+1 000 000 и множитель x3' },
+  'MEGA': { coins: 5000000, mult: 1, desc: '+5 000 000 очков' },
+};
 
 const DAILY_REWARDS = [
-  { day:1, coins:1000, icon:'🪙' },
-  { day:2, coins:2000, icon:'💰' },
-  { day:3, coins:3000, icon:'💵' },
-  { day:4, coins:5000, icon:'💎' },
-  { day:5, coins:10000, icon:'💠' },
-  { day:6, coins:20000, icon:'🏆' },
-  { day:7, coins:50000, icon:'👑' },
+  { coins:1000 }, { coins:2000 }, { coins:3000 }, { coins:5000 },
+  { coins:10000 }, { coins:20000 }, { coins:50000 },
 ];
 
-function toggleMenu() {
-  document.getElementById('sideMenu').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('open');
+// ============ КВЕСТЫ ============
+const QUESTS = [
+  { id:'tap1k', name:'🌟 Новичок', desc:'1 000 тапов', reward:5000, check: () => totalTaps >= 1000 },
+  { id:'tap10k', name:'🔥 Любитель', desc:'10 000 тапов', reward:50000, check: () => totalTaps >= 10000 },
+  { id:'tap50k', name:'⚡ Тапальщик', desc:'50 000 тапов', reward:300000, check: () => totalTaps >= 50000 },
+  { id:'tap100k', name:'💎 Про', desc:'100 000 тапов', reward:1000000, check: () => totalTaps >= 100000 },
+  { id:'tap500k', name:'💠 Мастер', desc:'500 000 тапов', reward:5000000, check: () => totalTaps >= 500000 },
+  { id:'tap1m', name:'🏆 Гуру', desc:'1 000 000 тапов', reward:20000000, check: () => totalTaps >= 1000000 },
+  { id:'tap5m', name:'👑 Легенда', desc:'5 000 000 тапов', reward:100000000, check: () => totalTaps >= 5000000 },
+  { id:'tap10m', name:'🚀 Титан', desc:'10 000 000 тапов', reward:250000000, check: () => totalTaps >= 10000000 },
+  { id:'tap50m', name:'🌌 Космос', desc:'50 000 000 тапов', reward:1000000000, check: () => totalTaps >= 50000000 },
+  { id:'tap100m', name:'🌟 100 млн', desc:'100 000 000 тапов', reward:5000000000, check: () => totalTaps >= 100000000 },
+  { id:'tap500m', name:'💫 500 млн', desc:'500 000 000 тапов', reward:20000000000, check: () => totalTaps >= 500000000 },
+  { id:'tap1b', name:'🌠 Миллиард', desc:'1 000 000 000 тапов', reward:50000000000, check: () => totalTaps >= 1000000000 },
+  { id:'tap10b', name:'✨ 10 млрд', desc:'10 000 000 000 тапов', reward:500000000000, check: () => totalTaps >= 10000000000 },
+  { id:'tap100b', name:'🌟 100 млрд', desc:'100 000 000 000 тапов', reward:5000000000000, check: () => totalTaps >= 100000000000 },
+  { id:'tap1t', name:'💎 1 трлн', desc:'1 000 000 000 000 тапов', reward:50000000000000, check: () => totalTaps >= 1000000000000 },
+  { id:'tap100t', name:'👑 100 трлн', desc:'100 000 000 000 000 тапов', reward:500000000000000, check: () => totalTaps >= 100000000000000 },
+  { id:'lvl5', name:'⬆️ Ур. 5', desc:'Достичь 5 уровня', reward:10000, check: () => level >= 5 },
+  { id:'lvl10', name:'⬆️ Ур. 10', desc:'Достичь 10 уровня', reward:100000, check: () => level >= 10 },
+  { id:'lvl25', name:'⬆️ Ур. 25', desc:'Достичь 25 уровня', reward:1000000, check: () => level >= 25 },
+  { id:'lvl50', name:'⬆️ Ур. 50', desc:'Достичь 50 уровня', reward:10000000, check: () => level >= 50 },
+  { id:'lvl100', name:'⬆️ Ур. 100', desc:'Достичь 100 уровня', reward:1000000000, check: () => level >= 100 },
+  { id:'mult2', name:'⚡ x2', desc:'Купить множитель x2', reward:50000, check: () => multiplier >= 2 },
+  { id:'mult5', name:'🔥 x5', desc:'Купить множитель x5', reward:500000, check: () => multiplier >= 5 },
+  { id:'mult10', name:'💎 x10', desc:'Купить множитель x10', reward:5000000, check: () => multiplier >= 10 },
+  { id:'promo', name:'🎫 Промокод', desc:'Активировать промокод', reward:25000, check: () => claimedPromos.length >= 1 },
+];
+
+// ============ ДОСТИЖЕНИЯ ============
+const ACHIEVEMENTS = [
+  { id:'first', icon:'🌟', name:'Первый тап', desc:'1 тап', check: () => totalTaps >= 1 },
+  { id:'taps100', icon:'💯', name:'Сотня', desc:'100 тапов', check: () => totalTaps >= 100 },
+  { id:'taps1k', icon:'🔥', name:'Тысяча', desc:'1000 тапов', check: () => totalTaps >= 1000 },
+  { id:'taps10k', icon:'⚡', name:'10К', desc:'10 000 тапов', check: () => totalTaps >= 10000 },
+  { id:'taps100k', icon:'💎', name:'100К', desc:'100 000 тапов', check: () => totalTaps >= 100000 },
+  { id:'taps1m', icon:'👑', name:'Миллион тапов', desc:'1 000 000 тапов', check: () => totalTaps >= 1000000 },
+  { id:'score1k', icon:'💰', name:'Тысячник', desc:'1000 очков', check: () => score >= 1000 },
+  { id:'score100k', icon:'💵', name:'Сто тысяч', desc:'100 000 очков', check: () => score >= 100000 },
+  { id:'score1m', icon:'💎', name:'Миллион', desc:'1 000 000 очков', check: () => score >= 1000000 },
+  { id:'score1b', icon:'👑', name:'Миллиард', desc:'1 000 000 000 очков', check: () => score >= 1000000000 },
+  { id:'mult5', icon:'⚡', name:'Магнат', desc:'Множитель x5', check: () => multiplier >= 5 },
+  { id:'mult25', icon:'🌟', name:'Император', desc:'Множитель x25', check: () => multiplier >= 25 },
+  { id:'lvl10', icon:'⬆️', name:'Десятка', desc:'Уровень 10', check: () => level >= 10 },
+  { id:'lvl50', icon:'🚀', name:'Полтинник', desc:'Уровень 50', check: () => level >= 50 },
+  { id:'auto', icon:'🤖', name:'Автоматизация', desc:'Купить автоклик', check: () => autotapLevel > 0 },
+  { id:'passive', icon:'⏰', name:'Пассив', desc:'Пассивный доход', check: () => passiveIncome > 0 },
+  { id:'promo1', icon:'🎫', name:'Промо-мастер', desc:'Активировать промокод', check: () => claimedPromos.length >= 1 },
+  { id:'wallet', icon:'💰', name:'Богач', desc:'Деньги в кошельке', check: () => walletTotal > 0 },
+];
+
+// ============ ГЕНЕРАЦИЯ 500 БУСТОВ ============
+const BOOST_NAMES = [
+  {n:'⚡ Множитель', t:'mult', base:100000, step:2},
+  {n:'🔥 Супер-множитель', t:'mult', base:500000, step:5},
+  {n:'💎 Мега-множитель', t:'mult', base:2000000, step:10},
+  {n:'👑 Мега-мульт', t:'mult', base:10000000, step:25},
+  {n:'🔋 Энергия', t:'energy', base:50000, step:1000},
+  {n:'⚡ Энергия+', t:'energy', base:250000, step:5000},
+  {n:'🌌 Энергия++', t:'energy', base:2000000, step:25000},
+  {n:'🤖 Автоклик', t:'auto', base:100000000, step:1},
+  {n:'🤖 Автоклик+', t:'auto', base:500000000, step:2},
+  {n:'🤖 Автоклик++', t:'auto', base:2000000000, step:5},
+  {n:'⏰ Пассив +1K/ч', t:'passive', base:1000000, step:1000},
+  {n:'⏰ Пассив +10K/ч', t:'passive', base:10000000, step:10000},
+  {n:'⏰ Пассив +100K/ч', t:'passive', base:100000000, step:100000},
+  {n:'💰 Кошелёк +10₽', t:'wallet', base:5000000, step:10},
+  {n:'💰 Кошелёк +100₽', t:'wallet', base:50000000, step:100},
+  {n:'💸 Кошелёк +1000₽', t:'wallet', base:500000000, step:1000},
+  {n:'🎁 Бонус-квест', t:'quest_bonus', base:500000, step:5000},
+  {n:'🎰 Удача', t:'luck', base:2000000, step:1},
+  {n:'⭐ Опыт', t:'xp', base:1000000, step:1000},
+  {n:'🏆 Трофей', t:'trophy', base:10000000, step:1},
+];
+
+const BOOSTS = [];
+let boostId = 0;
+for (let lvl = 0; lvl < 25; lvl++) {
+  for (const b of BOOST_NAMES) {
+    boostId++;
+    const price = Math.floor(b.base * Math.pow(2, lvl));
+    const value = b.step * Math.pow(2, lvl);
+    BOOSTS.push({
+      id: 'b' + boostId,
+      name: b.n + ' Lv.' + (lvl+1),
+      desc: b.t === 'mult' ? 'Множитель +' + value :
+            b.t === 'energy' ? 'Макс. энергия +' + value.toLocaleString() :
+            b.t === 'auto' ? 'Автоклик +' + value + '/сек' :
+            b.t === 'passive' ? 'Доход +' + value.toLocaleString() + '/час' :
+            b.t === 'wallet' ? 'Кошелёк +' + value + '₽' :
+            b.t === 'quest_bonus' ? 'Бонус к квестам +' + value :
+            b.t === 'luck' ? 'Удача +' + value + '%' :
+            b.t === 'xp' ? 'Опыт +' + value :
+            b.t === 'trophy' ? 'Трофеи +' + value :
+            'Бонус +' + value,
+      price: price,
+      type: b.t,
+      value: value,
+      apply: function() {
+        if (b.t === 'mult') multiplier = Math.max(multiplier, 1 + Math.floor(value/10));
+        else if (b.t === 'energy') maxEnergy += value;
+        else if (b.t === 'auto') autotapLevel = Math.max(autotapLevel, value);
+        else if (b.t === 'passive') passiveIncome += value;
+        else if (b.t === 'wallet') { walletBalance += value; walletTotal += value; }
+      }
+    });
+  }
 }
 
+// ============ УТИЛИТЫ ============
+function fmt(n) {
+  if (n >= 1e15) return (n/1e15).toFixed(2) + 'Q';
+  if (n >= 1e12) return (n/1e12).toFixed(2) + 'T';
+  if (n >= 1e9) return (n/1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(2) + 'K';
+  return Math.floor(n).toLocaleString();
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function toggleMenu() {
+  document.getElementById('sideMenu')?.classList.toggle('open');
+  document.getElementById('overlay')?.classList.toggle('open');
+}
+
+function openModal(name) {
+  document.getElementById('modal-' + name)?.classList.add('active');
+  if (name === 'quests') loadQuests();
+  if (name === 'boosts') loadBoosts();
+  if (name === 'achievements') loadAchievements();
+  if (name === 'daily') loadDaily();
+  if (name === 'stats') loadStats();
+  if (name === 'profile') loadProfile();
+  if (name === 'wallet') loadWallet();
+  if (name === 'referral') loadReferral();
+  if (name === 'promo') loadPromoHistory();
+}
+function closeModal(name) { document.getElementById('modal-' + name)?.classList.remove('active'); }
+
+// ============ ПОЛЬЗОВАТЕЛЬ ============
 function getTelegramUser() {
   if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
     const u = tg.initDataUnsafe.user;
@@ -281,62 +664,79 @@ function getTelegramUser() {
   return false;
 }
 
+// ============ СОХРАНЕНИЕ ============
 function saveToLocal() {
   const user = {
     nickname, phone, region, fullName,
     score, energy, maxEnergy, multiplier, totalTaps, level,
-    claimedQuests, dailyStreak, lastDailyClaim, autotapLevel, lastAutotapClaim
+    claimedQuests, claimedPromos, dailyStreak, lastDailyClaim,
+    autotapLevel, lastAutotapClaim, passiveIncome,
+    walletBalance, walletTotal, upgrades
   };
-  localStorage.setItem('ingsoft_user', JSON.stringify(user));
+  try { localStorage.setItem('ingsoft_user', JSON.stringify(user)); } catch(e) {}
 }
 
 function scheduleSave() {
   if (saveTimer) return;
-  saveTimer = setTimeout(() => {
-    saveToLocal();
-    saveTimer = null;
-  }, 300);
+  saveTimer = setTimeout(() => { saveToLocal(); saveTimer = null; }, 500);
 }
 
+// ============ ЗАГРУЗКА ============
 function loadPlayer() {
-  const regScreen = document.getElementById('regScreen');
   const saved = localStorage.getItem('ingsoft_user');
   if (!saved) {
-    regScreen.style.display = 'flex';
+    document.getElementById('regScreen').style.display = 'flex';
     return;
   }
-  const user = JSON.parse(saved);
-  nickname = user.nickname || null;
-  phone = user.phone || null;
-  region = user.region || null;
-  fullName = user.fullName || null;
-  score = user.score || 0;
-  energy = user.energy ?? 1000;
-  maxEnergy = user.maxEnergy ?? 1000;
-  multiplier = user.multiplier ?? 1;
-  dailyStreak = user.dailyStreak ?? 0;
-  lastDailyClaim = user.lastDailyClaim || null;
-  totalTaps = user.totalTaps ?? 0;
-  level = user.level ?? 1;
-  claimedQuests = user.claimedQuests || [];
-  autotapLevel = user.autotapLevel ?? 0;
-  lastAutotapClaim = user.lastAutotapClaim || null;
-  regScreen.style.display = 'none';
-  updateUI();
+  try {
+    const u = JSON.parse(saved);
+    nickname = u.nickname || null;
+    phone = u.phone || null;
+    region = u.region || null;
+    fullName = u.fullName || null;
+    score = u.score || 0;
+    energy = u.energy ?? 1000;
+    maxEnergy = u.maxEnergy ?? 1000;
+    multiplier = u.multiplier ?? 1;
+    dailyStreak = u.dailyStreak ?? 0;
+    lastDailyClaim = u.lastDailyClaim || null;
+    totalTaps = u.totalTaps ?? 0;
+    level = u.level ?? 1;
+    claimedQuests = u.claimedQuests || [];
+    claimedPromos = u.claimedPromos || [];
+    autotapLevel = u.autotapLevel ?? 0;
+    lastAutotapClaim = u.lastAutotapClaim || null;
+    passiveIncome = u.passiveIncome ?? 0;
+    walletBalance = u.walletBalance ?? 0;
+    walletTotal = u.walletTotal ?? 0;
+    upgrades = u.upgrades || {};
+    document.getElementById('regScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    updateUI();
+    buildSidebar();
+    return true;
+  } catch(e) {
+    document.getElementById('regScreen').style.display = 'flex';
+    return false;
+  }
 }
 
+// ============ UI ============
 function updateUI() {
-  document.getElementById('scoreBig').textContent = score.toLocaleString();
-  document.getElementById('statScore').textContent = score.toLocaleString();
+  document.getElementById('scoreBig').textContent = fmt(score);
+  document.getElementById('statScore').textContent = fmt(score);
   document.getElementById('statMult').textContent = 'x' + multiplier;
-  document.getElementById('statRank').textContent = rank;
-  document.getElementById('energyFill').style.width = (energy / maxEnergy * 100) + '%';
-  document.getElementById('energyText').textContent = energy + ' / ' + maxEnergy;
+  document.getElementById('statPerSec').textContent = fmt(autotapLevel * multiplier) + '/с';
+  document.getElementById('energyFill').style.width = Math.min(100, (energy / maxEnergy * 100)) + '%';
+  document.getElementById('energyText').textContent = Math.floor(energy) + ' / ' + maxEnergy;
   const levelCost = level * 1000;
   document.getElementById('levelFill').style.width = Math.min(100, (score / levelCost) * 100) + '%';
-  document.getElementById('levelText').textContent = 'Ур. ' + level + ' — ' + score.toLocaleString() + ' / ' + levelCost.toLocaleString();
+  document.getElementById('levelText').textContent = 'Ур. ' + level + ' — ' + fmt(score) + ' / ' + fmt(levelCost);
+  document.getElementById('userName').textContent = nickname || firstName || 'Игрок';
+  document.getElementById('avatar').textContent = (nickname || firstName || '?')[0].toUpperCase();
 }
 
+// ============ TAP ============
 document.getElementById('tapBtn').addEventListener('click', (e) => {
   if (energy <= 0) { showToast('⚡ Энергия кончилась!'); return; }
   score += multiplier; energy -= 1; totalTaps += 1;
@@ -358,203 +758,39 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
   scheduleSave();
 });
 
-function openModal(name) {
-  document.getElementById('modal-' + name).classList.add('active');
-  if (name === 'leaderboard') loadLeaderboard();
-  if (name === 'quests') loadQuests();
-  if (name === 'boosts') loadBoosts();
-  if (name === 'achievements') loadAchievements();
-  if (name === 'referral') loadReferral();
-  if (name === 'daily') loadDaily();
-  if (name === 'stats') loadStats();
-  if (name === 'profile') loadProfile();
-}
-function closeModal(name) { document.getElementById('modal-' + name).classList.remove('active'); }
-
-function loadLeaderboard() {
-  const el = document.getElementById('leaderList');
-  el.innerHTML = '<p style="color:#888;text-align:center;">Лидерборд появится после подключения сервера</p>';
-}
-
-const QUESTS = [
-  { id:'tap1k', name:'🌟 Новичок', desc:'1 000 тапов', reward:5000, check: () => totalTaps >= 1000 },
-  { id:'tap10k', name:'🔥 Любитель', desc:'10 000 тапов', reward:50000, check: () => totalTaps >= 10000 },
-  { id:'tap50k', name:'⚡ Тапальщик', desc:'50 000 тапов', reward:300000, check: () => totalTaps >= 50000 },
-  { id:'tap100k', name:'💎 Про', desc:'100 000 тапов', reward:1000000, check: () => totalTaps >= 100000 },
-  { id:'tap300k', name:'💠 Мастер', desc:'300 000 тапов', reward:3000000, check: () => totalTaps >= 300000 },
-  { id:'tap600k', name:'🏆 Гуру', desc:'600 000 тапов', reward:8000000, check: () => totalTaps >= 600000 },
-  { id:'tap1m', name:'👑 Легенда', desc:'1 000 000 тапов', reward:20000000, check: () => totalTaps >= 1000000 },
-  { id:'tap5m', name:'🚀 Титан', desc:'5 000 000 тапов', reward:100000000, check: () => totalTaps >= 5000000 },
-  { id:'tap10m', name:'🌌 Космос', desc:'10 000 000 тапов', reward:250000000, check: () => totalTaps >= 10000000 },
-  { id:'tap100m', name:'🌟 100 млн', desc:'100 000 000 тапов', reward:5000000000, check: () => totalTaps >= 100000000 },
-  { id:'tap1b', name:'💫 Миллиард', desc:'1 000 000 000 тапов', reward:50000000000, check: () => totalTaps >= 1000000000 },
-  { id:'tap100b', name:'🌠 100 млрд', desc:'100 000 000 000 тапов', reward:5000000000000, check: () => totalTaps >= 100000000000 },
-  { id:'tap100t', name:'✨ 100 трлн', desc:'100 000 000 000 000 тапов', reward:500000000000000, check: () => totalTaps >= 100000000000000 },
-  { id:'inv1', name:'👥 Первый друг', desc:'Пригласить 1 друга', reward:5000, check: () => false },
-  { id:'inv5', name:'👥 Компания', desc:'Пригласить 5 друзей', reward:50000, check: () => false },
-  { id:'inv10', name:'👥 Команда', desc:'Пригласить 10 друзей', reward:200000, check: () => false },
-  { id:'inv15', name:'👥 Отряд', desc:'Пригласить 15 друзей', reward:500000, check: () => false },
-  { id:'inv25', name:'👥 Армия', desc:'Пригласить 25 друзей', reward:2000000, check: () => false },
-  { id:'inv50', name:'👥 Легион', desc:'Пригласить 50 друзей', reward:10000000, check: () => false },
-  { id:'inv100', name:'👥 Империя', desc:'Пригласить 100 друзей', reward:100000000, check: () => false },
-  { id:'lvl5', name:'⬆️ Уровень 5', desc:'Достичь 5 уровня', reward:10000, check: () => level >= 5 },
-  { id:'lvl10', name:'⬆️ Уровень 10', desc:'Достичь 10 уровня', reward:100000, check: () => level >= 10 },
-  { id:'lvl25', name:'⬆️ Уровень 25', desc:'Достичь 25 уровня', reward:1000000, check: () => level >= 25 },
-  { id:'lvl50', name:'⬆️ Уровень 50', desc:'Достичь 50 уровня', reward:10000000, check: () => level >= 50 },
-];
-
-function loadQuests() {
-  const el = document.getElementById('questsList');
-  el.innerHTML = QUESTS.map(q => {
-    const isClaimed = claimedQuests.includes(q.id);
-    const canClaim = q.check() && !isClaimed;
-    let btn;
-    if (isClaimed) {
-      btn = '<button class="btn-buy" disabled>✅ Забрано</button>';
-    } else if (canClaim) {
-      btn = '<button class="btn-buy" onclick="claimQuest(\'' + q.id + '\')">Забрать</button>';
-    } else {
-      btn = '<button class="btn-buy" disabled>Не выполнено</button>';
-    }
-    return '<div class="item-row"><div class="item-info"><div class="item-name">' + q.name + '</div><div class="item-desc">' + q.desc + '</div><div class="item-reward">💰 +' + q.reward.toLocaleString() + '</div></div>' + btn + '</div>';
-  }).join('');
-}
-function claimQuest(id) {
-  const q = QUESTS.find(x => x.id === id);
-  if (!q || !q.check() || claimedQuests.includes(id)) return;
-  score += q.reward;
-  claimedQuests.push(id);
-  updateUI();
-  scheduleSave();
-  showToast('+' + q.reward.toLocaleString() + ' очков!');
-  loadQuests();
+// ============ SIDEBAR ============
+function buildSidebar() {
+  const items = [
+    { icon:'🏠', label:'Главная', action:'closeAllModals' },
+    { icon:'🏆', label:'Топ', action:'openModal(\'leaderboard\')' },
+    { icon:'📋', label:'Квесты', action:'openModal(\'quests\')' },
+    { icon:'⚡', label:'Бусты', action:'openModal(\'boosts\')' },
+    { icon:'🏅', label:'Достижения', action:'openModal(\'achievements\')' },
+    { icon:'👥', label:'Друзья', action:'openModal(\'referral\')' },
+    { icon:'🎁', label:'Награды', action:'openModal(\'daily\')' },
+    { icon:'📊', label:'Статистика', action:'openModal(\'stats\')' },
+    { icon:'👤', label:'Профиль', action:'openModal(\'profile\')' },
+    { icon:'🎫', label:'Промокод', action:'openModal(\'promo\')' },
+    { icon:'💰', label:'Кошелёк', action:'openModal(\'wallet\')' },
+    { icon:'🎰', label:'Рулетка', action:'openModal(\'roulette\')' },
+    { icon:'🎲', label:'Кубик', action:'openModal(\'dice\')' },
+    { icon:'🪙', label:'Монетка', action:'openModal(\'coin\')' },
+    { icon:'ℹ️', label:'О игре', action:'openModal(\'about\')' },
+  ];
+  const sb = document.getElementById('sidebar');
+  sb.innerHTML = items.map(it =>
+    '<div class="sidebar-item" onclick="' + it.action + '">' +
+      '<div class="sidebar-icon">' + it.icon + '</div>' +
+      '<div class="sidebar-label">' + it.label + '</div>' +
+    '</div>'
+  ).join('');
 }
 
-const BOOSTS = [
-  { id:'autotap1', name:'🤖 Автоклик +1/сек', desc:'Автоматически тапает', price:100000000, apply: () => autotapLevel = Math.max(autotapLevel, 1) },
-  { id:'autotap2', name:'🤖 Автоклик +2/сек', desc:'Ускоренный автоклик', price:300000000, apply: () => autotapLevel = Math.max(autotapLevel, 2) },
-  { id:'autotap5', name:'🤖 Автоклик +5/сек', desc:'Быстрый автоклик', price:1000000000, apply: () => autotapLevel = Math.max(autotapLevel, 5) },
-  { id:'autotap10', name:'🤖 Автоклик +10/сек', desc:'Очень быстрый', price:5000000000, apply: () => autotapLevel = Math.max(autotapLevel, 10) },
-  { id:'autotap20', name:'🤖 Автоклик +20/сек', desc:'Максимальный', price:50000000000, apply: () => autotapLevel = Math.max(autotapLevel, 20) },
-  { id:'mult2', name:'⚡ Множитель x2', desc:'Удваивает очки', price:100000, apply: () => multiplier = Math.max(multiplier, 2) },
-  { id:'mult5', name:'🔥 Множитель x5', desc:'Пятикратный', price:5000000, apply: () => multiplier = Math.max(multiplier, 5) },
-  { id:'mult10', name:'💎 Множитель x10', desc:'Десятикратный', price:500000000, apply: () => multiplier = Math.max(multiplier, 10) },
-  { id:'mult25', name:'👑 Множитель x25', desc:'Мега', price:5000000000, apply: () => multiplier = Math.max(multiplier, 25) },
-  { id:'energy1000', name:'🔋 +1000 энергии', desc:'Больше запас', price:50000, apply: () => maxEnergy += 1000 },
-  { id:'energy10000', name:'🔋 +10 000 энергии', desc:'Огромный запас', price:5000000, apply: () => maxEnergy += 10000 },
-];
-
-function loadBoosts() {
-  const el = document.getElementById('boostsList');
-  el.innerHTML = BOOSTS.map(b => '<div class="item-row"><div class="item-info"><div class="item-name">' + b.name + '</div><div class="item-desc">' + b.desc + '</div></div><button class="btn-buy" ' + (score >= b.price ? '' : 'disabled') + ' onclick="buyBoost(\'' + b.id + '\')">' + b.price.toLocaleString() + '</button></div>').join('');
-}
-function buyBoost(id) {
-  const b = BOOSTS.find(x => x.id === id);
-  if (!b || score < b.price) return;
-  score -= b.price; b.apply(); updateUI(); scheduleSave();
-  showToast('✅ Куплено: ' + b.name);
-  loadBoosts();
+function closeAllModals() {
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
 }
 
-const ACHIEVEMENTS = [
-  { id:'first', icon:'🌟', name:'Первый тап', desc:'Сделать первый тап', check: () => totalTaps >= 1 },
-  { id:'taps100', icon:'💯', name:'Сотня тапов', desc:'100 тапов', check: () => totalTaps >= 100 },
-  { id:'taps1000', icon:'🔥', name:'Тысяча тапов', desc:'1000 тапов', check: () => totalTaps >= 1000 },
-  { id:'taps10000', icon:'⚡', name:'10К тапов', desc:'10 000 тапов', check: () => totalTaps >= 10000 },
-  { id:'score1000', icon:'💰', name:'Тысячник', desc:'1000 очков', check: () => score >= 1000 },
-  { id:'score100000', icon:'💎', name:'Сто тысяч', desc:'100 000 очков', check: () => score >= 100000 },
-  { id:'score1m', icon:'👑', name:'Миллионер', desc:'1 000 000 очков', check: () => score >= 1000000 },
-  { id:'mult5', icon:'⚡', name:'Магнат', desc:'Множитель x5', check: () => multiplier >= 5 },
-  { id:'mult10', icon:'🌟', name:'Император', desc:'Множитель x10', check: () => multiplier >= 10 },
-  { id:'lvl5', icon:'⬆️', name:'Пятёрочка', desc:'Уровень 5', check: () => level >= 5 },
-  { id:'lvl10', icon:'🚀', name:'Десятка', desc:'Уровень 10', check: () => level >= 10 },
-];
-
-function loadAchievements() {
-  const el = document.getElementById('achList');
-  el.innerHTML = ACHIEVEMENTS.map(a => '<div class="achieve-item ' + (a.check() ? 'unlocked' : 'locked') + '"><div class="achieve-icon">' + a.icon + '</div><div class="achieve-text"><div class="achieve-name">' + a.name + '</div><div class="achieve-desc">' + a.desc + '</div></div></div>').join('');
-}
-
-function loadReferral() {
-  document.getElementById('refLink').textContent = 'Рефералка появится после подключения сервера';
-  document.getElementById('refCount').textContent = '0';
-}
-function copyRefLink() {
-  showToast('Рефералка появится позже');
-}
-
-function loadDaily() {
-  const el = document.getElementById('dailyContent');
-  const today = new Date().toISOString().split('T')[0];
-  const canClaim = lastDailyClaim !== today;
-  const nextDay = canClaim ? (dailyStreak % 7) : (dailyStreak - 1) % 7;
-  let html = '<div class="daily-grid">';
-  for (let i = 0; i < 7; i++) {
-    const claimed = i < (dailyStreak % 7);
-    const isToday = i === nextDay && canClaim;
-    const reward = DAILY_REWARDS[i];
-    html += '<div class="daily-day ' + (claimed ? 'claimed' : '') + ' ' + (isToday ? 'today' : '') + '"><div style="font-size:14px;">' + (claimed ? '✅' : reward.icon) + '</div><div style="font-size:9px;">День ' + (i+1) + '</div><div class="daily-reward">' + (claimed ? '✓' : reward.coins.toLocaleString()) + '</div></div>';
-  }
-  html += '</div>';
-  if (canClaim) {
-    const r = DAILY_REWARDS[nextDay];
-    html += '<p style="text-align:center;margin-bottom:16px;color:#ccc;">Сегодня: <b style="color:var(--ing-gold)">' + r.coins.toLocaleString() + '</b> очков</p>';
-    html += '<button class="btn-buy" style="width:100%;padding:16px;font-size:16px;" onclick="claimDaily()">🎁 Забрать</button>';
-  } else {
-    html += '<p style="text-align:center;color:#888;">Серия: <b style="color:var(--ing-red);">' + dailyStreak + ' дней</b></p>';
-    html += '<p style="text-align:center;color:#666;font-size:13px;margin-top:8px;">Возвращайся завтра!</p>';
-  }
-  el.innerHTML = html;
-}
-
-function claimDaily() {
-  const today = new Date().toISOString().split('T')[0];
-  if (lastDailyClaim === today) { showToast('Уже забрано сегодня!'); return; }
-  const nextDay = dailyStreak % 7;
-  const reward = DAILY_REWARDS[nextDay].coins;
-  score += reward;
-  dailyStreak += 1;
-  lastDailyClaim = today;
-  updateUI();
-  scheduleSave();
-  showToast('🎁 +' + reward.toLocaleString() + ' очков!');
-  loadDaily();
-}
-
-function loadStats() {
-  document.getElementById('statsContent').innerHTML =
-    '<div class="profile-row"><span>Очки</span><span>' + score.toLocaleString() + '</span></div>' +
-    '<div class="profile-row"><span>Всего тапов</span><span>' + totalTaps.toLocaleString() + '</span></div>' +
-    '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
-    '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
-    '<div class="profile-row"><span>Энергия</span><span>' + energy + ' / ' + maxEnergy + '</span></div>' +
-    '<div class="profile-row"><span>Автоклик</span><span>+' + autotapLevel + '/сек</span></div>' +
-    '<div class="profile-row"><span>Серия входов</span><span>' + dailyStreak + ' дн.</span></div>' +
-    '<div class="profile-row"><span>Достижений</span><span>' + ACHIEVEMENTS.filter(a => a.check()).length + ' / ' + ACHIEVEMENTS.length + '</span></div>';
-}
-
-function loadProfile() {
-  document.getElementById('profileContent').innerHTML =
-    '<div class="profile-avatar">' + (nickname || '?')[0].toUpperCase() + '</div>' +
-    '<div style="text-align:center;font-size:22px;font-weight:800;margin-bottom:4px;">' + (nickname || 'Игрок') + '</div>' +
-    '<div style="text-align:center;color:#888;font-size:13px;margin-bottom:20px;">@' + (username || 'аноним') + '</div>' +
-    '<div class="profile-row"><span>Очки</span><span>' + score.toLocaleString() + '</span></div>' +
-    '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
-    '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
-    '<div class="profile-row"><span>Тапов</span><span>' + totalTaps.toLocaleString() + '</span></div>';
-}
-
-function shareGame() {
-  const link = 'https://t.me/ingsoft_tap_bot/ingsoft_tap';
-  if (tg) tg.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('🔥 Играй в IngSoft Tap!'));
-}
-
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2000);
-}
-
+// ============ РЕГИСТРАЦИЯ ============
 let regData = {};
 
 function checkRegistration() {
@@ -569,12 +805,10 @@ function checkRegistration() {
   if (!fn || fn.length < 5) { showToast('Введи ФИО'); return; }
 
   regData = { nickname: nick, phone: ph, region: reg, fullName: fn };
-
   document.getElementById('confNickname').textContent = nick;
   document.getElementById('confPhone').textContent = ph;
   document.getElementById('confRegion').textContent = reg;
   document.getElementById('confFullName').textContent = fn;
-
   document.getElementById('regScreen').style.display = 'none';
   document.getElementById('confirmScreen').style.display = 'flex';
 }
@@ -586,63 +820,295 @@ function backToReg() {
 
 function completeRegistration() {
   if (!regData.nickname) { showToast('Заполни данные'); return; }
-
   nickname = regData.nickname;
   phone = regData.phone;
   region = regData.region;
   fullName = regData.fullName;
-  score = 1000;
-  energy = 1000;
-  maxEnergy = 1000;
-  multiplier = 1;
-  level = 1;
-  totalTaps = 0;
-  dailyStreak = 0;
-  autotapLevel = 0;
-  claimedQuests = [];
+  score = 1000; energy = 1000; maxEnergy = 1000; multiplier = 1;
+  level = 1; totalTaps = 0; dailyStreak = 0; autotapLevel = 0;
+  claimedQuests = []; claimedPromos = [];
+  passiveIncome = 0; walletBalance = 0; walletTotal = 0;
   lastAutotapClaim = new Date().toISOString();
-
   saveToLocal();
-  showToast('🎉 Добро пожаловать, ' + nickname + '! +1000 бонус');
   document.getElementById('confirmScreen').style.display = 'none';
   document.getElementById('regScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  showToast('🎉 Добро пожаловать, ' + nickname + '! +1000 бонус');
   updateUI();
+  buildSidebar();
 }
 
-function applyOfflineAutotap() {
-  if (!lastAutotapClaim || autotapLevel <= 0) return;
-  const now = Date.now();
-  const last = new Date(lastAutotapClaim).getTime();
-  const seconds = Math.floor((now - last) / 1000);
-  if (seconds < 5) return;
-  const earned = seconds * autotapLevel * multiplier;
-  score += earned;
-  lastAutotapClaim = new Date().toISOString();
-  updateUI();
-  saveToLocal();
-  if (earned > 0) showToast('🤖 Автоклик начислил ' + earned.toLocaleString());
+// ============ КВЕСТЫ ============
+function loadQuests() {
+  const el = document.getElementById('questsList');
+  el.innerHTML = QUESTS.map(q => {
+    const isClaimed = claimedQuests.includes(q.id);
+    const canClaim = q.check() && !isClaimed;
+    let btn;
+    if (isClaimed) btn = '<button class="btn-buy" disabled>✅ Забрано</button>';
+    else if (canClaim) btn = '<button class="btn-buy green" onclick="claimQuest(\'' + q.id + '\')">Забрать</button>';
+    else btn = '<button class="btn-buy" disabled>Не выполнено</button>';
+    return '<div class="item-row"><div class="item-info"><div class="item-name">' + q.name + '</div><div class="item-desc">' + q.desc + '</div><div class="item-reward">💰 +' + fmt(q.reward) + '</div></div>' + btn + '</div>';
+  }).join('');
 }
 
+function claimQuest(id) {
+  const q = QUESTS.find(x => x.id === id);
+  if (!q || !q.check() || claimedQuests.includes(id)) return;
+  score += q.reward;
+  claimedQuests.push(id);
+  updateUI(); scheduleSave();
+  showToast('+' + fmt(q.reward) + ' очков!');
+  loadQuests();
+}
+
+// ============ БУСТЫ ============
+let boostPage = 0;
+const BOOSTS_PER_PAGE = 20;
+
+function loadBoosts() {
+  const el = document.getElementById('boostsList');
+  const start = boostPage * BOOSTS_PER_PAGE;
+  const end = start + BOOSTS_PER_PAGE;
+  const pageBoosts = BOOSTS.slice(start, end);
+  const totalPages = Math.ceil(BOOSTS.length / BOOSTS_PER_PAGE);
+
+  let html = '';
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:12px;gap:8px;">';
+  html += '<button class="btn-buy" ' + (boostPage === 0 ? 'disabled' : '') + ' onclick="changeBoostPage(-1)">← Назад</button>';
+  html += '<div style="color:#888;font-size:12px;padding:8px;">Стр. ' + (boostPage+1) + ' / ' + totalPages + '</div>';
+  html += '<button class="btn-buy" ' + (boostPage >= totalPages-1 ? 'disabled' : '') + ' onclick="changeBoostPage(1)">Далее →</button>';
+  html += '</div>';
+
+  html += pageBoosts.map(b => {
+    const owned = upgrades[b.id];
+    const canBuy = score >= b.price && !owned;
+    let btn;
+    if (owned) btn = '<button class="btn-buy" disabled>✅ Куплено</button>';
+    else if (canBuy) btn = '<button class="btn-buy green" onclick="buyBoost(\'' + b.id + '\')">' + fmt(b.price) + '</button>';
+    else btn = '<button class="btn-buy" disabled>' + fmt(b.price) + '</button>';
+    return '<div class="item-row"><div class="item-info"><div class="item-name">' + b.name + '</div><div class="item-desc">' + b.desc + '</div></div>' + btn + '</div>';
+  }).join('');
+
+  el.innerHTML = html;
+}
+
+function changeBoostPage(dir) {
+  boostPage += dir;
+  if (boostPage < 0) boostPage = 0;
+  if (boostPage >= Math.ceil(BOOSTS.length / BOOSTS_PER_PAGE)) boostPage = Math.ceil(BOOSTS.length / BOOSTS_PER_PAGE) - 1;
+  loadBoosts();
+}
+
+function buyBoost(id) {
+  const b = BOOSTS.find(x => x.id === id);
+  if (!b || score < b.price || upgrades[b.id]) return;
+  score -= b.price;
+  upgrades[b.id] = true;
+  b.apply();
+  updateUI(); scheduleSave();
+  showToast('✅ Куплено: ' + b.name);
+  loadBoosts();
+}
+
+// ============ ДОСТИЖЕНИЯ ============
+function loadAchievements() {
+  const el = document.getElementById('achList');
+  el.innerHTML = ACHIEVEMENTS.map(a =>
+    '<div class="achieve-item ' + (a.check() ? 'unlocked' : 'locked') + '"><div class="achieve-icon">' + a.icon + '</div><div class="achieve-text"><div class="achieve-name">' + a.name + '</div><div class="achieve-desc">' + a.desc + '</div></div></div>'
+  ).join('');
+}
+
+// ============ РЕФЕРАЛКА ============
+function loadReferral() {
+  document.getElementById('refLink').textContent = 'https://t.me/ingsoft_tap_bot/ingsoft_tap?startapp=ref_' + telegramId;
+  document.getElementById('refCount').textContent = '0';
+}
+function copyRefLink() {
+  const link = document.getElementById('refLink').textContent;
+  navigator.clipboard.writeText(link).then(() => showToast('✅ Скопировано!'));
+}
+
+// ============ НАГРАДЫ ============
+function loadDaily() {
+  const el = document.getElementById('dailyContent');
+  const today = new Date().toISOString().split('T')[0];
+  const canClaim = lastDailyClaim !== today;
+  const nextDay = canClaim ? (dailyStreak % 7) : (dailyStreak - 1) % 7;
+  let html = '<div class="daily-grid">';
+  for (let i = 0; i < 7; i++) {
+    const claimed = i < (dailyStreak % 7);
+    const isToday = i === nextDay && canClaim;
+    const r = DAILY_REWARDS[i];
+    html += '<div class="daily-day ' + (claimed ? 'claimed' : '') + ' ' + (isToday ? 'today' : '') + '"><div style="font-size:14px;">' + (claimed ? '✅' : '🎁') + '</div><div style="font-size:9px;">День ' + (i+1) + '</div><div class="daily-reward">' + (claimed ? '✓' : fmt(r.coins)) + '</div></div>';
+  }
+  html += '</div>';
+  if (canClaim) {
+    const r = DAILY_REWARDS[nextDay];
+    html += '<p style="text-align:center;margin-bottom:14px;color:#ccc;">Сегодня: <b style="color:var(--ing-gold)">' + fmt(r.coins) + '</b></p>';
+    html += '<button class="btn-buy green" style="width:100%;padding:14px;" onclick="claimDaily()">🎁 Забрать</button>';
+  } else {
+    html += '<p style="text-align:center;color:#888;">Серия: <b style="color:var(--ing-red);">' + dailyStreak + ' дней</b></p>';
+  }
+  el.innerHTML = html;
+}
+
+function claimDaily() {
+  const today = new Date().toISOString().split('T')[0];
+  if (lastDailyClaim === today) { showToast('Уже забрано сегодня!'); return; }
+  const reward = DAILY_REWARDS[dailyStreak % 7].coins;
+  score += reward;
+  dailyStreak += 1;
+  lastDailyClaim = today;
+  updateUI(); scheduleSave();
+  showToast('🎁 +' + fmt(reward) + ' очков!');
+  loadDaily();
+}
+
+// ============ СТАТИСТИКА ============
+function loadStats() {
+  document.getElementById('statsContent').innerHTML =
+    '<div class="profile-row"><span>Очки</span><span>' + fmt(score) + '</span></div>' +
+    '<div class="profile-row"><span>Тапов</span><span>' + fmt(totalTaps) + '</span></div>' +
+    '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
+    '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
+    '<div class="profile-row"><span>Энергия</span><span>' + Math.floor(energy) + ' / ' + maxEnergy + '</span></div>' +
+    '<div class="profile-row"><span>Автоклик</span><span>+' + fmt(autotapLevel) + '/сек</span></div>' +
+    '<div class="profile-row"><span>Пассив</span><span>+' + fmt(passiveIncome) + '/час</span></div>' +
+    '<div class="profile-row"><span>Серия входов</span><span>' + dailyStreak + ' дн.</span></div>' +
+    '<div class="profile-row"><span>Куплено бустов</span><span>' + Object.keys(upgrades).length + ' / ' + BOOSTS.length + '</span></div>';
+}
+
+// ============ ПРОФИЛЬ ============
+function loadProfile() {
+  document.getElementById('profileContent').innerHTML =
+    '<div class="profile-avatar">' + (nickname || '?')[0].toUpperCase() + '</div>' +
+    '<div style="text-align:center;font-size:20px;font-weight:800;margin-bottom:4px;">' + (nickname || 'Игрок') + '</div>' +
+    '<div style="text-align:center;color:#888;font-size:12px;margin-bottom:16px;">@' + (username || 'аноним') + '</div>' +
+    '<div class="profile-row"><span>Очки</span><span>' + fmt(score) + '</span></div>' +
+    '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
+    '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
+    '<div class="profile-row"><span>Тапов</span><span>' + fmt(totalTaps) + '</span></div>' +
+    '<div class="profile-row"><span>Телефон</span><span>' + (phone || '—') + '</span></div>' +
+    '<div class="profile-row"><span>Регион</span><span>' + (region || '—') + '</span></div>' +
+    '<div class="profile-row"><span>ФИО</span><span>' + (fullName || '—') + '</span></div>';
+}
+
+// ============ КОШЕЛЁК ============
+function loadWallet() {
+  document.getElementById('walletVal').textContent = walletBalance.toFixed(2) + ' ₽';
+  document.getElementById('walletAvail').textContent = walletBalance.toFixed(2) + ' ₽';
+  document.getElementById('walletPending').textContent = '0 ₽';
+  document.getElementById('walletTotal').textContent = walletTotal.toFixed(2) + ' ₽';
+}
+
+// ============ ПРОМОКОД ============
+function redeemPromo() {
+  const code = document.getElementById('promoInput').value.trim().toUpperCase();
+  if (!code) { showToast('Введи промокод'); return; }
+  if (claimedPromos.includes(code)) { showToast('Уже активирован!'); return; }
+  const promo = PROMOS[code];
+  if (!promo) { showToast('❌ Неверный промокод'); return; }
+  if (promo.coins) score += promo.coins;
+  if (promo.mult) multiplier = Math.max(multiplier, promo.mult);
+  claimedPromos.push(code);
+  updateUI(); scheduleSave();
+  showToast('🎉 ' + promo.desc);
+  document.getElementById('promoInput').value = '';
+  loadPromoHistory();
+}
+
+function loadPromoHistory() {
+  const el = document.getElementById('promoHistory');
+  if (!claimedPromos.length) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div style="color:#888;font-size:12px;margin-bottom:6px;">Активированные:</div>' +
+    claimedPromos.map(c => '<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);padding:8px;border-radius:10px;margin-bottom:4px;font-size:12px;color:#22c55e;text-align:center;letter-spacing:2px;">✓ ' + c + '</div>').join('');
+}
+
+// ============ МИНИ-ИГРЫ ============
+function spinRoulette() {
+  if (score < 1000) { showToast('Нужно 1000 очков'); return; }
+  score -= 1000;
+  const wheel = document.getElementById('rouletteWheel');
+  const deg = Math.floor(Math.random() * 360) + 720;
+  wheel.style.transform = 'rotate(' + deg + 'deg)';
+  const sector = Math.floor((deg % 360) / 60);
+  const rewards = [0, 500, 2000, 10000, 50000, 0];
+  const reward = rewards[sector];
+  setTimeout(() => {
+    document.getElementById('rouletteResult').textContent = reward > 0 ? '+' + fmt(reward) + ' 🎉' : 'Пусто 😢';
+    if (reward > 0) score += reward;
+    updateUI(); scheduleSave();
+  }, 3000);
+}
+
+function rollDice() {
+  if (score < 500) { showToast('Нужно 500 очков'); return; }
+  score -= 500;
+  const diceEmoji = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+  const result = Math.floor(Math.random() * 6) + 1;
+  document.getElementById('diceValue').textContent = diceEmoji[result - 1];
+  const reward = result * 1000;
+  if (result >= 5) {
+    document.getElementById('diceResult').textContent = '🎉 +' + fmt(reward);
+    score += reward;
+  } else {
+    document.getElementById('diceResult').textContent = '😢 Пусто';
+  }
+  updateUI(); scheduleSave();
+}
+
+function flipCoin(choice) {
+  if (score < 100) { showToast('Нужно 100 очков'); return; }
+  score -= 100;
+  const result = Math.random() < 0.5 ? 'heads' : 'tails';
+  document.getElementById('coinValue').textContent = result === 'heads' ? '🦅' : '👑';
+  if (result === choice) {
+    document.getElementById('coinResult').textContent = '🎉 Победа! +200';
+    score += 200;
+  } else {
+    document.getElementById('coinResult').textContent = '😢 Проигрыш';
+  }
+  updateUI(); scheduleSave();
+}
+
+// ============ АВТОКЛИК И ПАССИВ ============
 function runAutotap() {
   if (autotapLevel <= 0) return;
   score += autotapLevel * multiplier;
   totalTaps += autotapLevel;
-  lastAutotapClaim = new Date().toISOString();
   updateUI();
-  scheduleSave();
 }
 
+function runPassive() {
+  if (passiveIncome <= 0) return;
+  score += Math.floor(passiveIncome / 360);
+}
+
+function regenEnergy() {
+  if (energy < maxEnergy) {
+    energy = Math.min(maxEnergy, energy + maxEnergy / 300);
+    updateUI();
+  }
+}
+
+// ============ ИНИЦИАЛИЗАЦИЯ ============
 function init() {
   if (tg) { tg.ready(); tg.expand(); }
   getTelegramUser();
-  loadPlayer();
-  applyOfflineAutotap();
+  const loaded = loadPlayer();
+  if (!loaded && !localStorage.getItem('ingsoft_user')) {
+    document.getElementById('regScreen').style.display = 'flex';
+  }
   setInterval(runAutotap, 1000);
-  setInterval(() => {
-    if (energy < maxEnergy) { energy++; updateUI(); scheduleSave(); }
-  }, 3000);
+  setInterval(runPassive, 1000);
+  setInterval(regenEnergy, 1000);
+  setInterval(saveToLocal, 5000);
+  window.addEventListener('beforeunload', saveToLocal);
 }
+
 init();
+
 </script>
 </body>
 </html>
