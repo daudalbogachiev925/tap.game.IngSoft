@@ -309,24 +309,37 @@ async function loadPlayer() {
     const last = data.last_energy_update ? new Date(data.last_energy_update).getTime() : now;
     const regen = Math.floor((now - last) / 3000);
     energy = Math.min(maxEnergy, energy + regen);
-  } else {
+    } else {
     const startParam = tg?.initDataUnsafe?.start_param;
     if (startParam && startParam.startsWith('ref_')) referrerId = parseInt(startParam.replace('ref_', ''));
     await supabaseClient.from('players').insert({
-      telegram_id: telegramId, username, first_name: firstName,
-      score: 0, energy: 1000, max_energy: 1000, multiplier: 1,
-      referrer_id: referrerId, last_energy_update: new Date().toISOString(),
-    level: 1, total_taps: 0, daily_streak: 0, welcome_bonus_claimed: true
+      telegram_id: telegramId,
+      username: username,
+      first_name: firstName,
+      score: 1000,
+      energy: 1000,
+      max_energy: 1000,
+      multiplier: 1,
+      referrer_id: referrerId,
+      last_energy_update: new Date().toISOString(),
+      level: 1,
+      total_taps: 0,
+      daily_streak: 0,
+      welcome_bonus_claimed: true
     });
-    score = 1000;
-    showToast('🎉 Добро пожаловать! +1000 бонус');    score = 1000;
-    showToast('🎉 Добро пожаловать! +1000 бонус');
     if (referrerId) {
       const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', referrerId).maybeSingle();
       if (ref) await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', referrerId);
     }
-    energy = 1000; maxEnergy = 1000; multiplier = 1; level = 1; totalTaps = 0;
+    score = 1000;
+    energy = 1000;
+    maxEnergy = 1000;
+    multiplier = 1;
+    level = 1;
+    totalTaps = 0;
+    showToast('🎉 Добро пожаловать! +1000 бонус');
   }
+
   updateUI();
 }
 
