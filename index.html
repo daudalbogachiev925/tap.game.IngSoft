@@ -15,10 +15,32 @@
   --ing-purple:#a855f7;
 }
 html, body {
-  background: linear-gradient(135deg,#0f0c29 0%,#302b63 35%,#24243e 70%,#0a0a0f 100%);
+  background:
+    radial-gradient(circle at 15% 20%, rgba(230,57,70,0.15), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(168,85,247,0.15), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(79,172,254,0.08), transparent 60%),
+    linear-gradient(135deg,#0f0c29 0%,#302b63 35%,#24243e 70%,#0a0a0f 100%);
   background-attachment: fixed; color:#fff;
   font-family: 'Segoe UI', Arial, sans-serif;
   min-height:100vh; overflow-x:hidden;
+  position: relative;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,215,0,0.5), transparent),
+    radial-gradient(2px 2px at 60% 70%, rgba(230,57,70,0.4), transparent),
+    radial-gradient(1px 1px at 80% 20%, rgba(79,172,254,0.5), transparent),
+    radial-gradient(1px 1px at 40% 80%, rgba(168,85,247,0.4), transparent),
+    radial-gradient(2px 2px at 10% 60%, rgba(255,215,0,0.3), transparent),
+    radial-gradient(1px 1px at 90% 50%, rgba(230,57,70,0.4), transparent);
+  background-size: 200% 200%;
+  animation: floatStars 20s linear infinite;
+  opacity: 0.7;
+}
+@keyframes floatStars {
+  0%{background-position:0% 0%;}
+  100%{background-position:200% 200%;}
 }
 .app { display:flex; min-height:100vh; }
 
@@ -31,18 +53,40 @@ html, body {
   overflow-y:auto; overflow-x:hidden;
 }
 .sidebar-logo {
-  padding:8px 4px; text-align:center;
-  border-bottom:1px solid var(--ing-border); margin-bottom:6px;
-  background: linear-gradient(135deg, rgba(230,57,70,0.15), rgba(79,172,254,0.1));
-  border-radius: 10px; margin: 4px 6px 6px 6px;
-  box-shadow: 0 0 15px rgba(230,57,70,0.25);
+  padding:10px 6px; text-align:center;
+  border-bottom:1px solid var(--ing-border); margin-bottom:8px;
+  background: linear-gradient(135deg, rgba(230,57,70,0.25), rgba(168,85,247,0.15), rgba(79,172,254,0.2));
+  background-size: 200% 200%;
+  animation: logoAura 4s ease infinite;
+  border-radius: 14px; margin: 6px 6px 8px 6px;
+  box-shadow: 0 0 20px rgba(230,57,70,0.4), 0 0 40px rgba(168,85,247,0.2), inset 0 0 15px rgba(255,215,0,0.1);
+  position: relative; overflow: hidden;
+}
+.sidebar-logo::before {
+  content: ''; position: absolute; inset: -50%;
+  background: conic-gradient(from 0deg, transparent, rgba(255,215,0,0.4), transparent, rgba(79,172,254,0.4), transparent);
+  animation: rotateGlow 6s linear infinite;
+  z-index: 0;
 }
 .sidebar-logo img {
-  height:24px; max-width:100%;
-  filter: drop-shadow(0 0 8px rgba(255,255,255,0.4));
-  transition: transform 0.3s;
+  height:28px; max-width:100%;
+  position: relative; z-index: 1;
+  filter: drop-shadow(0 0 10px rgba(255,215,0,0.8)) drop-shadow(0 0 20px rgba(230,57,70,0.6));
+  transition: transform 0.3s, filter 0.3s;
 }
-.sidebar-logo img:hover { transform: scale(1.1); }
+.sidebar-logo img:hover {
+  transform: scale(1.15) rotate(-3deg);
+  filter: drop-shadow(0 0 15px rgba(255,215,0,1)) drop-shadow(0 0 30px rgba(230,57,70,0.9));
+}
+@keyframes logoAura {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+@keyframes rotateGlow {
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
 .sidebar-item {
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding:5px 2px; cursor:pointer; border-radius:8px; margin:0 4px;
@@ -99,10 +143,22 @@ html, body {
 /* STATS */
 .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:14px; }
 .stat-card {
-  background:var(--ing-card); border:1px solid var(--ing-border);
+  background: linear-gradient(135deg, rgba(230,57,70,0.08), rgba(79,172,254,0.05), var(--ing-card));
+  border:1px solid var(--ing-border);
   border-radius:16px; padding:14px 6px; text-align:center;
-  transition: transform 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
 }
+.stat-card::after {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ing-gold), transparent);
+  animation: shineLine 3s ease-in-out infinite;
+}
+@keyframes shineLine {
+  0%,100%{left:-100%;}
+  50%{left:100%;}
+}
+.stat-card:hover { box-shadow: 0 0 20px rgba(230,57,70,0.3); }
 .stat-card:active { transform: scale(0.97); }
 .stat-value { font-size:18px; font-weight:800; color:var(--ing-gold); word-break:break-word; }
 .stat-label { font-size:10px; color:#777; margin-top:3px; text-transform:uppercase; }
@@ -150,10 +206,20 @@ html, body {
 /* QUICK */
 .quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:0 14px; }
 .quick-btn {
-  background:var(--ing-card); border:1px solid var(--ing-border);
+  background: linear-gradient(135deg, rgba(230,57,70,0.1), rgba(79,172,254,0.05), var(--ing-card));
+  border:1px solid var(--ing-border);
   border-radius:14px; padding:12px 4px; color:#fff; cursor:pointer;
-  font-size:10px; text-align:center; font-weight:600; transition:all 0.2s;
+  font-size:10px; text-align:center; font-weight:600;
+  transition:all 0.2s;
+  position: relative; overflow: hidden;
 }
+.quick-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255,215,0,0.1), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.quick-btn:hover::before { opacity: 1; }
+.quick-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(230,57,70,0.3); }
 .quick-btn:active { background:rgba(230,57,70,0.2); transform:scale(0.95); }
 .quick-icon { font-size:22px; display:block; margin-bottom:4px; }
 
@@ -252,9 +318,21 @@ html, body {
 .reg-btn.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
 
 /* CORNER LOGO */
-.corner-logo { position:fixed; right:14px; bottom:14px; z-index:600; opacity:0.6; transition:opacity 0.2s; pointer-events:none; background: rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 12px; backdrop-filter: blur(10px); border: 1px solid var(--ing-border); }
-.corner-logo img { height:34px; display:block; }
-.corner-logo:hover { opacity:1; }
+.corner-logo {
+  position:fixed; right:14px; bottom:14px; z-index:600;
+  opacity:0.75; transition:opacity 0.3s, transform 0.3s;
+  pointer-events:none;
+  background: linear-gradient(135deg, rgba(230,57,70,0.2), rgba(168,85,247,0.15));
+  padding: 8px 14px; border-radius: 16px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255,215,0,0.3);
+  box-shadow: 0 0 20px rgba(230,57,70,0.3), inset 0 0 15px rgba(255,215,0,0.1);
+}
+.corner-logo img {
+  height:38px; display:block;
+  filter: drop-shadow(0 0 8px rgba(255,215,0,0.6));
+}
+.corner-logo:hover { opacity:1; transform: scale(1.05); }
 
 /* MEDIA */
 @media (min-width: 768px) {
@@ -493,7 +571,7 @@ html, body {
     <div class="wallet-balance-val" id="walletVal">0 ₽</div>
     <div class="wallet-balance-lbl">Реальный баланс</div>
   </div>
-  <p style="color:#888;font-size:12px;text-align:center;margin-bottom:16px;">Здесь будут храниться деньги, которые ты заработаешь в игре.</p>
+<p style="color:#888;font-size:12px;text-align:center;margin-bottom:16px;">Раздел временно отключён. Скоро тут будет что-то интересное!</p>
   <div class="profile-row"><span>К выводу</span><span id="walletAvail">0 ₽</span></div>
   <div class="profile-row"><span>В ожидании</span><span id="walletPending">0 ₽</span></div>
   <div class="profile-row"><span>Заработано всего</span><span id="walletTotal">0 ₽</span></div>
@@ -596,9 +674,6 @@ const BOOST_NAMES = [
   {n:'⏰ Пассив +1K/ч', t:'passive', base:1000000, step:1000},
   {n:'⏰ Пассив +10K/ч', t:'passive', base:10000000, step:10000},
   {n:'⏰ Пассив +100K/ч', t:'passive', base:100000000, step:100000},
-  {n:'💰 Кошелёк +10₽', t:'wallet', base:5000000, step:10},
-  {n:'💰 Кошелёк +100₽', t:'wallet', base:50000000, step:100},
-  {n:'💸 Кошелёк +1000₽', t:'wallet', base:500000000, step:1000},
   {n:'🎁 Бонус-квест', t:'quest_bonus', base:500000, step:5000},
   {n:'🎰 Удача', t:'luck', base:2000000, step:1},
   {n:'⭐ Опыт', t:'xp', base:1000000, step:1000},
@@ -619,7 +694,6 @@ for (let lvl = 0; lvl < 25; lvl++) {
             b.t === 'energy' ? 'Энергия +' + value.toLocaleString() :
             b.t === 'auto' ? 'Автоклик +' + value + '/сек' :
             b.t === 'passive' ? 'Доход +' + value.toLocaleString() + '/час' :
-            b.t === 'wallet' ? 'Кошелёк +' + value + '₽' :
             'Бонус +' + value,
       price: price,
       type: b.t,
@@ -629,7 +703,6 @@ for (let lvl = 0; lvl < 25; lvl++) {
         else if (b.t === 'energy') maxEnergy += value;
         else if (b.t === 'auto') autotapLevel = Math.max(autotapLevel, value);
         else if (b.t === 'passive') passiveIncome += value;
-        else if (b.t === 'wallet') { walletBalance += value; walletTotal += value; }
       }
     });
   }
