@@ -404,6 +404,63 @@ body::after {
   .slideshow { height: 140px; margin: 10px; border-radius: 14px; }
   .slide, .slide::after { border-radius: 14px; }
 }
+.slide {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 18px;
+  opacity: 0;
+  transform: translateX(100%) scale(0.7);
+  transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: brightness(0.9);
+  z-index: 1;
+}
+.slide.active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  z-index: 10;
+  filter: brightness(1);
+}
+.slide.past {
+  opacity: 0;
+  transform: translateX(100%) scale(0.7);
+  z-index: 5;
+}
+.slide.future {
+  opacity: 0;
+  transform: translateX(-100%) scale(0.5);
+  z-index: 1;
+}
+.slide::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(10,10,15,0.7) 100%);
+  border-radius: 18px;
+}
+.slide-dots {
+  position: absolute;
+  bottom: 10px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 5px;
+  z-index: 20;
+}
+.slide-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: all 0.3s;
+}
+.slide-dot.active {
+  background: #4facfe;
+  width: 18px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(79,172,254,0.8);
+}
+
+@media (max-width: 480px) {
+  .slideshow { height: 140px; margin: 10px; border-radius: 14px; }
+  .slide, .slide::after { border-radius: 14px; }
+}
 
 
 /* ТОП-10 */
