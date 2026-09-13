@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>IngSoft · Tap Game</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
 :root { --ing-red:#e63946; --ing-red-dark:#c1121f; --ing-white:#fff; --ing-card:#15151f; --ing-border:rgba(230,57,70,0.2); --ing-gold:#ffd700; }
@@ -104,12 +103,10 @@ body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 70%,
     <img src="logo.png" alt="IngSoft" style="height:50px; margin-bottom:20px;" onerror="this.style.display='none'">
     <h1 style="font-size:24px; margin-bottom:8px; color:#fff;">Регистрация</h1>
     <p style="color:#888; font-size:13px; margin-bottom:24px;">Заполни данные, чтобы получать подарки</p>
-
     <input type="text" id="regNickname" placeholder="Никнейм" maxlength="20" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
     <input type="tel" id="regPhone" placeholder="Номер телефона (+7...)" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
     <input type="text" id="regRegion" placeholder="Город / регион (Россия, Ингушетия)" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:10px; outline:none;">
     <input type="text" id="regFullName" placeholder="ФИО полностью" style="width:100%; padding:14px; border-radius:12px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:15px; margin-bottom:16px; outline:none;">
-
     <button onclick="checkRegistration()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#e63946,#c1121f); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(230,57,70,0.5);">Далее</button>
     <p style="color:#666; font-size:11px; margin-top:16px;">Данные видны только тебе. Телефон нужен для верификации.</p>
   </div>
@@ -246,21 +243,19 @@ body { background: linear-gradient(135deg, #0f0c29 0%, #302b63 35%, #24243e 70%,
 <div class="toast" id="toast"></div>
 
 <script>
-const SUPABASE_URL = "https://gkibkizbdzvdhgbjvgjwl.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_ydcvpJDgSxghwV8wkBfkOw_dFsiKvRw";
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const tg = window.Telegram?.WebApp;
 
 let telegramId=null, username=null, firstName=null;
 let score=0, energy=1000, maxEnergy=1000, multiplier=1;
-let referrerId=null, lastDaily=null, rank='-';
+let referrerId=null, rank='-';
 let dailyStreak=0, lastDailyClaim=null, totalTaps=0, level=1;
 let claimedQuests = [];
-let isRegistered = false;
 let nickname = null;
+let phone = null, region = null, fullName = null;
 let autotapLevel = 0;
 let lastAutotapClaim = null;
+let saveTimer = null;
+
 const DAILY_REWARDS = [
   { day:1, coins:1000, icon:'🪙' },
   { day:2, coins:2000, icon:'💰' },
@@ -286,67 +281,47 @@ function getTelegramUser() {
   return false;
 }
 
-async function loadPlayer() {
-  const regScreen = document.getElementById('regScreen');
-  if (!isRegistered) {
-    const { data: checkData } = await supabaseClient.from('players').select('telegram_id, nickname').eq('telegram_id', telegramId).maybeSingle();
-    if (!checkData || !checkData.nickname) {
-      regScreen.style.display = 'flex';
-      return;
-    }
-    isRegistered = true;
-  }
-  regScreen.style.display = 'none';  const { data, error } = await supabaseClient.from('players').select('*').eq('telegram_id', telegramId).maybeSingle();
-  if (error) { showToast('Ошибка загрузки'); console.error(error); return; }
-  if (data) {
-    score = data.score || 0;
-    energy = data.energy ?? 1000;
-    maxEnergy = data.max_energy ?? 1000;
-    multiplier = data.multiplier ?? 1;
-    lastDaily = data.last_daily;
-    dailyStreak = data.daily_streak ?? 0;
-    lastDailyClaim = data.last_daily_claim;
-    totalTaps = data.total_taps ?? 0;
-    level = data.level ?? 1;
-    claimedQuests = data.claimed_quests || [];
-    nickname = data.nickname || null;
-    autotapLevel = data.autotap_level ?? 0;
-    lastAutotapClaim = data.last_autotap_claim;
-    const now = Date.now();
-    const last = data.last_energy_update ? new Date(data.last_energy_update).getTime() : now;
-    const regen = Math.floor((now - last) / 3000);
-    energy = Math.min(maxEnergy, energy + regen);
-    } else {
-    const startParam = tg?.initDataUnsafe?.start_param;
-    if (startParam && startParam.startsWith('ref_')) referrerId = parseInt(startParam.replace('ref_', ''));
-    await supabaseClient.from('players').insert({
-      telegram_id: telegramId,
-      username: username,
-      first_name: firstName,
-      score: 1000,
-      energy: 1000,
-      max_energy: 1000,
-      multiplier: 1,
-      referrer_id: referrerId,
-      last_energy_update: new Date().toISOString(),
-      level: 1,
-      total_taps: 0,
-      daily_streak: 0,
-      welcome_bonus_claimed: true
-    });
-    if (referrerId) {
-      const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', referrerId).maybeSingle();
-      if (ref) await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', referrerId);
-    }
-    score = 1000;
-    energy = 1000;
-    maxEnergy = 1000;
-    multiplier = 1;
-    level = 1;
-    totalTaps = 0;
-    showToast('🎉 Добро пожаловать! +1000 бонус');
-  }
+function saveToLocal() {
+  const user = {
+    nickname, phone, region, fullName,
+    score, energy, maxEnergy, multiplier, totalTaps, level,
+    claimedQuests, dailyStreak, lastDailyClaim, autotapLevel, lastAutotapClaim
+  };
+  localStorage.setItem('ingsoft_user', JSON.stringify(user));
+}
 
+function scheduleSave() {
+  if (saveTimer) return;
+  saveTimer = setTimeout(() => {
+    saveToLocal();
+    saveTimer = null;
+  }, 300);
+}
+
+function loadPlayer() {
+  const regScreen = document.getElementById('regScreen');
+  const saved = localStorage.getItem('ingsoft_user');
+  if (!saved) {
+    regScreen.style.display = 'flex';
+    return;
+  }
+  const user = JSON.parse(saved);
+  nickname = user.nickname || null;
+  phone = user.phone || null;
+  region = user.region || null;
+  fullName = user.fullName || null;
+  score = user.score || 0;
+  energy = user.energy ?? 1000;
+  maxEnergy = user.maxEnergy ?? 1000;
+  multiplier = user.multiplier ?? 1;
+  dailyStreak = user.dailyStreak ?? 0;
+  lastDailyClaim = user.lastDailyClaim || null;
+  totalTaps = user.totalTaps ?? 0;
+  level = user.level ?? 1;
+  claimedQuests = user.claimedQuests || [];
+  autotapLevel = user.autotapLevel ?? 0;
+  lastAutotapClaim = user.lastAutotapClaim || null;
+  regScreen.style.display = 'none';
   updateUI();
 }
 
@@ -360,18 +335,6 @@ function updateUI() {
   const levelCost = level * 1000;
   document.getElementById('levelFill').style.width = Math.min(100, (score / levelCost) * 100) + '%';
   document.getElementById('levelText').textContent = 'Ур. ' + level + ' — ' + score.toLocaleString() + ' / ' + levelCost.toLocaleString();
-}
-
-let saveTimer = null;
-function scheduleSave() {
-  if (saveTimer) return;
-  saveTimer = setTimeout(async () => {
-    await supabaseClient.from('players').update({
-      score, energy, multiplier, total_taps: totalTaps, level,
-      last_energy_update: new Date().toISOString()
-    }).eq('telegram_id', telegramId);
-    saveTimer = null;
-  }, 800);
 }
 
 document.getElementById('tapBtn').addEventListener('click', (e) => {
@@ -408,14 +371,9 @@ function openModal(name) {
 }
 function closeModal(name) { document.getElementById('modal-' + name).classList.remove('active'); }
 
-async function loadLeaderboard() {
-  const { data } = await supabaseClient.from('players').select('first_name, username, score').order('score', { ascending: false }).limit(10);
+function loadLeaderboard() {
   const el = document.getElementById('leaderList');
-  if (!data || !data.length) { el.innerHTML = '<p style="color:#888;text-align:center;">Пока никого нет</p>'; return; }
-  el.innerHTML = data.map((p, i) => {
-    const cls = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
-    return '<div class="leader-item ' + cls + '"><div class="leader-rank">' + (i+1) + '</div><div class="leader-name">' + (p.first_name || p.username || 'Игрок') + '</div><div class="leader-score">' + p.score.toLocaleString() + '</div></div>';
-  }).join('');
+  el.innerHTML = '<p style="color:#888;text-align:center;">Лидерборд появится после подключения сервера</p>';
 }
 
 const QUESTS = [
@@ -461,18 +419,17 @@ function loadQuests() {
     return '<div class="item-row"><div class="item-info"><div class="item-name">' + q.name + '</div><div class="item-desc">' + q.desc + '</div><div class="item-reward">💰 +' + q.reward.toLocaleString() + '</div></div>' + btn + '</div>';
   }).join('');
 }
-async function claimQuest(id) {
+function claimQuest(id) {
   const q = QUESTS.find(x => x.id === id);
   if (!q || !q.check() || claimedQuests.includes(id)) return;
   score += q.reward;
   claimedQuests.push(id);
   updateUI();
-  await supabaseClient.from('players').update({
-    score, claimed_quests: claimedQuests
-  }).eq('telegram_id', telegramId);
+  scheduleSave();
   showToast('+' + q.reward.toLocaleString() + ' очков!');
   loadQuests();
 }
+
 const BOOSTS = [
   { id:'autotap1', name:'🤖 Автоклик +1/сек', desc:'Автоматически тапает', price:100000000, apply: () => autotapLevel = Math.max(autotapLevel, 1) },
   { id:'autotap2', name:'🤖 Автоклик +2/сек', desc:'Ускоренный автоклик', price:300000000, apply: () => autotapLevel = Math.max(autotapLevel, 2) },
@@ -519,13 +476,11 @@ function loadAchievements() {
 }
 
 function loadReferral() {
-  const link = 'https://t.me/ingsoft_tap_bot/ingsoft_tap?startapp=ref_' + telegramId;
-  document.getElementById('refLink').textContent = link;
-  supabaseClient.from('players').select('telegram_id', { count: 'exact', head: true }).eq('referrer_id', telegramId).then(({ count }) => document.getElementById('refCount').textContent = count || 0);
+  document.getElementById('refLink').textContent = 'Рефералка появится после подключения сервера';
+  document.getElementById('refCount').textContent = '0';
 }
 function copyRefLink() {
-  const link = document.getElementById('refLink').textContent;
-  navigator.clipboard.writeText(link).then(() => showToast('✅ Скопировано!'));
+  showToast('Рефералка появится позже');
 }
 
 function loadDaily() {
@@ -552,7 +507,7 @@ function loadDaily() {
   el.innerHTML = html;
 }
 
-async function claimDaily() {
+function claimDaily() {
   const today = new Date().toISOString().split('T')[0];
   if (lastDailyClaim === today) { showToast('Уже забрано сегодня!'); return; }
   const nextDay = dailyStreak % 7;
@@ -561,7 +516,7 @@ async function claimDaily() {
   dailyStreak += 1;
   lastDailyClaim = today;
   updateUI();
-  await supabaseClient.from('players').update({ score, daily_streak: dailyStreak, last_daily_claim: today }).eq('telegram_id', telegramId);
+  scheduleSave();
   showToast('🎁 +' + reward.toLocaleString() + ' очков!');
   loadDaily();
 }
@@ -574,26 +529,23 @@ function loadStats() {
     '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
     '<div class="profile-row"><span>Энергия</span><span>' + energy + ' / ' + maxEnergy + '</span></div>' +
     '<div class="profile-row"><span>Автоклик</span><span>+' + autotapLevel + '/сек</span></div>' +
-    '<div class="profile-row"><span>Телефон</span><span>' + (nickname ? '✓' : '—') + '</span></div>' +
-    '<div class="profile-row"><span>Регион</span><span>' + (nickname ? '✓' : '—') + '</span></div>' +
     '<div class="profile-row"><span>Серия входов</span><span>' + dailyStreak + ' дн.</span></div>' +
     '<div class="profile-row"><span>Достижений</span><span>' + ACHIEVEMENTS.filter(a => a.check()).length + ' / ' + ACHIEVEMENTS.length + '</span></div>';
 }
 
 function loadProfile() {
   document.getElementById('profileContent').innerHTML =
-    '<div class="profile-avatar">' + (firstName || '?')[0].toUpperCase() + '</div>' +
-    '<div style="text-align:center;font-size:22px;font-weight:800;margin-bottom:4px;">' + (firstName || 'Игрок') + '</div>' +
+    '<div class="profile-avatar">' + (nickname || '?')[0].toUpperCase() + '</div>' +
+    '<div style="text-align:center;font-size:22px;font-weight:800;margin-bottom:4px;">' + (nickname || 'Игрок') + '</div>' +
     '<div style="text-align:center;color:#888;font-size:13px;margin-bottom:20px;">@' + (username || 'аноним') + '</div>' +
     '<div class="profile-row"><span>Очки</span><span>' + score.toLocaleString() + '</span></div>' +
     '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
     '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
-    '<div class="profile-row"><span>Тапов</span><span>' + totalTaps.toLocaleString() + '</span></div>' +
-    '<div class="profile-row"><span>Место</span><span>' + rank + '</span></div>';
+    '<div class="profile-row"><span>Тапов</span><span>' + totalTaps.toLocaleString() + '</span></div>';
 }
 
 function shareGame() {
-  const link = 'https://t.me/ingsoft_tap_bot/ingsoft_tap?startapp=ref_' + telegramId;
+  const link = 'https://t.me/ingsoft_tap_bot/ingsoft_tap';
   if (tg) tg.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent('🔥 Играй в IngSoft Tap!'));
 }
 
@@ -606,22 +558,22 @@ function showToast(msg) {
 let regData = {};
 
 function checkRegistration() {
-  const nickname = document.getElementById('regNickname').value.trim();
-  const phone = document.getElementById('regPhone').value.trim();
-  const region = document.getElementById('regRegion').value.trim();
-  const fullName = document.getElementById('regFullName').value.trim();
+  const nick = document.getElementById('regNickname').value.trim();
+  const ph = document.getElementById('regPhone').value.trim();
+  const reg = document.getElementById('regRegion').value.trim();
+  const fn = document.getElementById('regFullName').value.trim();
 
-  if (!nickname || nickname.length < 2) { showToast('Введи никнейм'); return; }
-  if (!phone || phone.length < 10) { showToast('Введи номер телефона'); return; }
-  if (!region || region.length < 3) { showToast('Введи регион'); return; }
-  if (!fullName || fullName.length < 5) { showToast('Введи ФИО'); return; }
+  if (!nick || nick.length < 2) { showToast('Введи никнейм'); return; }
+  if (!ph || ph.length < 10) { showToast('Введи номер телефона'); return; }
+  if (!reg || reg.length < 3) { showToast('Введи регион'); return; }
+  if (!fn || fn.length < 5) { showToast('Введи ФИО'); return; }
 
-  regData = { nickname, phone, region, fullName };
+  regData = { nickname: nick, phone: ph, region: reg, fullName: fn };
 
-  document.getElementById('confNickname').textContent = nickname;
-  document.getElementById('confPhone').textContent = phone;
-  document.getElementById('confRegion').textContent = region;
-  document.getElementById('confFullName').textContent = fullName;
+  document.getElementById('confNickname').textContent = nick;
+  document.getElementById('confPhone').textContent = ph;
+  document.getElementById('confRegion').textContent = reg;
+  document.getElementById('confFullName').textContent = fn;
 
   document.getElementById('regScreen').style.display = 'none';
   document.getElementById('confirmScreen').style.display = 'flex';
@@ -630,61 +582,34 @@ function checkRegistration() {
 function backToReg() {
   document.getElementById('confirmScreen').style.display = 'none';
   document.getElementById('regScreen').style.display = 'flex';
-  isRegistered = true;
 }
 
-async function completeRegistration() {
+function completeRegistration() {
   if (!regData.nickname) { showToast('Заполни данные'); return; }
 
-  const startParam = tg?.initDataUnsafe?.start_param;
-  let refId = null;
-  if (startParam && startParam.startsWith('ref_')) refId = parseInt(startParam.replace('ref_', ''));
+  nickname = regData.nickname;
+  phone = regData.phone;
+  region = regData.region;
+  fullName = regData.fullName;
+  score = 1000;
+  energy = 1000;
+  maxEnergy = 1000;
+  multiplier = 1;
+  level = 1;
+  totalTaps = 0;
+  dailyStreak = 0;
+  autotapLevel = 0;
+  claimedQuests = [];
+  lastAutotapClaim = new Date().toISOString();
 
-  const { data: existing } = await supabaseClient.from('players').select('telegram_id').eq('telegram_id', telegramId).maybeSingle();
-
-  const payload = {
-    nickname: regData.nickname,
-    phone: regData.phone,
-    region: regData.region,
-    full_name: regData.fullName,
-    username: username,
-    first_name: firstName,
-    welcome_bonus_claimed: true,
-    verified: true
-  };
-
-  if (existing) {
-    await supabaseClient.from('players').update(payload).eq('telegram_id', telegramId);
-  } else {
-    await supabaseClient.from('players').insert({
-      telegram_id: telegramId,
-      ...payload,
-      score: 1000,
-      energy: 1000,
-      max_energy: 1000,
-      multiplier: 1,
-      referrer_id: refId,
-      last_energy_update: new Date().toISOString(),
-      last_autotap_claim: new Date().toISOString(),
-      level: 1,
-      total_taps: 0,
-      daily_streak: 0,
-      autotap_level: 0
-    });
-    if (refId) {
-      const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', refId).maybeSingle();
-      if (ref) await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', refId);
-    }
-  }
-
-  showToast('🎉 Добро пожаловать, ' + regData.nickname + '! +1000 бонус');
+  saveToLocal();
+  showToast('🎉 Добро пожаловать, ' + nickname + '! +1000 бонус');
   document.getElementById('confirmScreen').style.display = 'none';
   document.getElementById('regScreen').style.display = 'none';
-  await loadPlayer();
   updateUI();
 }
-      
-async function applyOfflineAutotap() {
+
+function applyOfflineAutotap() {
   if (!lastAutotapClaim || autotapLevel <= 0) return;
   const now = Date.now();
   const last = new Date(lastAutotapClaim).getTime();
@@ -694,28 +619,24 @@ async function applyOfflineAutotap() {
   score += earned;
   lastAutotapClaim = new Date().toISOString();
   updateUI();
-  await supabaseClient.from('players').update({
-    score, last_autotap_claim: lastAutotapClaim
-  }).eq('telegram_id', telegramId);
+  saveToLocal();
   if (earned > 0) showToast('🤖 Автоклик начислил ' + earned.toLocaleString());
 }
 
-async function runAutotap() {
+function runAutotap() {
   if (autotapLevel <= 0) return;
   score += autotapLevel * multiplier;
   totalTaps += autotapLevel;
   lastAutotapClaim = new Date().toISOString();
   updateUI();
-  await supabaseClient.from('players').update({
-    score, total_taps: totalTaps, last_autotap_claim: lastAutotapClaim
-  }).eq('telegram_id', telegramId);
+  scheduleSave();
 }
 
-async function init() {
+function init() {
   if (tg) { tg.ready(); tg.expand(); }
   getTelegramUser();
-  await loadPlayer();
-  await applyOfflineAutotap();
+  loadPlayer();
+  applyOfflineAutotap();
   setInterval(runAutotap, 1000);
   setInterval(() => {
     if (energy < maxEnergy) { energy++; updateUI(); scheduleSave(); }
