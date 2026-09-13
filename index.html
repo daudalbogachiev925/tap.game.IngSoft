@@ -858,7 +858,7 @@ body::after {
   <div class="game-area">
     <div class="roulette-wheel" id="rouletteWheel"></div>
     <div class="game-result" id="rouletteResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinRoulette()">🎰 Крутить (1000)</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinRoulette()">🎰 Крутить</button>
   </div>
 </div></div>
 
@@ -916,6 +916,97 @@ body::after {
     <div class="dice" id="wheelDisplay">🎡</div>
     <div class="game-result" id="wheelResult">Крути!</div>
     <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinWheel()">🎡 Крутить (2000)</button>
+  </div>
+</div></div>
+
+<!-- НОВЫЕ ИГРЫ -->
+<div class="modal" id="modal-darts"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎯 <span>Дартс</span></div><button class="modal-close" onclick="closeModal('darts')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="dartsDisplay">🎯</div>
+    <div class="game-result" id="dartsResult">Бросай!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playDarts()">🎯 Бросить</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-fishing"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎣 <span>Рыбалка</span></div><button class="modal-close" onclick="closeModal('fishing')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="fishingDisplay">🎣</div>
+    <div class="game-result" id="fishingResult">Закинь удочку!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playFishing()">🎣 Закинуть</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-cards"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎴 <span>Карты</span></div><button class="modal-close" onclick="closeModal('cards')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="cardsDisplay">🎴</div>
+    <div class="game-result" id="cardsResult">Тяни карту!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playCards()">🎴 Тянуть</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-shells"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎩 <span>Фокусник</span></div><button class="modal-close" onclick="closeModal('shells')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="shellsDisplay">🎩</div>
+    <div class="game-result" id="shellsResult">Где шарик?</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playShells()">🎩 Угадать</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-craps"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎲 <span>Кости</span></div><button class="modal-close" onclick="closeModal('craps')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="crapsDisplay">🎲🎲</div>
+    <div class="game-result" id="crapsResult">Бросай!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playCraps()">🎲 Бросить</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-archery"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🏹 <span>Лучник</span></div><button class="modal-close" onclick="closeModal('archery')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="archeryDisplay">🏹</div>
+    <div class="game-result" id="archeryResult">Натяни тетиву!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playArchery()">🏹 Стрелять</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-penalty"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">⚽ <span>Пенальти</span></div><button class="modal-close" onclick="closeModal('penalty')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="penaltyDisplay">⚽</div>
+    <div class="game-result" id="penaltyResult">Бей!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playPenalty()">⚽ Ударить</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-basket3"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🏀 <span>3-очковый</span></div><button class="modal-close" onclick="closeModal('basket3')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="basket3Display">🏀</div>
+    <div class="game-result" id="basket3Result">Бросай!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playBasket3()">🏀 Бросить</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-mines"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">💣 <span>Сапёр</span></div><button class="modal-close" onclick="closeModal('mines')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="minesDisplay">💣</div>
+    <div class="game-result" id="minesResult">Открой клетку!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playMines()">💣 Открыть</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-poker"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎰 <span>Видеопокер</span></div><button class="modal-close" onclick="closeModal('poker')">×</button></div>
+  <div class="game-area">
+    <div class="dice" id="pokerDisplay">🎰</div>
+    <div class="game-result" id="pokerResult">Крути!</div>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playPoker()">🎰 Раздать</button>
   </div>
 </div></div>
 
@@ -1251,6 +1342,16 @@ const GAMES = [
   { id:'basket', icon:'🏀', name:'Баскетбол', desc:'Забрось мяч' },
   { id:'mine', icon:'⛏️', name:'Майнинг', desc:'Копай руду' },
   { id:'wheel', icon:'🎡', name:'Колесо', desc:'Крути фортуну' },
+  { id:'darts', icon:'🎯', name:'Дартс', desc:'Попади в цель' },
+  { id:'fishing', icon:'🎣', name:'Рыбалка', desc:'Поймай рыбу' },
+  { id:'cards', icon:'🎴', name:'Карты', desc:'Угадай карту' },
+  { id:'shells', icon:'🎩', name:'Фокусник', desc:'Где шарик?' },
+  { id:'craps', icon:'🎲', name:'Кости', desc:'Сумма кубиков' },
+  { id:'archery', icon:'🏹', name:'Лучник', desc:'Попади в яблочко' },
+  { id:'penalty', icon:'⚽', name:'Пенальти', desc:'Забей гол' },
+  { id:'basket3', icon:'🏀', name:'3-очковый', desc:'Сложный бросок' },
+  { id:'mines', icon:'💣', name:'Сапёр', desc:'Открой клетку' },
+  { id:'poker', icon:'🎰', name:'Видеопокер', desc:'Собери комбо' },
 ];
 // ============ ТОП-10 ============
 const FAKE_PLAYERS = [
@@ -1513,15 +1614,31 @@ function loadPromoHistory() {
     claimedPromos.map(c => '<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);padding:8px;border-radius:10px;margin-bottom:4px;font-size:12px;color:#22c55e;text-align:center;letter-spacing:2px;">✓ ' + c + '</div>').join('');
 }
 
+// ============ ДИНАМИЧЕСКАЯ ЦЕНА ИГР ============
+const GAME_COSTS = {};
+function getGameCost(gameId, basePrice) {
+  const attempts = GAME_COSTS[gameId] || 0;
+  return Math.floor(basePrice * Math.pow(1.15, attempts));
+}
+function increaseGameCost(gameId) {
+  GAME_COSTS[gameId] = (GAME_COSTS[gameId] || 0) + 1;
+}
+
+// ============ ИГРЫ ============
 function spinRoulette() {
-  if (score < 1000) { showToast('Нужно 1000 очков'); return; }
-  score -= 1000;
+  const cost = getGameCost('roulette', 1000);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('roulette');
   const wheel = document.getElementById('rouletteWheel');
   const deg = Math.floor(Math.random() * 360) + 720;
   wheel.style.transform = 'rotate(' + deg + 'deg)';
-  const sector = Math.floor((deg % 360) / 60);
-  const rewards = [0, 500, 2000, 10000, 50000, 0];
-  const reward = rewards[sector];
+  const chance = Math.random();
+  let reward = 0;
+  if (chance < 0.03) reward = 50000;
+  else if (chance < 0.12) reward = 10000;
+  else if (chance < 0.30) reward = 2000;
+  else if (chance < 0.50) reward = 500;
+  else reward = 0;
   setTimeout(() => {
     document.getElementById('rouletteResult').textContent = reward > 0 ? '+' + fmt(reward) + ' 🎉' : 'Пусто 😢';
     if (reward > 0) score += reward;
@@ -1530,41 +1647,56 @@ function spinRoulette() {
 }
 
 function rollDice() {
-  if (score < 500) { showToast('Нужно 500 очков'); return; }
-  score -= 500;
+  const cost = getGameCost('dice', 500);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('dice');
   const diceEmoji = ['⚀','⚁','⚂','⚃','⚄','⚅'];
   const result = Math.floor(Math.random() * 6) + 1;
   document.getElementById('diceValue').textContent = diceEmoji[result - 1];
-  const reward = result * 1000;
-  if (result >= 5) { document.getElementById('diceResult').textContent = '🎉 +' + fmt(reward); score += reward; }
-  else document.getElementById('diceResult').textContent = '😢 Пусто';
+  if (result === 6) {
+    const reward = 5000;
+    document.getElementById('diceResult').textContent = '🎉 +' + fmt(reward);
+    score += reward;
+  } else if (result === 5) {
+    const reward = 2000;
+    document.getElementById('diceResult').textContent = '✨ +' + fmt(reward);
+    score += reward;
+  } else {
+    document.getElementById('diceResult').textContent = '😢 Пусто';
+  }
   updateUI(); scheduleSave();
 }
 
 function flipCoin(choice) {
-  if (score < 100) { showToast('Нужно 100 очков'); return; }
-  score -= 100;
+  const cost = getGameCost('coin', 100);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('coin');
   const result = Math.random() < 0.5 ? 'heads' : 'tails';
   document.getElementById('coinValue').textContent = result === 'heads' ? '🦅' : '👑';
-  if (result === choice) { document.getElementById('coinResult').textContent = '🎉 Победа! +200'; score += 200; }
-  else document.getElementById('coinResult').textContent = '😢 Проигрыш';
+  if (result === choice) {
+    document.getElementById('coinResult').textContent = '🎉 Победа! +' + fmt(150);
+    score += 150;
+  } else {
+    document.getElementById('coinResult').textContent = '😢 Проигрыш';
+  }
   updateUI(); scheduleSave();
 }
 
 function spinSlots() {
-  if (score < 1000) { showToast('Нужно 1000 очков'); return; }
-  score -= 1000;
+  const cost = getGameCost('slots', 1000);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('slots');
   const symbols = ['🍒','🍋','💎','7️⃣','⭐','🔔'];
   const r1 = symbols[Math.floor(Math.random()*6)];
   const r2 = symbols[Math.floor(Math.random()*6)];
   const r3 = symbols[Math.floor(Math.random()*6)];
   document.getElementById('slotsDisplay').textContent = r1+r2+r3;
   if (r1===r2 && r2===r3) {
-    const rw = 100000;
+    const rw = 50000;
     document.getElementById('slotsResult').textContent = '🎉 ДЖЕКПОТ +' + fmt(rw);
     score += rw;
   } else if (r1===r2 || r2===r3 || r1===r3) {
-    const rw = 5000;
+    const rw = 2000;
     document.getElementById('slotsResult').textContent = '✨ +' + fmt(rw);
     score += rw;
   } else {
@@ -1574,16 +1706,17 @@ function spinSlots() {
 }
 
 function throwBasket() {
-  if (score < 500) { showToast('Нужно 500 очков'); return; }
-  score -= 500;
+  const cost = getGameCost('basket', 500);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('basket');
   const chance = Math.random();
-  if (chance < 0.4) {
+  if (chance < 0.25) {
     const rw = 5000;
     document.getElementById('basketDisplay').textContent = '🏀✅';
     document.getElementById('basketResult').textContent = '🎉 Попал! +' + fmt(rw);
     score += rw;
-  } else if (chance < 0.7) {
-    const rw = 1500;
+  } else if (chance < 0.55) {
+    const rw = 1000;
     document.getElementById('basketDisplay').textContent = '🏀⚠️';
     document.getElementById('basketResult').textContent = '✨ Почти! +' + fmt(rw);
     score += rw;
@@ -1595,23 +1728,24 @@ function throwBasket() {
 }
 
 function digMine() {
-  if (score < 1000) { showToast('Нужно 1000 очков'); return; }
-  score -= 1000;
+  const cost = getGameCost('mine', 1000);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('mine');
   const ores = [
     {icon:'🪨', name:'Камень', rw:0},
-    {icon:'🥉', name:'Бронза', rw:1500},
-    {icon:'🥈', name:'Серебро', rw:5000},
-    {icon:'🥇', name:'Золото', rw:15000},
-    {icon:'💎', name:'Алмаз', rw:50000},
-    {icon:'👑', name:'Корона', rw:200000},
+    {icon:'🥉', name:'Бронза', rw:1000},
+    {icon:'🥈', name:'Серебро', rw:3000},
+    {icon:'🥇', name:'Золото', rw:10000},
+    {icon:'💎', name:'Алмаз', rw:40000},
+    {icon:'👑', name:'Корона', rw:150000},
   ];
   const chance = Math.random();
   let idx = 0;
-  if (chance > 0.5) idx = 1;
-  if (chance > 0.7) idx = 2;
-  if (chance > 0.85) idx = 3;
-  if (chance > 0.95) idx = 4;
-  if (chance > 0.99) idx = 5;
+  if (chance > 0.6) idx = 1;
+  if (chance > 0.8) idx = 2;
+  if (chance > 0.92) idx = 3;
+  if (chance > 0.98) idx = 4;
+  if (chance > 0.995) idx = 5;
   const ore = ores[idx];
   document.getElementById('mineDisplay').textContent = ore.icon;
   if (ore.rw > 0) { document.getElementById('mineResult').textContent = '💎 ' + ore.name + ' +' + fmt(ore.rw); score += ore.rw; }
@@ -1620,13 +1754,162 @@ function digMine() {
 }
 
 function spinWheel() {
-  if (score < 2000) { showToast('Нужно 2000 очков'); return; }
-  score -= 2000;
-  const rewards = [1000, 5000, 10000, 50000, 100000, 500000];
+  const cost = getGameCost('wheel', 2000);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('wheel');
+  const rewards = [500, 2000, 5000, 20000, 50000, 200000];
   const rw = rewards[Math.floor(Math.random() * rewards.length)];
   document.getElementById('wheelDisplay').textContent = '🎡';
   document.getElementById('wheelResult').textContent = '🎉 +' + fmt(rw);
   score += rw;
+  updateUI(); scheduleSave();
+}
+
+// ============ НОВЫЕ ИГРЫ ============
+function playDarts() {
+  const cost = getGameCost('darts', 700);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('darts');
+  const chance = Math.random();
+  let rw = 0;
+  if (chance < 0.05) rw = 30000;
+  else if (chance < 0.2) rw = 5000;
+  else if (chance < 0.5) rw = 1000;
+  document.getElementById('dartsDisplay').textContent = rw > 0 ? '🎯✅' : '🎯❌';
+  document.getElementById('dartsResult').textContent = rw > 0 ? '🎉 +' + fmt(rw) : '😢 Мимо';
+  if (rw > 0) score += rw;
+  updateUI(); scheduleSave();
+}
+
+function playFishing() {
+  const cost = getGameCost('fishing', 600);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('fishing');
+  const chance = Math.random();
+  let rw = 0;
+  if (chance < 0.03) rw = 50000;
+  else if (chance < 0.15) rw = 5000;
+  else if (chance < 0.4) rw = 1000;
+  document.getElementById('fishingDisplay').textContent = rw > 0 ? '🐟🎉' : '🎣💨';
+  document.getElementById('fishingResult').textContent = rw > 0 ? '🎉 Поймал! +' + fmt(rw) : '😢 Сорвалась';
+  if (rw > 0) score += rw;
+  updateUI(); scheduleSave();
+}
+
+function playCards() {
+  const cost = getGameCost('cards', 400);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('cards');
+  const suits = ['♠','♥','♦','♣'];
+  const card = suits[Math.floor(Math.random()*4)];
+  const win = Math.random() < 0.25;
+  document.getElementById('cardsDisplay').textContent = card;
+  if (win) { document.getElementById('cardsResult').textContent = '🎉 +' + fmt(3000); score += 3000; }
+  else document.getElementById('cardsResult').textContent = '😢 Проигрыш';
+  updateUI(); scheduleSave();
+}
+
+function playShells() {
+  const cost = getGameCost('shells', 500);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('shells');
+  const win = Math.random() < 0.33;
+  document.getElementById('shellsDisplay').textContent = win ? '🎩🏀' : '🎩❌';
+  if (win) { document.getElementById('shellsResult').textContent = '🎉 Угадал! +' + fmt(2000); score += 2000; }
+  else document.getElementById('shellsResult').textContent = '😢 Мимо';
+  updateUI(); scheduleSave();
+}
+
+function playCraps() {
+  const cost = getGameCost('craps', 800);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('craps');
+  const d1 = Math.floor(Math.random()*6)+1;
+  const d2 = Math.floor(Math.random()*6)+1;
+  const sum = d1 + d2;
+  document.getElementById('crapsDisplay').textContent = '🎲' + d1 + ' + 🎲' + d2;
+  if (sum === 7 || sum === 11) {
+    const rw = 8000;
+    document.getElementById('crapsResult').textContent = '🎉 +' + fmt(rw);
+    score += rw;
+  } else if (sum === 2 || sum === 3 || sum === 12) {
+    document.getElementById('crapsResult').textContent = '😢 Проигрыш';
+  } else {
+    const rw = 1000;
+    document.getElementById('crapsResult').textContent = '✨ +' + fmt(rw);
+    score += rw;
+  }
+  updateUI(); scheduleSave();
+}
+
+function playArchery() {
+  const cost = getGameCost('archery', 600);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('archery');
+  const chance = Math.random();
+  let rw = 0;
+  if (chance < 0.05) rw = 25000;
+  else if (chance < 0.25) rw = 5000;
+  else if (chance < 0.5) rw = 1000;
+  document.getElementById('archeryDisplay').textContent = rw > 0 ? '🏹🎯' : '🏹💨';
+  document.getElementById('archeryResult').textContent = rw > 0 ? '🎉 +' + fmt(rw) : '😢 Мимо';
+  if (rw > 0) score += rw;
+  updateUI(); scheduleSave();
+}
+
+function playPenalty() {
+  const cost = getGameCost('penalty', 500);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('penalty');
+  const win = Math.random() < 0.3;
+  document.getElementById('penaltyDisplay').textContent = win ? '⚽🥅' : '⚽❌';
+  if (win) { document.getElementById('penaltyResult').textContent = '🎉 Гол! +' + fmt(4000); score += 4000; }
+  else document.getElementById('penaltyResult').textContent = '😢 Мимо';
+  updateUI(); scheduleSave();
+}
+
+function playBasket3() {
+  const cost = getGameCost('basket3', 1000);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('basket3');
+  const win = Math.random() < 0.15;
+  document.getElementById('basket3Display').textContent = win ? '🏀🎯' : '🏀❌';
+  if (win) { document.getElementById('basket3Result').textContent = '🎉 3 очка! +' + fmt(15000); score += 15000; }
+  else document.getElementById('basket3Result').textContent = '😢 Мимо';
+  updateUI(); scheduleSave();
+}
+
+function playMines() {
+  const cost = getGameCost('mines', 800);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('mines');
+  const win = Math.random() < 0.4;
+  document.getElementById('minesDisplay').textContent = win ? '💎✅' : '💣💥';
+  if (win) { document.getElementById('minesResult').textContent = '🎉 Безопасно! +' + fmt(2500); score += 2500; }
+  else document.getElementById('minesResult').textContent = '💥 Взрыв! Проигрыш';
+  updateUI(); scheduleSave();
+}
+
+function playPoker() {
+  const cost = getGameCost('poker', 1200);
+  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
+  score -= cost; increaseGameCost('poker');
+  const suits = ['♠','♥','♦','♣'];
+  const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+  const c1 = suits[Math.floor(Math.random()*4)] + values[Math.floor(Math.random()*13)];
+  const c2 = suits[Math.floor(Math.random()*4)] + values[Math.floor(Math.random()*13)];
+  const c3 = suits[Math.floor(Math.random()*4)] + values[Math.floor(Math.random()*13)];
+  document.getElementById('pokerDisplay').textContent = c1 + ' ' + c2 + ' ' + c3;
+  const chance = Math.random();
+  if (chance < 0.02) {
+    document.getElementById('pokerResult').textContent = '🎉 ТРИПЛ! +' + fmt(100000);
+    score += 100000;
+  } else if (chance < 0.15) {
+    document.getElementById('pokerResult').textContent = '✨ ПАРА! +' + fmt(5000);
+    score += 5000;
+  } else {
+    document.getElementById('pokerResult').textContent = '😢 Пусто';
+  }
   updateUI(); scheduleSave();
 }
 
