@@ -1208,7 +1208,7 @@ function updateUI() {
 
 document.getElementById('tapBtn').addEventListener('click', (e) => {
   if (energy <= 0) { showToast('⚡ Энергия кончилась!'); return; }
-  score += multiplier * 0.1; energy -= 1; totalTaps += 1;
+  score += multiplier; energy -= 1; totalTaps += 1;
   const newLevel = Math.floor(score / 10000) + 1;
   if (newLevel > level) { level = newLevel; showToast('🎉 Уровень ' + level + '!'); }
   updateUI();
