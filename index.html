@@ -95,6 +95,17 @@ body { background: radial-gradient(ellipse at top, #1a0a0f 0%, #0a0a0f 60%); col
 </head>
 <body>
 
+<div id="regScreen" style="position:fixed; inset:0; background:linear-gradient(135deg,#1a0a0f,#0a0a0f); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
+  <div style="text-align:center; max-width:400px; width:100%;">
+    <img src="logo.png" alt="IngSoft" style="height:60px; margin-bottom:30px;" onerror="this.style.display='none'">
+    <h1 style="font-size:28px; margin-bottom:10px; color:#fff;">Добро пожаловать!</h1>
+    <p style="color:#888; font-size:14px; margin-bottom:30px;">Придумай свой никнейм для игры</p>
+    <input type="text" id="nicknameInput" placeholder="Твой никнейм" maxlength="20" style="width:100%; padding:16px; border-radius:14px; border:1px solid rgba(230,57,70,0.3); background:#15151f; color:#fff; font-size:16px; text-align:center; margin-bottom:16px; outline:none;">
+    <button id="regBtn" onclick="completeRegistration()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#e63946,#c1121f); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(230,57,70,0.5);">Начать играть</button>
+    <p style="color:#666; font-size:12px; margin-top:20px;">Нажимая кнопку, ты соглашаешься с правилами игры</p>
+  </div>
+</div>
+
 <div class="header">
   <div class="logo-box"><img src="logo.png" alt="IngSoft" onerror="this.style.display='none';this.parentNode.innerHTML='<div style=\'font-size:20px;font-weight:900;color:#e63946;\'>INGSOFT</div>'"></div>
   <div class="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
@@ -222,7 +233,7 @@ let score=0, energy=1000, maxEnergy=1000, multiplier=1;
 let referrerId=null, lastDaily=null, rank='-';
 let dailyStreak=0, lastDailyClaim=null, totalTaps=0, level=1;
 let claimedQuests = [];
-
+let nickname = null;
 const DAILY_REWARDS = [
   { day:1, coins:1000, icon:'🪙' },
   { day:2, coins:2000, icon:'💰' },
@@ -249,6 +260,13 @@ function getTelegramUser() {
 }
 
 async function loadPlayer() {
+  const regScreen = document.getElementById('regScreen');
+  const { data: checkData } = await supabaseClient.from('players').select('telegram_id, nickname').eq('telegram_id', telegramId).maybeSingle();
+  if (!checkData || !checkData.nickname) {
+    regScreen.style.display = 'flex';
+    return;
+  }
+  regScreen.style.display = 'none';
   const { data, error } = await supabaseClient.from('players').select('*').eq('telegram_id', telegramId).maybeSingle();
   if (error) { showToast('Ошибка загрузки'); console.error(error); return; }
   if (data) {
@@ -262,6 +280,7 @@ async function loadPlayer() {
     totalTaps = data.total_taps ?? 0;
     level = data.level ?? 1;
     claimedQuests = data.claimed_quests || [];
+    nickname = data.nickname || null;
     const now = Date.now();
     const last = data.last_energy_update ? new Date(data.last_energy_update).getTime() : now;
     const regen = Math.floor((now - last) / 3000);
@@ -522,6 +541,58 @@ function showToast(msg) {
   el.textContent = msg; el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2000);
 }
+
+async function completeRegistration() {
+  const nickname = document.getElementById('nicknameInput').value.trim();
+  if (!nickname || nickname.length < 2) {
+    showToast('Введи никнейм (мин. 2 символа)');
+    return;
+  }
+  if (nickname.length > 20) {
+    showToast('Слишком длинный никнейм');
+    return;
+  }
+
+  const startParam = tg?.initDataUnsafe?.start_param;
+  let refId = null;
+  if (startParam && startParam.startsWith('ref_')) refId = parseInt(startParam.replace('ref_', ''));
+
+  const { data: existing } = await supabaseClient.from('players').select('telegram_id').eq('telegram_id', telegramId).maybeSingle();
+
+  if (existing) {
+    await supabaseClient.from('players').update({
+      nickname: nickname,
+      welcome_bonus_claimed: true
+    }).eq('telegram_id', telegramId);
+  } else {
+    await supabaseClient.from('players').insert({
+      telegram_id: telegramId,
+      username: username,
+      first_name: firstName,
+      nickname: nickname,
+      score: 1000,
+      energy: 1000,
+      max_energy: 1000,
+      multiplier: 1,
+      referrer_id: refId,
+      last_energy_update: new Date().toISOString(),
+      level: 1,
+      total_taps: 0,
+      daily_streak: 0,
+      welcome_bonus_claimed: true
+    });
+    if (refId) {
+      const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', refId).maybeSingle();
+      if (ref) await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', refId);
+    }
+  }
+
+  showToast('🎉 Добро пожаловать, ' + nickname + '! +1000 бонус');
+  document.getElementById('regScreen').style.display = 'none';
+  await loadPlayer();
+  updateUI();
+}
+
 
 async function init() {
   if (tg) { tg.ready(); tg.expand(); }
