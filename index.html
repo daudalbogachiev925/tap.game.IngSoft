@@ -221,6 +221,7 @@ let telegramId=null, username=null, firstName=null;
 let score=0, energy=1000, maxEnergy=1000, multiplier=1;
 let referrerId=null, lastDaily=null, rank='-';
 let dailyStreak=0, lastDailyClaim=null, totalTaps=0, level=1;
+let claimedQuests = [];
 
 const DAILY_REWARDS = [
   { day:1, coins:1000, icon:'🪙' },
@@ -260,6 +261,7 @@ async function loadPlayer() {
     lastDailyClaim = data.last_daily_claim;
     totalTaps = data.total_taps ?? 0;
     level = data.level ?? 1;
+    claimedQuests = data.claimed_quests || [];
     const now = Date.now();
     const last = data.last_energy_update ? new Date(data.last_energy_update).getTime() : now;
     const regen = Math.floor((now - last) / 3000);
@@ -271,13 +273,16 @@ async function loadPlayer() {
       telegram_id: telegramId, username, first_name: firstName,
       score: 0, energy: 1000, max_energy: 1000, multiplier: 1,
       referrer_id: referrerId, last_energy_update: new Date().toISOString(),
-      level: 1, total_taps: 0, daily_streak: 0
+    level: 1, total_taps: 0, daily_streak: 0, welcome_bonus_claimed: true
     });
+    score = 1000;
+    showToast('🎉 Добро пожаловать! +1000 бонус');    score = 1000;
+    showToast('🎉 Добро пожаловать! +1000 бонус');
     if (referrerId) {
       const { data: ref } = await supabaseClient.from('players').select('score').eq('telegram_id', referrerId).maybeSingle();
       if (ref) await supabaseClient.from('players').update({ score: (ref.score || 0) + 5000 }).eq('telegram_id', referrerId);
     }
-    score = 0; energy = 1000; maxEnergy = 1000; multiplier = 1; level = 1; totalTaps = 0;
+    energy = 1000; maxEnergy = 1000; multiplier = 1; level = 1; totalTaps = 0;
   }
   updateUI();
 }
@@ -368,15 +373,32 @@ const QUESTS = [
 
 function loadQuests() {
   const el = document.getElementById('questsList');
-  el.innerHTML = QUESTS.map(q => '<div class="item-row"><div class="item-info"><div class="item-name">' + q.name + '</div><div class="item-desc">' + q.desc + '</div><div class="item-reward">💰 +' + q.reward.toLocaleString() + '</div></div><button class="btn-buy" ' + (q.check() ? '' : 'disabled') + ' onclick="claimQuest(\'' + q.id + '\')">Забрать</button></div>').join('');
+  el.innerHTML = QUESTS.map(q => {
+    const isClaimed = claimedQuests.includes(q.id);
+    const canClaim = q.check() && !isClaimed;
+    let btn;
+    if (isClaimed) {
+      btn = '<button class="btn-buy" disabled>✅ Забрано</button>';
+    } else if (canClaim) {
+      btn = '<button class="btn-buy" onclick="claimQuest(\'' + q.id + '\')">Забрать</button>';
+    } else {
+      btn = '<button class="btn-buy" disabled>Не выполнено</button>';
+    }
+    return '<div class="item-row"><div class="item-info"><div class="item-name">' + q.name + '</div><div class="item-desc">' + q.desc + '</div><div class="item-reward">💰 +' + q.reward.toLocaleString() + '</div></div>' + btn + '</div>';
+  }).join('');
 }
-function claimQuest(id) {
+async function claimQuest(id) {
   const q = QUESTS.find(x => x.id === id);
-  if (!q || !q.check()) return;
-  score += q.reward; updateUI(); scheduleSave();
+  if (!q || !q.check() || claimedQuests.includes(id)) return;
+  score += q.reward;
+  claimedQuests.push(id);
+  updateUI();
+  await supabaseClient.from('players').update({
+    score, claimed_quests: claimedQuests
+  }).eq('telegram_id', telegramId);
   showToast('+' + q.reward.toLocaleString() + ' очков!');
+  loadQuests();
 }
-
 const BOOSTS = [
   { id:'mult2', name:'⚡ Множитель x2', desc:'Удваивает очки', price:10000, apply: () => multiplier = Math.max(multiplier, 2) },
   { id:'mult3', name:'🔥 Множитель x3', desc:'Утраивает очки', price:50000, apply: () => multiplier = Math.max(multiplier, 3) },
