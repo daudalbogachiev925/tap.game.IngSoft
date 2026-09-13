@@ -335,6 +335,77 @@ body::after {
 .quick-btn:active { transform:scale(0.95); }
 .quick-icon { font-size:22px; display:block; margin-bottom:4px; }
 
+/* КАРУСЕЛЬ БАННЕРОВ */
+.slideshow {
+  position: relative;
+  margin: 16px;
+  height: 180px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(79,172,254,0.3);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.5), 0 0 30px rgba(79,172,254,0.15);
+  background: #0a0a0f;
+  perspective: 1000px;
+}
+.slide {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 18px;
+  opacity: 0;
+  transform: translateX(100%) scale(0.7);
+  transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: brightness(0.9);
+  z-index: 1;
+}
+.slide.active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  z-index: 10;
+  filter: brightness(1);
+}
+.slide.past {
+  opacity: 0;
+  transform: translateX(100%) scale(0.7);
+  z-index: 5;
+}
+.slide.future {
+  opacity: 0;
+  transform: translateX(-100%) scale(0.5);
+  z-index: 1;
+}
+.slide::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(10,10,15,0.7) 100%);
+  border-radius: 18px;
+}
+.slide-dots {
+  position: absolute;
+  bottom: 10px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 5px;
+  z-index: 20;
+}
+.slide-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  transition: all 0.3s;
+}
+.slide-dot.active {
+  background: #4facfe;
+  width: 18px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(79,172,254,0.8);
+}
+
+@media (max-width: 480px) {
+  .slideshow { height: 140px; margin: 10px; border-radius: 14px; }
+  .slide, .slide::after { border-radius: 14px; }
+}
+
+
 /* ТОП-10 */
 .top-panel {
   margin: 20px 16px 10px;
@@ -692,6 +763,22 @@ body::after {
   <button class="quick-btn" onclick="openModal('daily')"><span class="quick-icon">🎁</span>Награды</button>
   <button class="quick-btn" onclick="openModal('promo')"><span class="quick-icon">🎫</span>Промокод</button>
 </div>
+
+<!-- КАРУСЕЛЬ БАННЕРОВ -->
+<div class="slideshow" id="slideshow">
+  <div class="slide" style="background-image:url('slide1.jpg')"></div>
+  <div class="slide" style="background-image:url('slide2.jpg')"></div>
+  <div class="slide" style="background-image:url('slide3.jpg')"></div>
+  <div class="slide" style="background-image:url('slide4.jpg')"></div>
+  <div class="slide" style="background-image:url('slide5.jpg')"></div>
+  <div class="slide" style="background-image:url('slide6.jpg')"></div>
+  <div class="slide" style="background-image:url('slide7.jpg')"></div>
+  <div class="slide" style="background-image:url('slide8.jpg')"></div>
+  <div class="slide" style="background-image:url('slide9.jpg')"></div>
+  <div class="slide" style="background-image:url('slide10.jpg')"></div>
+  <div class="slide-dots" id="slideDots"></div>
+</div>
+
 <div class="top-panel">
   <div class="top-panel-header">
     <div>
@@ -1503,6 +1590,47 @@ function regenEnergy() {
   }
 }
 
+// ============ КАРУСЕЛЬ БАННЕРОВ ============
+let slideIndex = 0;
+let slideTimer = null;
+
+function initSlideshow() {
+  const slides = document.querySelectorAll('.slide');
+  const dotsWrap = document.getElementById('slideDots');
+  if (!slides.length || !dotsWrap) return;
+
+  dotsWrap.innerHTML = Array.from(slides).map((_, i) =>
+    '<div class="slide-dot' + (i === 0 ? ' active' : '') + '"></div>'
+  ).join('');
+  const dots = document.querySelectorAll('.slide-dot');
+
+  slides.forEach((s, i) => {
+    s.classList.remove('active', 'past', 'future');
+    if (i === 0) s.classList.add('active');
+    else s.classList.add('future');
+  });
+
+  function nextSlide() {
+    const total = slides.length;
+    const prev = slideIndex;
+    slideIndex = (slideIndex + 1) % total;
+
+    slides[prev].classList.remove('active');
+    slides[prev].classList.add('past');
+    setTimeout(() => slides[prev].classList.remove('past'), 900);
+    setTimeout(() => slides[prev].classList.add('future'), 950);
+
+    slides[slideIndex].classList.remove('future', 'past');
+    slides[slideIndex].classList.add('active');
+
+    dots.forEach((d, i) => d.classList.toggle('active', i === slideIndex));
+  }
+
+  if (slideTimer) clearInterval(slideTimer);
+  slideTimer = setInterval(nextSlide, 4000);
+}
+
+
 function init() {
   if (tg) {
     tg.ready();
@@ -1525,6 +1653,7 @@ function init() {
   setInterval(regenEnergy, 1000);
   setInterval(saveToLocal, 5000);
   setInterval(loadTop10, 5000);
+  initSlideshow();
   window.addEventListener('beforeunload', saveToLocal);
 }
 init();
