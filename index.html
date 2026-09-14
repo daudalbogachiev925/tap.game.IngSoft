@@ -689,6 +689,10 @@ let isBalance = 0;
 let isTasksDone = [];
 let isBoostMultUntil = 0;
 let isAutoTapUntil = 0;
+
+// === ПОДПИСКА ===
+let subWasSubscribed = false; // был ли подписан
+let subWasPunished = false;   // уже оштрафован за отписку
 let claimedQuests=[], claimedPromos=[];
 let nickname=null, phone=null, region=null, fullName=null;
 let avatarData=null;
@@ -729,15 +733,37 @@ const IS_SHOP = [
     apply:() => { tapsToday = 0; } },
 ];
 
-// === ЗАДАНИЯ ЗА IS ===
+// ============================================================
+// НАСТРОЙКИ ПОДПИСОК
+// Когда появится сервер — вставь его URL в API_URL
+// Пример: const API_URL = 'https://my-server.com/api';
+// Пока API_URL = '' — работает имитация (без реальной проверки)
+// ============================================================
+const API_URL = ''; // ← СЮДА ВСТАВЬ URL СЕРВЕРА, КОГДА БУДЕТ
+const TG_CHANNEL = 'IngSoftTab06'; // без @
+const TG_CHANNEL_URL = 'https://t.me/IngSoftTab06';
+const SUB_REWARD = 50;    // сколько даём за подписку
+const SUB_PENALTY = 500;  // штраф за отписку (в 10 раз больше)
+
 const IS_TASKS = [
-  { id:'sub_tg',  icon:'📢', name:'Подписка на канал',      desc:'Telegram-канал IngSoft',  reward:50,  link:'https://t.me/ingsoft' },
-  { id:'sub_vk',  icon:'🅱️', name:'Подписка ВКонтакте',    desc:'Группа IngSoft',          reward:40,  link:'https://vk.com/ingsoft' },
-  { id:'sub_yt',  icon:'▶️', name:'Подписка YouTube',       desc:'Канал IngSoft',           reward:60,  link:'https://youtube.com/@ingsoft' },
-  { id:'like',    icon:'❤️', name:'Лайк ролика',            desc:'Поставь лайк',            reward:15,  link:'https://youtube.com/watch?v=xxx' },
-  { id:'repost',  icon:'🔁', name:'Репост ролика',          desc:'Поделись с друзьями',     reward:25,  link:'https://t.me/share/url?url=xxx' },
-  { id:'comment', icon:'💬', name:'Комментарий',            desc:'Оставь коммент',          reward:20,  link:'https://youtube.com/watch?v=xxx' },
-  { id:'invite',  icon:'👥', name:'Пригласи друга',         desc:'За каждого друга',        reward:100, link:'' },
+  // --- РЕАЛЬНОЕ ЗАДАНИЕ С ПРОВЕРКОЙ ---
+  { id:'sub_tg',
+    icon:'📢',
+    name:'Подписка на канал',
+    desc:'Telegram-канал @' + TG_CHANNEL,
+    reward:SUB_REWARD,
+    link:TG_CHANNEL_URL,
+    real:true,           // флаг: это задание с реальной проверкой
+    type:'subscribe'     // тип задания
+  },
+
+  // --- ЗАГЛУШКИ (пока нет ссылок) ---
+  { id:'sub_yt',  icon:'▶️', name:'Подписка YouTube',   desc:'Ссылку на YouTube ещё не добавили', reward:0, link:'', todo:true },
+  { id:'sub_wa',  icon:'💬', name:'Подписка WhatsApp',  desc:'Ссылку на WhatsApp ещё не добавили', reward:0, link:'', todo:true },
+  { id:'like',    icon:'❤️', name:'Лайк видео',          desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
+  { id:'repost',  icon:'🔁', name:'Репост видео',        desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
+  { id:'comment', icon:'💬', name:'Комментарий под видео', desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
+  { id:'invite',  icon:'👥', name:'Пригласи друга',      desc:'За каждого друга', reward:100, link:'', invite:true },
 ];
 
 const QUESTS = [
@@ -866,7 +892,8 @@ function saveToLocal() {
     autotapLevel, lastAutotapClaim, passiveIncome,
     walletBalance, walletTotal, upgrades,
     dailyTapLimit, tapsToday, lastTapDate, unlimitedUntil,
-    isBalance, isTasksDone, isBoostMultUntil, isAutoTapUntil
+    isBalance, isTasksDone, isBoostMultUntil, isAutoTapUntil,
+    subWasSubscribed, subWasPunished
   };
   try { localStorage.setItem('ingsoft_user', JSON.stringify(user)); } catch(e) {}
 }
@@ -895,6 +922,8 @@ function loadPlayer() {
     isTasksDone = u.isTasksDone || [];
     isBoostMultUntil = u.isBoostMultUntil ?? 0;
     isAutoTapUntil = u.isAutoTapUntil ?? 0;
+    subWasSubscribed = u.subWasSubscribed ?? false;
+    subWasPunished = u.subWasPunished ?? false;
     document.getElementById('regScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     updateUI();
@@ -1079,7 +1108,17 @@ function loadISShop() {
     '</div>';
   }).join('');
   const balEl = document.getElementById('isBalanceVal');
-  if (balEl) balEl.textContent = isBalance;
+  if (balEl) {
+    balEl.textContent = isBalance;
+    // Если минус — красным
+    if (isBalance < 0) {
+      balEl.style.color = '#ff4444';
+      balEl.style.textShadow = '0 0 15px rgba(255,68,68,0.8)';
+    } else {
+      balEl.style.color = '';
+      balEl.style.textShadow = '';
+    }
+  }
 }
 
 function buyIS(id) {
@@ -1098,19 +1137,150 @@ function loadISTasks() {
   if (!el) return;
   el.innerHTML = IS_TASKS.map(t => {
     const done = isTasksDone.includes(t.id);
-    let btn;
-    if (done) btn = '<button class="btn-is" disabled>✅ Выполнено</button>';
-    else if (t.id === 'invite') btn = '<button class="btn-is" onclick="doInvite()">Пригласить</button>';
-    else btn = '<button class="btn-is" onclick="doTask(\'' + t.id + '\')">Перейти</button>';
+    let btn = '';
+
+    if (t.todo) {
+      // Заглушка
+      btn = '<button class="btn-is" disabled>Скоро</button>';
+    } else if (t.invite) {
+      // Приглашение друга
+      if (done) btn = '<button class="btn-is" disabled>✅ Выполнено</button>';
+      else btn = '<button class="btn-is" onclick="doInvite()">Пригласить</button>';
+    } else if (t.real) {
+      // Реальная подписка
+      if (done) {
+        btn = '<button class="btn-is" disabled>✅ Подписан</button>';
+      } else {
+        btn = '<button class="btn-is" onclick="subscribeTask()">Подписаться</button>';
+      }
+    }
+
     return '<div class="is-task">' +
       '<div class="is-task-icon">' + t.icon + '</div>' +
       '<div class="is-task-info">' +
         '<div class="is-task-name">' + t.name + '</div>' +
         '<div class="is-task-desc">' + t.desc + '</div>' +
-        '<div class="is-task-reward">💎 +' + t.reward + ' IS</div>' +
+        (t.reward > 0 ? '<div class="is-task-reward">💎 +' + t.reward + ' IS</div>' : '') +
       '</div>' + btn +
     '</div>';
   }).join('');
+}
+
+// ============================================================
+// ПОДПИСКА НА КАНАЛ + ШТРАФЫ
+// ============================================================
+
+// Открывает канал + показывает предупреждение + проверяет подписку
+function subscribeTask() {
+  // 1. Показываем предупреждение
+  const warn = confirm(
+    '⚠️ ВНИМАНИЕ!\n\n' +
+    'За подписку ты получишь ' + SUB_REWARD + ' IS.\n\n' +
+    'Если ты ОТПИШЕШЬСЯ — с тебя автоматически спишут ' + SUB_PENALTY + ' IS ' +
+    '(в 10 раз больше).\n\n' +
+    'Если на балансе не хватит — уйдёшь в МИНУС.\n\n' +
+    'При повторной подписке минус обнулится.\n\n' +
+    'Продолжить?'
+  );
+  if (!warn) return;
+
+  // 2. Открываем канал
+  window.open(TG_CHANNEL_URL, '_blank');
+
+  // 3. Показываем уведомление "проверяем..."
+  showToast('⏳ Проверяем подписку...');
+
+  // 4. Через 3 секунды проверяем
+  setTimeout(() => checkAndRewardSubscription(), 3000);
+}
+
+// Проверка подписки: если API_URL есть — реальная, иначе имитация
+async function checkAndRewardSubscription() {
+  let isSubscribed = false;
+
+  if (API_URL) {
+    // === РЕАЛЬНАЯ ПРОВЕРКА (когда будет сервер) ===
+    try {
+      const resp = await fetch(API_URL + '/check-sub?user_id=' + telegramId + '&channel=' + TG_CHANNEL);
+      const data = await resp.json();
+      isSubscribed = data.subscribed === true;
+    } catch (e) {
+      console.error('Ошибка проверки подписки:', e);
+      showToast('❌ Ошибка проверки, попробуй позже');
+      return;
+    }
+  } else {
+    // === ИМИТАЦИЯ (пока нет сервера) ===
+    // Считаем что подписался, если игрок нажал кнопку и подождал 3 сек
+    isSubscribed = true;
+  }
+
+  if (isSubscribed) {
+    // Начисляем
+    if (!isTasksDone.includes('sub_tg')) {
+      isTasksDone.push('sub_tg');
+      isBalance += SUB_REWARD;
+      subWasSubscribed = true;
+      showToast('🎉 +' + SUB_REWARD + ' IS за подписку!');
+    } else {
+      showToast('✅ Ты уже подписан');
+    }
+    subWasSubscribed = true;
+  } else {
+    showToast('❌ Ты ещё не подписался на канал');
+  }
+
+  updateUI(); scheduleSave(); loadISTasks(); loadISShop();
+}
+
+// Проверка "отписался ли" — вызывается при каждом запуске игры
+async function checkUnsubscription() {
+  // Если игрок никогда не был подписан — ничего не делаем
+  if (!subWasSubscribed) return;
+
+  // Если уже оштрафован — не штрафуем повторно
+  if (subWasPunished) {
+    // Но проверяем: может, обратно подписался?
+    if (API_URL) {
+      try {
+        const resp = await fetch(API_URL + '/check-sub?user_id=' + telegramId + '&channel=' + TG_CHANNEL);
+        const data = await resp.json();
+        if (data.subscribed === true) {
+          // Подписался обратно — обнуляем минус
+          if (isBalance < 0) {
+            isBalance = 0;
+            showToast('✅ Ты снова подписан, минус обнулён!');
+          }
+          subWasPunished = false;
+          updateUI(); scheduleSave();
+        }
+      } catch (e) {}
+    } else {
+      // Имитация: через 10 сек считаем что подписался обратно
+      // (в реальности тут будет сервер)
+    }
+    return;
+  }
+
+  // Проверяем статус
+  if (API_URL) {
+    try {
+      const resp = await fetch(API_URL + '/check-sub?user_id=' + telegramId + '&channel=' + TG_CHANNEL);
+      const data = await resp.json();
+      if (data.subscribed === false) {
+        // Отписался — штрафуем
+        applyPenalty();
+      }
+    } catch (e) {}
+  }
+  // Если API_URL пусто — имитация: не штрафуем (иначе все игроки сразу уйдут в минус)
+}
+
+function applyPenalty() {
+  isBalance -= SUB_PENALTY;
+  subWasPunished = true;
+  showToast('⚠️ Ты отписался! Штраф -' + SUB_PENALTY + ' IS');
+  updateUI(); scheduleSave(); loadISShop();
 }
 
 function doTask(id) {
@@ -1188,6 +1358,7 @@ function completeRegistration() {
   lastAutotapClaim = new Date().toISOString();
   dailyTapLimit = 20000; tapsToday = 0; lastTapDate = null; unlimitedUntil = 0;
   isBalance = 0; isTasksDone = []; isBoostMultUntil = 0; isAutoTapUntil = 0;
+  subWasSubscribed = false; subWasPunished = false;
   saveToLocal();
   document.getElementById('confirmScreen').style.display = 'none';
   document.getElementById('regScreen').style.display = 'none';
@@ -1630,6 +1801,8 @@ function init() {
   initSlideshow();
   window.addEventListener('beforeunload', saveToLocal);
   loadISShop();
+  // Проверяем, не отписался ли игрок (сработает только когда будет API_URL)
+  setTimeout(checkUnsubscription, 2000);
 }
 init();
 </script>
