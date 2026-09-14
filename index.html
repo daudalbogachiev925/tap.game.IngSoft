@@ -813,6 +813,10 @@ body::after {
   <div class="energy-fill" id="energyFill" style="width:100%"></div>
 <div class="energy-text" id="energyText">500 / 500</div>
 </div>
+<div class="energy-bar" style="background:rgba(255,215,0,0.1);border-color:rgba(255,215,0,0.3);">
+  <div class="energy-fill" id="tapLimitFill" style="width:0%;background:linear-gradient(90deg,#ff8c00,#ffd700);"></div>
+  <div class="energy-text" id="tapLimitText">Тапы: 0 / 20 000</div>
+</div>
 
 <div class="quick-actions">
   <button class="quick-btn" onclick="openModal('quests')"><span class="quick-icon">📋</span>Квесты</button>
@@ -834,6 +838,23 @@ body::after {
   <div class="slide" style="background-image:url('slide9.jpg')"></div>
   <div class="slide" style="background-image:url('slide10.jpg')"></div>
   <div class="slide-dots" id="slideDots"></div>
+</div>
+<!-- === IS БАЛАНС + МАГАЗИН === -->
+<div class="is-balance">
+  <span class="is-icon">💎</span>
+  <span>IS:</span>
+  <span class="is-val" id="isBalanceVal">0</span>
+</div>
+
+<div class="is-shop-panel">
+  <div class="is-shop-header">
+    <div>
+      <div class="is-shop-title">🛒 IS Магазин</div>
+      <div class="is-shop-sub">Трать IS на бусты и тапы</div>
+    </div>
+    <button class="btn-is" onclick="openModal('isTasks')">+ Заработать</button>
+  </div>
+  <div class="is-shop-grid" id="isShopGrid"></div>
 </div>
 
 <div class="top-panel">
@@ -1053,6 +1074,12 @@ body::after {
   <div id="profileContent"></div>
 </div></div>
 
+<div class="modal" id="modal-isTasks"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">💎 <span>Заработать IS</span></div><button class="modal-close" onclick="closeModal('isTasks')">×</button></div>
+  <p style="color:#b8a060;font-size:12px;text-align:center;margin-bottom:14px;">Выполняй задания — получай IS</p>
+  <div id="isTasksList" class="is-tasks-grid"></div>
+</div></div>
+
 <div class="modal" id="modal-promo"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">🎫 <span>Промокод</span></div><button class="modal-close" onclick="closeModal('promo')">×</button></div>
   <p style="color:#888;font-size:13px;margin-bottom:14px;text-align:center;">Введи промокод и получи награду</p>
@@ -1096,6 +1123,18 @@ const tg = window.Telegram?.WebApp;
 let telegramId=null, username=null, firstName=null;
 let score=0, energy=1000, maxEnergy=1000, multiplier=1;
 let dailyStreak=0, lastDailyClaim=null, totalTaps=0, level=1;
+
+// === ДНЕВНОЙ ЛИМИТ ТАПОВ ===
+let dailyTapLimit = 20000;        // базовый лимит в день
+let tapsToday = 0;                // сколько уже натапано сегодня
+let lastTapDate = null;           // дата последнего тапа (для сброса)
+let unlimitedUntil = 0;           // timestamp до которого безлимит
+
+// === ВАЛЮТА IS ===
+let isBalance = 0;                // сколько IS у игрока
+let isTasksDone = [];             // id выполненных заданий (чтобы не повторять)
+let isBoostMultUntil = 0;         // x2 очков временно
+let isAutoTapUntil = 0;           // автоклик временно
 let claimedQuests=[], claimedPromos=[];
 let nickname=null, phone=null, region=null, fullName=null;
 let avatarData=null;
@@ -1115,6 +1154,36 @@ const PROMOS = {
   'MEGA': { coins: 5000000, desc: '+5 000 000 очков' },
 };
 const DAILY_REWARDS = [{coins:100},{coins:200},{coins:300},{coins:500},{coins:1000},{coins:2000},{coins:5000}];
+// === IS ТОВАРЫ ===
+const IS_SHOP = [
+  { id:'unlim15',  icon:'♾️', name:'Безлимит 15 мин', desc:'Тапай без лимита', price:100,
+    apply:() => { unlimitedUntil = Date.now() + 15*60*1000; } },
+  { id:'unlim30',  icon:'♾️', name:'Безлимит 30 мин', desc:'Двойное время',   price:180,
+    apply:() => { unlimitedUntil = Date.now() + 30*60*1000; } },
+  { id:'tap5000',  icon:'👆', name:'+5 000 тапов',     desc:'К дневной норме', price:75,
+    apply:() => { dailyTapLimit += 5000; } },
+  { id:'tap25000', icon:'👆', name:'+25 000 тапов',    desc:'К дневной норме', price:300,
+    apply:() => { dailyTapLimit += 25000; } },
+  { id:'energy',   icon:'⚡', name:'Полная энергия',   desc:'Мгновенно',       price:50,
+    apply:() => { energy = maxEnergy; } },
+  { id:'mult2day', icon:'✖️', name:'x2 очков 30 мин',  desc:'Временный буст',  price:120,
+    apply:() => { isBoostMultUntil = Date.now() + 30*60*1000; } },
+  { id:'autotap',  icon:'🤖', name:'Автоклик 1 час',   desc:'+1 тап/сек',      price:200,
+    apply:() => { isAutoTapUntil = Date.now() + 60*60*1000; } },
+  { id:'reset',    icon:'🔄', name:'Сброс лимита',     desc:'Обнулить счётчик',price:250,
+    apply:() => { tapsToday = 0; } },
+];
+
+// === ЗАДАНИЯ ЗА IS ===
+const IS_TASKS = [
+  { id:'sub_tg',  icon:'📢', name:'Подписка на канал',      desc:'Telegram-канал IngSoft',  reward:50,  link:'https://t.me/ingsoft' },
+  { id:'sub_vk',  icon:'🅱️', name:'Подписка ВКонтакте',    desc:'Группа IngSoft',          reward:40,  link:'https://vk.com/ingsoft' },
+  { id:'sub_yt',  icon:'▶️', name:'Подписка YouTube',       desc:'Канал IngSoft',           reward:60,  link:'https://youtube.com/@ingsoft' },
+  { id:'like',    icon:'❤️', name:'Лайк ролика',            desc:'Поставь лайк',            reward:15,  link:'https://youtube.com/watch?v=xxx' },
+  { id:'repost',  icon:'🔁', name:'Репост ролика',          desc:'Поделись с друзьями',     reward:25,  link:'https://t.me/share/url?url=xxx' },
+  { id:'comment', icon:'💬', name:'Комментарий',            desc:'Оставь коммент',          reward:20,  link:'https://youtube.com/watch?v=xxx' },
+  { id:'invite',  icon:'👥', name:'Пригласи друга',         desc:'За каждого друга',        reward:100, link:'' },
+];
 
 const QUESTS = [
   { id:'tap100', name:'🌟 Первые шаги', desc:'100 тапов', reward:100, check: () => totalTaps >= 100 },
@@ -1217,6 +1286,7 @@ function showToast(msg) { const el = document.getElementById('toast'); el.textCo
 function openModal(name) {
   document.getElementById('modal-' + name)?.classList.add('active');
   if (name === 'quests') loadQuests();
+  if (name === 'isTasks') loadISTasks();
   if (name === 'boosts') loadBoosts();
   if (name === 'achievements') loadAchievements();
   if (name === 'daily') loadDaily();
@@ -1226,6 +1296,76 @@ function openModal(name) {
   if (name === 'referral') loadReferral();
   if (name === 'promo') loadPromoHistory();
   if (name === 'games') loadGames();
+
+}
+// === РЕНДЕР IS МАГАЗИНА ===
+function loadISShop() {
+  const el = document.getElementById('isShopGrid');
+  if (!el) return;
+  el.innerHTML = IS_SHOP.map(item => {
+    const can = isBalance >= item.price;
+    return '<div class="is-shop-item" onclick="buyIS(\'' + item.id + '\')">' +
+      '<div class="isi-icon">' + item.icon + '</div>' +
+      '<div class="isi-name">' + item.name + '</div>' +
+      '<div class="isi-desc">' + item.desc + '</div>' +
+      '<div class="isi-price" style="' + (can ? '' : 'opacity:0.4;') + '">💎 ' + item.price + '</div>' +
+    '</div>';
+  }).join('');
+  const balEl = document.getElementById('isBalanceVal');
+  if (balEl) balEl.textContent = isBalance;
+}
+
+function buyIS(id) {
+  const item = IS_SHOP.find(x => x.id === id);
+  if (!item) return;
+  if (isBalance < item.price) { showToast('💎 Недостаточно IS'); return; }
+  isBalance -= item.price;
+  item.apply();
+  updateUI(); scheduleSave(); loadISShop();
+  showToast('✅ Куплено: ' + item.name);
+}
+
+// === РЕНДЕР ЗАДАНИЙ IS ===
+function loadISTasks() {
+  const el = document.getElementById('isTasksList');
+  if (!el) return;
+  el.innerHTML = IS_TASKS.map(t => {
+    const done = isTasksDone.includes(t.id);
+    let btn;
+    if (done) btn = '<button class="btn-is" disabled>✅ Выполнено</button>';
+    else if (t.id === 'invite') btn = '<button class="btn-is" onclick="doInvite()">Пригласить</button>';
+    else btn = '<button class="btn-is" onclick="doTask(\'' + t.id + '\')">Перейти</button>';
+    return '<div class="is-task">' +
+      '<div class="is-task-icon">' + t.icon + '</div>' +
+      '<div class="is-task-info">' +
+        '<div class="is-task-name">' + t.name + '</div>' +
+        '<div class="is-task-desc">' + t.desc + '</div>' +
+        '<div class="is-task-reward">💎 +' + t.reward + ' IS</div>' +
+      '</div>' + btn +
+    '</div>';
+  }).join('');
+}
+
+function doTask(id) {
+  const t = IS_TASKS.find(x => x.id === id);
+  if (!t || isTasksDone.includes(id)) return;
+  if (t.link) window.open(t.link, '_blank');
+  // Имитация проверки — через 2 секунды начисляем
+  setTimeout(() => {
+    if (isTasksDone.includes(id)) return;
+    isTasksDone.push(id);
+    isBalance += t.reward;
+    updateUI(); scheduleSave(); loadISTasks(); loadISShop();
+    showToast('💎 +' + t.reward + ' IS за ' + t.name);
+  }, 2000);
+}
+
+function doInvite() {
+  if (isTasksDone.includes('invite')) return;
+  isTasksDone.push('invite');
+  isBalance += 100;
+  updateUI(); scheduleSave(); loadISTasks(); loadISShop();
+  showToast('💎 +100 IS за приглашение');
 }
 function closeModal(name) { document.getElementById('modal-' + name)?.classList.remove('active'); }
 function closeAllModals() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
@@ -1247,6 +1387,8 @@ function saveToLocal() {
     claimedQuests, claimedPromos, dailyStreak, lastDailyClaim,
     autotapLevel, lastAutotapClaim, passiveIncome,
     walletBalance, walletTotal, upgrades
+    dailyTapLimit, tapsToday, lastTapDate, unlimitedUntil,
+    isBalance, isTasksDone, isBoostMultUntil, isAutoTapUntil,
   };
   try { localStorage.setItem('ingsoft_user', JSON.stringify(user)); } catch(e) {}
 }
@@ -1267,6 +1409,14 @@ function loadPlayer() {
     passiveIncome = u.passiveIncome ?? 0;
     walletBalance = u.walletBalance ?? 0; walletTotal = u.walletTotal ?? 0;
     upgrades = u.upgrades || {};
+    dailyTapLimit = u.dailyTapLimit ?? 20000;
+    tapsToday = u.tapsToday ?? 0;
+    lastTapDate = u.lastTapDate || null;
+    unlimitedUntil = u.unlimitedUntil ?? 0;
+    isBalance = u.isBalance ?? 0;
+    isTasksDone = u.isTasksDone || [];
+    isBoostMultUntil = u.isBoostMultUntil ?? 0;
+    isAutoTapUntil = u.isAutoTapUntil ?? 0;
     document.getElementById('regScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     updateUI();
@@ -1287,6 +1437,23 @@ function updateUI() {
   document.getElementById('statPerSec').textContent = fmt(autotapLevel * multiplier) + '/с';
   document.getElementById('energyFill').style.width = Math.min(100, (energy / maxEnergy * 100)) + '%';
   document.getElementById('energyText').textContent = Math.floor(energy) + ' / ' + maxEnergy;
+// === ДНЕВНОЙ ЛИМИТ ===
+const unlimited = Date.now() < unlimitedUntil;
+const tapLimitEl = document.getElementById('tapLimitFill');
+const tapLimitTxt = document.getElementById('tapLimitText');
+if (tapLimitEl && tapLimitTxt) {
+  if (unlimited) {
+    const left = Math.ceil((unlimitedUntil - Date.now()) / 60000);
+    tapLimitEl.style.width = '100%';
+    tapLimitEl.style.background = 'linear-gradient(90deg,#22c55e,#00f2fe)';
+    tapLimitTxt.textContent = '∞ Безлимит ещё ' + left + ' мин';
+  } else {
+    tapLimitEl.style.width = Math.min(100, (tapsToday / dailyTapLimit) * 100) + '%';
+    tapLimitEl.style.background = 'linear-gradient(90deg,#ff8c00,#ffd700)';
+    tapLimitTxt.textContent = 'Тапы: ' + tapsToday.toLocaleString() + ' / ' + dailyTapLimit.toLocaleString();
+  }
+}
+
   const levelCost = level * 10000;
   document.getElementById('levelFill').style.width = Math.min(100, (score / levelCost) * 100) + '%';
   document.getElementById('levelText').textContent = 'Ур. ' + level + ' — ' + fmt(score) + ' / ' + fmt(levelCost);
@@ -1299,7 +1466,23 @@ function updateUI() {
 
 document.getElementById('tapBtn').addEventListener('click', (e) => {
   if (energy <= 0) { showToast('⚡ Энергия кончилась!'); return; }
-  score += multiplier; energy -= 1; totalTaps += 1;
+
+  // === ПРОВЕРКА ДНЕВНОГО ЛИМИТА ===
+  const today = new Date().toISOString().split('T')[0];
+  if (lastTapDate !== today) {          // новый день — сброс
+    lastTapDate = today;
+    tapsToday = 0;
+  }
+  const unlimited = Date.now() < unlimitedUntil;
+  if (!unlimited && tapsToday >= dailyTapLimit) {
+    showToast('🚫 Дневной лимит ' + dailyTapLimit.toLocaleString() + ' тапов');
+    return;
+  }
+
+  const multBonus = Date.now() < isBoostMultUntil ? 2 : 1;
+  score += multiplier * multBonus;
+  tapsToday += 1;                        // считаем тап
+  // === конец проверки ===
   const newLevel = Math.floor(score / 10000) + 1;
   if (newLevel > level) { level = newLevel; showToast('🎉 Уровень ' + level + '!'); }
   updateUI();
@@ -1400,6 +1583,75 @@ function loadGames() {
     '</div>'
   ).join('');
 }
+// === РЕНДЕР IS МАГАЗИНА ===
+function loadISShop() {
+  const el = document.getElementById('isShopGrid');
+  if (!el) return;                       // если элемента нет — выходим (защита)
+  el.innerHTML = IS_SHOP.map(item => {
+    const can = isBalance >= item.price; // хватает ли IS
+    return '<div class="is-shop-item" onclick="buyIS(\'' + item.id + '\')">' +
+      '<div class="isi-icon">' + item.icon + '</div>' +
+      '<div class="isi-name">' + item.name + '</div>' +
+      '<div class="isi-desc">' + item.desc + '</div>' +
+      '<div class="isi-price" style="' + (can ? '' : 'opacity:0.4;') + '">💎 ' + item.price + '</div>' +
+    '</div>';
+  }).join('');
+  const balEl = document.getElementById('isBalanceVal');
+  if (balEl) balEl.textContent = isBalance;
+}
+
+function buyIS(id) {
+  const item = IS_SHOP.find(x => x.id === id);
+  if (!item) return;
+  if (isBalance < item.price) { showToast('💎 Недостаточно IS'); return; }
+  isBalance -= item.price;               // списываем
+  item.apply();                          // применяем эффект
+  updateUI(); scheduleSave(); loadISShop();
+  showToast('✅ Куплено: ' + item.name);
+}
+
+// === РЕНДЕР ЗАДАНИЙ IS ===
+function loadISTasks() {
+  const el = document.getElementById('isTasksList');
+  if (!el) return;
+  el.innerHTML = IS_TASKS.map(t => {
+    const done = isTasksDone.includes(t.id);
+    let btn;
+    if (done) btn = '<button class="btn-is" disabled>✅ Выполнено</button>';
+    else if (t.id === 'invite') btn = '<button class="btn-is" onclick="doInvite()">Пригласить</button>';
+    else btn = '<button class="btn-is" onclick="doTask(\'' + t.id + '\')">Перейти</button>';
+    return '<div class="is-task">' +
+      '<div class="is-task-icon">' + t.icon + '</div>' +
+      '<div class="is-task-info">' +
+        '<div class="is-task-name">' + t.name + '</div>' +
+        '<div class="is-task-desc">' + t.desc + '</div>' +
+        '<div class="is-task-reward">💎 +' + t.reward + ' IS</div>' +
+      '</div>' + btn +
+    '</div>';
+  }).join('');
+}
+
+function doTask(id) {
+  const t = IS_TASKS.find(x => x.id === id);
+  if (!t || isTasksDone.includes(id)) return;
+  if (t.link) window.open(t.link, '_blank');   // открываем ссылку
+  // Имитация проверки — через 2 секунды начисляем
+  setTimeout(() => {
+    if (isTasksDone.includes(id)) return;
+    isTasksDone.push(id);
+    isBalance += t.reward;
+    updateUI(); scheduleSave(); loadISTasks(); loadISShop();
+    showToast('💎 +' + t.reward + ' IS за ' + t.name);
+  }, 2000);
+}
+
+function doInvite() {
+  if (isTasksDone.includes('invite')) return;
+  isTasksDone.push('invite');
+  isBalance += 100;
+  updateUI(); scheduleSave(); loadISTasks(); loadISShop();
+  showToast('💎 +100 IS за приглашение');
+}
 
 function uploadAvatar() {
   const input = document.createElement('input');
@@ -1453,6 +1705,8 @@ function completeRegistration() {
   claimedQuests = []; claimedPromos = [];
   passiveIncome = 0; walletBalance = 0; walletTotal = 0;
   lastAutotapClaim = new Date().toISOString();
+  dailyTapLimit = 20000; tapsToday = 0; lastTapDate = null; unlimitedUntil = 0;
+  isBalance = 0; isTasksDone = []; isBoostMultUntil = 0; isAutoTapUntil = 0;
   saveToLocal();
   document.getElementById('confirmScreen').style.display = 'none';
   document.getElementById('regScreen').style.display = 'none';
@@ -1930,9 +2184,11 @@ function playPoker() {
   updateUI(); scheduleSave();
 }
 function runAutotap() {
-  if (autotapLevel <= 0) return;
-  score += autotapLevel * multiplier;
-  totalTaps += autotapLevel;
+  let taps = autotapLevel;
+  if (Date.now() < isAutoTapUntil) taps += 1; // IS-автоклик
+  if (taps <= 0) return;
+  score += taps * multiplier;
+  totalTaps += taps;
   updateUI();
 }
 function runPassive() {
@@ -2011,6 +2267,7 @@ function init() {
   setInterval(loadTop10, 5000);
   initSlideshow();
   window.addEventListener('beforeunload', saveToLocal);
+  loadISShop();
 }
 init();
 </script>
