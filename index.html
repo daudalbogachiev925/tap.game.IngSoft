@@ -74,6 +74,54 @@ body::after {
 .header-fio { font-size:11px; color:#9ab; }
 .header-rank { font-size:11px; color:#8899aa; }
 .header-rank b { color:var(--ing-gold); }
+/* === КНОПКИ В ШАПКЕ (ПРОМОКОДЫ / КОШЕЛЁК) === */
+.header-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(79,172,254,0.2);
+}
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(79,172,254,0.15), rgba(30,58,95,0.25));
+  border: 1px solid rgba(79,172,254,0.3);
+  border-radius: 10px;
+  padding: 6px 10px;
+  color: #e8f4ff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.header-btn:hover {
+  background: linear-gradient(135deg, rgba(79,172,254,0.3), rgba(30,58,95,0.4));
+  border-color: rgba(79,172,254,0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(79,172,254,0.3);
+}
+.header-btn:active {
+  transform: scale(0.95);
+}
+.header-btn-icon {
+  font-size: 14px;
+}
+.header-btn-label {
+  font-size: 10px;
+}
+
+/* Скрываем текст на маленьких экранах */
+@media (max-width: 480px) {
+  .header-btn-label { display: none; }
+  .header-btn { padding: 6px 8px; }
+  .header-btn-icon { font-size: 16px; }
+  .header-actions { gap: 4px; margin-left: 8px; padding-left: 8px; }
+}
+
 .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px; }
 .stat-card { background: linear-gradient(145deg, rgba(30,58,95,0.3), rgba(15,21,32,0.5)); border:1px solid rgba(79,172,254,0.2); border-radius:16px; padding:16px 8px; text-align:center; transition: transform 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); }
 .stat-card::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 50% -50%, rgba(79,172,254,0.15), transparent 70%); }
@@ -335,6 +383,16 @@ body::after {
       <div class="header-nick" id="userName">Игрок</div>
       <div class="header-fio" id="headerFio">—</div>
       <div class="header-rank">🏆 Место: <b id="headerRank">—</b></div>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="openModal('promocodes')" title="Промокоды">
+        <span class="header-btn-icon">🏷️</span>
+        <span class="header-btn-label">Промокоды</span>
+      </button>
+      <button class="header-btn" onclick="openModal('wallet')" title="Кошелёк">
+        <span class="header-btn-icon">💰</span>
+        <span class="header-btn-label">Кошелёк</span>
+      </button>
     </div>
   </div>
 </div>
@@ -1048,9 +1106,7 @@ function buildSidebar() {
     { icon:'🎁', label:'Награды', action:'openModal(\'daily\')' },
     { icon:'📊', label:'Статистика', action:'openModal(\'stats\')' },
     { icon:'👤', label:'Профиль', action:'openModal(\'profile\')' },
-    { icon:'🏷️', label:'Промокоды', action:'openModal(\'promocodes\')' },
     { icon:'🎫', label:'Промокод', action:'openModal(\'promo\')' },
-    { icon:'💰', label:'Кошелёк', action:'openModal(\'wallet\')' },
     { icon:'ℹ️', label:'О игре', action:'openModal(\'about\')' },
   ];
   const sb = document.getElementById('sidebarItems'); if (!sb) return;
