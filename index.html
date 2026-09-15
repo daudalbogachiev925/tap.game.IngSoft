@@ -526,7 +526,10 @@ body.theme-female .corner-logo {
     <p style="color:#888; font-size:13px; margin-bottom:20px;">Выбери пол и заполни данные</p>
     <input type="text" id="regNickname" class="reg-input" placeholder="Никнейм" maxlength="20">
     <input type="tel" id="regPhone" class="reg-input" placeholder="Номер телефона (+7...)">
-    <input type="text" id="regRegion" class="reg-input" placeholder="Город / регион">
+    <select id="regRegion" class="reg-input" style="appearance:none; cursor:pointer;">
+      <option value="" disabled selected>Выбери регион</option>
+      <option value="Ингушетия">🏔️ Ингушетия</option>
+    </select>
     <input type="text" id="regFullName" class="reg-input" placeholder="ФИО полностью">
     
     <!-- ВЫБОР ПОЛА -->
@@ -1320,7 +1323,7 @@ function buildSidebar() {
   ).join('');
 }
 
-const GAMES = [
+const GAMES_MALE = [
   { id:'roulette', icon:'🎰', name:'Рулетка', desc:'Крути колесо' },
   { id:'dice', icon:'🎲', name:'Кубик', desc:'Бросай кубик' },
   { id:'coin', icon:'🪙', name:'Монетка', desc:'Орёл или решка' },
@@ -1338,6 +1341,26 @@ const GAMES = [
   { id:'basket3', icon:'🏀', name:'3-очковый', desc:'Сложный бросок' },
   { id:'mines', icon:'💣', name:'Сапёр', desc:'Открой клетку' },
   { id:'poker', icon:'🎰', name:'Видеопокер', desc:'Собери комбо' },
+];
+
+const GAMES_FEMALE = [
+  { id:'roulette', icon:'💐', name:'Букет', desc:'Собери букет' },
+  { id:'dice', icon:'💎', name:'Кристалл', desc:'Найди кристалл' },
+  { id:'coin', icon:'🦋', name:'Бабочка', desc:'Поймай бабочку' },
+  { id:'slots', icon:'🌸', name:'Цветы', desc:'Собери 3 цветка' },
+  { id:'basket', icon:'🎀', name:'Бантик', desc:'Подбери бантик' },
+  { id:'mine', icon:'💖', name:'Сердечко', desc:'Найди сердечко' },
+  { id:'wheel', icon:'🌈', name:'Радуга', desc:'Крути радугу' },
+  { id:'darts', icon:'🌟', name:'Звёздочка', desc:'Попади в звезду' },
+  { id:'fishing', icon:'🐚', name:'Ракушка', desc:'Найди ракушку' },
+  { id:'cards', icon:'🌹', name:'Роза', desc:'Собери букет роз' },
+  { id:'shells', icon:'👑', name:'Корона', desc:'Угадай, где корона' },
+  { id:'craps', icon:'🍰', name:'Пирожное', desc:'Выбери вкус' },
+  { id:'archery', icon:'💍', name:'Кольцо', desc:'Попади в цель' },
+  { id:'penalty', icon:'🍓', name:'Ягодка', desc:'Собери ягоды' },
+  { id:'basket3', icon:'🧁', name:'Капкейк', desc:'Укрась капкейк' },
+  { id:'mines', icon:'🎁', name:'Подарок', desc:'Открой подарок' },
+  { id:'poker', icon:'🧸', name:'Плюшевый', desc:'Собери коллекцию' },
 ];
 
 const FAKE_PLAYERS = [
@@ -1377,7 +1400,8 @@ function loadTop10() {
 
 function loadGames() {
   const el = document.getElementById('gamesGrid');
-  el.innerHTML = GAMES.map(g =>
+  const list = (gender === 'female') ? GAMES_FEMALE : GAMES_MALE;
+  el.innerHTML = list.map(g =>
     '<div class="game-card" onclick="closeModal(\'games\'); openModal(\'' + g.id + '\')">' +
       '<div class="game-card-icon">' + g.icon + '</div>' +
       '<div class="game-card-name">' + g.name + '</div>' +
@@ -1607,7 +1631,7 @@ function checkRegistration() {
   const fn = document.getElementById('regFullName').value.trim();
   if (!nick || nick.length < 2) { showToast('Введи никнейм'); return; }
   if (!ph || ph.length < 10) { showToast('Введи номер телефона'); return; }
-  if (!reg || reg.length < 3) { showToast('Введи регион'); return; }
+  if (!reg) { showToast('Выбери регион'); return; }
   if (!fn || fn.length < 5) { showToast('Введи ФИО'); return; }
   if (!gender) { showToast('Выбери пол'); return; }
   regData = { nickname: nick, phone: ph, region: reg, fullName: fn, gender: gender };
