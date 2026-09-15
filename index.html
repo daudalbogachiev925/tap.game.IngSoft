@@ -736,6 +736,9 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 <div class="modal" id="modal-profile"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">👤 <span>Профиль</span></div><button class="modal-close" onclick="closeModal('profile')">×</button></div>
   <div id="profileContent"></div>
+  <button onclick="logout()" style="width:100%; padding:14px; margin-top:14px; border-radius:14px; border:1px solid rgba(230,57,70,0.4); background:linear-gradient(135deg, rgba(230,57,70,0.15), rgba(230,57,70,0.05)); color:#e63946; font-size:15px; font-weight:800; cursor:pointer;">
+    🚪 Выйти из аккаунта
+  </button>
 </div></div>
 
 <div class="modal" id="modal-isTasks"><div class="modal-content">
@@ -875,7 +878,7 @@ const IS_SHOP = [
   { id:'reset',    icon:'🔄', name:'Сброс лимита',     desc:'Обнулить счётчик',price:250, apply:() => { tapsToday = 0; } },
 ];
 
-const API_URL = '';
+const API_URL = 'https://ingsofttap.bothost.tech';
 const TG_CHANNEL = 'IngSoftTab06';
 const TG_CHANNEL_URL = 'https://t.me/IngSoftTab06';
 const SUB_REWARD = 50;
@@ -1653,6 +1656,65 @@ function loadStats() {
     '<div class="profile-row"><span>Пассив</span><span>+' + fmt(passiveIncome) + '/час</span></div>' +
     '<div class="profile-row"><span>Бустов</span><span>' + Object.keys(upgrades).length + ' / ' + BOOSTS.length + '</span></div>';
 }
+
+// === ВЫХОД ИЗ АККАУНТА ===
+function logout() {
+  const confirmOut = confirm('⚠️ Выйти из аккаунта?\n\nТы сможешь зайти снова по логину и паролю.');
+  if (!confirmOut) return;
+
+  // Удаляем токен
+  localStorage.removeItem('ingsoft_token');
+  currentToken = null;
+  currentUser = null;
+
+  // Очищаем все переменные
+  nickname = null; phone = null; region = null; fullName = null;
+  gender = null; selectedGender = null; avatarData = null;
+  score = 0; energy = 500; maxEnergy = 500; multiplier = 1;
+  level = 1; totalTaps = 0; dailyStreak = 0; autotapLevel = 0;
+  claimedQuests = []; claimedPromos = []; earnedPromocodes = [];
+  isBalance = 0; isTasksDone = []; unlimitedUntil = 0;
+  isBoostMultUntil = 0; isAutoTapUntil = 0;
+  subWasSubscribed = false; subWasPunished = false;
+  walletBalance = 0; walletTotal = 0;
+  upgrades = {}; passiveIncome = 0;
+
+  // Убираем тему
+  document.body.classList.remove('theme-female');
+  document.body.classList.remove('theme-male');
+
+  // Скрываем приложение, показываем авторизацию
+  closeAllModals();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'flex';
+
+  // Очищаем поля формы
+  document.getElementById('loginLogin').value = '';
+  document.getElementById('loginPassword').value = '';
+  document.getElementById('regLogin').value = '';
+  document.getElementById('regPassword').value = '';
+  document.getElementById('regNickname').value = '';
+  document.getElementById('regPhone').value = '';
+  document.getElementById('regRegion').value = '';
+  document.getElementById('regFullName').value = '';
+  selectedGender = null;
+
+  // Сбрасываем кнопки пола
+  const maleBtn = document.getElementById('genderMale');
+  const femaleBtn = document.getElementById('genderFemale');
+  if (maleBtn && femaleBtn) {
+    maleBtn.style.border = '2px solid rgba(79,172,254,0.3)';
+    maleBtn.style.background = 'rgba(10,10,15,0.7)';
+    maleBtn.style.boxShadow = 'none';
+    femaleBtn.style.border = '2px solid rgba(255,105,180,0.3)';
+    femaleBtn.style.background = 'rgba(10,10,15,0.7)';
+    femaleBtn.style.boxShadow = 'none';
+  }
+
+  showTab('login');
+  showToast('🚪 Ты вышел из аккаунта');
+}
+
 
 function loadProfile() {
   const av = avatarData ? '<div class="profile-avatar" style="background-image:url(' + avatarData + ');background-size:cover;"></div>' : '<div class="profile-avatar">' + (nickname || '?')[0].toUpperCase() + '</div>';
