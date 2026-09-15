@@ -950,7 +950,8 @@ const IS_SHOP = [
 const API_URL = 'https://ingsofttap.bothost.tech';
 const TG_CHANNEL = 'IngSoftTab06';
 const TG_CHANNEL_URL = 'https://t.me/IngSoftTab06';
-const BOT_USERNAME = 'IngSoftTab06';
+const BOT_USERNAME = 'ingsoft_checkbot';       // ← имя БОТА (не канала!)
+const BOT_SHORT_NAME = 'tap';                  // ← короткое имя Mini App
 const SUB_REWARD = 50;
 const SUB_PENALTY = 500;
 
@@ -1525,6 +1526,10 @@ async function doRegister() {
   if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
   if (!nick) { showToast('Введи никнейм'); return; }
   if (/\s/.test(nick)) { showToast('Никнейм без пробелов'); return; }
+  if (!/^[a-zA-Z0-9_]+$/.test(nick)) { 
+    showToast('Ник только латиница, цифры и _'); 
+    return; 
+  }
   if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
   if (!region) { showToast('Выбери регион'); return; }
   if (!full_name) { showToast('Введи ФИО'); return; }
@@ -1789,9 +1794,10 @@ function loadAchievements() {
 // РЕФЕРАЛЬНАЯ СИСТЕМА
 // ============================================================
 async function loadReferral() {
-  // Ссылка с ником пользователя
+  // Ссылка на Mini App с ником пользователя
   const myNick = nickname || ('user' + telegramId);
-  const link = 'https://t.me/' + BOT_USERNAME + '?startapp=ref_' + encodeURIComponent(myNick);
+  // ⚠️ ВАЖНО: URL = t.me/БОТ/КОРОТКОЕ_ИМЯ?startapp=ref_ник
+  const link = 'https://t.me/' + BOT_USERNAME + '/' + BOT_SHORT_NAME + '?startapp=ref_' + encodeURIComponent(myNick);
   const linkEl = document.getElementById('refLink');
   if (linkEl) linkEl.textContent = link;
 
