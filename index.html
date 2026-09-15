@@ -381,8 +381,8 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     <p style="color:#888; font-size:13px; margin-bottom:20px;">Эти данные нужны, чтобы вы могли писать в чате</p>
 
     <div style="display:flex; gap:8px; margin-bottom:16px;">
-      <button id="tabLogin" onclick="showTab('login')" class="reg-btn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f);">Вход</button>
-      <button id="tabRegister" onclick="showTab('register')" class="reg-btn" style="background:transparent;border:1px solid rgba(79,172,254,0.3);">Регистрация</button>
+      <button id="tabLogin" type="button" class="reg-btn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f);">Вход</button>
+      <button id="tabRegister" type="button" class="reg-btn" style="background:transparent;border:1px solid rgba(79,172,254,0.3);">Регистрация</button>
     </div>
 
     <div id="formLogin" style="display:none;">
@@ -1804,27 +1804,32 @@ function loadAchievements() {
 }
 
 async function loadReferral() {
+  if (!currentToken) return;
+
   const myNick = nickname || ('user' + telegramId);
-  const link = 'https://t.me/' + BOT_USERNAME + '/' + BOT_SHORT_NAME + '?startapp=ref_' + encodeURIComponent(myNick);
+  const myTgId = telegramId || '';
+  const link = 'https://t.me/' + BOT_USERNAME + '/' + BOT_SHORT_NAME
+             + '?startapp=ref_' + encodeURIComponent(myNick) + '_' + myTgId;
+
   const linkEl = document.getElementById('refLink');
   if (linkEl) linkEl.textContent = link;
 
-  if (currentToken) {
-    try {
-      const resp = await fetch(API_URL + '/referrals?token=' + currentToken);
-      const data = await resp.json();
-      if (data.ok) {
-        myReferrals = data.referrals || [];
-        const cntEl = document.getElementById('refCount');
-        if (cntEl) cntEl.textContent = myReferrals.length;
-        myReferralBonus = getTotalReferralEarnings(myReferrals.length);
-        renderReferralList();
-      }
-    } catch (e) {
-      console.error('Ошибка загрузки рефералов:', e);
-      const wrap = document.getElementById('referralList');
-      if (wrap) wrap.innerHTML = '<p style="text-align:center;color:#ff4444;font-size:12px;padding:12px;">Ошибка загрузки списка</p>';
+  try {
+    const resp = await fetch(API_URL + '/referrals?token=' + encodeURIComponent(currentToken));
+    const data = await resp.json();
+    if (data.ok) {
+      myReferrals = data.referrals || [];
+      const cntEl = document.getElementById('refCount');
+      if (cntEl) cntEl.textContent = myReferrals.length;
+      myReferralBonus = getTotalReferralEarnings(myReferrals.length);
+      renderReferralList();
+    } else {
+      console.warn('referrals error:', data.error);
     }
+  } catch (e) {
+    console.error('Ошибка загрузки рефералов:', e);
+    const wrap = document.getElementById('referralList');
+    if (wrap) wrap.innerHTML = '<p style="text-align:center;color:#ff4444;font-size:12px;padding:12px;">Ошибка: ' + e.message + '</p>';
   }
 }
 
@@ -2462,6 +2467,7 @@ async function loadProgressByToken(token) {
 }
 
 function init() {
+  // === Telegram WebApp init ===
   if (tg) {
     tg.ready();
     tg.expand();
@@ -2469,18 +2475,39 @@ function init() {
   }
   getTelegramUser();
 
+  // === РЕФЕРАЛЬНАЯ СИСТЕМА: ловим start_param ===
   try {
     const startParam = tg?.initDataUnsafe?.start_param;
+    console.log('🔗 start_param =', startParam);
+
     if (startParam && startParam.startsWith('ref_')) {
-      const refNick = decodeURIComponent(startParam.replace('ref_', ''));
-      if (refNick && refNick.length > 0 && refNick !== nickname) {
+      // Формат: ref_<nickname>_<telegram_id>
+      const parts = startParam.replace('ref_', '').split('_');
+      const refNick = decodeURIComponent(parts[0] || '');
+      const refTgId = parts[1] ? parseInt(parts[1], 10) : null;
+
+      if (refNick && refNick.length > 0) {
         referrerNickname = refNick;
         localStorage.setItem('ingsoft_referrer_nickname', refNick);
-        console.log('✅ Реферер по нику:', referrerNickname);
+        console.log('✅ referrer_nickname =', refNick);
+      }
+      if (refTgId && !isNaN(refTgId)) {
+        referrerId = refTgId;
+        localStorage.setItem('ingsoft_referrer_id', String(refTgId));
+        console.log('✅ referrer_id =', refTgId);
       }
     }
-  } catch (e) { console.error(e); }
+  } catch (e) {
+    console.error('start_param error:', e);
+  }
 
+  // === Кнопки Вход / Регистрация — вешаем нормально ===
+  const btnLogin = document.getElementById('tabLogin');
+  const btnReg = document.getElementById('tabRegister');
+  if (btnLogin) btnLogin.addEventListener('click', function(e) { e.preventDefault(); showTab('login'); });
+  if (btnReg)  btnReg.addEventListener('click',  function(e) { e.preventDefault(); showTab('register'); });
+
+  // === Проверяем сохранённый токен ===
   const savedToken = localStorage.getItem('ingsoft_token');
   if (savedToken) {
     currentToken = savedToken;
@@ -2488,6 +2515,8 @@ function init() {
   } else {
     document.getElementById('authScreen').style.display = 'flex';
   }
+
+  // === Таймеры ===
   setInterval(runAutotap, 1000);
   setInterval(runPassive, 1000);
   setInterval(regenEnergy, 1000);
