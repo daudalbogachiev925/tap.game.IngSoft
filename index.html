@@ -961,8 +961,8 @@ function getReferralReward(friendNumber) {
   if (friendNumber === 1) return 100;
   if (friendNumber === 2) return 200;
   if (friendNumber === 3) return 250;
-  if (friendNumber > 100) return 100;  // после 100 друзей — по 100 IS
-  return 300;  // друзья 4-100 дают 300 IS
+  if (friendNumber > 100) return 300;  // 100+ друзей — по 300 IS
+  return 100;  // друзья 4-100 дают 100 IS
 }
 
 // Общая сумма, которую можно заработать
@@ -1876,8 +1876,8 @@ function loadReferralBonus() {
     { range: '1 друг', reward: '+100 IS', need: 1 },
     { range: '2 друга', reward: '+200 IS', need: 2 },
     { range: '3 друга', reward: '+250 IS', need: 3 },
-    { range: '4-100 друзей', reward: '+300 IS за каждого', need: 4 },
-    { range: '100+ друзей', reward: '+100 IS за каждого', need: 100 }
+    { range: '4-100 друзей', reward: '+100 IS за каждого', need: 4 },
+    { range: '100+ друзей', reward: '+300 IS за каждого', need: 100 }
   ];
   
   el.innerHTML = rows.map((r, i) => {
