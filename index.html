@@ -717,10 +717,12 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 
 <div class="modal" id="modal-referral"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">👥 <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
-  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">За каждого друга — <b style="color:#ffd700;">+5000</b></p>
+  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">За каждого друга — <b style="color:#ffd700;">+100 IS</b></p>
   <div style="background:rgba(230,57,70,0.08);padding:12px;border-radius:12px;word-break:break-all;font-size:11px;color:#e63946;margin-bottom:10px;border:1px solid rgba(230,57,70,0.3);font-family:monospace;" id="refLink"></div>
-  <button class="btn-buy" style="width:100%;padding:12px;" onclick="copyRefLink()">📋 Копировать</button>
+  <button class="btn-buy" style="width:100%;padding:12px;" onclick="copyRefLink()">📋 Копировать ссылку</button>
   <div style="margin-top:12px;text-align:center;font-size:13px;color:#888;">Приглашено: <span id="refCount" style="color:#e63946;font-weight:800;">0</span></div>
+  <div style="margin-top:16px;font-size:13px;font-weight:800;color:#4facfe;">Твои друзья:</div>
+  <div id="referralList" style="margin-top:8px;max-height:240px;overflow-y:auto;"></div>
 </div></div>
 
 <div class="modal" id="modal-daily"><div class="modal-content">
@@ -855,6 +857,11 @@ let earnedPromocodes = [];
 let currentToken = null;
 let currentUser = null;
 let selectedGender = null;
+
+// === РЕФЕРАЛЬНАЯ СИСТЕМА ===
+let referrerId = null;
+let myReferrals = [];
+const REFERRAL_REWARD = 100;
 
 const PROMOS = {
   'INGSOFT': { coins: 50000, desc: '+50 000 очков' },
@@ -1424,14 +1431,14 @@ function showTab(tab) {
 async function doRegister() {
   const login = document.getElementById('regLogin').value.trim();
   const password = document.getElementById('regPassword').value;
-  const nickname = document.getElementById('regNickname').value.trim();
+  const nick = document.getElementById('regNickname').value.trim();
   const phone = document.getElementById('regPhone').value.trim();
   const region = document.getElementById('regRegion').value;
   const full_name = document.getElementById('regFullName').value.trim();
 
   if (!login || login.length < 3) { showToast('Логин минимум 3 символа'); return; }
   if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
-  if (!nickname) { showToast('Введи никнейм'); return; }
+  if (!nick) { showToast('Введи никнейм'); return; }
   if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
   if (!region) { showToast('Выбери регион'); return; }
   if (!full_name) { showToast('Введи ФИО'); return; }
@@ -1442,8 +1449,10 @@ async function doRegister() {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        login, password, nickname, gender: selectedGender,
-        region, phone, full_name
+        login, password, nickname: nick, gender: selectedGender,
+        region, phone, full_name,
+        telegram_id: telegramId,
+        referrer_id: referrerId
       })
     });
     const data = await resp.json();
@@ -1453,9 +1462,8 @@ async function doRegister() {
       return;
     }
 
-    // === УСПЕШНАЯ РЕГИСТРАЦИЯ ===
     localStorage.setItem('last_login', login);
-    showRegisterSuccessModal(nickname, login);
+    showRegisterSuccessModal(nick, login);
 
   } catch (e) {
     console.error(e);
@@ -1517,26 +1525,23 @@ async function doLogin() {
     walletBalance = u.wallet_balance ?? 0;
     walletTotal = u.wallet_total ?? 0;
     earnedPromocodes = u.earned_promocodes || [];
-
     applyGenderTheme();
     enterGame();
     showToast('🎉 С возвращением, ' + nickname + '!');
+    setTimeout(loadReferral, 500);
   } catch (e) {
     console.error(e);
     showToast('❌ Ошибка соединения');
   }
 }
 
-// === МОДАЛКА "РЕГИСТРАЦИЯ УСПЕШНА" (ИСПРАВЛЕНО: z-index 10000) ===
+// === МОДАЛКА "РЕГИСТРАЦИЯ УСПЕШНА" ===
 function showRegisterSuccessModal(nickname, login) {
-  // Удаляем старую модалку, если есть
   const old = document.getElementById('modal-regSuccess');
   if (old) old.remove();
 
-  // Создаём модалку
   const modal = document.createElement('div');
   modal.id = 'modal-regSuccess';
-  // ВАЖНО: используем собственные стили, чтобы модалка была ПОВЕРХ экрана авторизации
   modal.style.cssText = `
     display: flex;
     position: fixed;
@@ -1573,11 +1578,9 @@ function showRegisterSuccessModal(nickname, login) {
 }
 
 function goToLogin(login) {
-  // Закрываем модалку
   const modal = document.getElementById('modal-regSuccess');
   if (modal) modal.remove();
 
-  // Очищаем форму регистрации
   document.getElementById('regLogin').value = '';
   document.getElementById('regPassword').value = '';
   document.getElementById('regNickname').value = '';
@@ -1585,7 +1588,6 @@ function goToLogin(login) {
   document.getElementById('regRegion').value = '';
   document.getElementById('regFullName').value = '';
 
-  // Сбрасываем пол
   selectedGender = null;
   const maleBtn = document.getElementById('genderMale');
   const femaleBtn = document.getElementById('genderFemale');
@@ -1598,13 +1600,9 @@ function goToLogin(login) {
     femaleBtn.style.boxShadow = 'none';
   }
 
-  // Переключаемся на вкладку "Вход"
   showTab('login');
-
-  // Подставляем логин
   document.getElementById('loginLogin').value = login;
 
-  // Фокус на поле пароля
   setTimeout(() => {
     document.getElementById('loginPassword').focus();
   }, 100);
@@ -1691,12 +1689,45 @@ function loadAchievements() {
   ).join('');
 }
 
-function loadReferral() {
-  document.getElementById('refLink').textContent = 'https://t.me/IngSoftTab06?startapp=ref_' + telegramId;
-  document.getElementById('refCount').textContent = '0';
+async function loadReferral() {
+  const myId = currentUser?.id || telegramId;
+  const link = 'https://t.me/IngSoftTab06?startapp=ref_' + myId;
+  document.getElementById('refLink').textContent = link;
+
+  if (currentToken) {
+    try {
+      const resp = await fetch(API_URL + '/referrals?token=' + currentToken);
+      const data = await resp.json();
+      if (data.ok) {
+        myReferrals = data.referrals || [];
+        document.getElementById('refCount').textContent = myReferrals.length;
+        renderReferralList();
+      }
+    } catch (e) {
+      console.error('Ошибка загрузки рефералов', e);
+    }
+  }
 }
+
+function renderReferralList() {
+  const wrap = document.getElementById('referralList');
+  if (!wrap) return;
+  if (!myReferrals.length) {
+    wrap.innerHTML = '<p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Ты пока никого не пригласил.<br>Отправь ссылку другу — получишь 100 IS за каждого!</p>';
+    return;
+  }
+  wrap.innerHTML = myReferrals.map(r =>
+    '<div class="top-row" style="padding:10px 12px;">' +
+      '<div class="top-avatar">' + (r.nickname ? r.nickname[0].toUpperCase() : '?') + '</div>' +
+      '<div class="top-name">' + (r.nickname || 'Игрок') + '<span class="top-you">+100 IS</span></div>' +
+      '<div class="top-score">' + new Date(r.created_at).toLocaleDateString('ru') + '</div>' +
+    '</div>'
+  ).join('');
+}
+
 function copyRefLink() {
-  navigator.clipboard.writeText(document.getElementById('refLink').textContent).then(() => showToast('✅ Скопировано!'));
+  const link = document.getElementById('refLink').textContent;
+  navigator.clipboard.writeText(link).then(() => showToast('✅ Ссылка скопирована!'));
 }
 
 function loadDaily() {
@@ -1745,12 +1776,10 @@ function logout() {
   const confirmOut = confirm('⚠️ Выйти из аккаунта?\n\nТы сможешь зайти снова по логину и паролю.');
   if (!confirmOut) return;
 
-  // Удаляем токен
   localStorage.removeItem('ingsoft_token');
   currentToken = null;
   currentUser = null;
 
-  // Очищаем все переменные
   nickname = null; phone = null; region = null; fullName = null;
   gender = null; selectedGender = null; avatarData = null;
   score = 0; energy = 500; maxEnergy = 500; multiplier = 1;
@@ -1762,16 +1791,13 @@ function logout() {
   walletBalance = 0; walletTotal = 0;
   upgrades = {}; passiveIncome = 0;
 
-  // Убираем тему
   document.body.classList.remove('theme-female');
   document.body.classList.remove('theme-male');
 
-  // Скрываем приложение, показываем авторизацию
   closeAllModals();
   document.getElementById('app').style.display = 'none';
   document.getElementById('authScreen').style.display = 'flex';
 
-  // Очищаем поля формы
   document.getElementById('loginLogin').value = '';
   document.getElementById('loginPassword').value = '';
   document.getElementById('regLogin').value = '';
@@ -1782,7 +1808,6 @@ function logout() {
   document.getElementById('regFullName').value = '';
   selectedGender = null;
 
-  // Сбрасываем кнопки пола
   const maleBtn = document.getElementById('genderMale');
   const femaleBtn = document.getElementById('genderFemale');
   if (maleBtn && femaleBtn) {
@@ -2243,6 +2268,7 @@ async function loadProgressByToken(token) {
       telegramId = u.telegram_id || telegramId;
       applyGenderTheme();
       enterGame();
+      setTimeout(loadReferral, 500);
     } else {
       localStorage.removeItem('ingsoft_token');
       document.getElementById('authScreen').style.display = 'flex';
@@ -2253,6 +2279,9 @@ async function loadProgressByToken(token) {
   }
 }
 
+// ============================================================
+// ИНИЦИАЛИЗАЦИЯ
+// ============================================================
 function init() {
   if (tg) {
     tg.ready();
@@ -2260,6 +2289,19 @@ function init() {
     try { tg.setHeaderColor('#0a0a0f'); tg.setBackgroundColor('#0a0a0f'); } catch(e) {}
   }
   getTelegramUser();
+
+  // === ЛОВИМ РЕФЕРАЛЬНУЮ ССЫЛКУ ===
+  try {
+    const startParam = tg?.initDataUnsafe?.start_param;
+    if (startParam && startParam.startsWith('ref_')) {
+      const id = parseInt(startParam.replace('ref_', ''), 10);
+      if (!isNaN(id)) {
+        referrerId = id;
+        console.log('✅ Реферер:', referrerId);
+      }
+    }
+  } catch (e) { console.error(e); }
+
   const savedToken = localStorage.getItem('ingsoft_token');
   if (savedToken) {
     currentToken = savedToken;
