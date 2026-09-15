@@ -12,6 +12,13 @@
   --ing-red:#e63946; --ing-red-dark:#c1121f;
   --ing-gold:#ffd700; --ing-green:#22c55e; --ing-blue:#4facfe;
   --ing-purple:#a855f7;
+  /* === ЖЕНСКАЯ ТЕМА === */
+  --fem-pink:#ff69b4;
+  --fem-pink-light:#ffb6d9;
+  --fem-purple:#d946ef;
+  --fem-bg-1:#1a0a1f;
+  --fem-bg-2:#2a0a35;
+  --fem-bg-3:#3d1450;
   --wave-1:#0a0a0f; --wave-2:#0f1520; --wave-3:#0d1a2e; --wave-4:#132a4a; --wave-5:#1e3a5f;
 }
 html, body {
@@ -325,6 +332,185 @@ body::after {
 @media (max-width: 360px) {
   .score-big { font-size:42px; } .tap-button { width:160px; height:160px; font-size:22px; } .sidebar { width:44px; } .main { margin-left:44px; } .sidebar-label { font-size:5px; }
 }
+
+/* ============================================================
+   ЖЕНСКАЯ ТЕМА (применяется через body.theme-female)
+   ============================================================ */
+body.theme-female {
+  --ing-blue:#ff69b4;
+  --ing-gold:#ffb6d9;
+}
+body.theme-female::before {
+  background:
+    radial-gradient(ellipse 140% 60% at 20% 0%, rgba(217,70,239,0.5), transparent 60%),
+    radial-gradient(ellipse 120% 50% at 80% 30%, rgba(255,105,180,0.4), transparent 60%),
+    radial-gradient(ellipse 130% 70% at 10% 70%, rgba(42,10,53,0.9), transparent 60%),
+    radial-gradient(ellipse 100% 60% at 90% 100%, rgba(61,20,80,0.7), transparent 60%),
+    linear-gradient(160deg, #1a0a1f 0%, #2a0a35 40%, #3d1450 70%, #1a0a1f 100%);
+}
+body.theme-female::after {
+  background:
+    radial-gradient(ellipse 900px 200px at -10% 15%, rgba(217,70,239,0.3), transparent 70%),
+    radial-gradient(ellipse 800px 220px at 110% 25%, rgba(255,105,180,0.3), transparent 70%),
+    radial-gradient(ellipse 1000px 250px at 50% 50%, rgba(42,10,53,0.3), transparent 70%),
+    radial-gradient(ellipse 850px 200px at -5% 75%, rgba(217,70,239,0.25), transparent 70%),
+    radial-gradient(ellipse 950px 230px at 105% 90%, rgba(255,105,180,0.3), transparent 70%);
+}
+body.theme-female .sidebar {
+  background: linear-gradient(180deg, rgba(26,10,31,0.95) 0%, rgba(42,10,53,0.95) 100%);
+  border-right-color: rgba(255,105,180,0.4);
+}
+body.theme-female .sidebar-logo {
+  background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(217,70,239,0.3), rgba(61,20,80,0.4));
+}
+body.theme-female .sidebar-item::before {
+  background: linear-gradient(180deg, #ff69b4, #d946ef);
+}
+body.theme-female .sidebar-item:hover, body.theme-female .sidebar-item:active {
+  background: rgba(255,105,180,0.2);
+}
+body.theme-female .header {
+  background: rgba(26,10,31,0.75);
+  border-bottom-color: rgba(255,105,180,0.4);
+}
+body.theme-female .header-card {
+  background: linear-gradient(145deg, rgba(217,70,239,0.3), rgba(61,20,80,0.25));
+  border-color: rgba(255,105,180,0.4);
+}
+body.theme-female .avatar {
+  background: linear-gradient(135deg, #ff69b4, #d946ef);
+  box-shadow: 0 4px 20px rgba(255,105,180,0.5), 0 0 0 3px rgba(255,105,180,0.15);
+}
+body.theme-female .header-btn {
+  background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(217,70,239,0.2));
+  border-color: rgba(255,105,180,0.4);
+  color: #ffd9ec;
+}
+body.theme-female .header-btn:hover {
+  background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(217,70,239,0.35));
+  border-color: rgba(255,105,180,0.7);
+  box-shadow: 0 4px 15px rgba(255,105,180,0.4);
+}
+body.theme-female .stat-card {
+  background: linear-gradient(145deg, rgba(217,70,239,0.25), rgba(42,10,53,0.5));
+  border-color: rgba(255,105,180,0.3);
+}
+body.theme-female .stat-value { color: #ffd9ec; text-shadow: 0 0 15px rgba(255,105,180,0.6); }
+body.theme-female .level-fill {
+  background: linear-gradient(90deg, #d946ef, #ff69b4, #ffb6d9, #d946ef);
+  box-shadow: 0 0 25px rgba(255,105,180,0.6);
+}
+body.theme-female .score-big {
+  background: linear-gradient(135deg, #ffd9ec 0%, #ff69b4 40%, #d946ef 70%, #3d1450 100%);
+  filter: drop-shadow(0 0 25px rgba(255,105,180,0.6));
+}
+body.theme-female .tap-button {
+  background: conic-gradient(from 0deg, #3d1450, #d946ef, #ff69b4, #ffb6d9, #ff69b4, #d946ef, #3d1450);
+  box-shadow: 0 25px 90px rgba(255,105,180,0.4), 0 0 60px rgba(217,70,239,0.5), inset 0 -8px 30px rgba(0,0,0,0.6);
+}
+body.theme-female .tap-button::after {
+  background: radial-gradient(circle at 35% 25%, #d946ef, #3d1450 60%, #1a0a1f 100%);
+  box-shadow: inset 0 10px 30px rgba(255,105,180,0.2), inset 0 -10px 30px rgba(0,0,0,0.7);
+}
+body.theme-female .tap-button::before {
+  border-color: rgba(255,105,180,0.4);
+}
+body.theme-female .tap-button span {
+  text-shadow: 0 2px 10px rgba(255,105,180,0.6);
+}
+body.theme-female .float-plus {
+  color: #ff69b4;
+  text-shadow: 0 0 25px rgba(255,105,180,1);
+}
+body.theme-female .energy-fill {
+  background: linear-gradient(90deg, #d946ef, #ff69b4);
+  box-shadow: 0 0 20px rgba(255,105,180,0.5);
+}
+body.theme-female .quick-btn {
+  background: linear-gradient(145deg, rgba(217,70,239,0.25), rgba(42,10,53,0.5));
+  border-color: rgba(255,105,180,0.3);
+}
+body.theme-female .quick-btn:hover {
+  border-color: rgba(255,105,180,0.6);
+  box-shadow: 0 12px 30px rgba(255,105,180,0.3);
+}
+body.theme-female .quick-btn::before {
+  background: linear-gradient(90deg, transparent, #ff69b4, transparent);
+}
+body.theme-female .is-balance {
+  background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(217,70,239,0.1));
+  border-color: rgba(255,105,180,0.5);
+}
+body.theme-female .is-balance .is-val {
+  color: #ffb6d9;
+  text-shadow: 0 0 15px rgba(255,105,180,0.6);
+}
+body.theme-female .is-shop-panel {
+  background: linear-gradient(145deg, rgba(255,105,180,0.06), rgba(42,10,53,0.6));
+  border-color: rgba(255,105,180,0.3);
+}
+body.theme-female .is-shop-title {
+  background: linear-gradient(135deg, #ff69b4, #d946ef);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+body.theme-female .is-shop-item {
+  background: linear-gradient(145deg, rgba(255,105,180,0.08), rgba(42,10,53,0.6));
+  border-color: rgba(255,105,180,0.25);
+}
+body.theme-female .is-shop-item:hover {
+  border-color: rgba(255,105,180,0.6);
+  box-shadow: 0 10px 30px rgba(255,105,180,0.25);
+}
+body.theme-female .is-shop-item .isi-price {
+  background: linear-gradient(135deg, #ff69b4, #d946ef);
+  color: #fff;
+}
+body.theme-female .btn-is {
+  background: linear-gradient(135deg, #ff69b4, #d946ef);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(255,105,180,0.5);
+}
+body.theme-female .top-panel {
+  background: linear-gradient(145deg, rgba(217,70,239,0.2), rgba(42,10,53,0.6));
+  border-color: rgba(255,105,180,0.3);
+}
+body.theme-female .top-panel-title {
+  background: linear-gradient(135deg, #ffd9ec, #ff69b4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+body.theme-female .slide-dot.active { background: #ff69b4; box-shadow: 0 0 10px rgba(255,105,180,0.8); }
+body.theme-female .modal-content { border-top-color: #ff69b4; }
+body.theme-female .modal-title span { color: #ff69b4; }
+body.theme-female .modal-close {
+  background: rgba(255,105,180,0.1);
+  border-color: rgba(255,105,180,0.3);
+}
+body.theme-female .modal-close:hover { background: rgba(255,105,180,0.3); }
+body.theme-female .btn-buy {
+  background: linear-gradient(135deg, #ff69b4, #d946ef);
+  box-shadow: 0 4px 15px rgba(255,105,180,0.5);
+}
+body.theme-female .reg-btn {
+  background: linear-gradient(135deg, #ff69b4, #d946ef);
+}
+body.theme-female .reg-btn.green { background: linear-gradient(135deg, #d946ef, #a855f7); }
+body.theme-female .toast {
+  background: linear-gradient(135deg, #ff69b4, #d946ef);
+}
+body.theme-female .level-fill { animation: femGradient 4s ease infinite; }
+@keyframes femGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+body.theme-female .corner-logo {
+  background: linear-gradient(135deg, rgba(255,105,180,0.25), rgba(217,70,239,0.25));
+  border-color: rgba(255,105,180,0.5);
+}
 </style>
 </head>
 <body>
@@ -337,11 +523,25 @@ body::after {
       <img src="logo.png" alt="IngSoft" style="height:44px; display:block;" onerror="this.style.display='none'">
     </div>
     <h1 style="font-size:24px; margin-bottom:6px;">Регистрация</h1>
-    <p style="color:#888; font-size:13px; margin-bottom:20px;">Заполни данные, чтобы получать подарки</p>
+    <p style="color:#888; font-size:13px; margin-bottom:20px;">Выбери пол и заполни данные</p>
     <input type="text" id="regNickname" class="reg-input" placeholder="Никнейм" maxlength="20">
     <input type="tel" id="regPhone" class="reg-input" placeholder="Номер телефона (+7...)">
     <input type="text" id="regRegion" class="reg-input" placeholder="Город / регион">
     <input type="text" id="regFullName" class="reg-input" placeholder="ФИО полностью">
+    
+    <!-- ВЫБОР ПОЛА -->
+    <div style="margin-bottom:14px;">
+      <p style="color:#8899aa; font-size:12px; margin-bottom:8px; text-align:left;">Выбери пол:</p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" onclick="selectGender('male')" id="genderMale" class="gender-btn" style="flex:1; padding:14px; border-radius:14px; border:2px solid rgba(79,172,254,0.3); background:rgba(10,10,15,0.7); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s;">
+          👨 Мужской
+        </button>
+        <button type="button" onclick="selectGender('female')" id="genderFemale" class="gender-btn" style="flex:1; padding:14px; border-radius:14px; border:2px solid rgba(255,105,180,0.3); background:rgba(10,10,15,0.7); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s;">
+          👩 Женский
+        </button>
+      </div>
+    </div>
+    
     <button onclick="checkRegistration()" class="reg-btn">Далее</button>
     <p style="color:#666; font-size:11px; margin-top:16px;">Данные видны только тебе.</p>
   </div>
@@ -460,7 +660,7 @@ body::after {
 <div class="is-shop-panel">
   <div class="is-shop-header">
     <div>
-      <div class="is-shop-title">🛒 IS Магазин</div>
+      <div class="is-shop-title" id="isShopTitle">🛒 IS Магазин</div>
       <div class="is-shop-sub">Трать IS на бусты и тапы</div>
     </div>
     <button class="btn-is" onclick="openModal('isTasks')">+ Заработать</button>
@@ -472,7 +672,7 @@ body::after {
 <div class="top-panel">
   <div class="top-panel-header">
     <div>
-      <div class="top-panel-title">🏆 Топ-10 игроков</div>
+      <div class="top-panel-title" id="topPanelTitle">🏆 Топ-10 игроков</div>
       <div class="top-panel-sub">Лучшие тапальщики IngSoft</div>
     </div>
     <button class="btn-buy" style="padding:6px 12px;font-size:11px;" onclick="openModal('leaderboard')">Все</button>
@@ -824,6 +1024,7 @@ let subWasSubscribed = false;
 let subWasPunished = false;
 let claimedQuests=[], claimedPromos=[];
 let nickname=null, phone=null, region=null, fullName=null;
+let gender = null; // 'male' или 'female'
 let avatarData=null;
 let autotapLevel=0, lastAutotapClaim=null;
 let passiveIncome=0;
@@ -992,7 +1193,8 @@ function saveToLocal() {
     dailyTapLimit, tapsToday, lastTapDate, unlimitedUntil,
     isBalance, isTasksDone, isBoostMultUntil, isAutoTapUntil,
     subWasSubscribed, subWasPunished,
-    earnedPromocodes
+    earnedPromocodes,
+    gender
   };
   try { localStorage.setItem('ingsoft_user', JSON.stringify(user)); } catch(e) {}
 }
@@ -1024,6 +1226,8 @@ function loadPlayer() {
     subWasSubscribed = u.subWasSubscribed ?? false;
     subWasPunished = u.subWasPunished ?? false;
     earnedPromocodes = u.earnedPromocodes || [];
+    gender = u.gender || 'male';
+    applyGenderTheme();
     document.getElementById('regScreen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     updateUI();
@@ -1095,18 +1299,19 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
 });
 
 function buildSidebar() {
+  const isFem = (gender === 'female');
   const items = [
-    { icon:'🏠', label:'Главная', action:'closeAllModals' },
-    { icon:'🎮', label:'Игры', action:'openModal(\'games\')' },
-    { icon:'🏆', label:'Топ', action:'openModal(\'leaderboard\')' },
-    { icon:'📋', label:'Квесты', action:'openModal(\'quests\')' },
-    { icon:'⚡', label:'Бусты', action:'openModal(\'boosts\')' },
-    { icon:'🏅', label:'Достижения', action:'openModal(\'achievements\')' },
-    { icon:'👥', label:'Друзья', action:'openModal(\'referral\')' },
-    { icon:'🎁', label:'Награды', action:'openModal(\'daily\')' },
-    { icon:'📊', label:'Статистика', action:'openModal(\'stats\')' },
-    { icon:'👤', label:'Профиль', action:'openModal(\'profile\')' },
-    { icon:'🎫', label:'Промокод', action:'openModal(\'promo\')' },
+    { icon: isFem ? '🌸' : '🏠', label: isFem ? 'Главная' : 'Главная', action:'closeAllModals' },
+    { icon: isFem ? '🎀' : '🎮', label: isFem ? 'Развлечения' : 'Игры', action:'openModal(\'games\')' },
+    { icon: isFem ? '👑' : '🏆', label: 'Топ', action:'openModal(\'leaderboard\')' },
+    { icon: isFem ? '📝' : '📋', label: isFem ? 'Задания' : 'Квесты', action:'openModal(\'quests\')' },
+    { icon: isFem ? '💖' : '⚡', label: isFem ? 'Ускорители' : 'Бусты', action:'openModal(\'boosts\')' },
+    { icon: isFem ? '🌟' : '🏅', label: 'Достижения', action:'openModal(\'achievements\')' },
+    { icon: isFem ? '💕' : '👥', label:'Друзья', action:'openModal(\'referral\')' },
+    { icon: isFem ? '🎀' : '🎁', label:'Награды', action:'openModal(\'daily\')' },
+    { icon: isFem ? '📈' : '📊', label:'Статистика', action:'openModal(\'stats\')' },
+    { icon: isFem ? '👸' : '👤', label:'Профиль', action:'openModal(\'profile\')' },
+    { icon: isFem ? '💝' : '🎫', label:'Промокод', action:'openModal(\'promo\')' },
     { icon:'ℹ️', label:'О игре', action:'openModal(\'about\')' },
   ];
   const sb = document.getElementById('sidebarItems'); if (!sb) return;
@@ -1350,6 +1555,50 @@ function uploadAvatar() {
   input.click();
 }
 
+// === ВЫБОР ПОЛА ===
+function selectGender(g) {
+  gender = g;
+  const maleBtn = document.getElementById('genderMale');
+  const femaleBtn = document.getElementById('genderFemale');
+  
+  if (g === 'male') {
+    maleBtn.style.border = '2px solid #4facfe';
+    maleBtn.style.background = 'linear-gradient(135deg, rgba(79,172,254,0.25), rgba(30,58,95,0.4))';
+    maleBtn.style.boxShadow = '0 0 20px rgba(79,172,254,0.5)';
+    femaleBtn.style.border = '2px solid rgba(255,105,180,0.3)';
+    femaleBtn.style.background = 'rgba(10,10,15,0.7)';
+    femaleBtn.style.boxShadow = 'none';
+  } else {
+    femaleBtn.style.border = '2px solid #ff69b4';
+    femaleBtn.style.background = 'linear-gradient(135deg, rgba(255,105,180,0.25), rgba(217,70,239,0.3))';
+    femaleBtn.style.boxShadow = '0 0 20px rgba(255,105,180,0.5)';
+    maleBtn.style.border = '2px solid rgba(79,172,254,0.3)';
+    maleBtn.style.background = 'rgba(10,10,15,0.7)';
+    maleBtn.style.boxShadow = 'none';
+  }
+}
+
+// === ПРИМЕНЕНИЕ ТЕМЫ ===
+function applyGenderTheme() {
+  const isFem = (gender === 'female');
+  if (isFem) {
+    document.body.classList.add('theme-female');
+    document.body.classList.remove('theme-male');
+  } else {
+    document.body.classList.add('theme-male');
+    document.body.classList.remove('theme-female');
+  }
+  
+  // Смена заголовков
+  const isShop = document.getElementById('isShopTitle');
+  const topTitle = document.getElementById('topPanelTitle');
+  const tapLimitText = document.getElementById('tapLimitText');
+  
+  if (isShop) isShop.textContent = isFem ? '💖 Монетки' : '🛒 IS Магазин';
+  if (topTitle) topTitle.textContent = isFem ? '👑 Топ красоток' : '🏆 Топ-10 игроков';
+}
+
+
 let regData = {};
 function checkRegistration() {
   const nick = document.getElementById('regNickname').value.trim();
@@ -1360,7 +1609,8 @@ function checkRegistration() {
   if (!ph || ph.length < 10) { showToast('Введи номер телефона'); return; }
   if (!reg || reg.length < 3) { showToast('Введи регион'); return; }
   if (!fn || fn.length < 5) { showToast('Введи ФИО'); return; }
-  regData = { nickname: nick, phone: ph, region: reg, fullName: fn };
+  if (!gender) { showToast('Выбери пол'); return; }
+  regData = { nickname: nick, phone: ph, region: reg, fullName: fn, gender: gender };
   document.getElementById('confNickname').textContent = nick;
   document.getElementById('confPhone').textContent = ph;
   document.getElementById('confRegion').textContent = reg;
@@ -1375,6 +1625,7 @@ function backToReg() {
 function completeRegistration() {
   if (!regData.nickname) { showToast('Заполни данные'); return; }
   nickname = regData.nickname; phone = regData.phone; region = regData.region; fullName = regData.fullName;
+  gender = regData.gender || 'male';
   score = 0; energy = 500; maxEnergy = 500; multiplier = 1;
   level = 1; totalTaps = 0; dailyStreak = 0; autotapLevel = 0;
   claimedQuests = []; claimedPromos = [];
@@ -1388,6 +1639,7 @@ function completeRegistration() {
   document.getElementById('confirmScreen').style.display = 'none';
   document.getElementById('regScreen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
+  applyGenderTheme();
   showToast('🎉 Добро пожаловать, ' + nickname + '!');
   updateUI(); buildSidebar();
 }
