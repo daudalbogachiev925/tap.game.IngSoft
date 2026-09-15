@@ -12,12 +12,8 @@
   --ing-red:#e63946; --ing-red-dark:#c1121f;
   --ing-gold:#ffd700; --ing-green:#22c55e; --ing-blue:#4facfe;
   --ing-purple:#a855f7;
-  --fem-pink:#ff69b4;
-  --fem-pink-light:#ffb6d9;
-  --fem-purple:#d946ef;
-  --fem-bg-1:#1a0a1f;
-  --fem-bg-2:#2a0a35;
-  --fem-bg-3:#3d1450;
+  --fem-pink:#ff69b4; --fem-pink-light:#ffb6d9; --fem-purple:#d946ef;
+  --fem-bg-1:#1a0a1f; --fem-bg-2:#2a0a35; --fem-bg-3:#3d1450;
   --wave-1:#0a0a0f; --wave-2:#0f1520; --wave-3:#0d1a2e; --wave-4:#132a4a; --wave-5:#1e3a5f;
 }
 html, body {
@@ -84,6 +80,8 @@ body::after {
 .header-btn { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(79,172,254,0.15), rgba(30,58,95,0.25)); border: 1px solid rgba(79,172,254,0.3); border-radius: 10px; padding: 6px 10px; color: #e8f4ff; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
 .header-btn:hover { background: linear-gradient(135deg, rgba(79,172,254,0.3), rgba(30,58,95,0.4)); border-color: rgba(79,172,254,0.6); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(79,172,254,0.3); }
 .header-btn:active { transform: scale(0.95); }
+.header-btn.gold { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,140,0,0.15)); border-color: rgba(255,215,0,0.5); color: #ffe680; }
+.header-btn.gold:hover { background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,140,0,0.3)); border-color: rgba(255,215,0,0.8); box-shadow: 0 4px 15px rgba(255,215,0,0.4); }
 .header-btn-icon { font-size: 14px; }
 .header-btn-label { font-size: 10px; }
 @media (max-width: 480px) {
@@ -204,6 +202,7 @@ body::after {
 .btn-buy:active { transform:scale(0.95); }
 .btn-buy:disabled { opacity:0.35; cursor:not-allowed; }
 .btn-buy.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
+.btn-buy.gold { background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0a0f; }
 .btn-buy.blue { background:linear-gradient(135deg,#4facfe,#2563eb); }
 .games-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
 .game-card { background: linear-gradient(145deg, rgba(30,58,95,0.25), rgba(15,21,32,0.5)); border: 1px solid rgba(79,172,254,0.2); border-radius: 18px; padding: 22px 12px; text-align: center; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; overflow: hidden; }
@@ -395,7 +394,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     <div id="formRegister">
       <input type="text" id="regLogin" class="reg-input" placeholder="Логин (мин. 3 символа)" maxlength="30">
       <input type="password" id="regPassword" class="reg-input" placeholder="Пароль (мин. 6 символов)" maxlength="50">
-      <input type="text" id="regNickname" class="reg-input" placeholder="Никнейм" maxlength="20">
+      <input type="text" id="regNickname" class="reg-input" placeholder="Никнейм (латиницей без пробелов)" maxlength="20">
       <input type="tel" id="regPhone" class="reg-input" placeholder="Номер телефона (+7...)" maxlength="20">
       <select id="regRegion" class="reg-input" style="appearance:none; cursor:pointer;">
         <option value="" disabled selected>Выбери регион</option>
@@ -446,6 +445,10 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
       <button class="header-btn" onclick="openModal('referral')" title="Друзья">
         <span class="header-btn-icon">👥</span>
         <span class="header-btn-label">Друзья</span>
+      </button>
+      <button class="header-btn gold" onclick="openModal('referral-bonus')" title="Бонус за рефералку">
+        <span class="header-btn-icon">🎁</span>
+        <span class="header-btn-label">Бонус</span>
       </button>
       <button class="header-btn" onclick="openModal('promocodes')" title="Промокоды">
         <span class="header-btn-icon">🏷️</span>
@@ -719,17 +722,53 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div id="achList"></div>
 </div></div>
 
+<!-- ============ МОДАЛКА "ДРУЗЬЯ" ============ -->
 <div class="modal" id="modal-referral"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">👥 <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
-  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">За каждого друга, который зарегистрируется — <b style="color:#ffd700;">+100 IS</b></p>
-  <div style="background:rgba(230,57,70,0.08);padding:12px;border-radius:12px;word-break:break-all;font-size:11px;color:#e63946;margin-bottom:10px;border:1px solid rgba(230,57,70,0.3);font-family:monospace;" id="refLink">Загрузка ссылки...</div>
+  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">Приглашай друзей — получай IS за каждого</p>
+  
+  <div style="background:linear-gradient(135deg,rgba(79,172,254,0.1),rgba(30,58,95,0.2)); border:1px solid rgba(79,172,254,0.3); border-radius:12px; padding:12px; margin-bottom:12px;">
+    <div style="font-size:11px; color:#8899aa; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;">Твоя ссылка:</div>
+    <div style="word-break:break-all; font-size:11px; color:#4facfe; font-family:monospace; padding:8px; background:rgba(10,10,15,0.5); border-radius:8px;" id="refLink">Загрузка...</div>
+  </div>
+  
   <button class="btn-buy" style="width:100%;padding:12px;" onclick="copyRefLink()">📋 Копировать ссылку</button>
   <button class="btn-buy green" style="width:100%;padding:12px;margin-top:8px;" onclick="shareRefLink()">📤 Поделиться с другом</button>
-  <div style="margin-top:12px;text-align:center;font-size:13px;color:#888;">Приглашено: <span id="refCount" style="color:#e63946;font-weight:800;">0</span></div>
-  <div style="margin-top:16px;font-size:13px;font-weight:800;color:#4facfe;">Твои друзья:</div>
-  <div id="referralList" style="margin-top:8px;max-height:240px;overflow-y:auto;">
+  
+  <div style="margin-top:16px; text-align:center; font-size:13px; color:#888;">
+    Приглашено: <span id="refCount" style="color:#ffd700; font-weight:800; font-size:16px;">0</span> друзей
+  </div>
+  
+  <div style="margin-top:20px; font-size:13px; font-weight:800; color:#4facfe; margin-bottom:8px;">📋 Твои друзья:</div>
+  <div id="referralList" style="margin-top:8px; max-height:280px; overflow-y:auto;">
     <p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Загрузка...</p>
   </div>
+</div></div>
+
+<!-- ============ МОДАЛКА "БОНУС ЗА РЕФЕРАЛКУ" ============ -->
+<div class="modal" id="modal-referral-bonus"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🎁 <span>Бонус за рефералку</span></div><button class="modal-close" onclick="closeModal('referral-bonus')">×</button></div>
+  
+  <p style="color:#b8a060; font-size:12px; text-align:center; margin-bottom:16px;">Чем больше друзей — тем больше награда за каждого!</p>
+  
+  <div style="background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(255,140,0,0.08)); border:1px solid rgba(255,215,0,0.5); border-radius:16px; padding:16px; margin-bottom:16px; text-align:center; box-shadow:0 0 30px rgba(255,215,0,0.2);">
+    <div style="font-size:11px; color:#b8a060; text-transform:uppercase; letter-spacing:2px;">Приглашено друзей</div>
+    <div style="font-size:44px; font-weight:900; color:#ffd700; margin:6px 0; text-shadow:0 0 25px rgba(255,215,0,0.6);" id="bonusFriendCount">0<span style="font-size:22px; color:#b8a060;"> / 100</span></div>
+    <div style="font-size:12px; color:#8899aa;">Заработано: <b style="color:#ffd700; font-size:15px;" id="bonusTotalEarned">0 IS</b></div>
+  </div>
+  
+  <div style="background:rgba(10,10,15,0.7); border-radius:14px; overflow:hidden; height:28px; margin-bottom:20px; border:1px solid rgba(255,215,0,0.3); position:relative;">
+    <div id="bonusProgressFill" style="height:100%; background:linear-gradient(90deg,#ff8c00,#ffd700); transition:width 0.5s; box-shadow:0 0 20px rgba(255,215,0,0.6); width:0%;"></div>
+    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:900; text-shadow:0 1px 4px rgba(0,0,0,0.9);" id="bonusProgressText">0 / 100</div>
+  </div>
+  
+  <div style="font-size:14px; font-weight:800; color:#4facfe; margin-bottom:10px;">📊 Таблица наград:</div>
+  <div id="bonusTable"></div>
+  
+  <p style="color:#8899aa; font-size:11px; text-align:center; margin-top:14px; line-height:1.6;">
+    💡 За каждого друга приходит IS автоматически<br>
+    после того, как друг зарегистрируется
+  </p>
 </div></div>
 
 <div class="modal" id="modal-daily"><div class="modal-content">
@@ -866,17 +905,23 @@ let currentUser = null;
 let selectedGender = null;
 
 // === РЕФЕРАЛЬНАЯ СИСТЕМА ===
-let referrerId = null;         // ID реферера (telegram_id или user_id)
+let referrerNickname = null;   // ник того, кто пригласил
+let referrerId = null;         // telegram_id того, кто пригласил
 let myReferrals = [];          // список приглашённых
 let myUserId = null;           // внутренний ID в БД
+let myReferralBonus = 0;       // сколько IS я уже заработал на рефералах
 
-// === ЗАГРУЗКА СОХРАНЁННОГО REFERRER_ID ===
+// Загрузка сохранённых рефереров
 try {
-  const savedRef = localStorage.getItem('ingsoft_referrer_id');
-  if (savedRef) {
-    referrerId = parseInt(savedRef, 10);
+  const savedRefNick = localStorage.getItem('ingsoft_referrer_nickname');
+  if (savedRefNick) {
+    referrerNickname = savedRefNick;
+    console.log('📥 Загружен referrerNickname:', referrerNickname);
+  }
+  const savedRefId = localStorage.getItem('ingsoft_referrer_id');
+  if (savedRefId) {
+    referrerId = parseInt(savedRefId, 10);
     if (isNaN(referrerId)) referrerId = null;
-    console.log('📥 Загружен referrerId из localStorage:', referrerId);
   }
 } catch (e) {}
 
@@ -905,9 +950,29 @@ const IS_SHOP = [
 const API_URL = 'https://ingsofttap.bothost.tech';
 const TG_CHANNEL = 'IngSoftTab06';
 const TG_CHANNEL_URL = 'https://t.me/IngSoftTab06';
+const BOT_USERNAME = 'IngSoftTab06';
 const SUB_REWARD = 50;
 const SUB_PENALTY = 500;
-const BOT_USERNAME = 'IngSoftTab06'; // ← если изменится, поменяй тут
+
+// === НАГРАДЫ ЗА РЕФЕРАЛОВ ===
+// Формула: за N-го друга сколько IS даём
+function getReferralReward(friendNumber) {
+  if (friendNumber <= 0) return 0;
+  if (friendNumber === 1) return 100;
+  if (friendNumber === 2) return 200;
+  if (friendNumber === 3) return 250;
+  if (friendNumber > 100) return 100;  // после 100 друзей — по 100 IS
+  return 300;  // друзья 4-100 дают 300 IS
+}
+
+// Общая сумма, которую можно заработать
+function getTotalReferralEarnings(count) {
+  let total = 0;
+  for (let i = 1; i <= count; i++) {
+    total += getReferralReward(i);
+  }
+  return total;
+}
 
 const IS_TASKS = [
   { id:'sub_tg', icon:'📢', name:'Подписка на канал', desc:'Telegram-канал @' + TG_CHANNEL, reward:SUB_REWARD, link:TG_CHANNEL_URL, real:true, type:'subscribe' },
@@ -994,7 +1059,7 @@ function fmt(n) {
   if (n >= 1e3) return (n/1e3).toFixed(2) + 'K';
   return Math.floor(n).toLocaleString();
 }
-function showToast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2000); }
+function showToast(msg) { const el = document.getElementById('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500); }
 
 function openModal(name) {
   document.getElementById('modal-' + name)?.classList.add('active');
@@ -1008,6 +1073,7 @@ function openModal(name) {
   if (name === 'profile') loadProfile();
   if (name === 'wallet') loadWallet();
   if (name === 'referral') loadReferral();
+  if (name === 'referral-bonus') loadReferralBonus();
   if (name === 'promo') loadPromoHistory();
   if (name === 'games') loadGames();
 }
@@ -1127,6 +1193,7 @@ function buildSidebar() {
     { icon: isFem ? '💖' : '⚡', label: isFem ? 'Ускорители' : 'Бусты', action:'openModal(\'boosts\')' },
     { icon: isFem ? '🌟' : '🏅', label: 'Достижения', action:'openModal(\'achievements\')' },
     { icon: isFem ? '💕' : '👥', label:'Друзья', action:'openModal(\'referral\')' },
+    { icon:'🎁', label:'Бонус', action:'openModal(\'referral-bonus\')' },
     { icon: isFem ? '🎀' : '🎁', label:'Награды', action:'openModal(\'daily\')' },
     { icon: isFem ? '📈' : '📊', label:'Статистика', action:'openModal(\'stats\')' },
     { icon: isFem ? '👸' : '👤', label:'Профиль', action:'openModal(\'profile\')' },
@@ -1457,6 +1524,7 @@ async function doRegister() {
   if (!login || login.length < 3) { showToast('Логин минимум 3 символа'); return; }
   if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
   if (!nick) { showToast('Введи никнейм'); return; }
+  if (/\s/.test(nick)) { showToast('Никнейм без пробелов'); return; }
   if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
   if (!region) { showToast('Выбери регион'); return; }
   if (!full_name) { showToast('Введи ФИО'); return; }
@@ -1470,7 +1538,8 @@ async function doRegister() {
         login, password, nickname: nick, gender: selectedGender,
         region, phone, full_name,
         telegram_id: telegramId,
-        referrer_id: referrerId       // ← отправляем реферера (telegram_id пригласившего)
+        referrer_nickname: referrerNickname,   // ← ник реферера
+        referrer_id: referrerId                 // ← telegram_id реферера (если есть)
       })
     });
     const data = await resp.json();
@@ -1480,8 +1549,10 @@ async function doRegister() {
       return;
     }
 
-    // Регистрация успешна — очищаем referrerId, чтобы награду не начислили повторно
+    // Очищаем реферера после регистрации
+    localStorage.removeItem('ingsoft_referrer_nickname');
     localStorage.removeItem('ingsoft_referrer_id');
+    referrerNickname = null;
     referrerId = null;
 
     localStorage.setItem('last_login', login);
@@ -1515,7 +1586,7 @@ async function doLogin() {
     const u = data.user;
     currentToken = u.token;
     currentUser = u;
-    myUserId = u.id;             // ← сохраняем внутренний ID
+    myUserId = u.id;
     localStorage.setItem('ingsoft_token', currentToken);
 
     nickname = u.nickname;
@@ -1523,7 +1594,6 @@ async function doLogin() {
     phone = u.phone;
     fullName = u.full_name;
     region = u.region;
-    // НЕ перезаписываем telegramId, если он уже есть (иначе сломаем рефералов)
     if (!telegramId || telegramId === 999999999) {
       telegramId = u.telegram_id || telegramId;
     }
@@ -1719,9 +1789,9 @@ function loadAchievements() {
 // РЕФЕРАЛЬНАЯ СИСТЕМА
 // ============================================================
 async function loadReferral() {
-  // Ссылка на реферера строится из telegramId (уникальный ID в Telegram)
-  const myId = telegramId;
-  const link = 'https://t.me/' + BOT_USERNAME + '?startapp=ref_' + myId;
+  // Ссылка с ником пользователя
+  const myNick = nickname || ('user' + telegramId);
+  const link = 'https://t.me/' + BOT_USERNAME + '?startapp=ref_' + encodeURIComponent(myNick);
   const linkEl = document.getElementById('refLink');
   if (linkEl) linkEl.textContent = link;
 
@@ -1734,6 +1804,8 @@ async function loadReferral() {
         myReferrals = data.referrals || [];
         const cntEl = document.getElementById('refCount');
         if (cntEl) cntEl.textContent = myReferrals.length;
+        // Считаем заработанное
+        myReferralBonus = getTotalReferralEarnings(myReferrals.length);
         renderReferralList();
       }
     } catch (e) {
@@ -1748,24 +1820,24 @@ function renderReferralList() {
   const wrap = document.getElementById('referralList');
   if (!wrap) return;
   if (!myReferrals.length) {
-    wrap.innerHTML = '<p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Ты пока никого не пригласил.<br>Отправь ссылку другу — получишь 100 IS за каждого!</p>';
+    wrap.innerHTML = '<p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Ты пока никого не пригласил.<br>Отправь ссылку другу — получишь 100 IS за первого!</p>';
     return;
   }
-  wrap.innerHTML = myReferrals.map(r =>
-    '<div class="top-row" style="padding:10px 12px;">' +
-      '<div class="top-avatar">' + (r.nickname ? r.nickname[0].toUpperCase() : '?') + '</div>' +
-      '<div class="top-name">' + (r.nickname || 'Игрок') + '<span class="top-you">+100 IS</span></div>' +
-      '<div class="top-score">' + (r.created_at ? new Date(r.created_at).toLocaleDateString('ru') : '') + '</div>' +
-    '</div>'
-  ).join('');
+  wrap.innerHTML = myReferrals.map((r, i) => {
+    const reward = getReferralReward(i + 1);
+    return '<div style="display:flex; align-items:center; gap:10px; padding:10px 12px; margin-bottom:6px; background:linear-gradient(90deg, rgba(79,172,254,0.08), rgba(30,58,95,0.15)); border:1px solid rgba(79,172,254,0.2); border-radius:10px;">' +
+      '<div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#4facfe,#1e3a5f); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex-shrink:0;">' + (r.nickname ? r.nickname[0].toUpperCase() : '?') + '</div>' +
+      '<div style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:600;">' + (r.nickname || 'Игрок') + '</div>' +
+      '<div style="font-size:12px; font-weight:800; color:#ffd700; white-space:nowrap;">+' + reward + ' IS</div>' +
+    '</div>';
+  }).join('');
 }
 
 function copyRefLink() {
   const link = document.getElementById('refLink').textContent;
-  if (!link || link === 'Загрузка ссылки...') { showToast('Подожди, ссылка ещё не готова'); return; }
+  if (!link || link === 'Загрузка...') { showToast('Подожди, ссылка ещё не готова'); return; }
   navigator.clipboard.writeText(link).then(() => showToast('✅ Ссылка скопирована!'))
     .catch(() => {
-      // Fallback для старых браузеров
       const ta = document.createElement('textarea');
       ta.value = link;
       document.body.appendChild(ta);
@@ -1778,10 +1850,50 @@ function copyRefLink() {
 
 function shareRefLink() {
   const link = document.getElementById('refLink').textContent;
-  if (!link || link === 'Загрузка ссылки...') { showToast('Подожди, ссылка ещё не готова'); return; }
+  if (!link || link === 'Загрузка...') { showToast('Подожди, ссылка ещё не готова'); return; }
   const text = 'Привет! Заходи в IngSoft Tap — я уже там! 🎮';
   const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
   window.open(shareUrl, '_blank');
+}
+
+// === БОНУС ЗА РЕФЕРАЛКУ ===
+function loadReferralBonus() {
+  const count = myReferrals.length;
+  const bonusCount = document.getElementById('bonusFriendCount');
+  const bonusProgressFill = document.getElementById('bonusProgressFill');
+  const bonusProgressText = document.getElementById('bonusProgressText');
+  const bonusTotalEarned = document.getElementById('bonusTotalEarned');
+  
+  if (bonusCount) bonusCount.innerHTML = count + '<span style="font-size:22px; color:#b8a060;"> / 100</span>';
+  if (bonusProgressFill) bonusProgressFill.style.width = Math.min(100, count) + '%';
+  if (bonusProgressText) bonusProgressText.textContent = count + ' / 100';
+  if (bonusTotalEarned) bonusTotalEarned.textContent = getTotalReferralEarnings(count) + ' IS';
+  
+  const el = document.getElementById('bonusTable');
+  if (!el) return;
+  
+  const rows = [
+    { range: '1 друг', reward: '+100 IS', need: 1 },
+    { range: '2 друга', reward: '+200 IS', need: 2 },
+    { range: '3 друга', reward: '+250 IS', need: 3 },
+    { range: '4-100 друзей', reward: '+300 IS за каждого', need: 4 },
+    { range: '100+ друзей', reward: '+100 IS за каждого', need: 100 }
+  ];
+  
+  el.innerHTML = rows.map((r, i) => {
+    const done = count >= r.need;
+    return '<div style="display:flex; align-items:center; gap:10px; padding:12px; margin-bottom:6px; ' +
+      'background:' + (done 
+        ? 'linear-gradient(90deg, rgba(34,197,94,0.15), rgba(30,58,95,0.2))' 
+        : 'linear-gradient(90deg, rgba(30,58,95,0.15), rgba(15,21,32,0.3))') + '; ' +
+      'border:1px solid ' + (done ? 'rgba(34,197,94,0.4)' : 'rgba(79,172,254,0.15)') + '; border-radius:12px;">' +
+      '<div style="width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; ' +
+        'background:' + (done ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'rgba(255,255,255,0.05)') + '; ' +
+        'color:' + (done ? '#fff' : '#8899aa') + '; flex-shrink:0;">' + (done ? '✓' : (i + 1)) + '</div>' +
+      '<div style="flex:1; font-size:13px; font-weight:700;">' + r.range + '</div>' +
+      '<div style="font-size:13px; font-weight:800; color:' + (done ? '#22c55e' : '#ffd700') + '; white-space:nowrap;">' + r.reward + '</div>' +
+    '</div>';
+  }).join('');
 }
 
 function loadDaily() {
@@ -1822,6 +1934,7 @@ function loadStats() {
     '<div class="profile-row"><span>Энергия</span><span>' + Math.floor(energy) + ' / ' + maxEnergy + '</span></div>' +
     '<div class="profile-row"><span>Автоклик</span><span>+' + fmt(autotapLevel) + '/сек</span></div>' +
     '<div class="profile-row"><span>Пассив</span><span>+' + fmt(passiveIncome) + '/час</span></div>' +
+    '<div class="profile-row"><span>Друзей</span><span>' + myReferrals.length + '</span></div>' +
     '<div class="profile-row"><span>Бустов</span><span>' + Object.keys(upgrades).length + ' / ' + BOOSTS.length + '</span></div>';
 }
 
@@ -1831,6 +1944,7 @@ function logout() {
   if (!confirmOut) return;
 
   localStorage.removeItem('ingsoft_token');
+  localStorage.removeItem('ingsoft_referrer_nickname');
   localStorage.removeItem('ingsoft_referrer_id');
   currentToken = null;
   currentUser = null;
@@ -1846,6 +1960,7 @@ function logout() {
   subWasSubscribed = false; subWasPunished = false;
   walletBalance = 0; walletTotal = 0;
   upgrades = {}; passiveIncome = 0;
+  myReferrals = []; myReferralBonus = 0;
 
   document.body.classList.remove('theme-female');
   document.body.classList.remove('theme-male');
@@ -1889,6 +2004,7 @@ function loadProfile() {
     '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
     '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
     '<div class="profile-row"><span>Тапов</span><span>' + fmt(totalTaps) + '</span></div>' +
+    '<div class="profile-row"><span>Друзей</span><span>' + myReferrals.length + '</span></div>' +
     '<div class="profile-row"><span>Телефон</span><span>' + (phone || '—') + '</span></div>' +
     '<div class="profile-row"><span>Регион</span><span>' + (region || '—') + '</span></div>' +
     '<div class="profile-row"><span>ФИО</span><span>' + (fullName || '—') + '</span></div>';
@@ -2322,7 +2438,6 @@ async function loadProgressByToken(token) {
       walletTotal = u.wallet_total ?? 0;
       earnedPromocodes = u.earned_promocodes || [];
       myUserId = u.id;
-      // НЕ перезаписываем telegramId, если он уже есть
       if (!telegramId || telegramId === 999999999) {
         telegramId = u.telegram_id || telegramId;
       }
@@ -2351,16 +2466,15 @@ function init() {
   }
   getTelegramUser();
 
-  // === ЛОВИМ РЕФЕРАЛЬНУЮ ССЫЛКУ ===
+  // === ЛОВИМ РЕФЕРАЛЬНУЮ ССЫЛКУ (ник в ссылке) ===
   try {
     const startParam = tg?.initDataUnsafe?.start_param;
     if (startParam && startParam.startsWith('ref_')) {
-      const id = parseInt(startParam.replace('ref_', ''), 10);
-      if (!isNaN(id) && id !== telegramId) {
-        referrerId = id;
-        // Сохраняем в localStorage — если пользователь обновит страницу, ID не потеряется
-        localStorage.setItem('ingsoft_referrer_id', String(id));
-        console.log('✅ Реферер из Telegram:', referrerId);
+      const refNick = decodeURIComponent(startParam.replace('ref_', ''));
+      if (refNick && refNick.length > 0 && refNick !== nickname) {
+        referrerNickname = refNick;
+        localStorage.setItem('ingsoft_referrer_nickname', refNick);
+        console.log('✅ Реферер по нику:', referrerNickname);
       }
     }
   } catch (e) { console.error(e); }
