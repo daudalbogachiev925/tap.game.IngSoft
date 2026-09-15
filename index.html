@@ -12,7 +12,6 @@
   --ing-red:#e63946; --ing-red-dark:#c1121f;
   --ing-gold:#ffd700; --ing-green:#22c55e; --ing-blue:#4facfe;
   --ing-purple:#a855f7;
-  /* === ЖЕНСКАЯ ТЕМА === */
   --fem-pink:#ff69b4;
   --fem-pink-light:#ffb6d9;
   --fem-purple:#d946ef;
@@ -81,54 +80,18 @@ body::after {
 .header-fio { font-size:11px; color:#9ab; }
 .header-rank { font-size:11px; color:#8899aa; }
 .header-rank b { color:var(--ing-gold); }
-/* === КНОПКИ В ШАПКЕ (ПРОМОКОДЫ / КОШЕЛЁК) === */
-.header-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-left: 12px;
-  padding-left: 12px;
-  border-left: 1px solid rgba(79,172,254,0.2);
-}
-.header-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, rgba(79,172,254,0.15), rgba(30,58,95,0.25));
-  border: 1px solid rgba(79,172,254,0.3);
-  border-radius: 10px;
-  padding: 6px 10px;
-  color: #e8f4ff;
-  font-size: 11px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.header-btn:hover {
-  background: linear-gradient(135deg, rgba(79,172,254,0.3), rgba(30,58,95,0.4));
-  border-color: rgba(79,172,254,0.6);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(79,172,254,0.3);
-}
-.header-btn:active {
-  transform: scale(0.95);
-}
-.header-btn-icon {
-  font-size: 14px;
-}
-.header-btn-label {
-  font-size: 10px;
-}
-
-/* Скрываем текст на маленьких экранах */
+.header-actions { display: flex; flex-direction: column; gap: 6px; margin-left: 12px; padding-left: 12px; border-left: 1px solid rgba(79,172,254,0.2); }
+.header-btn { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(79,172,254,0.15), rgba(30,58,95,0.25)); border: 1px solid rgba(79,172,254,0.3); border-radius: 10px; padding: 6px 10px; color: #e8f4ff; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.header-btn:hover { background: linear-gradient(135deg, rgba(79,172,254,0.3), rgba(30,58,95,0.4)); border-color: rgba(79,172,254,0.6); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(79,172,254,0.3); }
+.header-btn:active { transform: scale(0.95); }
+.header-btn-icon { font-size: 14px; }
+.header-btn-label { font-size: 10px; }
 @media (max-width: 480px) {
   .header-btn-label { display: none; }
   .header-btn { padding: 6px 8px; }
   .header-btn-icon { font-size: 16px; }
   .header-actions { gap: 4px; margin-left: 8px; padding-left: 8px; }
 }
-
 .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px; }
 .stat-card { background: linear-gradient(145deg, rgba(30,58,95,0.3), rgba(15,21,32,0.5)); border:1px solid rgba(79,172,254,0.2); border-radius:16px; padding:16px 8px; text-align:center; transition: transform 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); }
 .stat-card::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 50% -50%, rgba(79,172,254,0.15), transparent 70%); }
@@ -334,7 +297,7 @@ body::after {
 }
 
 /* ============================================================
-   ЖЕНСКАЯ ТЕМА (применяется через body.theme-female)
+   ЖЕНСКАЯ ТЕМА
    ============================================================ */
 body.theme-female {
   --ing-blue:#ff69b4;
@@ -356,213 +319,105 @@ body.theme-female::after {
     radial-gradient(ellipse 850px 200px at -5% 75%, rgba(217,70,239,0.25), transparent 70%),
     radial-gradient(ellipse 950px 230px at 105% 90%, rgba(255,105,180,0.3), transparent 70%);
 }
-body.theme-female .sidebar {
-  background: linear-gradient(180deg, rgba(26,10,31,0.95) 0%, rgba(42,10,53,0.95) 100%);
-  border-right-color: rgba(255,105,180,0.4);
-}
-body.theme-female .sidebar-logo {
-  background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(217,70,239,0.3), rgba(61,20,80,0.4));
-}
-body.theme-female .sidebar-item::before {
-  background: linear-gradient(180deg, #ff69b4, #d946ef);
-}
-body.theme-female .sidebar-item:hover, body.theme-female .sidebar-item:active {
-  background: rgba(255,105,180,0.2);
-}
-body.theme-female .header {
-  background: rgba(26,10,31,0.75);
-  border-bottom-color: rgba(255,105,180,0.4);
-}
-body.theme-female .header-card {
-  background: linear-gradient(145deg, rgba(217,70,239,0.3), rgba(61,20,80,0.25));
-  border-color: rgba(255,105,180,0.4);
-}
-body.theme-female .avatar {
-  background: linear-gradient(135deg, #ff69b4, #d946ef);
-  box-shadow: 0 4px 20px rgba(255,105,180,0.5), 0 0 0 3px rgba(255,105,180,0.15);
-}
-body.theme-female .header-btn {
-  background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(217,70,239,0.2));
-  border-color: rgba(255,105,180,0.4);
-  color: #ffd9ec;
-}
-body.theme-female .header-btn:hover {
-  background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(217,70,239,0.35));
-  border-color: rgba(255,105,180,0.7);
-  box-shadow: 0 4px 15px rgba(255,105,180,0.4);
-}
-body.theme-female .stat-card {
-  background: linear-gradient(145deg, rgba(217,70,239,0.25), rgba(42,10,53,0.5));
-  border-color: rgba(255,105,180,0.3);
-}
+body.theme-female .sidebar { background: linear-gradient(180deg, rgba(26,10,31,0.95) 0%, rgba(42,10,53,0.95) 100%); border-right-color: rgba(255,105,180,0.4); }
+body.theme-female .sidebar-logo { background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(217,70,239,0.3), rgba(61,20,80,0.4)); }
+body.theme-female .sidebar-item::before { background: linear-gradient(180deg, #ff69b4, #d946ef); }
+body.theme-female .sidebar-item:hover, body.theme-female .sidebar-item:active { background: rgba(255,105,180,0.2); }
+body.theme-female .header { background: rgba(26,10,31,0.75); border-bottom-color: rgba(255,105,180,0.4); }
+body.theme-female .header-card { background: linear-gradient(145deg, rgba(217,70,239,0.3), rgba(61,20,80,0.25)); border-color: rgba(255,105,180,0.4); }
+body.theme-female .avatar { background: linear-gradient(135deg, #ff69b4, #d946ef); box-shadow: 0 4px 20px rgba(255,105,180,0.5), 0 0 0 3px rgba(255,105,180,0.15); }
+body.theme-female .header-btn { background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(217,70,239,0.2)); border-color: rgba(255,105,180,0.4); color: #ffd9ec; }
+body.theme-female .header-btn:hover { background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(217,70,239,0.35)); border-color: rgba(255,105,180,0.7); box-shadow: 0 4px 15px rgba(255,105,180,0.4); }
+body.theme-female .stat-card { background: linear-gradient(145deg, rgba(217,70,239,0.25), rgba(42,10,53,0.5)); border-color: rgba(255,105,180,0.3); }
 body.theme-female .stat-value { color: #ffd9ec; text-shadow: 0 0 15px rgba(255,105,180,0.6); }
-body.theme-female .level-fill {
-  background: linear-gradient(90deg, #d946ef, #ff69b4, #ffb6d9, #d946ef);
-  box-shadow: 0 0 25px rgba(255,105,180,0.6);
-}
-body.theme-female .score-big {
-  background: linear-gradient(135deg, #ffd9ec 0%, #ff69b4 40%, #d946ef 70%, #3d1450 100%);
-  filter: drop-shadow(0 0 25px rgba(255,105,180,0.6));
-}
-body.theme-female .tap-button {
-  background: conic-gradient(from 0deg, #3d1450, #d946ef, #ff69b4, #ffb6d9, #ff69b4, #d946ef, #3d1450);
-  box-shadow: 0 25px 90px rgba(255,105,180,0.4), 0 0 60px rgba(217,70,239,0.5), inset 0 -8px 30px rgba(0,0,0,0.6);
-}
-body.theme-female .tap-button::after {
-  background: radial-gradient(circle at 35% 25%, #d946ef, #3d1450 60%, #1a0a1f 100%);
-  box-shadow: inset 0 10px 30px rgba(255,105,180,0.2), inset 0 -10px 30px rgba(0,0,0,0.7);
-}
-body.theme-female .tap-button::before {
-  border-color: rgba(255,105,180,0.4);
-}
-body.theme-female .tap-button span {
-  text-shadow: 0 2px 10px rgba(255,105,180,0.6);
-}
-body.theme-female .float-plus {
-  color: #ff69b4;
-  text-shadow: 0 0 25px rgba(255,105,180,1);
-}
-body.theme-female .energy-fill {
-  background: linear-gradient(90deg, #d946ef, #ff69b4);
-  box-shadow: 0 0 20px rgba(255,105,180,0.5);
-}
-body.theme-female .quick-btn {
-  background: linear-gradient(145deg, rgba(217,70,239,0.25), rgba(42,10,53,0.5));
-  border-color: rgba(255,105,180,0.3);
-}
-body.theme-female .quick-btn:hover {
-  border-color: rgba(255,105,180,0.6);
-  box-shadow: 0 12px 30px rgba(255,105,180,0.3);
-}
-body.theme-female .quick-btn::before {
-  background: linear-gradient(90deg, transparent, #ff69b4, transparent);
-}
-body.theme-female .is-balance {
-  background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(217,70,239,0.1));
-  border-color: rgba(255,105,180,0.5);
-}
-body.theme-female .is-balance .is-val {
-  color: #ffb6d9;
-  text-shadow: 0 0 15px rgba(255,105,180,0.6);
-}
-body.theme-female .is-shop-panel {
-  background: linear-gradient(145deg, rgba(255,105,180,0.06), rgba(42,10,53,0.6));
-  border-color: rgba(255,105,180,0.3);
-}
-body.theme-female .is-shop-title {
-  background: linear-gradient(135deg, #ff69b4, #d946ef);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-body.theme-female .is-shop-item {
-  background: linear-gradient(145deg, rgba(255,105,180,0.08), rgba(42,10,53,0.6));
-  border-color: rgba(255,105,180,0.25);
-}
-body.theme-female .is-shop-item:hover {
-  border-color: rgba(255,105,180,0.6);
-  box-shadow: 0 10px 30px rgba(255,105,180,0.25);
-}
-body.theme-female .is-shop-item .isi-price {
-  background: linear-gradient(135deg, #ff69b4, #d946ef);
-  color: #fff;
-}
-body.theme-female .btn-is {
-  background: linear-gradient(135deg, #ff69b4, #d946ef);
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(255,105,180,0.5);
-}
-body.theme-female .top-panel {
-  background: linear-gradient(145deg, rgba(217,70,239,0.2), rgba(42,10,53,0.6));
-  border-color: rgba(255,105,180,0.3);
-}
-body.theme-female .top-panel-title {
-  background: linear-gradient(135deg, #ffd9ec, #ff69b4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+body.theme-female .level-fill { background: linear-gradient(90deg, #d946ef, #ff69b4, #ffb6d9, #d946ef); box-shadow: 0 0 25px rgba(255,105,180,0.6); }
+body.theme-female .score-big { background: linear-gradient(135deg, #ffffff 0%, #ffd9ec 30%, #ff69b4 70%, #d946ef 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(255,105,180,0.9)) drop-shadow(0 0 15px rgba(217,70,239,0.6)); }
+body.theme-female .tap-button { background: conic-gradient(from 0deg, #3d1450, #d946ef, #ff69b4, #ffb6d9, #ff69b4, #d946ef, #3d1450); box-shadow: 0 25px 90px rgba(255,105,180,0.4), 0 0 60px rgba(217,70,239,0.5), inset 0 -8px 30px rgba(0,0,0,0.6); }
+body.theme-female .tap-button::after { background: radial-gradient(circle at 35% 25%, #d946ef, #3d1450 60%, #1a0a1f 100%); box-shadow: inset 0 10px 30px rgba(255,105,180,0.2), inset 0 -10px 30px rgba(0,0,0,0.7); }
+body.theme-female .tap-button::before { border-color: rgba(255,105,180,0.4); }
+body.theme-female .tap-button span { text-shadow: 0 2px 10px rgba(255,105,180,0.6); }
+body.theme-female .float-plus { color: #ff69b4; text-shadow: 0 0 25px rgba(255,105,180,1); }
+body.theme-female .energy-fill { background: linear-gradient(90deg, #d946ef, #ff69b4); box-shadow: 0 0 20px rgba(255,105,180,0.5); }
+body.theme-female .quick-btn { background: linear-gradient(145deg, rgba(217,70,239,0.25), rgba(42,10,53,0.5)); border-color: rgba(255,105,180,0.3); }
+body.theme-female .quick-btn:hover { border-color: rgba(255,105,180,0.6); box-shadow: 0 12px 30px rgba(255,105,180,0.3); }
+body.theme-female .quick-btn::before { background: linear-gradient(90deg, transparent, #ff69b4, transparent); }
+body.theme-female .is-balance { background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(217,70,239,0.1)); border-color: rgba(255,105,180,0.5); }
+body.theme-female .is-balance .is-val { color: #ffb6d9; text-shadow: 0 0 15px rgba(255,105,180,0.6); }
+body.theme-female .is-shop-panel { background: linear-gradient(145deg, rgba(255,105,180,0.06), rgba(42,10,53,0.6)); border-color: rgba(255,105,180,0.3); }
+body.theme-female .is-shop-title { background: linear-gradient(135deg, #ff69b4, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+body.theme-female .is-shop-item { background: linear-gradient(145deg, rgba(255,105,180,0.08), rgba(42,10,53,0.6)); border-color: rgba(255,105,180,0.25); }
+body.theme-female .is-shop-item:hover { border-color: rgba(255,105,180,0.6); box-shadow: 0 10px 30px rgba(255,105,180,0.25); }
+body.theme-female .is-shop-item .isi-price { background: linear-gradient(135deg, #ff69b4, #d946ef); color: #fff; }
+body.theme-female .btn-is { background: linear-gradient(135deg, #ff69b4, #d946ef); color: #fff; box-shadow: 0 4px 15px rgba(255,105,180,0.5); }
+body.theme-female .top-panel { background: linear-gradient(145deg, rgba(217,70,239,0.2), rgba(42,10,53,0.6)); border-color: rgba(255,105,180,0.3); }
+body.theme-female .top-panel-title { background: linear-gradient(135deg, #ffd9ec, #ff69b4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 body.theme-female .slide-dot.active { background: #ff69b4; box-shadow: 0 0 10px rgba(255,105,180,0.8); }
 body.theme-female .modal-content { border-top-color: #ff69b4; }
 body.theme-female .modal-title span { color: #ff69b4; }
-body.theme-female .modal-close {
-  background: rgba(255,105,180,0.1);
-  border-color: rgba(255,105,180,0.3);
-}
+body.theme-female .modal-close { background: rgba(255,105,180,0.1); border-color: rgba(255,105,180,0.3); }
 body.theme-female .modal-close:hover { background: rgba(255,105,180,0.3); }
-body.theme-female .btn-buy {
-  background: linear-gradient(135deg, #ff69b4, #d946ef);
-  box-shadow: 0 4px 15px rgba(255,105,180,0.5);
-}
-body.theme-female .reg-btn {
-  background: linear-gradient(135deg, #ff69b4, #d946ef);
-}
+body.theme-female .btn-buy { background: linear-gradient(135deg, #ff69b4, #d946ef); box-shadow: 0 4px 15px rgba(255,105,180,0.5); }
+body.theme-female .reg-btn { background: linear-gradient(135deg, #ff69b4, #d946ef); }
 body.theme-female .reg-btn.green { background: linear-gradient(135deg, #d946ef, #a855f7); }
-body.theme-female .toast {
-  background: linear-gradient(135deg, #ff69b4, #d946ef);
-}
+body.theme-female .toast { background: linear-gradient(135deg, #ff69b4, #d946ef); }
 body.theme-female .level-fill { animation: femGradient 4s ease infinite; }
 @keyframes femGradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-body.theme-female .corner-logo {
-  background: linear-gradient(135deg, rgba(255,105,180,0.25), rgba(217,70,239,0.25));
-  border-color: rgba(255,105,180,0.5);
-}
+body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,105,180,0.25), rgba(217,70,239,0.25)); border-color: rgba(255,105,180,0.5); }
 </style>
 </head>
 <body>
 <div class="wave-overlay"></div>
 
-<!-- ============ ЭКРАН РЕГИСТРАЦИИ ============ -->
-<div id="regScreen" class="reg-screen">
+<!-- ============ ЭКРАН АВТОРИЗАЦИИ ============ -->
+<div id="authScreen" class="reg-screen">
   <div style="text-align:center; max-width:420px; width:100%; padding-top:20px;">
-    <div style="background: linear-gradient(135deg, rgba(230,57,70,0.15), rgba(79,172,254,0.1)); border: 1px solid rgba(230,57,70,0.3); border-radius: 20px; padding: 16px 30px; margin-bottom: 16px; display: inline-block; box-shadow: 0 4px 25px rgba(230,57,70,0.2);">
+    <div style="background: linear-gradient(135deg, rgba(230,57,70,0.15), rgba(79,172,254,0.1)); border: 1px solid rgba(230,57,70,0.3); border-radius: 20px; padding: 16px 30px; margin-bottom: 16px; display: inline-block;">
       <img src="logo.png" alt="IngSoft" style="height:44px; display:block;" onerror="this.style.display='none'">
     </div>
-    <h1 style="font-size:24px; margin-bottom:6px;">Регистрация</h1>
-    <p style="color:#888; font-size:13px; margin-bottom:20px;">Выбери пол и заполни данные</p>
-    <input type="text" id="regNickname" class="reg-input" placeholder="Никнейм" maxlength="20">
-    <input type="tel" id="regPhone" class="reg-input" placeholder="Номер телефона (+7...)">
-    <select id="regRegion" class="reg-input" style="appearance:none; cursor:pointer;">
-      <option value="" disabled selected>Выбери регион</option>
-      <option value="Ингушетия">🏔️ Ингушетия</option>
-    </select>
-    <input type="text" id="regFullName" class="reg-input" placeholder="ФИО полностью">
-    
-    <!-- ВЫБОР ПОЛА -->
-    <div style="margin-bottom:14px;">
-      <p style="color:#8899aa; font-size:12px; margin-bottom:8px; text-align:left;">Выбери пол:</p>
-      <div style="display:flex; gap:10px;">
-        <button type="button" onclick="selectGender('male')" id="genderMale" class="gender-btn" style="flex:1; padding:14px; border-radius:14px; border:2px solid rgba(79,172,254,0.3); background:rgba(10,10,15,0.7); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s;">
-          👨 Мужской
-        </button>
-        <button type="button" onclick="selectGender('female')" id="genderFemale" class="gender-btn" style="flex:1; padding:14px; border-radius:14px; border:2px solid rgba(255,105,180,0.3); background:rgba(10,10,15,0.7); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.2s;">
-          👩 Женский
-        </button>
-      </div>
-    </div>
-    
-    <button onclick="checkRegistration()" class="reg-btn">Далее</button>
-    <p style="color:#666; font-size:11px; margin-top:16px;">Данные видны только тебе.</p>
-  </div>
-</div>
+    <h1 style="font-size:24px; margin-bottom:6px;">IngSoft Tap</h1>
+    <p style="color:#888; font-size:13px; margin-bottom:20px;">Эти данные нужны, чтобы вы могли писать в чате</p>
 
-<!-- ============ ЭКРАН ПОДТВЕРЖДЕНИЯ ============ -->
-<div id="confirmScreen" class="reg-screen" style="display:none;">
-  <div style="text-align:center; max-width:420px; width:100%;">
-    <h1 style="font-size:22px; margin-bottom:16px;">Проверь данные</h1>
-    <div style="background:#15151f; border:1px solid rgba(230,57,70,0.3); border-radius:14px; padding:16px; margin-bottom:16px; text-align:left; font-size:13px;">
-      <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Никнейм:</span> <b id="confNickname"></b></div>
-      <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Телефон:</span> <b id="confPhone"></b></div>
-      <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);"><span style="color:#888;">Регион:</span> <b id="confRegion"></b></div>
-      <div style="padding:8px 0;"><span style="color:#888;">ФИО:</span> <b id="confFullName"></b></div>
+    <div style="display:flex; gap:8px; margin-bottom:16px;">
+      <button id="tabLogin" onclick="showTab('login')" class="reg-btn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f);">Вход</button>
+      <button id="tabRegister" onclick="showTab('register')" class="reg-btn" style="background:transparent;border:1px solid rgba(79,172,254,0.3);">Регистрация</button>
     </div>
-    <p style="color:#ffd700; font-size:12px; margin-bottom:16px;">Если данные верны — получишь подарки.<br>Если нет — не получишь.</p>
-    <button onclick="completeRegistration()" class="reg-btn green" style="margin-bottom:10px;">✅ Всё верно</button>
-    <button onclick="backToReg()" style="width:100%; padding:14px; border-radius:14px; border:1px solid rgba(230,57,70,0.3); background:transparent; color:#888; font-size:14px; cursor:pointer;">← Изменить</button>
+
+    <div id="formLogin" style="display:none;">
+      <input type="text" id="loginLogin" class="reg-input" placeholder="Логин" maxlength="30">
+      <input type="password" id="loginPassword" class="reg-input" placeholder="Пароль" maxlength="50">
+      <button onclick="doLogin()" class="reg-btn">🔓 Войти</button>
+    </div>
+
+    <div id="formRegister">
+      <input type="text" id="regLogin" class="reg-input" placeholder="Логин (мин. 3 символа)" maxlength="30">
+      <input type="password" id="regPassword" class="reg-input" placeholder="Пароль (мин. 6 символов)" maxlength="50">
+      <input type="text" id="regNickname" class="reg-input" placeholder="Никнейм" maxlength="20">
+      <input type="tel" id="regPhone" class="reg-input" placeholder="Номер телефона (+7...)" maxlength="20">
+      <select id="regRegion" class="reg-input" style="appearance:none; cursor:pointer;">
+        <option value="" disabled selected>Выбери регион</option>
+        <option value="Ингушетия">🏔️ Ингушетия</option>
+      </select>
+      <input type="text" id="regFullName" class="reg-input" placeholder="ФИО полностью" maxlength="100">
+      
+      <div style="margin-bottom:14px;">
+        <p style="color:#8899aa; font-size:12px; margin-bottom:8px; text-align:left;">Выбери пол:</p>
+        <div style="display:flex; gap:10px;">
+          <button type="button" onclick="selectGender('male')" id="genderMale" style="flex:1; padding:14px; border-radius:14px; border:2px solid rgba(79,172,254,0.3); background:rgba(10,10,15,0.7); color:#fff; font-size:14px; font-weight:700; cursor:pointer;">
+            👨 Мужской
+          </button>
+          <button type="button" onclick="selectGender('female')" id="genderFemale" style="flex:1; padding:14px; border-radius:14px; border:2px solid rgba(255,105,180,0.3); background:rgba(10,10,15,0.7); color:#fff; font-size:14px; font-weight:700; cursor:pointer;">
+            👩 Женский
+          </button>
+        </div>
+      </div>
+      
+      <p style="color:#666; font-size:11px; margin:10px 0;">Регистрируясь, вы соглашаетесь с правилами игры.</p>
+      <button onclick="doRegister()" class="reg-btn green">✅ Зарегистрироваться</button>
+    </div>
   </div>
 </div>
 
@@ -637,7 +492,6 @@ body.theme-female .corner-logo {
   <button class="quick-btn" onclick="openModal('promo')"><span class="quick-icon">🎫</span>Промокод</button>
 </div>
 
-<!-- КАРУСЕЛЬ -->
 <div class="slideshow" id="slideshow">
   <div class="slide" style="background-image:url('slide1.jpg')"></div>
   <div class="slide" style="background-image:url('slide2.jpg')"></div>
@@ -652,14 +506,12 @@ body.theme-female .corner-logo {
   <div class="slide-dots" id="slideDots"></div>
 </div>
 
-<!-- IS БАЛАНС -->
 <div class="is-balance">
   <span class="is-icon">💎</span>
   <span>IS:</span>
   <span class="is-val" id="isBalanceVal">0</span>
 </div>
 
-<!-- IS МАГАЗИН -->
 <div class="is-shop-panel">
   <div class="is-shop-header">
     <div>
@@ -671,7 +523,6 @@ body.theme-female .corner-logo {
   <div class="is-shop-grid" id="isShopGrid"></div>
 </div>
 
-<!-- ТОП-10 -->
 <div class="top-panel">
   <div class="top-panel-header">
     <div>
@@ -683,7 +534,6 @@ body.theme-female .corner-logo {
   <div class="top-list" id="topList"></div>
 </div>
 
-<!-- МОДАЛКИ ИГР -->
 <div class="modal" id="modal-games"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">🎮 <span>Игры на тапы</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
   <div class="games-grid" id="gamesGrid"></div>
@@ -845,7 +695,6 @@ body.theme-female .corner-logo {
   </div>
 </div></div>
 
-<!-- МОДАЛКИ РАЗДЕЛОВ -->
 <div class="modal" id="modal-leaderboard"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">🏆 <span>Топ игроков</span></div><button class="modal-close" onclick="closeModal('leaderboard')">×</button></div>
   <div id="leaderList">Загрузка...</div>
@@ -895,48 +744,23 @@ body.theme-female .corner-logo {
   <div id="isTasksList" class="is-tasks-grid"></div>
 </div></div>
 
-<!-- ==================== МОДАЛКА: ПРОМОКОДЫ ==================== -->
 <div class="modal" id="modal-promocodes"><div class="modal-content">
   <div class="modal-header">
     <div class="modal-title">🏷️ <span>Промокоды IngSoft</span></div>
     <button class="modal-close" onclick="closeModal('promocodes')">×</button>
   </div>
-
-  <!-- 10 ПОД-ВКЛАДОК -->
   <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:14px;">
-    <button onclick="switchPromoTab(1)" id="promoTab1" style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#0a0a0f; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:pointer; box-shadow:0 4px 15px rgba(255,215,0,0.4);">
-      IngSoft
-    </button>
-    <button onclick="switchPromoTab(2)" id="promoTab2" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
-    <button onclick="switchPromoTab(3)" id="promoTab3" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
-    <button onclick="switchPromoTab(4)" id="promoTab4" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
-    <button onclick="switchPromoTab(5)" id="promoTab5" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
-    <button onclick="switchPromoTab(6)" id="promoTab6" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
-    <button onclick="switchPromoTab(7)" id="promoTab7" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
-    <button onclick="switchPromoTab(8)" id="promoTab8" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
-    <button onclick="switchPromoTab(9)" id="promoTab9" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
-    <button onclick="switchPromoTab(10)" id="promoTab10" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">
-      🔒 Скоро
-    </button>
+    <button onclick="switchPromoTab(1)" id="promoTab1" style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#0a0a0f; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:pointer; box-shadow:0 4px 15px rgba(255,215,0,0.4);">IngSoft</button>
+    <button onclick="switchPromoTab(2)" id="promoTab2" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(3)" id="promoTab3" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(4)" id="promoTab4" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(5)" id="promoTab5" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(6)" id="promoTab6" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(7)" id="promoTab7" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(8)" id="promoTab8" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(9)" id="promoTab9" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(10)" id="promoTab10" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
   </div>
-
-  <!-- СОДЕРЖИМОЕ АКТИВНОЙ ВКЛАДКИ -->
   <div id="promoContent" style="background:linear-gradient(145deg, rgba(255,215,0,0.08), rgba(15,21,32,0.6)); border:1px solid rgba(255,215,0,0.25); border-radius:14px; padding:16px; margin-bottom:14px; font-size:13px; line-height:1.7; color:#e8e4dc;">
     <div style="text-align:center; font-size:16px; font-weight:900; color:#ffd700; margin-bottom:12px;">🏷️ Промокоды IngSoft</div>
     <p style="margin-bottom:10px;">Промокоды на заказ на сайте <b style="color:#ffd700;">IngSoft</b> <span style="color:#888;">(ссылка)</span></p>
@@ -944,26 +768,12 @@ body.theme-female .corner-logo {
     <p style="margin-bottom:10px;"><b style="color:#ffd700;">Например:</b> у вас есть промокоды на <b>2%</b>, <b>3%</b>, <b>5%</b>. Вы сможете использовать <b>на 1 заказ</b> промокод <b>5%</b>, и только потом на следующий заказ использовать <b>2% + 3%</b>.</p>
     <p style="color:#888; font-size:11px;">Скоро тут появится ссылка на сайт IngSoft.</p>
   </div>
-
-  <!-- 2 РАЗДЕЛА -->
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
-    <button onclick="switchPromoView('earn')" id="promoViewEarn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f); border:none; color:#fff; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(79,172,254,0.4);">
-      💼 Заработать
-    </button>
-    <button onclick="switchPromoView('wallet')" id="promoViewWallet" style="background:transparent; border:1px solid rgba(79,172,254,0.3); color:#8899aa; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer;">
-      👛 Кошелёк
-    </button>
+    <button onclick="switchPromoView('earn')" id="promoViewEarn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f); border:none; color:#fff; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(79,172,254,0.4);">💼 Заработать</button>
+    <button onclick="switchPromoView('wallet')" id="promoViewWallet" style="background:transparent; border:1px solid rgba(79,172,254,0.3); color:#8899aa; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer;">👛 Кошелёк</button>
   </div>
-
-  <!-- ЗАРАБОТАТЬ -->
-  <div id="promoEarnView">
-    <div id="promoEarnList"></div>
-  </div>
-
-  <!-- КОШЕЛЁК -->
-  <div id="promoWalletView" style="display:none;">
-    <div id="promoWalletList"></div>
-  </div>
+  <div id="promoEarnView"><div id="promoEarnList"></div></div>
+  <div id="promoWalletView" style="display:none;"><div id="promoWalletList"></div></div>
 </div></div>
 
 <div class="modal" id="modal-promo"><div class="modal-content">
@@ -1027,7 +837,7 @@ let subWasSubscribed = false;
 let subWasPunished = false;
 let claimedQuests=[], claimedPromos=[];
 let nickname=null, phone=null, region=null, fullName=null;
-let gender = null; // 'male' или 'female'
+let gender = null;
 let avatarData=null;
 let autotapLevel=0, lastAutotapClaim=null;
 let passiveIncome=0;
@@ -1037,6 +847,11 @@ let upgrades = {};
 
 // === ПРОМОКОДЫ ===
 let earnedPromocodes = [];
+
+// === АВТОРИЗАЦИЯ ===
+let currentToken = null;
+let currentUser = null;
+let selectedGender = null;
 
 const PROMOS = {
   'INGSOFT': { coins: 50000, desc: '+50 000 очков' },
@@ -1049,7 +864,6 @@ const PROMOS = {
 };
 const DAILY_REWARDS = [{coins:100},{coins:200},{coins:300},{coins:500},{coins:1000},{coins:2000},{coins:5000}];
 
-// === IS ТОВАРЫ ===
 const IS_SHOP = [
   { id:'unlim15',  icon:'♾️', name:'Безлимит 15 мин', desc:'Тапай без лимита', price:100, apply:() => { unlimitedUntil = Date.now() + 15*60*1000; } },
   { id:'unlim30',  icon:'♾️', name:'Безлимит 30 мин', desc:'Двойное время',   price:180, apply:() => { unlimitedUntil = Date.now() + 30*60*1000; } },
@@ -1061,9 +875,6 @@ const IS_SHOP = [
   { id:'reset',    icon:'🔄', name:'Сброс лимита',     desc:'Обнулить счётчик',price:250, apply:() => { tapsToday = 0; } },
 ];
 
-// ============================================================
-// НАСТРОЙКИ ПОДПИСОК
-// ============================================================
 const API_URL = '';
 const TG_CHANNEL = 'IngSoftTab06';
 const TG_CHANNEL_URL = 'https://t.me/IngSoftTab06';
@@ -1195,54 +1006,32 @@ function saveToLocal() {
     walletBalance, walletTotal, upgrades,
     dailyTapLimit, tapsToday, lastTapDate, unlimitedUntil,
     isBalance, isTasksDone, isBoostMultUntil, isAutoTapUntil,
-    subWasSubscribed, subWasPunished,
-    earnedPromocodes,
-    gender
+    subWasSubscribed, subWasPunished, earnedPromocodes, gender
   };
   try { localStorage.setItem('ingsoft_user', JSON.stringify(user)); } catch(e) {}
+
+  if (currentToken && API_URL) {
+    fetch(API_URL + '/save-progress', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        token: currentToken,
+        score, energy, max_energy: maxEnergy, multiplier, level, total_taps: totalTaps,
+        is_balance: isBalance, daily_tap_limit: dailyTapLimit, taps_today: tapsToday,
+        last_tap_date: lastTapDate, sub_was_subscribed: subWasSubscribed,
+        sub_was_punished: subWasPunished, is_tasks_done: isTasksDone,
+        claimed_quests: claimedQuests, claimed_promos: claimedPromos,
+        upgrades: upgrades, unlimited_until: unlimitedUntil,
+        is_boost_mult_until: isBoostMultUntil, is_auto_tap_until: isAutoTapUntil,
+        autotap_level: autotapLevel, passive_income: passiveIncome,
+        wallet_balance: walletBalance, wallet_total: walletTotal,
+        earned_promocodes: earnedPromocodes
+      })
+    }).catch(e => {});
+  }
 }
 function scheduleSave() { if (saveTimer) return; saveTimer = setTimeout(() => { saveToLocal(); saveTimer = null; }, 500); }
 
-function loadPlayer() {
-  const saved = localStorage.getItem('ingsoft_user');
-  if (!saved) { document.getElementById('regScreen').style.display = 'flex'; return; }
-  try {
-    const u = JSON.parse(saved);
-    nickname = u.nickname; phone = u.phone; region = u.region; fullName = u.fullName;
-    avatarData = u.avatarData || null;
-    score = u.score || 0; energy = u.energy ?? 500; maxEnergy = u.maxEnergy ?? 500;
-    multiplier = u.multiplier ?? 1; dailyStreak = u.dailyStreak ?? 0;
-    lastDailyClaim = u.lastDailyClaim; totalTaps = u.totalTaps ?? 0; level = u.level ?? 1;
-    claimedQuests = u.claimedQuests || []; claimedPromos = u.claimedPromos || [];
-    autotapLevel = u.autotapLevel ?? 0; lastAutotapClaim = u.lastAutotapClaim;
-    passiveIncome = u.passiveIncome ?? 0;
-    walletBalance = u.walletBalance ?? 0; walletTotal = u.walletTotal ?? 0;
-    upgrades = u.upgrades || {};
-    dailyTapLimit = u.dailyTapLimit ?? 20000;
-    tapsToday = u.tapsToday ?? 0;
-    lastTapDate = u.lastTapDate || null;
-    unlimitedUntil = u.unlimitedUntil ?? 0;
-    isBalance = u.isBalance ?? 0;
-    isTasksDone = u.isTasksDone || [];
-    isBoostMultUntil = u.isBoostMultUntil ?? 0;
-    isAutoTapUntil = u.isAutoTapUntil ?? 0;
-    subWasSubscribed = u.subWasSubscribed ?? false;
-    subWasPunished = u.subWasPunished ?? false;
-    earnedPromocodes = u.earnedPromocodes || [];
-    gender = u.gender || 'male';
-    applyGenderTheme();
-    document.getElementById('regScreen').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    updateUI();
-    buildSidebar();
-    if (avatarData) {
-      document.getElementById('avatar').style.backgroundImage = 'url(' + avatarData + ')';
-      document.getElementById('avatar').style.backgroundSize = 'cover';
-      document.getElementById('avatar').textContent = '';
-    }
-    return true;
-  } catch(e) { document.getElementById('regScreen').style.display = 'flex'; return false; }
-}
 
 function updateUI() {
   document.getElementById('scoreBig').textContent = fmt(score);
@@ -1279,7 +1068,6 @@ function updateUI() {
   loadISShop();
 }
 
-// === ОБРАБОТЧИК ТАПА ===
 document.getElementById('tapBtn').addEventListener('click', (e) => {
   if (energy <= 0) { showToast('⚡ Энергия кончилась!'); return; }
   const today = new Date().toISOString().split('T')[0];
@@ -1304,7 +1092,7 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
 function buildSidebar() {
   const isFem = (gender === 'female');
   const items = [
-    { icon: isFem ? '🌸' : '🏠', label: isFem ? 'Главная' : 'Главная', action:'closeAllModals' },
+    { icon: isFem ? '🌸' : '🏠', label:'Главная', action:'closeAllModals' },
     { icon: isFem ? '🎀' : '🎮', label: isFem ? 'Развлечения' : 'Игры', action:'openModal(\'games\')' },
     { icon: isFem ? '👑' : '🏆', label: 'Топ', action:'openModal(\'leaderboard\')' },
     { icon: isFem ? '📝' : '📋', label: isFem ? 'Задания' : 'Квесты', action:'openModal(\'quests\')' },
@@ -1579,12 +1367,11 @@ function uploadAvatar() {
   input.click();
 }
 
-// === ВЫБОР ПОЛА ===
+// === ВЫБОР ПОЛА (один раз, пишет в selectedGender) ===
 function selectGender(g) {
-  gender = g;
+  selectedGender = g;
   const maleBtn = document.getElementById('genderMale');
   const femaleBtn = document.getElementById('genderFemale');
-  
   if (g === 'male') {
     maleBtn.style.border = '2px solid #4facfe';
     maleBtn.style.background = 'linear-gradient(135deg, rgba(79,172,254,0.25), rgba(30,58,95,0.4))';
@@ -1612,60 +1399,147 @@ function applyGenderTheme() {
     document.body.classList.add('theme-male');
     document.body.classList.remove('theme-female');
   }
-  
-  // Смена заголовков
   const isShop = document.getElementById('isShopTitle');
   const topTitle = document.getElementById('topPanelTitle');
-  const tapLimitText = document.getElementById('tapLimitText');
-  
   if (isShop) isShop.textContent = isFem ? '💖 Монетки' : '🛒 IS Магазин';
   if (topTitle) topTitle.textContent = isFem ? '👑 Топ красоток' : '🏆 Топ-10 игроков';
 }
 
+// ============================================================
+// АВТОРИЗАЦИЯ
+// ============================================================
+function showTab(tab) {
+  const isLogin = (tab === 'login');
+  document.getElementById('formLogin').style.display = isLogin ? 'block' : 'none';
+  document.getElementById('formRegister').style.display = isLogin ? 'none' : 'block';
+  document.getElementById('tabLogin').style.background = isLogin ? 'linear-gradient(135deg,#4facfe,#1e3a5f)' : 'transparent';
+  document.getElementById('tabLogin').style.border = isLogin ? 'none' : '1px solid rgba(79,172,254,0.3)';
+  document.getElementById('tabRegister').style.background = isLogin ? 'transparent' : 'linear-gradient(135deg,#4facfe,#1e3a5f)';
+  document.getElementById('tabRegister').style.border = isLogin ? '1px solid rgba(79,172,254,0.3)' : 'none';
+}
 
-let regData = {};
-function checkRegistration() {
-  const nick = document.getElementById('regNickname').value.trim();
-  const ph = document.getElementById('regPhone').value.trim();
-  const reg = document.getElementById('regRegion').value.trim();
-  const fn = document.getElementById('regFullName').value.trim();
-  if (!nick || nick.length < 2) { showToast('Введи никнейм'); return; }
-  if (!ph || ph.length < 10) { showToast('Введи номер телефона'); return; }
-  if (!reg) { showToast('Выбери регион'); return; }
-  if (!fn || fn.length < 5) { showToast('Введи ФИО'); return; }
-  if (!gender) { showToast('Выбери пол'); return; }
-  regData = { nickname: nick, phone: ph, region: reg, fullName: fn, gender: gender };
-  document.getElementById('confNickname').textContent = nick;
-  document.getElementById('confPhone').textContent = ph;
-  document.getElementById('confRegion').textContent = reg;
-  document.getElementById('confFullName').textContent = fn;
-  document.getElementById('regScreen').style.display = 'none';
-  document.getElementById('confirmScreen').style.display = 'flex';
+async function doRegister() {
+  const login = document.getElementById('regLogin').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const nickname = document.getElementById('regNickname').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const region = document.getElementById('regRegion').value;
+  const full_name = document.getElementById('regFullName').value.trim();
+
+  if (!login || login.length < 3) { showToast('Логин минимум 3 символа'); return; }
+  if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
+  if (!nickname) { showToast('Введи никнейм'); return; }
+  if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
+  if (!region) { showToast('Выбери регион'); return; }
+  if (!full_name) { showToast('Введи ФИО'); return; }
+  if (!selectedGender) { showToast('Выбери пол'); return; }
+
+  try {
+    const resp = await fetch(API_URL + '/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        login, password, nickname, gender: selectedGender,
+        region, phone, full_name
+      })
+    });
+    const data = await resp.json();
+
+    if (!resp.ok || data.error) {
+      showToast('❌ ' + (data.error || 'Ошибка'));
+      return;
+    }
+
+    currentToken = data.token;
+    currentUser = data;
+    nickname = data.nickname;
+    gender = data.gender;
+    phone = data.phone;
+    fullName = data.full_name;
+    region = data.region;
+    telegramId = data.telegram_id || telegramId;
+
+    localStorage.setItem('ingsoft_token', currentToken);
+    applyGenderTheme();
+    enterGame();
+    showToast('🎉 Добро пожаловать, ' + nickname + '!');
+  } catch (e) {
+    console.error(e);
+    showToast('❌ Ошибка соединения');
+  }
 }
-function backToReg() {
-  document.getElementById('confirmScreen').style.display = 'none';
-  document.getElementById('regScreen').style.display = 'flex';
+
+async function doLogin() {
+  const login = document.getElementById('loginLogin').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  if (!login || !password) { showToast('Введи логин и пароль'); return; }
+
+  try {
+    const resp = await fetch(API_URL + '/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({login, password})
+    });
+    const data = await resp.json();
+
+    if (!resp.ok || data.error) {
+      showToast('❌ ' + (data.error || 'Ошибка входа'));
+      return;
+    }
+
+    const u = data.user;
+    currentToken = u.token;
+    currentUser = u;
+    localStorage.setItem('ingsoft_token', currentToken);
+
+    nickname = u.nickname;
+    gender = u.gender || 'male';
+    phone = u.phone;
+    fullName = u.full_name;
+    region = u.region;
+    telegramId = u.telegram_id || telegramId;
+    score = u.score || 0;
+    energy = u.energy ?? 500;
+    maxEnergy = u.max_energy ?? 500;
+    multiplier = u.multiplier ?? 1;
+    level = u.level ?? 1;
+    totalTaps = u.total_taps ?? 0;
+    isBalance = u.is_balance ?? 0;
+    dailyTapLimit = u.daily_tap_limit ?? 20000;
+    tapsToday = u.taps_today ?? 0;
+    lastTapDate = u.last_tap_date || null;
+    subWasSubscribed = u.sub_was_subscribed || false;
+    subWasPunished = u.sub_was_punished || false;
+    isTasksDone = u.is_tasks_done || [];
+    claimedQuests = u.claimed_quests || [];
+    claimedPromos = u.claimed_promos || [];
+    upgrades = u.upgrades || {};
+    unlimitedUntil = u.unlimited_until ?? 0;
+    isBoostMultUntil = u.is_boost_mult_until ?? 0;
+    isAutoTapUntil = u.is_auto_tap_until ?? 0;
+    autotapLevel = u.autotap_level ?? 0;
+    passiveIncome = u.passive_income ?? 0;
+    walletBalance = u.wallet_balance ?? 0;
+    walletTotal = u.wallet_total ?? 0;
+    earnedPromocodes = u.earned_promocodes || [];
+
+    applyGenderTheme();
+    enterGame();
+    showToast('🎉 С возвращением, ' + nickname + '!');
+  } catch (e) {
+    console.error(e);
+    showToast('❌ Ошибка соединения');
+  }
 }
-function completeRegistration() {
-  if (!regData.nickname) { showToast('Заполни данные'); return; }
-  nickname = regData.nickname; phone = regData.phone; region = regData.region; fullName = regData.fullName;
-  gender = regData.gender || 'male';
-  score = 0; energy = 500; maxEnergy = 500; multiplier = 1;
-  level = 1; totalTaps = 0; dailyStreak = 0; autotapLevel = 0;
-  claimedQuests = []; claimedPromos = [];
-  passiveIncome = 0; walletBalance = 0; walletTotal = 0;
-  lastAutotapClaim = new Date().toISOString();
-  dailyTapLimit = 20000; tapsToday = 0; lastTapDate = null; unlimitedUntil = 0;
-  isBalance = 0; isTasksDone = []; isBoostMultUntil = 0; isAutoTapUntil = 0;
-  subWasSubscribed = false; subWasPunished = false;
-  earnedPromocodes = [];
-  saveToLocal();
-  document.getElementById('confirmScreen').style.display = 'none';
-  document.getElementById('regScreen').style.display = 'none';
+
+function enterGame() {
+  document.getElementById('authScreen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
-  applyGenderTheme();
-  showToast('🎉 Добро пожаловать, ' + nickname + '!');
-  updateUI(); buildSidebar();
+  updateUI();
+  buildSidebar();
+  loadISShop();
+  saveToLocal();
 }
 
 function loadQuests() {
@@ -2195,6 +2069,45 @@ function initSlideshow() {
   slideTimer = setInterval(nextSlide, 4000);
 }
 
+async function loadProgressByToken(token) {
+  try {
+    const resp = await fetch(API_URL + '/get-progress?token=' + token);
+    const data = await resp.json();
+    if (data.found && data.user) {
+      const u = data.user;
+      nickname = u.nickname; gender = u.gender || 'male'; phone = u.phone;
+      fullName = u.full_name; region = u.region;
+      score = u.score || 0; energy = u.energy ?? 500; maxEnergy = u.max_energy ?? 500;
+      multiplier = u.multiplier ?? 1; level = u.level ?? 1; totalTaps = u.total_taps ?? 0;
+      isBalance = u.is_balance ?? 0; dailyTapLimit = u.daily_tap_limit ?? 20000;
+      tapsToday = u.taps_today ?? 0; lastTapDate = u.last_tap_date || null;
+      subWasSubscribed = u.sub_was_subscribed || false;
+      subWasPunished = u.sub_was_punished || false;
+      isTasksDone = u.is_tasks_done || [];
+      claimedQuests = u.claimed_quests || [];
+      claimedPromos = u.claimed_promos || [];
+      upgrades = u.upgrades || {};
+      unlimitedUntil = u.unlimited_until ?? 0;
+      isBoostMultUntil = u.is_boost_mult_until ?? 0;
+      isAutoTapUntil = u.is_auto_tap_until ?? 0;
+      autotapLevel = u.autotap_level ?? 0;
+      passiveIncome = u.passive_income ?? 0;
+      walletBalance = u.wallet_balance ?? 0;
+      walletTotal = u.wallet_total ?? 0;
+      earnedPromocodes = u.earned_promocodes || [];
+      telegramId = u.telegram_id || telegramId;
+      applyGenderTheme();
+      enterGame();
+    } else {
+      localStorage.removeItem('ingsoft_token');
+      document.getElementById('authScreen').style.display = 'flex';
+    }
+  } catch (e) {
+    console.error(e);
+    document.getElementById('authScreen').style.display = 'flex';
+  }
+}
+
 function init() {
   if (tg) {
     tg.ready();
@@ -2202,9 +2115,12 @@ function init() {
     try { tg.setHeaderColor('#0a0a0f'); tg.setBackgroundColor('#0a0a0f'); } catch(e) {}
   }
   getTelegramUser();
-  const loaded = loadPlayer();
-  if (!loaded && !localStorage.getItem('ingsoft_user')) {
-    document.getElementById('regScreen').style.display = 'flex';
+  const savedToken = localStorage.getItem('ingsoft_token');
+  if (savedToken) {
+    currentToken = savedToken;
+    loadProgressByToken(savedToken);
+  } else {
+    document.getElementById('authScreen').style.display = 'flex';
   }
   setInterval(runAutotap, 1000);
   setInterval(runPassive, 1000);
