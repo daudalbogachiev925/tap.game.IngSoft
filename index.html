@@ -905,19 +905,15 @@ let currentUser = null;
 let selectedGender = null;
 
 // === РЕФЕРАЛЬНАЯ СИСТЕМА ===
-let referrerNickname = null;   // ник того, кто пригласил
-let referrerId = null;         // telegram_id того, кто пригласил
-let myReferrals = [];          // список приглашённых
-let myUserId = null;           // внутренний ID в БД
-let myReferralBonus = 0;       // сколько IS я уже заработал на рефералах
+let referrerNickname = null;
+let referrerId = null;
+let myReferrals = [];
+let myUserId = null;
+let myReferralBonus = 0;
 
-// Загрузка сохранённых рефереров
 try {
   const savedRefNick = localStorage.getItem('ingsoft_referrer_nickname');
-  if (savedRefNick) {
-    referrerNickname = savedRefNick;
-    console.log('📥 Загружен referrerNickname:', referrerNickname);
-  }
+  if (savedRefNick) { referrerNickname = savedRefNick; }
   const savedRefId = localStorage.getItem('ingsoft_referrer_id');
   if (savedRefId) {
     referrerId = parseInt(savedRefId, 10);
@@ -950,28 +946,23 @@ const IS_SHOP = [
 const API_URL = 'https://ingsofttap.bothost.tech';
 const TG_CHANNEL = 'IngSoftTab06';
 const TG_CHANNEL_URL = 'https://t.me/IngSoftTab06';
-const BOT_USERNAME = 'ingsoft_checkbot';       // ← имя БОТА (не канала!)
-const BOT_SHORT_NAME = 'tap';                  // ← короткое имя Mini App
+const BOT_USERNAME = 'ingsoft_checkbot';
+const BOT_SHORT_NAME = 'tap';
 const SUB_REWARD = 50;
 const SUB_PENALTY = 500;
 
-// === НАГРАДЫ ЗА РЕФЕРАЛОВ ===
-// Формула: за N-го друга сколько IS даём
 function getReferralReward(friendNumber) {
   if (friendNumber <= 0) return 0;
   if (friendNumber === 1) return 100;
   if (friendNumber === 2) return 200;
   if (friendNumber === 3) return 250;
-  if (friendNumber > 100) return 300;  // 100+ друзей — по 300 IS
-  return 100;  // друзья 4-100 дают 100 IS
+  if (friendNumber > 100) return 300;
+  return 100;
 }
 
-// Общая сумма, которую можно заработать
 function getTotalReferralEarnings(count) {
   let total = 0;
-  for (let i = 1; i <= count; i++) {
-    total += getReferralReward(i);
-  }
+  for (let i = 1; i <= count; i++) total += getReferralReward(i);
   return total;
 }
 
@@ -1091,7 +1082,6 @@ function getTelegramUser() {
   return false;
 }
 
-// === СОХРАНЕНИЕ ===
 function saveToLocal() {
   const user = {
     nickname, phone, region, fullName, avatarData,
@@ -1463,7 +1453,6 @@ function uploadAvatar() {
   input.click();
 }
 
-// === ВЫБОР ПОЛА ===
 function selectGender(g) {
   selectedGender = g;
   const maleBtn = document.getElementById('genderMale');
@@ -1485,7 +1474,6 @@ function selectGender(g) {
   }
 }
 
-// === ПРИМЕНЕНИЕ ТЕМЫ ===
 function applyGenderTheme() {
   const isFem = (gender === 'female');
   if (isFem) {
@@ -1501,9 +1489,6 @@ function applyGenderTheme() {
   if (topTitle) topTitle.textContent = isFem ? '👑 Топ красоток' : '🏆 Топ-10 игроков';
 }
 
-// ============================================================
-// АВТОРИЗАЦИЯ
-// ============================================================
 function showTab(tab) {
   const isLogin = (tab === 'login');
   document.getElementById('formLogin').style.display = isLogin ? 'block' : 'none';
@@ -1514,6 +1499,9 @@ function showTab(tab) {
   document.getElementById('tabRegister').style.border = isLogin ? '1px solid rgba(79,172,254,0.3)' : 'none';
 }
 
+// ============================================================
+// РЕГИСТРАЦИЯ С ЛОГАМИ
+// ============================================================
 async function doRegister() {
   const login = document.getElementById('regLogin').value.trim();
   const password = document.getElementById('regPassword').value;
@@ -1526,14 +1514,13 @@ async function doRegister() {
   if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
   if (!nick) { showToast('Введи никнейм'); return; }
   if (/\s/.test(nick)) { showToast('Никнейм без пробелов'); return; }
-  if (!/^[a-zA-Z0-9_]+$/.test(nick)) { 
-    showToast('Ник только латиница, цифры и _'); 
-    return; 
-  }
+  if (!/^[a-zA-Z0-9_]+$/.test(nick)) { showToast('Ник только латиница, цифры и _'); return; }
   if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
   if (!region) { showToast('Выбери регион'); return; }
   if (!full_name) { showToast('Введи ФИО'); return; }
   if (!selectedGender) { showToast('Выбери пол'); return; }
+
+  console.log('📤 Отправляем регистрацию:', { login, nickname: nick, phone, region });
 
   try {
     const resp = await fetch(API_URL + '/register', {
@@ -1543,18 +1530,28 @@ async function doRegister() {
         login, password, nickname: nick, gender: selectedGender,
         region, phone, full_name,
         telegram_id: telegramId,
-        referrer_nickname: referrerNickname,   // ← ник реферера
-        referrer_id: referrerId                 // ← telegram_id реферера (если есть)
+        referrer_nickname: referrerNickname,
+        referrer_id: referrerId
       })
     });
-    const data = await resp.json();
+
+    console.log('📥 Ответ сервера:', resp.status, resp.statusText);
+    const text = await resp.text();
+    console.log('📥 Тело ответа:', text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      showToast('❌ Сервер вернул не JSON: ' + text.slice(0, 80));
+      return;
+    }
 
     if (!resp.ok || data.error) {
       showToast('❌ ' + (data.error || 'Ошибка'));
       return;
     }
 
-    // Очищаем реферера после регистрации
     localStorage.removeItem('ingsoft_referrer_nickname');
     localStorage.removeItem('ingsoft_referrer_id');
     referrerNickname = null;
@@ -1564,16 +1561,21 @@ async function doRegister() {
     showRegisterSuccessModal(nick, login);
 
   } catch (e) {
-    console.error(e);
-    showToast('❌ Ошибка соединения');
+    console.error('❌ Ошибка:', e);
+    showToast('❌ Ошибка соединения: ' + e.message);
   }
 }
 
+// ============================================================
+// ВХОД С ЛОГАМИ
+// ============================================================
 async function doLogin() {
   const login = document.getElementById('loginLogin').value.trim();
   const password = document.getElementById('loginPassword').value;
 
   if (!login || !password) { showToast('Введи логин и пароль'); return; }
+
+  console.log('📤 Отправляем вход:', { login });
 
   try {
     const resp = await fetch(API_URL + '/login', {
@@ -1581,7 +1583,18 @@ async function doLogin() {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({login, password})
     });
-    const data = await resp.json();
+
+    console.log('📥 Ответ сервера:', resp.status, resp.statusText);
+    const text = await resp.text();
+    console.log('📥 Тело ответа:', text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      showToast('❌ Сервер вернул не JSON: ' + text.slice(0, 80));
+      return;
+    }
 
     if (!resp.ok || data.error) {
       showToast('❌ ' + (data.error || 'Ошибка входа'));
@@ -1631,8 +1644,8 @@ async function doLogin() {
     showToast('🎉 С возвращением, ' + nickname + '!');
     setTimeout(loadReferral, 500);
   } catch (e) {
-    console.error(e);
-    showToast('❌ Ошибка соединения');
+    console.error('❌ Ошибка:', e);
+    showToast('❌ Ошибка соединения: ' + e.message);
   }
 }
 
@@ -1790,18 +1803,12 @@ function loadAchievements() {
   ).join('');
 }
 
-// ============================================================
-// РЕФЕРАЛЬНАЯ СИСТЕМА
-// ============================================================
 async function loadReferral() {
-  // Ссылка на Mini App с ником пользователя
   const myNick = nickname || ('user' + telegramId);
-  // ⚠️ ВАЖНО: URL = t.me/БОТ/КОРОТКОЕ_ИМЯ?startapp=ref_ник
   const link = 'https://t.me/' + BOT_USERNAME + '/' + BOT_SHORT_NAME + '?startapp=ref_' + encodeURIComponent(myNick);
   const linkEl = document.getElementById('refLink');
   if (linkEl) linkEl.textContent = link;
 
-  // Загружаем список приглашённых
   if (currentToken) {
     try {
       const resp = await fetch(API_URL + '/referrals?token=' + currentToken);
@@ -1810,7 +1817,6 @@ async function loadReferral() {
         myReferrals = data.referrals || [];
         const cntEl = document.getElementById('refCount');
         if (cntEl) cntEl.textContent = myReferrals.length;
-        // Считаем заработанное
         myReferralBonus = getTotalReferralEarnings(myReferrals.length);
         renderReferralList();
       }
@@ -1862,7 +1868,6 @@ function shareRefLink() {
   window.open(shareUrl, '_blank');
 }
 
-// === БОНУС ЗА РЕФЕРАЛКУ ===
 function loadReferralBonus() {
   const count = myReferrals.length;
   const bonusCount = document.getElementById('bonusFriendCount');
@@ -1944,7 +1949,6 @@ function loadStats() {
     '<div class="profile-row"><span>Бустов</span><span>' + Object.keys(upgrades).length + ' / ' + BOOSTS.length + '</span></div>';
 }
 
-// === ВЫХОД ИЗ АККАУНТА ===
 function logout() {
   const confirmOut = confirm('⚠️ Выйти из аккаунта?\n\nТы сможешь зайти снова по логину и паролю.');
   if (!confirmOut) return;
@@ -2037,9 +2041,6 @@ function redeemPromo() {
   loadPromoHistory();
 }
 
-// ============================================================
-// ПРОМОКОДЫ (СИСТЕМА СКИДОК)
-// ============================================================
 let promoActiveTab = 1;
 let promoActiveView = 'earn';
 
@@ -2173,7 +2174,6 @@ function loadPromoHistory() {
     claimedPromos.map(c => '<div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);padding:8px;border-radius:10px;margin-bottom:4px;font-size:12px;color:#22c55e;text-align:center;letter-spacing:2px;">✓ ' + c + '</div>').join('');
 }
 
-// === ЦЕНА ИГР ===
 const GAME_COSTS = {};
 const COST_SEQUENCE = [1000, 5000, 7000, 10000, 15000, 25000, 40000, 60000, 90000, 150000];
 function getGameCost(gameId) {
@@ -2461,9 +2461,6 @@ async function loadProgressByToken(token) {
   }
 }
 
-// ============================================================
-// ИНИЦИАЛИЗАЦИЯ
-// ============================================================
 function init() {
   if (tg) {
     tg.ready();
@@ -2472,7 +2469,6 @@ function init() {
   }
   getTelegramUser();
 
-  // === ЛОВИМ РЕФЕРАЛЬНУЮ ССЫЛКУ (ник в ссылке) ===
   try {
     const startParam = tg?.initDataUnsafe?.start_param;
     if (startParam && startParam.startsWith('ref_')) {
