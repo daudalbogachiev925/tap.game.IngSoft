@@ -245,7 +245,20 @@ body::after {
 .reg-screen { position:fixed; inset:0; background:linear-gradient(160deg,#0f1520,#0a0a0f); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; overflow-y:auto; }
 .reg-input { width:100%; padding:14px; border-radius:12px; border:1px solid rgba(79,172,254,0.25); background:rgba(10,10,15,0.7); color:#fff; font-size:15px; margin-bottom:10px; outline:none; transition: all 0.2s; }
 .reg-input:focus { border-color: #4facfe; box-shadow: 0 0 20px rgba(79,172,254,0.3); }
-.reg-btn { width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#4facfe,#1e3a5f); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(79,172,254,0.5); transition: all 0.2s; }
+.reg-btn {
+  width:100%; padding:16px; border-radius:14px; border:none;
+  background:linear-gradient(135deg,#4facfe,#1e3a5f); color:#fff;
+  font-size:16px; font-weight:800; cursor:pointer;
+  box-shadow:0 8px 30px rgba(79,172,254,0.5);
+  transition: transform 0.15s, box-shadow 0.15s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+.reg-btn:active { transform: scale(0.97); }
+.reg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .reg-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(79,172,254,0.7); }
 .reg-btn.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
 .corner-logo { position:fixed; right:14px; bottom:14px; z-index:600; opacity:0.75; transition:opacity 0.3s, transform 0.3s; pointer-events:none; background: linear-gradient(135deg, rgba(79,172,254,0.2), rgba(30,58,95,0.2)); padding: 10px 16px; border-radius: 16px; backdrop-filter: blur(15px); border: 1px solid rgba(79,172,254,0.4); box-shadow: 0 0 30px rgba(79,172,254,0.3), inset 0 0 15px rgba(79,172,254,0.1); }
@@ -386,9 +399,9 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     </div>
 
     <div id="formLogin" style="display:none;">
-      <input type="text" id="loginLogin" class="reg-input" placeholder="Логин" maxlength="30">
-      <input type="password" id="loginPassword" class="reg-input" placeholder="Пароль" maxlength="50">
-      <button onclick="doLogin()" class="reg-btn">🔓 Войти</button>
+      <input type="text" id="loginLogin" class="reg-input" placeholder="Логин" maxlength="30" autocomplete="username">
+      <input type="password" id="loginPassword" class="reg-input" placeholder="Пароль" maxlength="50" autocomplete="current-password">
+      <button id="btnDoLogin" type="button" class="reg-btn">🔓 Войти</button>
     </div>
 
     <div id="formRegister">
@@ -415,8 +428,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
       </div>
       
       <p style="color:#666; font-size:11px; margin:10px 0;">Регистрируясь, вы соглашаетесь с правилами игры.</p>
-      <button onclick="doRegister()" class="reg-btn green">✅ Зарегистрироваться</button>
-    </div>
+      <button id="btnDoRegister" type="button" class="reg-btn green">✅ Зарегистрироваться</button>
   </div>
 </div>
 
@@ -2481,7 +2493,6 @@ function init() {
     console.log('🔗 start_param =', startParam);
 
     if (startParam && startParam.startsWith('ref_')) {
-      // Формат: ref_<nickname>_<telegram_id>
       const parts = startParam.replace('ref_', '').split('_');
       const refNick = decodeURIComponent(parts[0] || '');
       const refTgId = parts[1] ? parseInt(parts[1], 10) : null;
@@ -2501,11 +2512,50 @@ function init() {
     console.error('start_param error:', e);
   }
 
-  // === Кнопки Вход / Регистрация — вешаем нормально ===
-  const btnLogin = document.getElementById('tabLogin');
-  const btnReg = document.getElementById('tabRegister');
-  if (btnLogin) btnLogin.addEventListener('click', function(e) { e.preventDefault(); showTab('login'); });
-  if (btnReg)  btnReg.addEventListener('click',  function(e) { e.preventDefault(); showTab('register'); });
+  // === ЖДЁМ ПОЛНОЙ ЗАГРУЗКИ DOM, ПОТОМ ВЕШАЕМ ОБРАБОТЧИКИ ===
+  function bindAuthButtons() {
+    // Кнопки табов
+    const btnLogin = document.getElementById('tabLogin');
+    const btnReg = document.getElementById('tabRegister');
+    if (btnLogin && !btnLogin.dataset.bound) {
+      btnLogin.dataset.bound = '1';
+      btnLogin.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        showTab('login');
+      });
+    }
+    if (btnReg && !btnReg.dataset.bound) {
+      btnReg.dataset.bound = '1';
+      btnReg.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        showTab('register');
+      });
+    }
+
+    // Кнопка "Войти"
+    const btnDoLogin = document.getElementById('btnDoLogin');
+    if (btnDoLogin && !btnDoLogin.dataset.bound) {
+      btnDoLogin.dataset.bound = '1';
+      btnDoLogin.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        doLogin();
+      });
+    }
+
+    // Кнопка "Зарегистрироваться"
+    const btnDoRegister = document.getElementById('btnDoRegister');
+    if (btnDoRegister && !btnDoRegister.dataset.bound) {
+      btnDoRegister.dataset.bound = '1';
+      btnDoRegister.addEventListener('click', function(e) {
+        e.preventDefault(); e.stopPropagation();
+        doRegister();
+      });
+    }
+  }
+
+  // Вызываем сразу и через 100 мс (на случай если DOM ещё грузится)
+  bindAuthButtons();
+  setTimeout(bindAuthButtons, 100);
 
   // === Проверяем сохранённый токен ===
   const savedToken = localStorage.getItem('ingsoft_token');
