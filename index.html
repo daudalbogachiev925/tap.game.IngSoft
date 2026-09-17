@@ -11,12 +11,18 @@
 :root {
   --ing-red:#e63946; --ing-red-dark:#c1121f;
   --ing-gold:#ffd700; --ing-green:#22c55e; --ing-blue:#4facfe;
-  --ing-purple:#a855f7;
+  --ing-purple:#a855f7; --ing-violet:#8b5cf6; --ing-pink:#ec4899;
   --fem-pink:#ff69b4; --fem-pink-light:#ffb6d9; --fem-purple:#d946ef;
   --wave-1:#0a0a0f; --wave-2:#0f1520; --wave-3:#0d1a2e; --wave-4:#132a4a; --wave-5:#1e3a5f;
+  --glass-bg: rgba(30, 41, 59, 0.35);
+  --glass-border: rgba(148, 163, 184, 0.15);
+  --glow-blue: 0 0 40px rgba(79,172,254,0.5);
+  --glow-purple: 0 0 40px rgba(139,92,246,0.5);
+  --glow-gold: 0 0 40px rgba(255,215,0,0.5);
+  --glow-green: 0 0 40px rgba(34,197,94,0.5);
 }
 html, body {
-  background: var(--wave-1); color:#fff; font-family:'Segoe UI', Arial, sans-serif;
+  background: var(--wave-1); color:#fff; font-family:'Inter', 'Segoe UI', -apple-system, sans-serif;
   min-height:100vh; overflow-x:hidden; -webkit-overflow-scrolling: touch;
   position: relative; width:100%; max-width:100vw;
 }
@@ -24,249 +30,294 @@ html, body {
 body::before {
   content:''; position:fixed; inset:0; z-index:-3; pointer-events: none;
   background:
-    radial-gradient(ellipse 140% 60% at 20% 0%, rgba(30,58,95,0.65), transparent 60%),
-    radial-gradient(ellipse 120% 50% at 80% 30%, rgba(13,26,46,0.85), transparent 60%),
-    radial-gradient(ellipse 130% 70% at 10% 70%, rgba(15,21,32,0.9), transparent 60%),
-    radial-gradient(ellipse 100% 60% at 90% 100%, rgba(19,42,74,0.75), transparent 60%),
-    linear-gradient(160deg, #0a0a0f 0%, #0f1520 40%, #0d1a2e 70%, #0a0a0f 100%);
+    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(139, 92, 246, 0.35), transparent 55%),
+    radial-gradient(ellipse 100% 60% at 100% 100%, rgba(79, 172, 254, 0.25), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 0% 100%, rgba(236, 72, 153, 0.2), transparent 55%),
+    linear-gradient(180deg, #0a0518 0%, #0f0c29 25%, #0d1a3a 60%, #0a0518 100%);
 }
 body::after {
   content:''; position:fixed; inset:0; z-index:-2; pointer-events:none;
-  background:
-    radial-gradient(ellipse 900px 200px at -10% 15%, rgba(30,58,95,0.4), transparent 70%),
-    radial-gradient(ellipse 800px 220px at 110% 25%, rgba(19,42,74,0.45), transparent 70%),
-    radial-gradient(ellipse 1000px 250px at 50% 50%, rgba(13,26,46,0.35), transparent 70%),
-    radial-gradient(ellipse 850px 200px at -5% 75%, rgba(30,58,95,0.3), transparent 70%),
-    radial-gradient(ellipse 950px 230px at 105% 90%, rgba(19,42,74,0.4), transparent 70%);
-  background-size: 100% 100%; animation: wavesMove 25s ease-in-out infinite;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.03) 1px, transparent 1.5px),
+    radial-gradient(circle at 85% 40%, rgba(255,255,255,0.04) 1px, transparent 1.5px),
+    radial-gradient(circle at 40% 70%, rgba(255,255,255,0.03) 1px, transparent 1.5px),
+    radial-gradient(circle at 70% 90%, rgba(255,255,255,0.04) 1px, transparent 1.5px);
+  background-size: 100px 100px, 150px 150px, 200px 200px, 130px 130px;
+  animation: starsFloat 60s linear infinite;
 }
-.wave-overlay { position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background: repeating-linear-gradient(105deg, transparent 0px, transparent 120px, rgba(30,58,95,0.06) 121px, rgba(30,58,95,0.06) 123px, transparent 124px, transparent 260px, rgba(19,42,74,0.05) 261px, rgba(19,42,74,0.05) 263px);
-  opacity: 0.85;
+@keyframes starsFloat {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 100px 100px, -150px 150px, 200px -200px, -130px 130px; }
 }
-@keyframes wavesMove { 0%,100%{background-position:0% 0%, 100% 0%, 50% 0%, 0% 100%, 100% 100%;} 50%{background-position:5% 15%, 95% 20%, 45% 55%, 5% 85%, 95% 95%;} }
+.wave-overlay { position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:0.4;
+  background: repeating-linear-gradient(105deg, transparent 0px, transparent 200px, rgba(139,92,246,0.04) 201px, rgba(139,92,246,0.04) 203px, transparent 204px, transparent 400px, rgba(79,172,254,0.03) 401px, rgba(79,172,254,0.03) 403px);
+}
 .app { display:flex; min-height:100vh; position:relative; z-index:1; }
-.sidebar { width:56px; background: linear-gradient(180deg, rgba(10,10,15,0.96) 0%, rgba(15,21,32,0.96) 100%); border-right:1px solid rgba(30,58,95,0.5); padding:8px 0; display:flex; flex-direction:column; gap:4px; position:fixed; left:0; top:0; height:100vh; z-index:500; overflow-y:auto; overflow-x:hidden; backdrop-filter: blur(18px); box-shadow: 4px 0 35px rgba(0,0,0,0.75); }
-.sidebar-logo { padding:10px 4px; text-align:center; background: linear-gradient(135deg, rgba(230,57,70,0.35), rgba(30,58,95,0.35), rgba(19,42,74,0.45)); background-size: 200% 200%; animation: logoAura 5s ease infinite; border-radius: 12px; margin: 4px 6px 10px 6px; box-shadow: 0 0 30px rgba(30,58,95,0.6), inset 0 0 18px rgba(79,172,254,0.2); position: relative; overflow: hidden; }
-.sidebar-logo::before { content:''; position:absolute; inset:-50%; background: conic-gradient(from 0deg, transparent, rgba(79,172,254,0.4), transparent, rgba(230,57,70,0.3), transparent); animation: rotateGlow 8s linear infinite; z-index:0; }
-.sidebar-logo img { height:26px; max-width:100%; position: relative; z-index: 1; filter: drop-shadow(0 0 12px rgba(79,172,254,0.9)); transition: transform 0.3s; }
-.sidebar-logo img:hover { transform: scale(1.15); }
+
+/* SIDEBAR */
+.sidebar { width:64px; background: linear-gradient(180deg, rgba(10,5,24,0.85) 0%, rgba(15,12,41,0.9) 100%); border-right:1px solid rgba(139,92,246,0.2); padding:10px 0; display:flex; flex-direction:column; gap:6px; position:fixed; left:0; top:0; height:100vh; z-index:500; overflow-y:auto; overflow-x:hidden; backdrop-filter: blur(25px); box-shadow: 4px 0 40px rgba(0,0,0,0.6); }
+.sidebar-logo { padding:12px 4px; text-align:center; background: linear-gradient(135deg, rgba(236,72,153,0.3), rgba(139,92,246,0.4), rgba(79,172,254,0.3)); background-size: 200% 200%; animation: logoAura 6s ease infinite; border-radius: 14px; margin: 4px 8px 12px 8px; box-shadow: 0 0 30px rgba(139,92,246,0.5), inset 0 0 20px rgba(255,255,255,0.08); position: relative; overflow: hidden; }
+.sidebar-logo::before { content:''; position:absolute; inset:-50%; background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.2), transparent, rgba(236,72,153,0.3), transparent); animation: rotateGlow 6s linear infinite; z-index:0; }
+.sidebar-logo img { height:28px; max-width:100%; position: relative; z-index: 1; filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)); transition: transform 0.3s; }
+.sidebar-logo img:hover { transform: scale(1.15) rotate(-3deg); }
 @keyframes logoAura { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
 @keyframes rotateGlow { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
-.sidebar-item { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:7px 2px; cursor:pointer; border-radius:10px; margin:0 6px; transition: all 0.25s; position: relative; overflow: hidden; }
-.sidebar-item::before { content:''; position:absolute; left:-100%; top:0; bottom:0; width:3px; background: linear-gradient(180deg, #4facfe, #1e3a5f); transition: left 0.3s; border-radius: 3px; box-shadow: 0 0 12px rgba(79,172,254,0.6); }
+.sidebar-item { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 2px; cursor:pointer; border-radius:12px; margin:0 8px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
+.sidebar-item::before { content:''; position:absolute; left:-100%; top:0; bottom:0; width:3px; background: linear-gradient(180deg, #ec4899, #8b5cf6, #4facfe); transition: left 0.3s; border-radius: 3px; box-shadow: 0 0 12px rgba(139,92,246,0.8); }
 .sidebar-item:hover::before, .sidebar-item.active::before { left: 0; }
-.sidebar-item:hover, .sidebar-item:active { background:rgba(30,58,95,0.3); transform: translateX(2px); }
-.sidebar-item.active { background:linear-gradient(135deg,rgba(30,58,95,0.45),rgba(19,42,74,0.35)); border:1px solid rgba(79,172,254,0.45); box-shadow: 0 0 18px rgba(79,172,254,0.25); }
-.sidebar-icon { font-size:15px; line-height:1; }
-.sidebar-label { font-size:7px; color:#8899aa; margin-top:2px; font-weight:600; text-align:center; white-space:nowrap; }
+.sidebar-item:hover, .sidebar-item:active { background:rgba(139,92,246,0.15); transform: translateX(3px); }
+.sidebar-item.active { background:linear-gradient(135deg,rgba(139,92,246,0.3),rgba(79,172,254,0.2)); border:1px solid rgba(139,92,246,0.5); box-shadow: 0 0 20px rgba(139,92,246,0.35); }
+.sidebar-icon { font-size:18px; line-height:1; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+.sidebar-label { font-size:8px; color:#94a3b8; margin-top:3px; font-weight:700; text-align:center; white-space:nowrap; letter-spacing: 0.3px; }
 .sidebar-item:hover .sidebar-label, .sidebar-item.active .sidebar-label { color:#fff; }
-.main { flex:1; margin-left:56px; padding-bottom:80px; max-width:100%; }
-.header { display:flex; align-items:center; justify-content:center; padding:14px 18px; background: rgba(10,10,15,0.78); backdrop-filter:blur(28px); position:sticky; top:0; z-index:400; border-bottom:1px solid rgba(30,58,95,0.45); box-shadow: 0 4px 30px rgba(0,0,0,0.55); }
-.header-card { display:flex; align-items:center; gap:14px; background: linear-gradient(145deg, rgba(30,58,95,0.45), rgba(19,42,74,0.35)); border: 1px solid rgba(79,172,254,0.35); border-radius: 22px; padding: 12px 22px; box-shadow: 0 10px 40px rgba(30,58,95,0.4), inset 0 1px 0 rgba(255,255,255,0.1); max-width: 100%; position: relative; overflow: hidden; }
-.header-card::before { content:''; position:absolute; inset:0; background: linear-gradient(120deg, transparent 30%, rgba(79,172,254,0.15) 50%, transparent 70%); animation: shineSweep 5s ease-in-out infinite; }
+.main { flex:1; margin-left:64px; padding-bottom:80px; max-width:100%; }
+
+/* HEADER */
+.header { display:flex; align-items:center; justify-content:center; padding:14px 18px; background: rgba(10,5,24,0.6); backdrop-filter:blur(30px); position:sticky; top:0; z-index:400; border-bottom:1px solid rgba(139,92,246,0.2); box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+.header-card { display:flex; align-items:center; gap:16px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(30,58,95,0.3), rgba(79,172,254,0.15)); border: 1px solid rgba(139,92,246,0.35); border-radius: 24px; padding: 12px 24px; box-shadow: 0 10px 40px rgba(139,92,246,0.25), inset 0 1px 0 rgba(255,255,255,0.15); max-width: 100%; position: relative; overflow: hidden; }
+.header-card::before { content:''; position:absolute; inset:0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%); animation: shineSweep 6s ease-in-out infinite; }
 @keyframes shineSweep { 0%,100%{transform:translateX(-100%);} 50%{transform:translateX(100%);} }
 .avatar-wrap { position: relative; cursor: pointer; }
-.avatar { width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg,#4facfe,#1e3a5f); display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:22px; box-shadow:0 6px 25px rgba(79,172,254,0.55), 0 0 0 3px rgba(79,172,254,0.2), inset 0 1px 0 rgba(255,255,255,0.3); overflow: hidden; background-size: cover; background-position: center; transition: transform 0.2s; }
-.avatar:hover { transform: scale(1.06); }
-.avatar-edit { position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid #0a0a0f; box-shadow: 0 3px 10px rgba(255,215,0,0.6); }
+.avatar { width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6,#4facfe); display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:24px; box-shadow:0 8px 30px rgba(139,92,246,0.6), 0 0 0 3px rgba(255,255,255,0.15), inset 0 2px 4px rgba(255,255,255,0.3); overflow: hidden; background-size: cover; background-position: center; transition: transform 0.3s; }
+.avatar:hover { transform: scale(1.08) rotate(2deg); }
+.avatar-edit { position: absolute; bottom: -2px; right: -2px; width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000; display: flex; align-items: center; justify-content: center; font-size: 13px; border: 2px solid #0a0518; box-shadow: 0 4px 12px rgba(255,215,0,0.7); }
 .header-info { display:flex; flex-direction:column; gap:3px; min-width:0; }
-.header-nick { font-size:17px; color:#fff; font-weight:800; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
-.header-fio { font-size:11px; color:#9ab; }
-.header-rank { font-size:11px; color:#8899aa; }
-.header-rank b { color:var(--ing-gold); }
+.header-nick { font-size:18px; color:#fff; font-weight:800; background: linear-gradient(135deg, #fff, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.header-fio { font-size:11px; color:#94a3b8; }
+.header-rank { font-size:11px; color:#94a3b8; }
+.header-rank b { color:var(--ing-gold); text-shadow: 0 0 10px rgba(255,215,0,0.6); }
 .header-actions {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, auto);
-  gap: 6px;
+  gap: 7px;
   margin-left: 14px;
   padding-left: 14px;
-  border-left: 1px solid rgba(79,172,254,0.25);
-  min-width: 180px;
+  border-left: 1px solid rgba(139,92,246,0.3);
+  min-width: 190px;
 }
 .header-btn {
   display: flex; align-items: center; justify-content: center; gap: 5px;
-  background: linear-gradient(135deg, rgba(79,172,254,0.18), rgba(30,58,95,0.3));
-  border: 1px solid rgba(79,172,254,0.4);
-  border-radius: 11px; padding: 8px 8px;
-  color: #e8f4ff; font-size: 10px; font-weight: 700;
-  cursor: pointer; transition: all 0.2s; white-space: nowrap;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(30,58,95,0.3));
+  border: 1px solid rgba(139,92,246,0.4);
+  border-radius: 12px; padding: 9px 8px;
+  color: #e0e7ff; font-size: 10px; font-weight: 700;
+  cursor: pointer; transition: all 0.25s; white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 }
-.header-btn:hover { background: linear-gradient(135deg, rgba(79,172,254,0.35), rgba(30,58,95,0.45)); border-color: rgba(79,172,254,0.75); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,172,254,0.4); }
+.header-btn:hover { background: linear-gradient(135deg, rgba(139,92,246,0.4), rgba(79,172,254,0.3)); border-color: rgba(139,92,246,0.8); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139,92,246,0.5); }
 .header-btn:active { transform: scale(0.95); }
-.header-btn.gold { background: linear-gradient(135deg, rgba(255,215,0,0.22), rgba(255,140,0,0.18)); border-color: rgba(255,215,0,0.6); color: #ffe680; }
-.header-btn.gold:hover { background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,140,0,0.3)); border-color: rgba(255,215,0,0.9); box-shadow: 0 6px 20px rgba(255,215,0,0.5); }
-.header-btn-icon { font-size: 14px; line-height: 1; }
+.header-btn.gold { background: linear-gradient(135deg, rgba(255,215,0,0.25), rgba(255,140,0,0.2)); border-color: rgba(255,215,0,0.6); color: #ffe680; }
+.header-btn.gold:hover { background: linear-gradient(135deg, rgba(255,215,0,0.45), rgba(255,140,0,0.35)); border-color: rgba(255,215,0,0.95); box-shadow: 0 8px 25px rgba(255,215,0,0.6); }
+.header-btn-icon { font-size: 15px; line-height: 1; }
 .header-btn-label { font-size: 10px; }
 @media (max-width: 480px) {
   .header-card { flex-wrap: wrap; gap: 10px; padding: 10px 14px; }
   .header-actions { margin-left: 0; padding-left: 0; border-left: none; width: 100%; min-width: 0; }
-  .header-btn { padding: 6px 6px; font-size: 9px; }
-  .header-btn-icon { font-size: 13px; }
+  .header-btn { padding: 7px 6px; font-size: 9px; }
+  .header-btn-icon { font-size: 14px; }
 }
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:18px; }
-.stat-card { background: linear-gradient(145deg, rgba(30,58,95,0.4), rgba(15,21,32,0.6)); border:1px solid rgba(79,172,254,0.3); border-radius:18px; padding:18px 8px; text-align:center; transition: transform 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); }
-.stat-card::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 50% -50%, rgba(79,172,254,0.2), transparent 70%); }
-.stat-card::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #4facfe, transparent); animation: shineLine 3.5s ease-in-out infinite; }
+
+/* STATS */
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:20px 18px; }
+.stat-card { background: linear-gradient(145deg, rgba(139,92,246,0.15), rgba(30,58,95,0.25), rgba(15,12,41,0.5)); border:1px solid rgba(139,92,246,0.3); border-radius:20px; padding:18px 10px; text-align:center; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+.stat-card::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 50% -30%, rgba(236,72,153,0.25), transparent 70%); }
+.stat-card::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, #ec4899, #8b5cf6, transparent); animation: shineLine 4s ease-in-out infinite; }
 @keyframes shineLine { 0%,100%{left:-100%;} 50%{left:100%;} }
-.stat-card:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(79,172,254,0.35); }
-.stat-value { font-size:21px; font-weight:800; color:#e8f4ff; word-break:break-word; position: relative; z-index: 1; text-shadow: 0 0 18px rgba(79,172,254,0.55); }
-.stat-label { font-size:10px; color:#8899aa; margin-top:4px; text-transform:uppercase; letter-spacing: 0.8px; position: relative; z-index: 1; }
-.level-bar { margin:0 16px 16px; background:rgba(10,10,15,0.75); border-radius:14px; overflow:hidden; height:30px; position:relative; border:1px solid rgba(79,172,254,0.3); box-shadow: inset 0 2px 15px rgba(0,0,0,0.7); }
-.level-fill { height:100%; background:linear-gradient(90deg,#1e3a5f,#4facfe,#00f2fe,#ffd700); background-size:300% 100%; animation:gradientMove 4s ease infinite; transition:width 0.4s; box-shadow: 0 0 30px rgba(79,172,254,0.6); }
+.stat-card:hover { transform: translateY(-4px); box-shadow: 0 15px 45px rgba(139,92,246,0.4); border-color: rgba(139,92,246,0.6); }
+.stat-value { font-size:23px; font-weight:900; background: linear-gradient(135deg, #fff, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; word-break:break-word; position: relative; z-index: 1; filter: drop-shadow(0 0 15px rgba(139,92,246,0.6)); }
+.stat-label { font-size:10px; color:#94a3b8; margin-top:5px; text-transform:uppercase; letter-spacing: 1px; position: relative; z-index: 1; font-weight: 600; }
+
+/* LEVEL BAR */
+.level-bar { margin:0 18px 18px; background:rgba(10,5,24,0.7); border-radius:16px; overflow:hidden; height:34px; position:relative; border:1px solid rgba(139,92,246,0.35); box-shadow: inset 0 2px 15px rgba(0,0,0,0.8); }
+.level-fill { height:100%; background:linear-gradient(90deg,#ec4899,#8b5cf6,#4facfe,#ffd700); background-size:300% 100%; animation:gradientMove 4s ease infinite; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 0 30px rgba(139,92,246,0.8); }
 @keyframes gradientMove { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
-.level-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; font-weight:800; color:white; text-shadow:0 1px 4px rgba(0,0,0,0.9); }
-.score-block { text-align:center; padding:22px 16px 10px; }
-.score-big { font-size:74px; font-weight:900; background:linear-gradient(135deg,#e8f4ff 0%,#4facfe 40%,#1e3a5f 70%,#0d1a2e 100%); background-size: 200% 200%; animation: scoreFlow 6s ease infinite; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; transition:transform 0.1s; filter:drop-shadow(0 0 30px rgba(79,172,254,0.6)); }
+.level-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:800; color:white; text-shadow:0 2px 6px rgba(0,0,0,1); letter-spacing: 0.5px; }
+
+/* SCORE */
+.score-block { text-align:center; padding:26px 16px 12px; }
+.score-big { font-size:80px; font-weight:900; background:linear-gradient(135deg,#fff 0%,#ec4899 30%,#8b5cf6 60%,#4facfe 100%); background-size: 200% 200%; animation: scoreFlow 8s ease infinite; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; transition:transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); filter:drop-shadow(0 0 35px rgba(139,92,246,0.7)); line-height: 1; }
 @keyframes scoreFlow { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
-.score-big.pop { transform:scale(1.12); }
-.score-label { font-size:12px; color:#667788; text-transform:uppercase; letter-spacing:3px; margin-top:6px; }
-.tap-container { display:flex; justify-content:center; padding:20px 16px; position:relative; overflow: visible; }
-.tap-button { width:220px; height:220px; border-radius:50%; background: conic-gradient(from 0deg, #0d1a2e, #1e3a5f, #4facfe, #1e3a5f, #0d1a2e, #1e3a5f, #4facfe, #0d1a2e); padding:6px; border:none; cursor:pointer; font-size:32px; font-weight:900; color:white; letter-spacing:4px; box-shadow: 0 25px 90px rgba(79,172,254,0.5), 0 0 70px rgba(30,58,95,0.7), inset 0 -8px 30px rgba(0,0,0,0.6); transition:transform 0.08s; position:relative; animation: rotateHue 12s linear infinite; }
-.tap-button::after { content:''; position:absolute; inset:6px; border-radius:50%; background: radial-gradient(circle at 35% 25%, #1e3a5f, #0d1a2e 60%, #050810 100%); z-index:1; box-shadow: inset 0 10px 30px rgba(79,172,254,0.2), inset 0 -10px 30px rgba(0,0,0,0.75); }
-.tap-button span { position:relative; z-index:2; text-shadow: 0 2px 12px rgba(79,172,254,0.7); }
+.score-big.pop { transform:scale(1.15); }
+.score-label { font-size:12px; color:#64748b; text-transform:uppercase; letter-spacing:4px; margin-top:8px; font-weight: 700; }
+
+/* TAP */
+.tap-container { display:flex; justify-content:center; padding:24px 16px; position:relative; overflow: visible; }
+.tap-button { width:240px; height:240px; border-radius:50%; background: conic-gradient(from 0deg, #ec4899, #8b5cf6, #4facfe, #22c55e, #ffd700, #ec4899); padding:8px; border:none; cursor:pointer; font-size:38px; font-weight:900; color:white; letter-spacing:6px; box-shadow: 0 30px 100px rgba(139,92,246,0.6), 0 0 80px rgba(236,72,153,0.4), inset 0 -10px 40px rgba(0,0,0,0.7); transition:transform 0.1s cubic-bezier(0.34, 1.56, 0.64, 1); position:relative; animation: rotateHue 15s linear infinite; }
+.tap-button::after { content:''; position:absolute; inset:8px; border-radius:50%; background: radial-gradient(circle at 35% 25%, #1e293b, #0a0518 60%, #05020f 100%); z-index:1; box-shadow: inset 0 15px 40px rgba(139,92,246,0.25), inset 0 -15px 40px rgba(0,0,0,0.8); }
+.tap-button span { position:relative; z-index:2; text-shadow: 0 3px 20px rgba(255,255,255,0.6), 0 0 30px rgba(139,92,246,0.8); }
 @keyframes rotateHue { from{filter:hue-rotate(0deg);} to{filter:hue-rotate(360deg);} }
-.tap-button:active { transform:scale(0.92); }
-.tap-button::before { content:''; position:absolute; inset:-25px; border-radius:50%; border:2px solid rgba(79,172,254,0.35); animation:pulse 3s infinite; }
-@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.7;} 50%{transform:scale(1.1);opacity:0.1;} }
-.float-plus { position:absolute; pointer-events:none; font-weight:900; font-size:28px; color: #4facfe; animation:floatUp 1s ease-out forwards; z-index:10; text-shadow: 0 0 25px rgba(79,172,254,1); }
-@keyframes floatUp { 0%{opacity:1;transform:translate(-50%,-50%) scale(1);} 100%{opacity:0;transform:translate(-50%,-180%) scale(1.5);} }
-.energy-bar { margin:0 16px 16px; background:rgba(10,10,15,0.75); border-radius:14px; overflow:hidden; height:28px; position:relative; border:1px solid rgba(79,172,254,0.3); box-shadow: inset 0 2px 15px rgba(0,0,0,0.7); }
-.energy-fill { height:100%; background:linear-gradient(90deg,#1e3a5f,#4facfe); transition:width 0.3s; box-shadow: 0 0 22px rgba(79,172,254,0.6); }
-.energy-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:11px; font-weight:800; color:white; text-shadow:0 1px 4px rgba(0,0,0,0.9); }
-.quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:0 16px; }
-.quick-btn { background: linear-gradient(145deg, rgba(30,58,95,0.4), rgba(15,21,32,0.6)); border:1px solid rgba(79,172,254,0.3); border-radius:14px; padding:14px 4px; color:#fff; cursor:pointer; font-size:10px; text-align:center; font-weight:600; transition:all 0.25s; position: relative; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
-.quick-btn::before { content:''; position:absolute; top:0; left:50%; transform: translateX(-50%); width:0; height:2px; background: linear-gradient(90deg, transparent, #4facfe, transparent); transition: width 0.3s; }
+.tap-button:active { transform:scale(0.9); }
+.tap-button::before { content:''; position:absolute; inset:-30px; border-radius:50%; border:2px solid rgba(139,92,246,0.4); animation:pulse 3s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);opacity:0.7;} 50%{transform:scale(1.15);opacity:0.05;} }
+.float-plus { position:absolute; pointer-events:none; font-weight:900; font-size:32px; color:#ec4899; animation:floatUp 1.2s ease-out forwards; z-index:10; text-shadow: 0 0 30px rgba(236,72,153,1), 0 0 50px rgba(139,92,246,0.8); }
+@keyframes floatUp { 0%{opacity:1;transform:translate(-50%,-50%) scale(1);} 100%{opacity:0;transform:translate(-50%,-200%) scale(1.6);} }
+
+/* ENERGY */
+.energy-bar { margin:0 18px 16px; background:rgba(10,5,24,0.75); border-radius:16px; overflow:hidden; height:30px; position:relative; border:1px solid rgba(79,172,254,0.3); box-shadow: inset 0 2px 15px rgba(0,0,0,0.8); }
+.energy-fill { height:100%; background:linear-gradient(90deg,#8b5cf6,#4facfe,#22d3ee); transition:width 0.3s; box-shadow: 0 0 25px rgba(79,172,254,0.7); }
+.energy-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:800; color:white; text-shadow:0 2px 5px rgba(0,0,0,1); }
+
+/* QUICK */
+.quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:0 18px; }
+.quick-btn { background: linear-gradient(145deg, rgba(139,92,246,0.15), rgba(30,58,95,0.3), rgba(15,12,41,0.5)); border:1px solid rgba(139,92,246,0.3); border-radius:16px; padding:16px 6px; color:#fff; cursor:pointer; font-size:10px; text-align:center; font-weight:700; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.5); backdrop-filter: blur(10px); }
+.quick-btn::before { content:''; position:absolute; top:0; left:50%; transform: translateX(-50%); width:0; height:3px; background: linear-gradient(90deg, transparent, #ec4899, #8b5cf6, transparent); transition: width 0.4s; }
 .quick-btn:hover::before { width: 100%; }
-.quick-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(79,172,254,0.4); border-color: rgba(79,172,254,0.6); }
+.quick-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(139,92,246,0.45); border-color: rgba(139,92,246,0.6); }
 .quick-btn:active { transform:scale(0.95); }
-.quick-icon { font-size:22px; display:block; margin-bottom:4px; }
-.is-balance { display:flex; align-items:center; justify-content:center; gap:8px; margin: 16px 16px 8px; padding: 12px 18px; background: linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,140,0,0.1)); border: 1px solid rgba(255,215,0,0.55); border-radius: 16px; box-shadow: 0 0 30px rgba(255,215,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15); font-weight: 800; font-size: 16px; }
-.is-balance .is-icon { font-size: 24px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.9)); }
-.is-balance .is-val { color: var(--ing-gold); text-shadow: 0 0 18px rgba(255,215,0,0.7); }
-.is-shop-panel { margin: 8px 16px 16px; background: linear-gradient(145deg, rgba(255,215,0,0.08), rgba(15,21,32,0.65)); border: 1px solid rgba(255,215,0,0.3); border-radius: 22px; padding: 18px; box-shadow: 0 18px 55px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08); position: relative; overflow: hidden; }
-.is-shop-panel::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:2px; background: linear-gradient(90deg, transparent, #ffd700, transparent); animation: shineLine 4s ease-in-out infinite; }
-.is-shop-header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 14px; }
-.is-shop-title { font-size: 16px; font-weight: 800; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.is-shop-sub { font-size: 11px; color: #b8a060; }
+.quick-icon { font-size:26px; display:block; margin-bottom:6px; filter: drop-shadow(0 0 8px rgba(139,92,246,0.6)); }
+
+/* IS Balance */
+.is-balance { display:flex; align-items:center; justify-content:center; gap:10px; margin: 18px 18px 10px; padding: 14px 20px; background: linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,140,0,0.12)); border: 1px solid rgba(255,215,0,0.55); border-radius: 18px; box-shadow: 0 0 40px rgba(255,215,0,0.3), inset 0 1px 0 rgba(255,255,255,0.15); font-weight: 900; font-size: 17px; backdrop-filter: blur(10px); }
+.is-balance .is-icon { font-size: 28px; filter: drop-shadow(0 0 12px rgba(255,215,0,1)); }
+.is-balance .is-val { color: #ffd700; text-shadow: 0 0 25px rgba(255,215,0,0.9); }
+
+/* IS SHOP */
+.is-shop-panel { margin: 10px 18px 18px; background: linear-gradient(145deg, rgba(255,215,0,0.08), rgba(15,12,41,0.7)); border: 1px solid rgba(255,215,0,0.3); border-radius: 24px; padding: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08); position: relative; overflow: hidden; backdrop-filter: blur(15px); }
+.is-shop-panel::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:2px; background: linear-gradient(90deg, transparent, #ffd700, transparent); animation: shineLine 5s ease-in-out infinite; }
+.is-shop-header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.is-shop-title { font-size: 17px; font-weight: 900; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.is-shop-sub { font-size: 11px; color: #b8a060; margin-top: 2px; }
 .is-shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.is-shop-item { background: linear-gradient(145deg, rgba(255,215,0,0.1), rgba(15,21,32,0.65)); border: 1px solid rgba(255,215,0,0.25); border-radius: 14px; padding: 12px 8px; text-align: center; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
-.is-shop-item:hover { transform: translateY(-3px); border-color: rgba(255,215,0,0.65); box-shadow: 0 12px 35px rgba(255,215,0,0.3); }
+.is-shop-item { background: linear-gradient(145deg, rgba(255,215,0,0.1), rgba(15,12,41,0.7)); border: 1px solid rgba(255,215,0,0.25); border-radius: 16px; padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden; }
+.is-shop-item:hover { transform: translateY(-4px); border-color: rgba(255,215,0,0.7); box-shadow: 0 15px 40px rgba(255,215,0,0.35); }
 .is-shop-item:active { transform: scale(0.96); }
-.is-shop-item .isi-icon { font-size: 28px; display: block; margin-bottom: 4px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.5)); }
+.is-shop-item .isi-icon { font-size: 32px; display: block; margin-bottom: 6px; filter: drop-shadow(0 0 12px rgba(255,215,0,0.6)); }
 .is-shop-item .isi-name { font-size: 12px; font-weight: 800; margin-bottom: 3px; }
-.is-shop-item .isi-desc { font-size: 10px; color: #8899aa; margin-bottom: 6px; }
-.is-shop-item .isi-price { display: inline-block; padding: 4px 10px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #0a0a0f; font-weight: 900; font-size: 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(255,215,0,0.5); }
+.is-shop-item .isi-desc { font-size: 10px; color: #94a3b8; margin-bottom: 8px; }
+.is-shop-item .isi-price { display: inline-block; padding: 5px 12px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #0a0518; font-weight: 900; font-size: 12px; border-radius: 10px; box-shadow: 0 5px 15px rgba(255,215,0,0.55); }
+
+/* IS TASKS */
 .is-tasks-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-.is-task { display: flex; align-items: center; gap: 10px; padding: 12px; background: linear-gradient(145deg, rgba(255,215,0,0.08), rgba(15,21,32,0.55)); border: 1px solid rgba(255,215,0,0.2); border-radius: 14px; transition: all 0.2s; }
-.is-task:hover { border-color: rgba(255,215,0,0.55); transform: translateX(3px); }
-.is-task-icon { font-size: 26px; flex-shrink: 0; }
+.is-task { display: flex; align-items: center; gap: 12px; padding: 14px; background: linear-gradient(145deg, rgba(255,215,0,0.08), rgba(15,12,41,0.6)); border: 1px solid rgba(255,215,0,0.2); border-radius: 16px; transition: all 0.25s; }
+.is-task:hover { border-color: rgba(255,215,0,0.6); transform: translateX(4px); box-shadow: 0 10px 30px rgba(255,215,0,0.2); }
+.is-task-icon { font-size: 28px; flex-shrink: 0; filter: drop-shadow(0 0 8px rgba(255,215,0,0.4)); }
 .is-task-info { flex: 1; min-width: 0; }
 .is-task-name { font-size: 13px; font-weight: 700; }
-.is-task-desc { font-size: 11px; color: #8899aa; margin-top: 2px; }
-.is-task-reward { font-size: 12px; color: var(--ing-gold); font-weight: 800; margin-top: 2px; }
-.btn-is { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; color: #0a0a0f; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-weight: 900; font-size: 12px; box-shadow: 0 4px 15px rgba(255,215,0,0.5); white-space: nowrap; transition: all 0.2s; }
-.btn-is:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(255,215,0,0.75); }
+.is-task-desc { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+.is-task-reward { font-size: 12px; color: #ffd700; font-weight: 800; margin-top: 3px; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+.btn-is { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; color: #0a0518; padding: 9px 16px; border-radius: 12px; cursor: pointer; font-weight: 900; font-size: 12px; box-shadow: 0 5px 20px rgba(255,215,0,0.5); white-space: nowrap; transition: all 0.25s; }
+.btn-is:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,215,0,0.75); }
 .btn-is:disabled { opacity: 0.4; cursor: not-allowed; }
-.slideshow { position: relative; margin: 16px; height: 180px; border-radius: 18px; overflow: hidden; border: 1px solid rgba(79,172,254,0.35); box-shadow: 0 18px 50px rgba(0,0,0,0.55), 0 0 35px rgba(79,172,254,0.25); background: #0a0a0f; }
-.slide { position: absolute; inset: 0; background-size: cover; background-position: center; border-radius: 18px; opacity: 0; transform: translateX(100%) scale(0.7); transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1); filter: brightness(0.9); z-index: 1; }
+
+/* SLIDESHOW */
+.slideshow { position: relative; margin: 18px; height: 190px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(139,92,246,0.4); box-shadow: 0 20px 55px rgba(0,0,0,0.6), 0 0 40px rgba(139,92,246,0.3); background: #0a0518; }
+.slide { position: absolute; inset: 0; background-size: cover; background-position: center; border-radius: 20px; opacity: 0; transform: translateX(100%) scale(0.7); transition: all 0.9s cubic-bezier(0.4, 0, 0.2, 1); filter: brightness(0.9); z-index: 1; }
 .slide.active { opacity: 1; transform: translateX(0) scale(1); z-index: 10; filter: brightness(1); }
 .slide.past { opacity: 0; transform: translateX(100%) scale(0.7); z-index: 5; }
 .slide.future { opacity: 0; transform: translateX(-100%) scale(0.5); z-index: 1; }
-.slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(10,10,15,0.7) 100%); border-radius: 18px; }
-.slide-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 20; }
-.slide-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s; }
-.slide-dot.active { background: #4facfe; width: 18px; border-radius: 3px; box-shadow: 0 0 12px rgba(79,172,254,0.9); }
-.top-panel { margin: 20px 16px 10px; background: linear-gradient(145deg, rgba(30,58,95,0.3), rgba(15,21,32,0.65)); border: 1px solid rgba(79,172,254,0.25); border-radius: 20px; padding: 16px; box-shadow: 0 18px 55px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06); position: relative; overflow: hidden; }
-.top-panel::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:2px; background: linear-gradient(90deg, transparent, #4facfe, transparent); animation: shineLine 4s ease-in-out infinite; }
-.top-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; position: relative; z-index: 1; }
-.top-panel-title { font-size: 16px; font-weight: 800; background: linear-gradient(135deg, #e8f4ff, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.top-panel-sub { font-size: 11px; color: #667788; }
-.top-list { display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 1; }
-.top-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: rgba(255,255,255,0.02); border-radius: 12px; transition: all 0.2s; border: 1px solid transparent; }
-.top-row:hover { background: rgba(79,172,254,0.1); border-color: rgba(79,172,254,0.35); }
-.top-row.rank-1 { background: linear-gradient(90deg, rgba(79,172,254,0.25), rgba(79,172,254,0.04)); border-color: rgba(79,172,254,0.45); }
-.top-row.rank-2 { background: linear-gradient(90deg, rgba(30,58,95,0.35), rgba(30,58,95,0.06)); border-color: rgba(79,172,254,0.3); }
-.top-row.rank-3 { background: linear-gradient(90deg, rgba(19,42,74,0.35), rgba(19,42,74,0.06)); border-color: rgba(79,172,254,0.25); }
-.top-rank { width: 30px; height: 30px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; background: rgba(255,255,255,0.05); color: #8899aa; flex-shrink: 0; }
-.rank-1 .top-rank { background: linear-gradient(135deg, #4facfe, #1e3a5f); color: #fff; box-shadow: 0 0 22px rgba(79,172,254,0.8); }
-.rank-2 .top-rank { background: linear-gradient(135deg, #5fb8ff, #0d1a2e); color: #fff; }
-.rank-3 .top-rank { background: linear-gradient(135deg, #3a7fb8, #0a0a0f); color: #fff; }
-.top-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #4facfe, #1e3a5f); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 14px; flex-shrink: 0; background-size: cover; background-position: center; }
+.slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(10,5,24,0.8) 100%); border-radius: 20px; }
+.slide-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 20; }
+.slide-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s; }
+.slide-dot.active { background: #ec4899; width: 22px; border-radius: 4px; box-shadow: 0 0 15px rgba(236,72,153,0.9); }
+
+/* TOP PANEL */
+.top-panel { margin: 22px 18px 12px; background: linear-gradient(145deg, rgba(139,92,246,0.15), rgba(15,12,41,0.7)); border: 1px solid rgba(139,92,246,0.3); border-radius: 22px; padding: 18px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06); position: relative; overflow: hidden; backdrop-filter: blur(15px); }
+.top-panel::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:2px; background: linear-gradient(90deg, transparent, #ec4899, #8b5cf6, transparent); animation: shineLine 5s ease-in-out infinite; }
+.top-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; position: relative; z-index: 1; }
+.top-panel-title { font-size: 17px; font-weight: 900; background: linear-gradient(135deg, #fff, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.top-panel-sub { font-size: 11px; color: #64748b; margin-top: 2px; }
+.top-list { display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
+.top-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: rgba(255,255,255,0.03); border-radius: 14px; transition: all 0.25s; border: 1px solid rgba(255,255,255,0.05); }
+.top-row:hover { background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.4); transform: translateX(3px); }
+.top-row.rank-1 { background: linear-gradient(90deg, rgba(255,215,0,0.2), rgba(255,140,0,0.05)); border-color: rgba(255,215,0,0.5); }
+.top-row.rank-2 { background: linear-gradient(90deg, rgba(192,192,192,0.15), rgba(139,92,246,0.05)); border-color: rgba(192,192,192,0.4); }
+.top-row.rank-3 { background: linear-gradient(90deg, rgba(205,127,50,0.15), rgba(139,92,246,0.05)); border-color: rgba(205,127,50,0.4); }
+.top-rank { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; background: rgba(255,255,255,0.06); color: #94a3b8; flex-shrink: 0; }
+.rank-1 .top-rank { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #0a0518; box-shadow: 0 0 25px rgba(255,215,0,0.8); }
+.rank-2 .top-rank { background: linear-gradient(135deg, #cbd5e1, #64748b); color: #0a0518; }
+.rank-3 .top-rank { background: linear-gradient(135deg, #cd7f32, #92400e); color: #fff; }
+.top-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #ec4899, #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 14px; flex-shrink: 0; background-size: cover; background-position: center; box-shadow: 0 0 15px rgba(139,92,246,0.5); }
 .top-name { flex: 1; font-size: 13px; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.top-score { font-size: 13px; font-weight: 800; color: #4facfe; }
-.top-you { font-size: 10px; color: #4facfe; background: rgba(79,172,254,0.25); padding: 2px 6px; border-radius: 6px; margin-left: 6px; }
-.modal { display:none; position:fixed; inset:0; background:rgba(5,5,10,0.92); z-index:2000; align-items:flex-end; justify-content:center; backdrop-filter:blur(12px); }
+.top-score { font-size: 13px; font-weight: 800; color: #a78bfa; text-shadow: 0 0 10px rgba(139,92,246,0.5); }
+.top-you { font-size: 10px; color: #ec4899; background: rgba(236,72,153,0.2); padding: 2px 8px; border-radius: 8px; margin-left: 6px; font-weight: 800; }
+
+/* MODALS */
+.modal { display:none; position:fixed; inset:0; background:rgba(5,2,15,0.92); z-index:2000; align-items:flex-end; justify-content:center; backdrop-filter:blur(15px); }
 .modal.active { display:flex; }
-.modal-content { background: linear-gradient(180deg, #0f1520 0%, #0a0a0f 100%); border-radius:24px 24px 0 0; padding:20px; max-width:560px; width:100%; max-height:88vh; overflow-y:auto; border-top:2px solid #4facfe; animation:slideUp 0.3s; box-shadow: 0 -15px 55px rgba(79,172,254,0.25); }
+.modal-content { background: linear-gradient(180deg, #141c2e 0%, #0a0518 100%); border-radius:28px 28px 0 0; padding:22px; max-width:560px; width:100%; max-height:88vh; overflow-y:auto; border-top:2px solid transparent; border-image: linear-gradient(90deg, #ec4899, #8b5cf6, #4facfe) 1; animation:slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 -20px 60px rgba(139,92,246,0.35); }
 @keyframes slideUp { from{transform:translateY(100%);} to{transform:translateY(0);} }
-.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; position:sticky; top:0; background:linear-gradient(180deg,#0f1520 70%,transparent); padding-bottom:8px; z-index:10; }
-.modal-title { font-size:18px; font-weight:800; }
-.modal-title span { color:#4facfe; }
-.modal-close { background:rgba(79,172,254,0.12); border:1px solid rgba(79,172,254,0.35); color:#fff; width:32px; height:32px; border-radius:10px; font-size:20px; cursor:pointer; transition: all 0.2s; }
-.modal-close:hover { background: rgba(79,172,254,0.35); }
-.item-row { display:flex; justify-content:space-between; align-items:center; padding:14px; margin-bottom:8px; background: linear-gradient(145deg, rgba(30,58,95,0.25), rgba(15,21,32,0.45)); border-radius:14px; border:1px solid rgba(79,172,254,0.2); transition: all 0.2s; }
-.item-row:hover { border-color: rgba(79,172,254,0.45); }
+.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; position:sticky; top:0; background:linear-gradient(180deg,#141c2e 70%,transparent); padding-bottom:10px; z-index:10; }
+.modal-title { font-size:19px; font-weight:900; }
+.modal-title span { background: linear-gradient(135deg, #ec4899, #8b5cf6, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.modal-close { background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4); color:#fff; width:34px; height:34px; border-radius:12px; font-size:20px; cursor:pointer; transition: all 0.25s; }
+.modal-close:hover { background: rgba(139,92,246,0.4); transform: rotate(90deg); }
+.item-row { display:flex; justify-content:space-between; align-items:center; padding:16px; margin-bottom:8px; background: linear-gradient(145deg, rgba(139,92,246,0.1), rgba(15,12,41,0.6)); border-radius:16px; border:1px solid rgba(139,92,246,0.2); transition: all 0.25s; }
+.item-row:hover { border-color: rgba(139,92,246,0.5); transform: translateX(3px); }
 .item-info { flex:1; min-width:0; }
 .item-name { font-size:14px; font-weight:700; margin-bottom:3px; }
-.item-desc { font-size:11px; color:#667788; }
-.item-reward { font-size:11px; color:#4facfe; margin-top:3px; font-weight:700; }
-.btn-buy { background:linear-gradient(135deg,#4facfe,#1e3a5f); border:none; color:#fff; padding:8px 14px; border-radius:10px; cursor:pointer; font-weight:700; font-size:12px; box-shadow:0 4px 15px rgba(79,172,254,0.45); white-space:nowrap; transition: all 0.2s; }
-.btn-buy:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(79,172,254,0.75); }
+.item-desc { font-size:11px; color:#64748b; }
+.item-reward { font-size:11px; color:#a78bfa; margin-top:3px; font-weight:700; }
+.btn-buy { background:linear-gradient(135deg,#8b5cf6,#4facfe); border:none; color:#fff; padding:9px 16px; border-radius:12px; cursor:pointer; font-weight:800; font-size:12px; box-shadow:0 5px 20px rgba(139,92,246,0.5); white-space:nowrap; transition: all 0.25s; }
+.btn-buy:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139,92,246,0.8); }
 .btn-buy:active { transform:scale(0.95); }
 .btn-buy:disabled { opacity:0.35; cursor:not-allowed; }
-.btn-buy.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
-.btn-buy.gold { background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0a0f; }
+.btn-buy.green { background:linear-gradient(135deg,#22c55e,#16a34a); box-shadow:0 5px 20px rgba(34,197,94,0.5); }
+.btn-buy.gold { background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0518; }
 .btn-buy.blue { background:linear-gradient(135deg,#4facfe,#2563eb); }
+
+/* GAMES */
 .games-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
-.game-card { background: linear-gradient(145deg, rgba(30,58,95,0.3), rgba(15,21,32,0.55)); border: 1px solid rgba(79,172,254,0.25); border-radius: 18px; padding: 22px 12px; text-align: center; cursor: pointer; transition: all 0.25s; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; overflow: hidden; }
-.game-card::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 50% 0%, rgba(79,172,254,0.25), transparent 70%); opacity: 0; transition: opacity 0.3s; }
+.game-card { background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.6)); border: 1px solid rgba(139,92,246,0.25); border-radius: 20px; padding: 24px 12px; text-align: center; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; overflow: hidden; }
+.game-card::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 50% 0%, rgba(236,72,153,0.25), transparent 70%); opacity: 0; transition: opacity 0.3s; }
 .game-card:hover::before { opacity: 1; }
-.game-card:hover { transform: translateY(-3px); border-color: rgba(79,172,254,0.6); box-shadow: 0 15px 40px rgba(79,172,254,0.3); }
+.game-card:hover { transform: translateY(-4px); border-color: rgba(236,72,153,0.6); box-shadow: 0 18px 50px rgba(139,92,246,0.4); }
 .game-card:active { transform: scale(0.96); }
-.game-card-icon { font-size: 44px; position: relative; z-index: 1; filter: drop-shadow(0 0 15px rgba(79,172,254,0.6)); }
+.game-card-icon { font-size: 48px; position: relative; z-index: 1; filter: drop-shadow(0 0 20px rgba(139,92,246,0.7)); }
 .game-card-name { font-size: 14px; font-weight: 800; position: relative; z-index: 1; }
-.game-card-desc { font-size: 11px; color: #8899aa; position: relative; z-index: 1; }
-.game-area { background: linear-gradient(145deg, rgba(30,58,95,0.3), rgba(15,21,32,0.55)); border:1px solid rgba(79,172,254,0.25); border-radius:16px; padding:24px; text-align:center; margin-bottom:16px; min-height:240px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow: inset 0 2px 20px rgba(0,0,0,0.5); }
-.game-result { font-size:32px; font-weight:900; margin:16px 0; background: linear-gradient(135deg, #e8f4ff, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.dice { font-size:80px; margin:16px 0; }
-.roulette-wheel { width:200px; height:200px; border-radius:50%; background:conic-gradient(#0d1a2e 0deg 60deg,#4facfe 60deg 120deg,#1e3a5f 120deg 180deg,#0a0a0f 180deg 240deg,#5fb8ff 240deg 300deg,#132a4a 300deg 360deg); margin:16px auto; border:4px solid #e8f4ff; transition:transform 3s cubic-bezier(0.2,0.8,0.3,1); box-shadow: 0 0 60px rgba(79,172,254,0.6); }
-.profile-avatar { width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,#4facfe,#1e3a5f); display:flex; align-items:center; justify-content:center; font-size:36px; font-weight:900; color:white; margin:0 auto 16px; box-shadow:0 8px 30px rgba(79,172,254,0.55), 0 0 0 4px rgba(79,172,254,0.2); overflow: hidden; background-size: cover; background-position: center; }
-.profile-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(79,172,254,0.1); font-size:13px; }
-.profile-row span:first-child { color:#8899aa; }
-.profile-row span:last-child { font-weight:700; color:#4facfe; }
+.game-card-desc { font-size: 11px; color: #94a3b8; position: relative; z-index: 1; }
+.game-area { background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.6)); border:1px solid rgba(139,92,246,0.25); border-radius:20px; padding:26px; text-align:center; margin-bottom:16px; min-height:250px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow: inset 0 3px 25px rgba(0,0,0,0.6); }
+.game-result { font-size:32px; font-weight:900; margin:16px 0; background: linear-gradient(135deg, #fff, #ec4899, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.dice { font-size:80px; margin:16px 0; filter: drop-shadow(0 0 20px rgba(139,92,246,0.6)); }
+.roulette-wheel { width:200px; height:200px; border-radius:50%; background:conic-gradient(#0d1a2e 0deg 60deg,#8b5cf6 60deg 120deg,#ec4899 120deg 180deg,#4facfe 180deg 240deg,#22c55e 240deg 300deg,#ffd700 300deg 360deg); margin:16px auto; border:4px solid #e0e7ff; transition:transform 3s cubic-bezier(0.2,0.8,0.3,1); box-shadow: 0 0 70px rgba(139,92,246,0.7); }
+
+/* PROFILE */
+.profile-avatar { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6,#4facfe); display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:900; color:white; margin:0 auto 18px; box-shadow:0 12px 40px rgba(139,92,246,0.6), 0 0 0 4px rgba(139,92,246,0.25); overflow: hidden; background-size: cover; background-position: center; }
+.profile-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(139,92,246,0.12); font-size:13px; }
+.profile-row span:first-child { color:#94a3b8; }
+.profile-row span:last-child { font-weight:700; color:#a78bfa; }
+
+/* DAILY */
 .daily-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
-.daily-day { aspect-ratio:1; background: linear-gradient(145deg, rgba(30,58,95,0.25), rgba(15,21,32,0.45)); border:1px solid rgba(79,172,254,0.2); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:9px; color:#8899aa; padding:4px; transition: all 0.2s; }
-.daily-day.claimed { background:linear-gradient(145deg, rgba(79,172,254,0.25), rgba(79,172,254,0.06)); border-color:#4facfe; color:#4facfe; }
-.daily-day.today { background:linear-gradient(145deg, rgba(79,172,254,0.35), rgba(30,58,95,0.25)); border-color:#4facfe; color:white; animation: todayPulse 2s infinite; }
-@keyframes todayPulse { 0%,100%{box-shadow:0 0 0 0 rgba(79,172,254,0.5);} 50%{box-shadow:0 0 0 10px rgba(79,172,254,0);} }
-.daily-reward { font-size:12px; font-weight:900; color:#4facfe; margin-top:2px; }
-.achieve-item { display:flex; align-items:center; gap:10px; padding:12px; background: linear-gradient(145deg, rgba(30,58,95,0.25), rgba(15,21,32,0.45)); border-radius:14px; margin-bottom:6px; border:1px solid rgba(79,172,254,0.2); transition: all 0.2s; }
+.daily-day { aspect-ratio:1; background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.5)); border:1px solid rgba(139,92,246,0.25); border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:9px; color:#94a3b8; padding:4px; transition: all 0.25s; }
+.daily-day.claimed { background:linear-gradient(145deg, rgba(139,92,246,0.3), rgba(139,92,246,0.08)); border-color:#8b5cf6; color:#a78bfa; }
+.daily-day.today { background:linear-gradient(145deg, rgba(236,72,153,0.3), rgba(139,92,246,0.2)); border-color:#ec4899; color:white; animation: todayPulse 2s infinite; }
+@keyframes todayPulse { 0%,100%{box-shadow:0 0 0 0 rgba(236,72,153,0.6);} 50%{box-shadow:0 0 0 12px rgba(236,72,153,0);} }
+.daily-reward { font-size:12px; font-weight:900; color:#a78bfa; margin-top:2px; }
+
+/* ACHIEVEMENTS */
+.achieve-item { display:flex; align-items:center; gap:12px; padding:14px; background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.5)); border-radius:16px; margin-bottom:6px; border:1px solid rgba(139,92,246,0.2); transition: all 0.25s; }
 .achieve-item.locked { opacity:0.4; }
-.achieve-item.unlocked { background:linear-gradient(90deg,rgba(79,172,254,0.2),rgba(30,58,95,0.25)); border-color:#4facfe; }
-.achieve-item:hover { transform: translateX(3px); }
-.achieve-icon { font-size:26px; }
+.achieve-item.unlocked { background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(236,72,153,0.15)); border-color:#8b5cf6; box-shadow: 0 0 20px rgba(139,92,246,0.3); }
+.achieve-item:hover { transform: translateX(4px); }
+.achieve-icon { font-size:28px; filter: drop-shadow(0 0 8px rgba(139,92,246,0.6)); }
 .achieve-text { flex:1; }
 .achieve-name { font-size:13px; font-weight:700; }
-.achieve-desc { font-size:11px; color:#667788; margin-top:2px; }
-.wallet-balance { background:linear-gradient(145deg,rgba(34,197,94,0.18),rgba(10,26,16,0.65)); border:1px solid rgba(34,197,94,0.35); border-radius:16px; padding:20px; text-align:center; margin-bottom:16px; box-shadow: inset 0 2px 20px rgba(34,197,94,0.1); }
-.wallet-balance-val { font-size:42px; font-weight:900; color:#22c55e; text-shadow: 0 0 28px rgba(34,197,94,0.6); }
-.wallet-balance-lbl { font-size:12px; color:#8899aa; margin-top:4px; text-transform:uppercase; letter-spacing:2px; }
-.promo-input { width:100%; padding:14px; border-radius:12px; border:1px solid rgba(79,172,254,0.3); background:rgba(10,10,15,0.75); color:#fff; font-size:14px; text-align:center; margin-bottom:12px; outline:none; text-transform:uppercase; letter-spacing:2px; transition: all 0.2s; }
-.promo-input:focus { border-color: #4facfe; box-shadow: 0 0 25px rgba(79,172,254,0.4); }
-.toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(120px); background:linear-gradient(135deg,#4facfe,#1e3a5f); color:white; padding:12px 24px; border-radius:14px; transition:transform 0.3s cubic-bezier(0.2,0.8,0.3,1); z-index:3000; font-size:13px; font-weight:700; max-width:90%; text-align:center; box-shadow: 0 15px 50px rgba(79,172,254,0.7); }
+.achieve-desc { font-size:11px; color:#64748b; margin-top:2px; }
+
+/* WALLET */
+.wallet-balance { background:linear-gradient(145deg,rgba(34,197,94,0.18),rgba(10,26,16,0.7)); border:1px solid rgba(34,197,94,0.4); border-radius:18px; padding:24px; text-align:center; margin-bottom:16px; box-shadow: inset 0 2px 25px rgba(34,197,94,0.15), 0 0 40px rgba(34,197,94,0.2); }
+.wallet-balance-val { font-size:46px; font-weight:900; color:#22c55e; text-shadow: 0 0 35px rgba(34,197,94,0.7); }
+.wallet-balance-lbl { font-size:12px; color:#94a3b8; margin-top:6px; text-transform:uppercase; letter-spacing:3px; }
+
+/* PROMO INPUT */
+.promo-input { width:100%; padding:16px; border-radius:14px; border:1px solid rgba(139,92,246,0.4); background:rgba(10,5,24,0.8); color:#fff; font-size:14px; text-align:center; margin-bottom:14px; outline:none; text-transform:uppercase; letter-spacing:3px; transition: all 0.25s; font-weight: 700; }
+.promo-input:focus { border-color: #8b5cf6; box-shadow: 0 0 30px rgba(139,92,246,0.5); }
+
+/* TOAST */
+.toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(120px); background:linear-gradient(135deg,#8b5cf6,#ec4899); color:white; padding:14px 28px; border-radius:16px; transition:transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); z-index:3000; font-size:13px; font-weight: 700; max-width:90%; text-align:center; box-shadow: 0 20px 55px rgba(139,92,246,0.8); }
 .toast.show { transform:translateX(-50%) translateY(0); }
-.reg-screen { position:fixed; inset:0; background:linear-gradient(160deg,#0f1520,#0a0a0f); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; overflow-y:auto; }
-.reg-input { width:100%; padding:14px; border-radius:12px; border:1px solid rgba(79,172,254,0.3); background:rgba(10,10,15,0.75); color:#fff; font-size:15px; margin-bottom:10px; outline:none; transition: all 0.2s; }
-.reg-input:focus { border-color: #4facfe; box-shadow: 0 0 25px rgba(79,172,254,0.4); }
+
+/* AUTH */
+.reg-screen { position:fixed; inset:0; background:linear-gradient(160deg,#0f0c29,#0a0518); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; overflow-y:auto; }
+.reg-input { width:100%; padding:16px; border-radius:14px; border:1px solid rgba(139,92,246,0.4); background:rgba(10,5,24,0.8); color:#fff; font-size:15px; margin-bottom:12px; outline:none; transition: all 0.25s; }
+.reg-input:focus { border-color: #8b5cf6; box-shadow: 0 0 30px rgba(139,92,246,0.5); }
 .reg-btn {
-  width:100%; padding:16px; border-radius:14px; border:none;
-  background:linear-gradient(135deg,#4facfe,#1e3a5f); color:#fff;
+  width:100%; padding:16px; border-radius:16px; border:none;
+  background:linear-gradient(135deg,#8b5cf6,#ec4899); color:#fff;
   font-size:16px; font-weight:800; cursor:pointer;
-  box-shadow:0 8px 30px rgba(79,172,254,0.55);
-  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow:0 10px 35px rgba(139,92,246,0.6);
+  transition: transform 0.2s, box-shadow 0.2s;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   position: relative;
@@ -275,106 +326,109 @@ body::after {
 }
 .reg-btn:active { transform: scale(0.97); }
 .reg-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.reg-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 45px rgba(79,172,254,0.8); }
+.reg-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 50px rgba(139,92,246,0.9); }
 .reg-btn.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
-.corner-logo { position:fixed; right:14px; bottom:14px; z-index:600; opacity:0.78; transition:opacity 0.3s, transform 0.3s; pointer-events:none; background: linear-gradient(135deg, rgba(79,172,254,0.22), rgba(30,58,95,0.22)); padding: 10px 16px; border-radius: 16px; backdrop-filter: blur(18px); border: 1px solid rgba(79,172,254,0.45); box-shadow: 0 0 35px rgba(79,172,254,0.35), inset 0 0 18px rgba(79,172,254,0.12); }
-.corner-logo img { height:38px; display:block; filter: drop-shadow(0 0 12px rgba(79,172,254,0.9)); }
-.corner-logo:hover { opacity:1; transform: scale(1.08); }
 
-/* ✨ СПЕЦИАЛЬНЫЕ МОДАЛКИ РЕФЕРАЛКИ */
+/* CORNER LOGO */
+.corner-logo { position:fixed; right:14px; bottom:14px; z-index:600; opacity:0.78; transition:opacity 0.3s, transform 0.3s; pointer-events:none; background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(236,72,153,0.2)); padding: 12px 18px; border-radius: 18px; backdrop-filter: blur(20px); border: 1px solid rgba(139,92,246,0.5); box-shadow: 0 0 40px rgba(139,92,246,0.4), inset 0 0 20px rgba(255,255,255,0.05); }
+.corner-logo img { height:40px; display:block; filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)); }
+.corner-logo:hover { opacity:1; transform: scale(1.1); }
+
+/* REF MODAL */
 .ref-thanks-overlay {
   display: none;
   position: fixed; inset: 0;
-  background: radial-gradient(ellipse at center, rgba(10,10,15,0.85) 0%, rgba(5,5,10,0.97) 100%);
+  background: radial-gradient(ellipse at center, rgba(10,5,24,0.9) 0%, rgba(5,2,15,0.97) 100%);
   z-index: 99999;
   align-items: center; justify-content: center;
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(18px);
   padding: 20px;
   animation: fadeIn 0.4s ease-out;
 }
 .ref-thanks-overlay.show { display: flex; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-.ref-thanks-card {
-  background: linear-gradient(160deg, #141c2e 0%, #0a0a0f 100%);
-  border-radius: 28px;
-  padding: 32px 24px;
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-  border: 2px solid rgba(255,215,0,0.45);
-  box-shadow: 0 0 80px rgba(255,215,0,0.35), 0 0 0 1px rgba(255,215,0,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
-  position: relative;
-  overflow: hidden;
-  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
 @keyframes scaleIn {
   0% { transform: scale(0.5); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+.ref-thanks-card {
+  background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%);
+  border-radius: 30px;
+  padding: 34px 26px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  border: 2px solid rgba(255,215,0,0.5);
+  box-shadow: 0 0 90px rgba(255,215,0,0.4), 0 0 0 1px rgba(255,215,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+  animation: scaleIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .ref-thanks-card::before {
   content: '';
   position: absolute;
   inset: -50%;
-  background: conic-gradient(from 0deg, transparent, rgba(255,215,0,0.15), transparent, rgba(255,215,0,0.1), transparent);
+  background: conic-gradient(from 0deg, transparent, rgba(255,215,0,0.18), transparent, rgba(255,140,0,0.12), transparent);
   animation: rotateGlow 6s linear infinite;
   z-index: 0;
 }
 .ref-thanks-card > * { position: relative; z-index: 1; }
 .ref-thanks-emoji {
-  font-size: 72px;
+  font-size: 78px;
   line-height: 1;
-  margin-bottom: 12px;
-  filter: drop-shadow(0 0 25px rgba(255,215,0,0.9));
+  margin-bottom: 14px;
+  filter: drop-shadow(0 0 30px rgba(255,215,0,1));
   animation: bounce 1.5s ease-in-out infinite;
   display: inline-block;
 }
-@keyframes bounce { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-10px) scale(1.05);} }
+@keyframes bounce { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-12px) scale(1.06);} }
 .ref-thanks-title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 900;
   color: #ffd700;
-  margin-bottom: 8px;
-  text-shadow: 0 0 20px rgba(255,215,0,0.8);
+  margin-bottom: 10px;
+  text-shadow: 0 0 25px rgba(255,215,0,0.9);
 }
 .ref-thanks-sub {
   font-size: 14px;
-  color: #ccd;
-  margin-bottom: 20px;
-  line-height: 1.5;
+  color: #cbd5e1;
+  margin-bottom: 22px;
+  line-height: 1.55;
 }
-.ref-thanks-sub b { color: #4facfe; }
+.ref-thanks-sub b { color: #a78bfa; }
 .ref-thanks-counter {
-  background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(22,163,74,0.1));
-  border: 2px solid rgba(34,197,94,0.5);
-  border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 0 35px rgba(34,197,94,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, rgba(34,197,94,0.22), rgba(22,163,74,0.12));
+  border: 2px solid rgba(34,197,94,0.55);
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 0 40px rgba(34,197,94,0.35), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 .ref-thanks-counter-label {
   font-size: 11px;
-  color: #8ab;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  font-weight: 700;
 }
 .ref-thanks-counter-value {
-  font-size: 48px;
+  font-size: 54px;
   font-weight: 900;
   color: #22c55e;
-  text-shadow: 0 0 30px rgba(34,197,94,0.8);
+  text-shadow: 0 0 35px rgba(34,197,94,0.9);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-.ref-thanks-counter-value .unit { font-size: 22px; color: #8ab; margin-left: 4px; }
+.ref-thanks-counter-value .unit { font-size: 24px; color: #94a3b8; margin-left: 6px; }
 .ref-thanks-progress {
-  height: 8px;
-  background: rgba(10,10,15,0.7);
-  border-radius: 4px;
+  height: 10px;
+  background: rgba(10,5,24,0.75);
+  border-radius: 5px;
   overflow: hidden;
-  margin-top: 12px;
-  border: 1px solid rgba(34,197,94,0.3);
+  margin-top: 14px;
+  border: 1px solid rgba(34,197,94,0.35);
 }
 .ref-thanks-progress-fill {
   height: 100%;
@@ -382,248 +436,245 @@ body::after {
   background-size: 200% 100%;
   width: 0%;
   transition: width 0.1s linear;
-  box-shadow: 0 0 15px rgba(34,197,94,0.8);
+  box-shadow: 0 0 20px rgba(34,197,94,0.9);
   animation: gradientMove 2s linear infinite;
 }
 .ref-thanks-close {
-  margin-top: 10px;
+  margin-top: 12px;
   background: linear-gradient(135deg, #ffd700, #ff8c00);
   border: none;
-  color: #0a0a0f;
-  padding: 12px 30px;
-  border-radius: 12px;
-  font-size: 14px;
+  color: #0a0518;
+  padding: 14px 34px;
+  border-radius: 14px;
+  font-size: 15px;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 6px 25px rgba(255,215,0,0.55);
-  transition: transform 0.15s;
+  box-shadow: 0 8px 30px rgba(255,215,0,0.65);
+  transition: transform 0.2s;
 }
 .ref-thanks-close:active { transform: scale(0.95); }
-.ref-thanks-close:hover { transform: translateY(-2px); box-shadow: 0 10px 35px rgba(255,215,0,0.8); }
+.ref-thanks-close:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,215,0,0.9); }
 
-/* Приветственная картинка для нового игрока */
 .ref-welcome-card {
-  background: linear-gradient(160deg, #141c2e 0%, #0a0a0f 100%);
-  border-radius: 28px;
-  padding: 30px 24px;
+  background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%);
+  border-radius: 30px;
+  padding: 32px 26px;
   max-width: 420px;
   width: 100%;
   text-align: center;
-  border: 2px solid rgba(79,172,254,0.5);
-  box-shadow: 0 0 80px rgba(79,172,254,0.4), 0 0 0 1px rgba(79,172,254,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+  border: 2px solid rgba(139,92,246,0.55);
+  box-shadow: 0 0 90px rgba(139,92,246,0.45), 0 0 0 1px rgba(139,92,246,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
   position: relative;
   overflow: hidden;
-  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: scaleIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .ref-welcome-card::before {
   content: '';
   position: absolute;
   inset: -50%;
-  background: conic-gradient(from 0deg, transparent, rgba(79,172,254,0.15), transparent, rgba(34,197,94,0.1), transparent);
+  background: conic-gradient(from 0deg, transparent, rgba(139,92,246,0.18), transparent, rgba(236,72,153,0.15), transparent);
   animation: rotateGlow 6s linear infinite;
   z-index: 0;
 }
 .ref-welcome-card > * { position: relative; z-index: 1; }
 .ref-welcome-emoji {
-  font-size: 68px;
+  font-size: 72px;
   line-height: 1;
-  margin-bottom: 12px;
-  filter: drop-shadow(0 0 25px rgba(79,172,254,0.9));
+  margin-bottom: 14px;
+  filter: drop-shadow(0 0 30px rgba(139,92,246,1));
   animation: bounce 1.6s ease-in-out infinite;
   display: inline-block;
 }
 .ref-welcome-title {
-  font-size: 21px;
+  font-size: 22px;
   font-weight: 900;
-  background: linear-gradient(135deg, #e8f4ff, #4facfe);
+  background: linear-gradient(135deg, #fff, #c4b5fd);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .ref-welcome-text {
   font-size: 13px;
-  color: #bbc;
-  line-height: 1.65;
-  margin-bottom: 16px;
+  color: #cbd5e1;
+  line-height: 1.7;
+  margin-bottom: 18px;
   text-align: left;
 }
 .ref-welcome-text b { color: #ffd700; }
 .ref-welcome-text .green { color: #22c55e; font-weight: 700; }
-.ref-welcome-text .blue { color: #4facfe; font-weight: 700; }
+.ref-welcome-text .blue { color: #a78bfa; font-weight: 700; }
 .ref-welcome-tips {
-  background: linear-gradient(135deg, rgba(79,172,254,0.12), rgba(30,58,95,0.2));
-  border: 1px solid rgba(79,172,254,0.35);
-  border-radius: 14px;
-  padding: 14px;
+  background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(30,58,95,0.2));
+  border: 1px solid rgba(139,92,246,0.4);
+  border-radius: 16px;
+  padding: 16px;
   text-align: left;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 .ref-welcome-tips-title {
   font-size: 12px;
   font-weight: 800;
-  color: #4facfe;
-  margin-bottom: 8px;
+  color: #a78bfa;
+  margin-bottom: 10px;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
 }
 .ref-welcome-tips-item {
   font-size: 12px;
-  color: #ccd;
-  padding: 5px 0;
+  color: #cbd5e1;
+  padding: 6px 0;
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  line-height: 1.45;
+  gap: 9px;
+  line-height: 1.5;
 }
 .ref-welcome-tips-item .ic {
   color: #ffd700;
   font-size: 14px;
   flex-shrink: 0;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 .ref-welcome-btn {
   width: 100%;
   background: linear-gradient(135deg, #22c55e, #16a34a);
   border: none;
   color: #fff;
-  padding: 15px;
-  border-radius: 14px;
+  padding: 16px;
+  border-radius: 16px;
   font-size: 15px;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 8px 30px rgba(34,197,94,0.55);
-  transition: transform 0.15s;
+  box-shadow: 0 10px 35px rgba(34,197,94,0.6);
+  transition: transform 0.2s;
   margin-bottom: 10px;
 }
 .ref-welcome-btn:active { transform: scale(0.97); }
-.ref-welcome-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(34,197,94,0.8); }
+.ref-welcome-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 45px rgba(34,197,94,0.9); }
 .ref-welcome-btn.secondary {
   background: transparent;
-  border: 1px solid rgba(79,172,254,0.35);
-  color: #8899aa;
+  border: 1px solid rgba(139,92,246,0.4);
+  color: #94a3b8;
   box-shadow: none;
   font-size: 13px;
-  padding: 11px;
+  padding: 12px;
 }
-.ref-welcome-btn.secondary:hover { background: rgba(79,172,254,0.1); color: #fff; }
+.ref-welcome-btn.secondary:hover { background: rgba(139,92,246,0.15); color: #fff; }
 
+/* RESPONSIVE */
 @media (min-width: 768px) {
-  .sidebar { width:64px; } .sidebar-icon { font-size:17px; } .sidebar-label { font-size:8px; }
-  .main { margin-left:64px; } .score-big { font-size:88px; }
-  .tap-button { width:250px; height:250px; font-size:34px; }
-  .modal-content { border-radius:24px; margin:auto; max-height:90vh; } .modal { align-items:center; }
-  .stats { gap: 12px; margin: 16px; } .stat-value { font-size: 22px; }
+  .sidebar { width:72px; } .sidebar-icon { font-size:20px; } .sidebar-label { font-size:9px; }
+  .main { margin-left:72px; } .score-big { font-size:96px; }
+  .tap-button { width:270px; height:270px; font-size:40px; }
+  .modal-content { border-radius:28px; margin:auto; max-height:90vh; } .modal { align-items:center; }
+  .stats { gap: 14px; margin: 20px; } .stat-value { font-size: 26px; }
 }
 @media (min-width: 1100px) {
-  .sidebar { width:180px; padding:12px 0; }
-  .sidebar-item { flex-direction:row; gap:12px; justify-content:flex-start; padding:10px 14px; margin:0 10px; }
-  .sidebar-label { font-size:13px; margin-top:0; } .sidebar-icon { font-size:20px; }
-  .main { max-width:900px; margin:0 auto; padding-left:180px; }
+  .sidebar { width:190px; padding:14px 0; }
+  .sidebar-item { flex-direction:row; gap:14px; justify-content:flex-start; padding:12px 16px; margin:0 12px; }
+  .sidebar-label { font-size:13px; margin-top:0; } .sidebar-icon { font-size:22px; }
+  .main { max-width:900px; margin:0 auto; padding-left:190px; }
 }
 @media (max-width: 480px) {
-  .sidebar { width:48px; padding:6px 0; gap:3px; } .sidebar-logo { margin: 2px 4px 6px 4px; padding: 6px 2px; } .sidebar-logo img { height:20px; }
-  .sidebar-icon { font-size:13px; } .sidebar-label { font-size:6px; margin-top:1px; } .sidebar-item { padding:5px 1px; margin:0 4px; }
-  .main { margin-left:48px; padding-bottom:100px; }
-  .header { padding:10px 12px; } .header-card { padding: 8px 14px; gap: 10px; border-radius: 16px; }
-  .avatar { width:44px; height:44px; font-size:18px; } .avatar-edit { width:16px; height:16px; font-size:9px; }
-  .header-nick { font-size:14px; } .header-fio { font-size:10px; } .header-rank { font-size:10px; }
-  .stats { gap:6px; margin:10px; } .stat-card { padding:10px 4px; border-radius:12px; } .stat-value { font-size:15px; } .stat-label { font-size:9px; }
-  .level-bar { margin:0 10px 10px; height:24px; border-radius:12px; } .level-text { font-size:10px; }
-  .score-block { padding:14px 10px 6px; } .score-big { font-size:52px; } .score-label { font-size:10px; letter-spacing:2px; }
-  .tap-container { padding:14px; } .tap-button { width:180px; height:180px; font-size:26px; letter-spacing:3px; } .tap-button::before { inset:-18px; }
-  .energy-bar { margin:0 10px 10px; height:24px; border-radius:12px; } .energy-text { font-size:10px; }
-  .quick-actions { grid-template-columns:repeat(2,1fr); gap:8px; padding:0 10px; } .quick-btn { padding:12px 4px; font-size:10px; border-radius:12px; } .quick-icon { font-size:20px; }
-  .top-panel { margin: 14px 10px 8px; padding: 12px; border-radius:16px; } .top-panel-title { font-size:14px; } .top-panel-sub { font-size:10px; }
-  .top-row { padding:8px 10px; gap:8px; border-radius:10px; } .top-rank { width:26px; height:26px; font-size:12px; border-radius:8px; } .top-avatar { width:30px; height:30px; font-size:12px; }
+  .sidebar { width:54px; padding:8px 0; gap:4px; } .sidebar-logo { margin: 2px 6px 8px 6px; padding: 8px 2px; } .sidebar-logo img { height:22px; }
+  .sidebar-icon { font-size:15px; } .sidebar-label { font-size:6px; margin-top:2px; } .sidebar-item { padding:6px 2px; margin:0 5px; }
+  .main { margin-left:54px; padding-bottom:100px; }
+  .header { padding:12px 14px; } .header-card { padding: 10px 16px; gap: 12px; border-radius: 18px; }
+  .avatar { width:48px; height:48px; font-size:20px; } .avatar-edit { width:18px; height:18px; font-size:10px; }
+  .header-nick { font-size:15px; } .header-fio { font-size:10px; } .header-rank { font-size:10px; }
+  .stats { gap:8px; margin:12px; } .stat-card { padding:12px 6px; border-radius:14px; } .stat-value { font-size:16px; } .stat-label { font-size:9px; }
+  .level-bar { margin:0 12px 12px; height:26px; border-radius:14px; } .level-text { font-size:10px; }
+  .score-block { padding:16px 12px 8px; } .score-big { font-size:56px; } .score-label { font-size:10px; letter-spacing:2px; }
+  .tap-container { padding:16px; } .tap-button { width:190px; height:190px; font-size:28px; letter-spacing:4px; } .tap-button::before { inset:-20px; }
+  .energy-bar { margin:0 12px 12px; height:26px; border-radius:14px; } .energy-text { font-size:10px; }
+  .quick-actions { grid-template-columns:repeat(2,1fr); gap:10px; padding:0 12px; } .quick-btn { padding:14px 6px; font-size:10px; border-radius:14px; } .quick-icon { font-size:22px; }
+  .top-panel { margin: 16px 12px 10px; padding: 14px; border-radius:18px; } .top-panel-title { font-size:15px; } .top-panel-sub { font-size:10px; }
+  .top-row { padding:10px 12px; gap:10px; border-radius:12px; } .top-rank { width:28px; height:28px; font-size:12px; border-radius:9px; } .top-avatar { width:32px; height:32px; font-size:13px; }
   .top-name { font-size:12px; } .top-score { font-size:12px; }
-  .modal-content { padding:16px; border-radius:20px 20px 0 0; max-height:92vh; } .modal-title { font-size:16px; } .modal-close { width:28px; height:28px; font-size:18px; }
-  .item-row { padding:12px; border-radius:12px; } .item-name { font-size:13px; } .item-desc { font-size:10px; } .btn-buy { padding:7px 12px; font-size:11px; border-radius:9px; }
-  .game-card { padding:16px 10px; border-radius:14px; } .game-card-icon { font-size:34px; } .game-card-name { font-size:12px; } .game-card-desc { font-size:10px; }
-  .profile-avatar { width:70px; height:70px; font-size:28px; } .profile-row { font-size:12px; padding:8px 0; }
-  .daily-grid { grid-template-columns:repeat(4,1fr); gap:5px; } .daily-day { font-size:8px; padding:3px; } .daily-reward { font-size:10px; }
-  .achieve-item { padding:10px; gap:8px; } .achieve-icon { font-size:22px; } .achieve-name { font-size:12px; } .achieve-desc { font-size:10px; }
-  .reg-screen { padding:14px; } .reg-input { padding:12px; font-size:14px; } .reg-btn { padding:14px; font-size:15px; }
-  .corner-logo { padding: 6px 10px; border-radius: 12px; bottom: 10px; right: 10px; } .corner-logo img { height:26px; }
-  .toast { font-size:12px; padding:10px 18px; bottom:20px; max-width:85%; }
+  .modal-content { padding:18px; border-radius:24px 24px 0 0; max-height:92vh; } .modal-title { font-size:17px; } .modal-close { width:30px; height:30px; font-size:19px; }
+  .item-row { padding:14px; border-radius:14px; } .item-name { font-size:13px; } .item-desc { font-size:10px; } .btn-buy { padding:8px 14px; font-size:11px; border-radius:10px; }
+  .game-card { padding:18px 12px; border-radius:16px; } .game-card-icon { font-size:38px; } .game-card-name { font-size:12px; } .game-card-desc { font-size:10px; }
+  .profile-avatar { width:80px; height:80px; font-size:32px; } .profile-row { font-size:12px; padding:10px 0; }
+  .daily-grid { grid-template-columns:repeat(4,1fr); gap:6px; } .daily-day { font-size:8px; padding:4px; border-radius:12px; } .daily-reward { font-size:10px; }
+  .achieve-item { padding:12px; gap:10px; border-radius:14px; } .achieve-icon { font-size:24px; } .achieve-name { font-size:12px; } .achieve-desc { font-size:10px; }
+  .reg-screen { padding:16px; } .reg-input { padding:14px; font-size:14px; } .reg-btn { padding:15px; font-size:15px; }
+  .corner-logo { padding: 8px 12px; border-radius: 14px; bottom: 12px; right: 12px; } .corner-logo img { height:28px; }
+  .toast { font-size:12px; padding:12px 20px; bottom:20px; max-width:85%; }
   .is-shop-grid { grid-template-columns: 1fr; }
-  .ref-thanks-card, .ref-welcome-card { padding: 24px 18px; border-radius: 22px; }
-  .ref-thanks-emoji { font-size: 60px; }
-  .ref-thanks-counter-value { font-size: 38px; }
-  .ref-welcome-emoji { font-size: 56px; }
-  .ref-welcome-title { font-size: 18px; }
+  .ref-thanks-card, .ref-welcome-card { padding: 26px 20px; border-radius: 24px; }
+  .ref-thanks-emoji { font-size: 64px; }
+  .ref-thanks-counter-value { font-size: 42px; }
+  .ref-welcome-emoji { font-size: 60px; }
+  .ref-welcome-title { font-size: 19px; }
 }
 @media (max-width: 360px) {
-  .score-big { font-size:42px; } .tap-button { width:160px; height:160px; font-size:22px; } .sidebar { width:44px; } .main { margin-left:44px; } .sidebar-label { font-size:5px; }
+  .score-big { font-size:46px; } .tap-button { width:170px; height:170px; font-size:24px; } .sidebar { width:48px; } .main { margin-left:48px; } .sidebar-label { font-size:5px; }
 }
 
-/* ЖЕНСКАЯ ТЕМА */
+/* FEMALE THEME */
 body.theme-female { --ing-blue:#ff69b4; --ing-gold:#ffb6d9; }
 body.theme-female::before {
   background:
-    radial-gradient(ellipse 140% 60% at 20% 0%, rgba(217,70,239,0.55), transparent 60%),
-    radial-gradient(ellipse 120% 50% at 80% 30%, rgba(255,105,180,0.45), transparent 60%),
-    radial-gradient(ellipse 130% 70% at 10% 70%, rgba(42,10,53,0.9), transparent 60%),
-    radial-gradient(ellipse 100% 60% at 90% 100%, rgba(61,20,80,0.75), transparent 60%),
-    linear-gradient(160deg, #1a0a1f 0%, #2a0a35 40%, #3d1450 70%, #1a0a1f 100%);
+    radial-gradient(ellipse 120% 80% at 50% 0%, rgba(236,72,153,0.4), transparent 55%),
+    radial-gradient(ellipse 100% 60% at 100% 100%, rgba(217,70,239,0.3), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 0% 100%, rgba(255,105,180,0.25), transparent 55%),
+    linear-gradient(180deg, #1a0518 0%, #2a0a35 25%, #3d1450 60%, #1a0518 100%);
 }
 body.theme-female::after {
-  background:
-    radial-gradient(ellipse 900px 200px at -10% 15%, rgba(217,70,239,0.35), transparent 70%),
-    radial-gradient(ellipse 800px 220px at 110% 25%, rgba(255,105,180,0.35), transparent 70%),
-    radial-gradient(ellipse 1000px 250px at 50% 50%, rgba(42,10,53,0.35), transparent 70%),
-    radial-gradient(ellipse 850px 200px at -5% 75%, rgba(217,70,239,0.3), transparent 70%),
-    radial-gradient(ellipse 950px 230px at 105% 90%, rgba(255,105,180,0.35), transparent 70%);
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(255,182,217,0.08) 1.5px, transparent 2px),
+    radial-gradient(circle at 85% 40%, rgba(236,72,153,0.08) 1.5px, transparent 2px),
+    radial-gradient(circle at 40% 70%, rgba(255,182,217,0.08) 1.5px, transparent 2px),
+    radial-gradient(circle at 70% 90%, rgba(217,70,239,0.08) 1.5px, transparent 2px);
 }
-body.theme-female .sidebar { background: linear-gradient(180deg, rgba(26,10,31,0.96) 0%, rgba(42,10,53,0.96) 100%); border-right-color: rgba(255,105,180,0.5); }
-body.theme-female .sidebar-logo { background: linear-gradient(135deg, rgba(255,105,180,0.35), rgba(217,70,239,0.35), rgba(61,20,80,0.45)); }
+body.theme-female .sidebar { background: linear-gradient(180deg, rgba(26,5,24,0.9) 0%, rgba(42,10,53,0.9) 100%); border-right-color: rgba(236,72,153,0.4); }
+body.theme-female .sidebar-logo { background: linear-gradient(135deg, rgba(255,105,180,0.4), rgba(217,70,239,0.4), rgba(236,72,153,0.35)); }
 body.theme-female .sidebar-item::before { background: linear-gradient(180deg, #ff69b4, #d946ef); }
-body.theme-female .sidebar-item:hover, body.theme-female .sidebar-item:active { background: rgba(255,105,180,0.25); }
-body.theme-female .header { background: rgba(26,10,31,0.78); border-bottom-color: rgba(255,105,180,0.45); }
-body.theme-female .header-card { background: linear-gradient(145deg, rgba(217,70,239,0.35), rgba(61,20,80,0.3)); border-color: rgba(255,105,180,0.45); }
-body.theme-female .avatar { background: linear-gradient(135deg, #ff69b4, #d946ef); box-shadow: 0 6px 25px rgba(255,105,180,0.55), 0 0 0 3px rgba(255,105,180,0.2); }
-body.theme-female .header-btn { background: linear-gradient(135deg, rgba(255,105,180,0.18), rgba(217,70,239,0.25)); border-color: rgba(255,105,180,0.45); color: #ffd9ec; }
-body.theme-female .header-btn:hover { background: linear-gradient(135deg, rgba(255,105,180,0.35), rgba(217,70,239,0.4)); border-color: rgba(255,105,180,0.8); box-shadow: 0 6px 20px rgba(255,105,180,0.5); }
-body.theme-female .stat-card { background: linear-gradient(145deg, rgba(217,70,239,0.3), rgba(42,10,53,0.55)); border-color: rgba(255,105,180,0.35); }
-body.theme-female .stat-value { color: #ffd9ec; text-shadow: 0 0 18px rgba(255,105,180,0.7); }
-body.theme-female .level-fill { background: linear-gradient(90deg, #d946ef, #ff69b4, #ffb6d9, #d946ef); box-shadow: 0 0 30px rgba(255,105,180,0.7); animation: femGradient 4s ease infinite; }
-body.theme-female .score-big { background: linear-gradient(135deg, #ffffff 0%, #ffd9ec 30%, #ff69b4 70%, #d946ef 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(255,105,180,0.95)) drop-shadow(0 0 15px rgba(217,70,239,0.7)); }
-body.theme-female .tap-button { background: conic-gradient(from 0deg, #3d1450, #d946ef, #ff69b4, #ffb6d9, #ff69b4, #d946ef, #3d1450); box-shadow: 0 25px 90px rgba(255,105,180,0.5), 0 0 70px rgba(217,70,239,0.6), inset 0 -8px 30px rgba(0,0,0,0.6); }
-body.theme-female .tap-button::after { background: radial-gradient(circle at 35% 25%, #d946ef, #3d1450 60%, #1a0a1f 100%); box-shadow: inset 0 10px 30px rgba(255,105,180,0.25), inset 0 -10px 30px rgba(0,0,0,0.75); }
-body.theme-female .tap-button::before { border-color: rgba(255,105,180,0.45); }
-body.theme-female .tap-button span { text-shadow: 0 2px 12px rgba(255,105,180,0.7); }
-body.theme-female .float-plus { color: #ff69b4; text-shadow: 0 0 25px rgba(255,105,180,1); }
-body.theme-female .energy-fill { background: linear-gradient(90deg, #d946ef, #ff69b4); box-shadow: 0 0 22px rgba(255,105,180,0.6); }
-body.theme-female .quick-btn { background: linear-gradient(145deg, rgba(217,70,239,0.3), rgba(42,10,53,0.55)); border-color: rgba(255,105,180,0.35); }
-body.theme-female .quick-btn:hover { border-color: rgba(255,105,180,0.7); box-shadow: 0 15px 35px rgba(255,105,180,0.4); }
-body.theme-female .quick-btn::before { background: linear-gradient(90deg, transparent, #ff69b4, transparent); }
-body.theme-female .is-balance { background: linear-gradient(135deg, rgba(255,105,180,0.18), rgba(217,70,239,0.12)); border-color: rgba(255,105,180,0.55); }
-body.theme-female .is-balance .is-val { color: #ffb6d9; text-shadow: 0 0 18px rgba(255,105,180,0.7); }
-body.theme-female .is-shop-panel { background: linear-gradient(145deg, rgba(255,105,180,0.08), rgba(42,10,53,0.65)); border-color: rgba(255,105,180,0.35); }
-body.theme-female .is-shop-title { background: linear-gradient(135deg, #ff69b4, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-body.theme-female .is-shop-item { background: linear-gradient(145deg, rgba(255,105,180,0.1), rgba(42,10,53,0.65)); border-color: rgba(255,105,180,0.3); }
-body.theme-female .is-shop-item:hover { border-color: rgba(255,105,180,0.7); box-shadow: 0 12px 35px rgba(255,105,180,0.3); }
+body.theme-female .sidebar-item:hover, body.theme-female .sidebar-item:active { background: rgba(236,72,153,0.2); }
+body.theme-female .header { background: rgba(26,5,24,0.7); border-bottom-color: rgba(236,72,153,0.3); }
+body.theme-female .header-card { background: linear-gradient(135deg, rgba(236,72,153,0.25), rgba(217,70,239,0.25), rgba(255,105,180,0.15)); border-color: rgba(236,72,153,0.4); }
+body.theme-female .avatar { background: linear-gradient(135deg, #ff69b4, #d946ef); box-shadow: 0 8px 30px rgba(236,72,153,0.6), 0 0 0 3px rgba(255,255,255,0.15); }
+body.theme-female .header-btn { background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(217,70,239,0.25)); border-color: rgba(236,72,153,0.4); color: #ffd9ec; }
+body.theme-female .header-btn:hover { background: linear-gradient(135deg, rgba(236,72,153,0.4), rgba(217,70,239,0.4)); border-color: rgba(236,72,153,0.8); box-shadow: 0 8px 25px rgba(236,72,153,0.6); }
+body.theme-female .stat-card { background: linear-gradient(145deg, rgba(236,72,153,0.2), rgba(217,70,239,0.15), rgba(42,10,53,0.6)); border-color: rgba(236,72,153,0.35); }
+body.theme-female .stat-value { color: #ffd9ec; filter: drop-shadow(0 0 15px rgba(236,72,153,0.7)); }
+body.theme-female .level-fill { background: linear-gradient(90deg, #d946ef, #ff69b4, #ffb6d9, #d946ef); box-shadow: 0 0 30px rgba(236,72,153,0.8); }
+body.theme-female .score-big { background: linear-gradient(135deg, #fff 0%, #ffd9ec 30%, #ff69b4 60%, #d946ef 100%); filter: drop-shadow(0 0 40px rgba(236,72,153,0.9)); }
+body.theme-female .tap-button { background: conic-gradient(from 0deg, #ff69b4, #d946ef, #ffb6d9, #ec4899, #ff69b4); box-shadow: 0 30px 100px rgba(236,72,153,0.6), 0 0 80px rgba(217,70,239,0.5), inset 0 -10px 40px rgba(0,0,0,0.7); }
+body.theme-female .tap-button::after { background: radial-gradient(circle at 35% 25%, #d946ef, #3d1450 60%, #1a0518 100%); }
+body.theme-female .tap-button::before { border-color: rgba(236,72,153,0.5); }
+body.theme-female .tap-button span { text-shadow: 0 3px 20px rgba(255,255,255,0.7), 0 0 30px rgba(236,72,153,0.9); }
+body.theme-female .float-plus { color: #ff69b4; text-shadow: 0 0 30px rgba(255,105,180,1); }
+body.theme-female .energy-fill { background: linear-gradient(90deg, #d946ef, #ff69b4); box-shadow: 0 0 25px rgba(236,72,153,0.7); }
+body.theme-female .quick-btn { background: linear-gradient(145deg, rgba(236,72,153,0.2), rgba(217,70,239,0.15), rgba(42,10,53,0.5)); border-color: rgba(236,72,153,0.35); }
+body.theme-female .quick-btn:hover { border-color: rgba(236,72,153,0.7); box-shadow: 0 15px 40px rgba(236,72,153,0.5); }
+body.theme-female .quick-btn::before { background: linear-gradient(90deg, transparent, #ff69b4, #d946ef, transparent); }
+body.theme-female .is-balance { background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(217,70,239,0.15)); border-color: rgba(236,72,153,0.6); }
+body.theme-female .is-balance .is-val { color: #ffb6d9; }
+body.theme-female .is-shop-panel { background: linear-gradient(145deg, rgba(236,72,153,0.08), rgba(42,10,53,0.7)); border-color: rgba(236,72,153,0.35); }
+body.theme-female .is-shop-title { background: linear-gradient(135deg, #ff69b4, #d946ef); }
+body.theme-female .is-shop-item { background: linear-gradient(145deg, rgba(236,72,153,0.12), rgba(42,10,53,0.7)); border-color: rgba(236,72,153,0.3); }
+body.theme-female .is-shop-item:hover { border-color: rgba(236,72,153,0.7); box-shadow: 0 15px 40px rgba(236,72,153,0.4); }
 body.theme-female .is-shop-item .isi-price { background: linear-gradient(135deg, #ff69b4, #d946ef); color: #fff; }
-body.theme-female .btn-is { background: linear-gradient(135deg, #ff69b4, #d946ef); color: #fff; box-shadow: 0 4px 15px rgba(255,105,180,0.55); }
-body.theme-female .top-panel { background: linear-gradient(145deg, rgba(217,70,239,0.25), rgba(42,10,53,0.65)); border-color: rgba(255,105,180,0.35); }
-body.theme-female .top-panel-title { background: linear-gradient(135deg, #ffd9ec, #ff69b4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-body.theme-female .slide-dot.active { background: #ff69b4; box-shadow: 0 0 12px rgba(255,105,180,0.9); }
-body.theme-female .modal-content { border-top-color: #ff69b4; }
-body.theme-female .modal-title span { color: #ff69b4; }
-body.theme-female .modal-close { background: rgba(255,105,180,0.12); border-color: rgba(255,105,180,0.35); }
-body.theme-female .modal-close:hover { background: rgba(255,105,180,0.35); }
-body.theme-female .btn-buy { background: linear-gradient(135deg, #ff69b4, #d946ef); box-shadow: 0 4px 15px rgba(255,105,180,0.55); }
+body.theme-female .btn-is { background: linear-gradient(135deg, #ff69b4, #d946ef); color: #fff; box-shadow: 0 5px 20px rgba(236,72,153,0.6); }
+body.theme-female .top-panel { background: linear-gradient(145deg, rgba(236,72,153,0.18), rgba(42,10,53,0.7)); border-color: rgba(236,72,153,0.35); }
+body.theme-female .top-panel-title { background: linear-gradient(135deg, #fff, #ffd9ec); }
+body.theme-female .slide-dot.active { background: #ff69b4; box-shadow: 0 0 15px rgba(236,72,153,1); }
+body.theme-female .modal-content { border-image: linear-gradient(90deg, #ff69b4, #d946ef, #ec4899) 1; }
+body.theme-female .modal-title span { background: linear-gradient(135deg, #ff69b4, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+body.theme-female .modal-close { background: rgba(236,72,153,0.15); border-color: rgba(236,72,153,0.4); }
+body.theme-female .modal-close:hover { background: rgba(236,72,153,0.4); }
+body.theme-female .btn-buy { background: linear-gradient(135deg, #ff69b4, #d946ef); box-shadow: 0 5px 20px rgba(236,72,153,0.6); }
 body.theme-female .reg-btn { background: linear-gradient(135deg, #ff69b4, #d946ef); }
 body.theme-female .reg-btn.green { background: linear-gradient(135deg, #d946ef, #a855f7); }
 body.theme-female .toast { background: linear-gradient(135deg, #ff69b4, #d946ef); }
-@keyframes femGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,105,180,0.28), rgba(217,70,239,0.28)); border-color: rgba(255,105,180,0.55); }
+body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(236,72,153,0.3), rgba(217,70,239,0.3)); border-color: rgba(236,72,153,0.6); }
 </style>
 </head>
 <body>
 <div class="wave-overlay"></div>
 
-<!-- ============ МОДАЛКА БЛАГОДАРНОСТИ (тому кто пригласил) ============ -->
+<!-- МОДАЛКА БЛАГОДАРНОСТИ (рефереру) -->
 <div id="refThanksOverlay" class="ref-thanks-overlay">
   <div class="ref-thanks-card">
     <div class="ref-thanks-emoji">🎉</div>
@@ -638,7 +689,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   </div>
 </div>
 
-<!-- ============ МОДАЛКА ПРИВЕТСТВИЯ (новому игроку) ============ -->
+<!-- МОДАЛКА ПРИВЕТСТВИЯ (новому игроку) -->
 <div id="refWelcomeOverlay" class="ref-thanks-overlay">
   <div class="ref-welcome-card">
     <div class="ref-welcome-emoji">👋</div>
@@ -659,18 +710,18 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   </div>
 </div>
 
-<!-- ============ ЭКРАН АВТОРИЗАЦИИ ============ -->
+<!-- ЭКРАН АВТОРИЗАЦИИ -->
 <div id="authScreen" class="reg-screen">
   <div style="text-align:center; max-width:420px; width:100%; padding-top:20px;">
-    <div style="background: linear-gradient(135deg, rgba(230,57,70,0.18), rgba(79,172,254,0.12)); border: 1px solid rgba(230,57,70,0.35); border-radius: 20px; padding: 16px 30px; margin-bottom: 16px; display: inline-block;">
-      <img src="logo.png" alt="IngSoft" style="height:44px; display:block;" onerror="this.style.display='none'">
+    <div style="background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(139,92,246,0.15)); border: 1px solid rgba(236,72,153,0.4); border-radius: 22px; padding: 18px 32px; margin-bottom: 18px; display: inline-block; box-shadow: 0 0 40px rgba(139,92,246,0.3);">
+      <img src="logo.png" alt="IngSoft" style="height:48px; display:block;" onerror="this.style.display='none'">
     </div>
-    <h1 style="font-size:24px; margin-bottom:6px;">IngSoft Tap</h1>
-    <p style="color:#888; font-size:13px; margin-bottom:20px;">Эти данные нужны, чтобы вы могли писать в чате</p>
+    <h1 style="font-size:26px; margin-bottom:8px; background: linear-gradient(135deg, #fff, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">IngSoft Tap</h1>
+    <p style="color:#94a3b8; font-size:13px; margin-bottom:22px;">Эти данные нужны, чтобы вы могли писать в чате</p>
 
-    <div style="display:flex; gap:8px; margin-bottom:16px;">
-      <button id="tabLogin" type="button" class="reg-btn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f);">Вход</button>
-      <button id="tabRegister" type="button" class="reg-btn" style="background:transparent;border:1px solid rgba(79,172,254,0.3);">Регистрация</button>
+    <div style="display:flex; gap:8px; margin-bottom:18px;">
+      <button id="tabLogin" type="button" class="reg-btn" style="background:linear-gradient(135deg,#8b5cf6,#4facfe);">Вход</button>
+      <button id="tabRegister" type="button" class="reg-btn" style="background:transparent;border:1px solid rgba(139,92,246,0.4);">Регистрация</button>
     </div>
 
     <div id="formLogin" style="display:none;">
@@ -691,24 +742,24 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
       <input type="text" id="regFullName" class="reg-input" placeholder="ФИО полностью" maxlength="100">
 
       <div style="margin-bottom:14px;">
-        <p style="color:#8899aa; font-size:12px; margin-bottom:8px; text-align:left;">Выбери пол:</p>
+        <p style="color:#94a3b8; font-size:12px; margin-bottom:10px; text-align:left; font-weight: 700;">Выбери пол:</p>
         <div style="display:flex; gap:10px;">
-          <button type="button" onclick="selectGender('male')" id="genderMale" style="flex:1; padding:14px; border-radius:14px; border:2px solid rgba(79,172,254,0.3); background:rgba(10,10,15,0.7); color:#fff; font-size:14px; font-weight:700; cursor:pointer;">
+          <button type="button" onclick="selectGender('male')" id="genderMale" style="flex:1; padding:15px; border-radius:14px; border:2px solid rgba(139,92,246,0.3); background:rgba(10,5,24,0.75); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition: all 0.25s;">
             👨 Мужской
           </button>
-          <button type="button" onclick="selectGender('female')" id="genderFemale" style="flex:1; padding:14px; border-radius:14px; border:2px solid rgba(255,105,180,0.3); background:rgba(10,10,15,0.7); color:#fff; font-size:14px; font-weight:700; cursor:pointer;">
+          <button type="button" onclick="selectGender('female')" id="genderFemale" style="flex:1; padding:15px; border-radius:14px; border:2px solid rgba(236,72,153,0.3); background:rgba(10,5,24,0.75); color:#fff; font-size:14px; font-weight:700; cursor:pointer; transition: all 0.25s;">
             👩 Женский
           </button>
         </div>
       </div>
 
-      <p style="color:#666; font-size:11px; margin:10px 0;">Регистрируясь, вы соглашаетесь с правилами игры.</p>
+      <p style="color:#64748b; font-size:11px; margin:10px 0;">Регистрируясь, вы соглашаетесь с правилами игры.</p>
       <button id="btnDoRegister" type="button" class="reg-btn green">✅ Зарегистрироваться</button>
     </div>
   </div>
 </div>
 
-<!-- ============ ОСНОВНОЕ ПРИЛОЖЕНИЕ ============ -->
+<!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
 <div class="app" id="app" style="display:none;">
 
 <aside class="sidebar" id="sidebar">
@@ -824,11 +875,12 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
       <div class="top-panel-title" id="topPanelTitle">♛ Топ-10 игроков</div>
       <div class="top-panel-sub">Лучшие тапальщики IngSoft</div>
     </div>
-    <button class="btn-buy" style="padding:6px 12px;font-size:11px;" onclick="openModal('leaderboard')">Все</button>
+    <button class="btn-buy" style="padding:7px 14px;font-size:11px;" onclick="openModal('leaderboard')">Все</button>
   </div>
   <div class="top-list" id="topList"></div>
 </div>
 
+<!-- MODALS (все существующие) -->
 <div class="modal" id="modal-games"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">⬢ <span>Игры на тапы</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
   <div class="games-grid" id="gamesGrid"></div>
@@ -839,7 +891,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="roulette-wheel" id="rouletteWheel"></div>
     <div class="game-result" id="rouletteResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinRoulette()">Крутить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="spinRoulette()">Крутить</button>
   </div>
 </div></div>
 
@@ -848,7 +900,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="diceValue">◆</div>
     <div class="game-result" id="diceResult">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="rollDice()">Бросить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="rollDice()">Бросить</button>
   </div>
 </div></div>
 
@@ -858,8 +910,8 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     <div class="dice" id="coinValue">○</div>
     <div class="game-result" id="coinResult">Орёл или решка?</div>
     <div style="display:flex;gap:10px;">
-      <button class="btn-buy" style="padding:12px 20px;" onclick="flipCoin('heads')">Орёл</button>
-      <button class="btn-buy" style="padding:12px 20px;" onclick="flipCoin('tails')">Решка</button>
+      <button class="btn-buy" style="padding:14px 22px;" onclick="flipCoin('heads')">Орёл</button>
+      <button class="btn-buy" style="padding:14px 22px;" onclick="flipCoin('tails')">Решка</button>
     </div>
   </div>
 </div></div>
@@ -869,7 +921,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div style="font-size:60px;letter-spacing:20px;" id="slotsDisplay">◇◇◇</div>
     <div class="game-result" id="slotsResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinSlots()">Крутить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="spinSlots()">Крутить</button>
   </div>
 </div></div>
 
@@ -878,7 +930,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="basketDisplay">◉</div>
     <div class="game-result" id="basketResult">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="throwBasket()">Бросить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="throwBasket()">Бросить</button>
   </div>
 </div></div>
 
@@ -887,7 +939,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="mineDisplay">◆</div>
     <div class="game-result" id="mineResult">Копай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="digMine()">Копать</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="digMine()">Копать</button>
   </div>
 </div></div>
 
@@ -896,7 +948,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="wheelDisplay">◉</div>
     <div class="game-result" id="wheelResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinWheel()">Крутить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="spinWheel()">Крутить</button>
   </div>
 </div></div>
 
@@ -905,7 +957,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="dartsDisplay">◎</div>
     <div class="game-result" id="dartsResult">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playDarts()">Бросить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playDarts()">Бросить</button>
   </div>
 </div></div>
 
@@ -914,7 +966,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="fishingDisplay">◇</div>
     <div class="game-result" id="fishingResult">Закинь удочку!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playFishing()">Закинуть</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playFishing()">Закинуть</button>
   </div>
 </div></div>
 
@@ -923,7 +975,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="cardsDisplay">◈</div>
     <div class="game-result" id="cardsResult">Тяни карту!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playCards()">Тянуть</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playCards()">Тянуть</button>
   </div>
 </div></div>
 
@@ -932,7 +984,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="shellsDisplay">◐</div>
     <div class="game-result" id="shellsResult">Где шарик?</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playShells()">Угадать</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playShells()">Угадать</button>
   </div>
 </div></div>
 
@@ -941,7 +993,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="crapsDisplay">◆◆</div>
     <div class="game-result" id="crapsResult">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playCraps()">Бросить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playCraps()">Бросить</button>
   </div>
 </div></div>
 
@@ -950,7 +1002,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="archeryDisplay">➤</div>
     <div class="game-result" id="archeryResult">Натяни тетиву!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playArchery()">Стрелять</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playArchery()">Стрелять</button>
   </div>
 </div></div>
 
@@ -959,7 +1011,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="penaltyDisplay">◉</div>
     <div class="game-result" id="penaltyResult">Бей!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playPenalty()">Ударить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playPenalty()">Ударить</button>
   </div>
 </div></div>
 
@@ -968,7 +1020,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="basket3Display">◉</div>
     <div class="game-result" id="basket3Result">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playBasket3()">Бросить</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playBasket3()">Бросить</button>
   </div>
 </div></div>
 
@@ -977,7 +1029,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="minesDisplay">✸</div>
     <div class="game-result" id="minesResult">Открой клетку!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playMines()">Открыть</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playMines()">Открыть</button>
   </div>
 </div></div>
 
@@ -986,7 +1038,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="game-area">
     <div class="dice" id="pokerDisplay">◈</div>
     <div class="game-result" id="pokerResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playPoker()">Раздать</button>
+    <button class="btn-buy" style="padding:14px 34px;font-size:15px;" onclick="playPoker()">Раздать</button>
   </div>
 </div></div>
 
@@ -1012,31 +1064,31 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 
 <div class="modal" id="modal-referral"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">❖ <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
-  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">Приглашай друзей — получай IS за каждого.<br><span style="color:#22c55e;font-size:11px;">✓ IS начисляется автоматически сразу после регистрации друга</span></p>
+  <p style="color:#94a3b8;font-size:13px;margin-bottom:12px;text-align:center;">Приглашай друзей — получай IS за каждого.<br><span style="color:#22c55e;font-size:11px;">✓ IS начисляется автоматически сразу после регистрации друга</span></p>
 
-  <div style="background:linear-gradient(135deg,rgba(79,172,254,0.12),rgba(30,58,95,0.25)); border:1px solid rgba(79,172,254,0.35); border-radius:12px; padding:12px; margin-bottom:12px;">
-    <div style="font-size:11px; color:#8899aa; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;">Твоя ссылка:</div>
-    <div style="word-break:break-all; font-size:11px; color:#4facfe; font-family:monospace; padding:8px; background:rgba(10,10,15,0.55); border-radius:8px; min-height: 32px;" id="refLink">—</div>
+  <div style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(30,58,95,0.25)); border:1px solid rgba(139,92,246,0.4); border-radius:14px; padding:14px; margin-bottom:14px;">
+    <div style="font-size:11px; color:#94a3b8; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; font-weight:700;">Твоя ссылка:</div>
+    <div style="word-break:break-all; font-size:11px; color:#a78bfa; font-family:monospace; padding:10px; background:rgba(10,5,24,0.6); border-radius:10px; min-height: 34px;" id="refLink">—</div>
   </div>
 
-  <button class="btn-buy" style="width:100%;padding:12px;" onclick="copyRefLink()">📋 Копировать ссылку</button>
-  <button class="btn-buy green" style="width:100%;padding:12px;margin-top:8px;" onclick="shareRefLink()">📤 Поделиться с другом</button>
+  <button class="btn-buy" style="width:100%;padding:14px;" onclick="copyRefLink()">📋 Копировать ссылку</button>
+  <button class="btn-buy green" style="width:100%;padding:14px;margin-top:10px;" onclick="shareRefLink()">📤 Поделиться с другом</button>
 
-  <div style="margin-top:16px; text-align:center; font-size:13px; color:#888;">
-    Приглашено: <span id="refCount" style="color:#ffd700; font-weight:800; font-size:16px;">0</span> друзей
+  <div style="margin-top:18px; text-align:center; font-size:13px; color:#94a3b8;">
+    Приглашено: <span id="refCount" style="color:#ffd700; font-weight:800; font-size:18px; text-shadow: 0 0 15px rgba(255,215,0,0.6);">0</span> друзей
   </div>
 
-  <div style="background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(22,163,74,0.06)); border:1px solid rgba(34,197,94,0.35); border-radius:14px; padding:14px; margin-top:16px;">
-    <div style="font-size:12px; color:#8899aa; margin-bottom:8px;">◈ Заработано всего:</div>
-    <div style="font-size:24px; font-weight:900; color:#22c55e; text-shadow:0 0 18px rgba(34,197,94,0.6);" id="refEarnedTotal">0 IS</div>
-    <div style="font-size:11px; color:#667788; margin-top:4px;">+ Можно забрать: <b style="color:#ffd700;" id="refClaimable">0 IS</b></div>
+  <div style="background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(22,163,74,0.08)); border:1px solid rgba(34,197,94,0.4); border-radius:16px; padding:16px; margin-top:18px;">
+    <div style="font-size:12px; color:#94a3b8; margin-bottom:8px;">◈ Заработано всего:</div>
+    <div style="font-size:26px; font-weight:900; color:#22c55e; text-shadow:0 0 20px rgba(34,197,94,0.7);" id="refEarnedTotal">0 IS</div>
+    <div style="font-size:11px; color:#64748b; margin-top:6px;">+ Можно забрать: <b style="color:#ffd700;" id="refClaimable">0 IS</b></div>
   </div>
 
-  <button id="btnClaimRef" onclick="claimReferralReward()" class="btn-buy green" style="width:100%;padding:14px;margin-top:10px;font-size:14px;font-weight:800;" disabled>
+  <button id="btnClaimRef" onclick="claimReferralReward()" class="btn-buy green" style="width:100%;padding:16px;margin-top:12px;font-size:14px;font-weight:800;" disabled>
     ✧ Забрать награду
   </button>
 
-  <div style="font-size:11px; color:#8899aa; margin-top:14px; text-align:center; line-height:1.6;">
+  <div style="font-size:11px; color:#94a3b8; margin-top:16px; text-align:center; line-height:1.7;">
     ▤ <b style="color:#ffd700;">Таблица наград:</b><br>
     1 друг — 100 IS<br>
     2 друга — 150 IS<br>
@@ -1046,32 +1098,32 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     100+ друзей — по 300 IS
   </div>
 
-  <div style="margin-top:20px; font-size:13px; font-weight:800; color:#4facfe; margin-bottom:8px;">▤ Твои друзья:</div>
+  <div style="margin-top:22px; font-size:13px; font-weight:800; color:#a78bfa; margin-bottom:10px;">▤ Твои друзья:</div>
   <div id="referralList" style="margin-top:8px; max-height:280px; overflow-y:auto;">
-    <p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Загрузка...</p>
+    <p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</p>
   </div>
 </div></div>
 
 <div class="modal" id="modal-referral-bonus"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">✧ <span>Бонус за рефералку</span></div><button class="modal-close" onclick="closeModal('referral-bonus')">×</button></div>
 
-  <p style="color:#b8a060; font-size:12px; text-align:center; margin-bottom:16px;">Чем больше друзей — тем больше награда за каждого!</p>
+  <p style="color:#b8a060; font-size:12px; text-align:center; margin-bottom:18px;">Чем больше друзей — тем больше награда за каждого!</p>
 
-  <div style="background:linear-gradient(135deg,rgba(255,215,0,0.18),rgba(255,140,0,0.1)); border:1px solid rgba(255,215,0,0.55); border-radius:16px; padding:16px; margin-bottom:16px; text-align:center; box-shadow:0 0 35px rgba(255,215,0,0.25);">
-    <div style="font-size:11px; color:#b8a060; text-transform:uppercase; letter-spacing:2px;">Приглашено друзей</div>
-    <div style="font-size:44px; font-weight:900; color:#ffd700; margin:6px 0; text-shadow:0 0 28px rgba(255,215,0,0.7);" id="bonusFriendCount">0<span style="font-size:22px; color:#b8a060;"> / 100</span></div>
-    <div style="font-size:12px; color:#8899aa;">Заработано: <b style="color:#ffd700; font-size:15px;" id="bonusTotalEarned">0 IS</b></div>
+  <div style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.12)); border:1px solid rgba(255,215,0,0.6); border-radius:18px; padding:18px; margin-bottom:18px; text-align:center; box-shadow:0 0 40px rgba(255,215,0,0.3);">
+    <div style="font-size:11px; color:#b8a060; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Приглашено друзей</div>
+    <div style="font-size:48px; font-weight:900; color:#ffd700; margin:8px 0; text-shadow:0 0 30px rgba(255,215,0,0.8);" id="bonusFriendCount">0<span style="font-size:22px; color:#b8a060;"> / 100</span></div>
+    <div style="font-size:12px; color:#94a3b8;">Заработано: <b style="color:#ffd700; font-size:16px;" id="bonusTotalEarned">0 IS</b></div>
   </div>
 
-  <div style="background:rgba(10,10,15,0.75); border-radius:14px; overflow:hidden; height:28px; margin-bottom:20px; border:1px solid rgba(255,215,0,0.35); position:relative;">
-    <div id="bonusProgressFill" style="height:100%; background:linear-gradient(90deg,#ff8c00,#ffd700); transition:width 0.5s; box-shadow:0 0 25px rgba(255,215,0,0.7); width:0%;"></div>
-    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:900; text-shadow:0 1px 4px rgba(0,0,0,0.9);" id="bonusProgressText">0 / 100</div>
+  <div style="background:rgba(10,5,24,0.8); border-radius:14px; overflow:hidden; height:30px; margin-bottom:22px; border:1px solid rgba(255,215,0,0.4); position:relative;">
+    <div id="bonusProgressFill" style="height:100%; background:linear-gradient(90deg,#ff8c00,#ffd700); transition:width 0.5s; box-shadow:0 0 25px rgba(255,215,0,0.8); width:0%;"></div>
+    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:900; text-shadow:0 1px 5px rgba(0,0,0,1);" id="bonusProgressText">0 / 100</div>
   </div>
 
-  <div style="font-size:14px; font-weight:800; color:#4facfe; margin-bottom:10px;">▤ Таблица наград:</div>
+  <div style="font-size:14px; font-weight:800; color:#a78bfa; margin-bottom:12px;">▤ Таблица наград:</div>
   <div id="bonusTable"></div>
 
-  <p style="color:#8899aa; font-size:11px; text-align:center; margin-top:14px; line-height:1.6;">
+  <p style="color:#94a3b8; font-size:11px; text-align:center; margin-top:16px; line-height:1.7;">
     ✦ За каждого друга IS приходит автоматически<br>
     сразу после того, как друг зарегистрируется
   </p>
@@ -1090,14 +1142,14 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 <div class="modal" id="modal-profile"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">◉ <span>Профиль</span></div><button class="modal-close" onclick="closeModal('profile')">×</button></div>
   <div id="profileContent"></div>
-  <button onclick="logout()" style="width:100%; padding:14px; margin-top:14px; border-radius:14px; border:1px solid rgba(230,57,70,0.45); background:linear-gradient(135deg, rgba(230,57,70,0.18), rgba(230,57,70,0.06)); color:#e63946; font-size:15px; font-weight:800; cursor:pointer;">
+  <button onclick="logout()" style="width:100%; padding:16px; margin-top:16px; border-radius:16px; border:1px solid rgba(230,57,70,0.5); background:linear-gradient(135deg, rgba(230,57,70,0.2), rgba(230,57,70,0.08)); color:#e63946; font-size:15px; font-weight:800; cursor:pointer; transition: all 0.25s;">
     ⏻ Выйти из аккаунта
   </button>
 </div></div>
 
 <div class="modal" id="modal-isTasks"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">◈ <span>Заработать IS</span></div><button class="modal-close" onclick="closeModal('isTasks')">×</button></div>
-  <p style="color:#b8a060;font-size:12px;text-align:center;margin-bottom:14px;">Выполняй задания — получай IS</p>
+  <p style="color:#b8a060;font-size:12px;text-align:center;margin-bottom:16px;">Выполняй задания — получай IS</p>
   <div id="isTasksList" class="is-tasks-grid"></div>
 </div></div>
 
@@ -1106,27 +1158,27 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     <div class="modal-title">✎ <span>Промокоды IngSoft</span></div>
     <button class="modal-close" onclick="closeModal('promocodes')">×</button>
   </div>
-  <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:14px;">
-    <button onclick="switchPromoTab(1)" id="promoTab1" style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#0a0a0f; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:pointer; box-shadow:0 4px 15px rgba(255,215,0,0.5);">IngSoft</button>
-    <button onclick="switchPromoTab(2)" id="promoTab2" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button onclick="switchPromoTab(3)" id="promoTab3" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button onclick="switchPromoTab(4)" id="promoTab4" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button onclick="switchPromoTab(5)" id="promoTab5" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button onclick="switchPromoTab(6)" id="promoTab6" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button onclick="switchPromoTab(7)" id="promoTab7" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button onclick="switchPromoTab(8)" id="promoTab8" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button onclick="switchPromoTab(9)" id="promoTab9" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button onclick="switchPromoTab(10)" id="promoTab10" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+  <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:16px;">
+    <button onclick="switchPromoTab(1)" id="promoTab1" style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#0a0518; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:pointer; box-shadow:0 5px 18px rgba(255,215,0,0.5);">IngSoft</button>
+    <button onclick="switchPromoTab(2)" id="promoTab2" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(3)" id="promoTab3" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(4)" id="promoTab4" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(5)" id="promoTab5" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(6)" id="promoTab6" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(7)" id="promoTab7" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(8)" id="promoTab8" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(9)" id="promoTab9" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(10)" id="promoTab10" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
   </div>
-  <div id="promoContent" style="background:linear-gradient(145deg, rgba(255,215,0,0.1), rgba(15,21,32,0.65)); border:1px solid rgba(255,215,0,0.3); border-radius:14px; padding:16px; margin-bottom:14px; font-size:13px; line-height:1.7; color:#e8e4dc;">
-    <div style="text-align:center; font-size:16px; font-weight:900; color:#ffd700; margin-bottom:12px;">✎ Промокоды IngSoft</div>
-    <p style="margin-bottom:10px;">Промокоды на заказ на сайте <b style="color:#ffd700;">IngSoft</b> <span style="color:#888;">(ссылка)</span></p>
+  <div id="promoContent" style="background:linear-gradient(145deg, rgba(255,215,0,0.1), rgba(15,12,41,0.7)); border:1px solid rgba(255,215,0,0.35); border-radius:16px; padding:18px; margin-bottom:16px; font-size:13px; line-height:1.7; color:#e0e7ff;">
+    <div style="text-align:center; font-size:16px; font-weight:900; color:#ffd700; margin-bottom:14px;">✎ Промокоды IngSoft</div>
+    <p style="margin-bottom:10px;">Промокоды на заказ на сайте <b style="color:#ffd700;">IngSoft</b> <span style="color:#64748b;">(ссылка)</span></p>
     <p style="margin-bottom:10px;">Скидка будет <b>до 5%</b>.</p>
-    <p style="color:#888; font-size:11px;">Скоро тут появится ссылка на сайт IngSoft.</p>
+    <p style="color:#64748b; font-size:11px;">Скоро тут появится ссылка на сайт IngSoft.</p>
   </div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
-    <button onclick="switchPromoView('earn')" id="promoViewEarn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f); border:none; color:#fff; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(79,172,254,0.45);">◈ Заработать</button>
-    <button onclick="switchPromoView('wallet')" id="promoViewWallet" style="background:transparent; border:1px solid rgba(79,172,254,0.35); color:#8899aa; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer;">◐ Кошелёк</button>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+    <button onclick="switchPromoView('earn')" id="promoViewEarn" style="background:linear-gradient(135deg,#8b5cf6,#4facfe); border:none; color:#fff; padding:13px 8px; border-radius:14px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 6px 22px rgba(139,92,246,0.5);">◈ Заработать</button>
+    <button onclick="switchPromoView('wallet')" id="promoViewWallet" style="background:transparent; border:1px solid rgba(139,92,246,0.4); color:#94a3b8; padding:13px 8px; border-radius:14px; font-size:12px; font-weight:800; cursor:pointer;">◐ Кошелёк</button>
   </div>
   <div id="promoEarnView"><div id="promoEarnList"></div></div>
   <div id="promoWalletView" style="display:none;"><div id="promoWalletList"></div></div>
@@ -1134,9 +1186,9 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 
 <div class="modal" id="modal-promo"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">✎ <span>Промокод</span></div><button class="modal-close" onclick="closeModal('promo')">×</button></div>
-  <p style="color:#888;font-size:13px;margin-bottom:14px;text-align:center;">Введи промокод и получи награду</p>
+  <p style="color:#94a3b8;font-size:13px;margin-bottom:16px;text-align:center;">Введи промокод и получи награду</p>
   <input type="text" id="promoInput" class="promo-input" placeholder="ВВЕДИ КОД" maxlength="20">
-  <button class="btn-buy green" style="width:100%;padding:14px;font-size:15px;" onclick="redeemPromo()">✧ Активировать</button>
+  <button class="btn-buy green" style="width:100%;padding:16px;font-size:15px;" onclick="redeemPromo()">✧ Активировать</button>
   <div id="promoHistory" style="margin-top:16px;"></div>
 </div></div>
 
@@ -1146,17 +1198,17 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     <div class="wallet-balance-val" id="walletVal">0 ₽</div>
     <div class="wallet-balance-lbl">Реальный баланс</div>
   </div>
-  <p style="color:#888;font-size:12px;text-align:center;margin-bottom:16px;">Раздел временно отключён. Скоро тут будет что-то интересное!</p>
+  <p style="color:#94a3b8;font-size:12px;text-align:center;margin-bottom:16px;">Раздел временно отключён. Скоро тут будет что-то интересное!</p>
   <div class="profile-row"><span>К выводу</span><span id="walletAvail">0 ₽</span></div>
   <div class="profile-row"><span>В ожидании</span><span id="walletPending">0 ₽</span></div>
   <div class="profile-row"><span>Заработано всего</span><span id="walletTotal">0 ₽</span></div>
-  <button class="btn-buy blue" style="width:100%;padding:14px;margin-top:14px;font-size:14px;" onclick="showToast('Вывод станет доступен позже')">↓ Вывести</button>
+  <button class="btn-buy blue" style="width:100%;padding:16px;margin-top:16px;font-size:14px;" onclick="showToast('Вывод станет доступен позже')">↓ Вывести</button>
 </div></div>
 
 <div class="modal" id="modal-about"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">ⓘ <span>О игре</span></div><button class="modal-close" onclick="closeModal('about')">×</button></div>
-  <p style="color:#ccc;line-height:1.7;font-size:13px;">
-    <b style="color:#e63946;">IngSoft Tap</b> — тапалка внутри Telegram.<br><br>
+  <p style="color:#cbd5e1;line-height:1.8;font-size:13px;">
+    <b style="color:#ec4899;">IngSoft Tap</b> — тапалка внутри Telegram.<br><br>
     • Тапай — получай очки<br>
     • Покупай бусты — пассивный доход<br>
     • Играй в мини-игры<br>
@@ -1170,7 +1222,9 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 
 </main>
 </div>
+
 <script>
+// ============ ВЕСЬ JS-КОД ИЗ ПРЕДЫДУЩЕЙ ВЕРСИИ ============
 const tg = window.Telegram?.WebApp;
 let telegramId=null, username=null, firstName=null;
 let score=0, energy=1000, maxEnergy=1000, multiplier=1;
@@ -1471,11 +1525,11 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
   const newLevel = Math.floor(score / 10000) + 1;
   if (newLevel > level) { level = newLevel; showToast('🎉 Уровень ' + level + '!'); }
   updateUI();
-  const el = document.getElementById('scoreBig'); el.classList.add('pop'); setTimeout(() => el.classList.remove('pop'), 100);
+  const el = document.getElementById('scoreBig'); el.classList.add('pop'); setTimeout(() => el.classList.remove('pop'), 150);
   const rect = document.getElementById('tapContainer').getBoundingClientRect();
   const plus = document.createElement('div'); plus.className = 'float-plus'; plus.textContent = '+' + multiplier;
   plus.style.left = (e.clientX - rect.left) + 'px'; plus.style.top = (e.clientY - rect.top) + 'px';
-  document.getElementById('tapContainer').appendChild(plus); setTimeout(() => plus.remove(), 1000);
+  document.getElementById('tapContainer').appendChild(plus); setTimeout(() => plus.remove(), 1200);
   if (tg) tg.HapticFeedback?.impactOccurred('light');
   scheduleSave();
 });
@@ -1607,7 +1661,7 @@ function loadISShop() {
     balEl.textContent = isBalance;
     if (isBalance < 0) {
       balEl.style.color = '#ff4444';
-      balEl.style.textShadow = '0 0 15px rgba(255,68,68,0.8)';
+      balEl.style.textShadow = '0 0 20px rgba(255,68,68,0.9)';
     } else {
       balEl.style.color = '';
       balEl.style.textShadow = '';
@@ -1764,18 +1818,18 @@ function selectGender(g) {
   const maleBtn = document.getElementById('genderMale');
   const femaleBtn = document.getElementById('genderFemale');
   if (g === 'male') {
-    maleBtn.style.border = '2px solid #4facfe';
-    maleBtn.style.background = 'linear-gradient(135deg, rgba(79,172,254,0.25), rgba(30,58,95,0.4))';
-    maleBtn.style.boxShadow = '0 0 20px rgba(79,172,254,0.5)';
-    femaleBtn.style.border = '2px solid rgba(255,105,180,0.3)';
-    femaleBtn.style.background = 'rgba(10,10,15,0.7)';
+    maleBtn.style.border = '2px solid #8b5cf6';
+    maleBtn.style.background = 'linear-gradient(135deg, rgba(139,92,246,0.3), rgba(30,58,95,0.4))';
+    maleBtn.style.boxShadow = '0 0 25px rgba(139,92,246,0.6)';
+    femaleBtn.style.border = '2px solid rgba(236,72,153,0.3)';
+    femaleBtn.style.background = 'rgba(10,5,24,0.75)';
     femaleBtn.style.boxShadow = 'none';
   } else {
-    femaleBtn.style.border = '2px solid #ff69b4';
-    femaleBtn.style.background = 'linear-gradient(135deg, rgba(255,105,180,0.25), rgba(217,70,239,0.3))';
-    femaleBtn.style.boxShadow = '0 0 20px rgba(255,105,180,0.5)';
-    maleBtn.style.border = '2px solid rgba(79,172,254,0.3)';
-    maleBtn.style.background = 'rgba(10,10,15,0.7)';
+    femaleBtn.style.border = '2px solid #ec4899';
+    femaleBtn.style.background = 'linear-gradient(135deg, rgba(236,72,153,0.3), rgba(217,70,239,0.3))';
+    femaleBtn.style.boxShadow = '0 0 25px rgba(236,72,153,0.6)';
+    maleBtn.style.border = '2px solid rgba(139,92,246,0.3)';
+    maleBtn.style.background = 'rgba(10,5,24,0.75)';
     maleBtn.style.boxShadow = 'none';
   }
 }
@@ -1799,13 +1853,12 @@ function showTab(tab) {
   const isLogin = (tab === 'login');
   document.getElementById('formLogin').style.display = isLogin ? 'block' : 'none';
   document.getElementById('formRegister').style.display = isLogin ? 'none' : 'block';
-  document.getElementById('tabLogin').style.background = isLogin ? 'linear-gradient(135deg,#4facfe,#1e3a5f)' : 'transparent';
-  document.getElementById('tabLogin').style.border = isLogin ? 'none' : '1px solid rgba(79,172,254,0.3)';
-  document.getElementById('tabRegister').style.background = isLogin ? 'transparent' : 'linear-gradient(135deg,#4facfe,#1e3a5f)';
-  document.getElementById('tabRegister').style.border = isLogin ? '1px solid rgba(79,172,254,0.3)' : 'none';
+  document.getElementById('tabLogin').style.background = isLogin ? 'linear-gradient(135deg,#8b5cf6,#4facfe)' : 'transparent';
+  document.getElementById('tabLogin').style.border = isLogin ? 'none' : '1px solid rgba(139,92,246,0.4)';
+  document.getElementById('tabRegister').style.background = isLogin ? 'transparent' : 'linear-gradient(135deg,#8b5cf6,#4facfe)';
+  document.getElementById('tabRegister').style.border = isLogin ? '1px solid rgba(139,92,246,0.4)' : 'none';
 }
 
-// ✨ МОДАЛКА БЛАГОДАРНОСТИ (рефереру)
 function showRefThanks(friendNick, rewardAmount) {
   const overlay = document.getElementById('refThanksOverlay');
   const nickEl = document.getElementById('refThanksNick');
@@ -1835,7 +1888,6 @@ function showRefThanks(friendNick, rewardAmount) {
   }
   requestAnimationFrame(animate);
 
-  // Авто-закрытие через 5 секунд
   setTimeout(() => {
     if (overlay.classList.contains('show')) closeRefThanks();
   }, 5200);
@@ -1851,7 +1903,6 @@ function closeRefThanks() {
   }, 400);
 }
 
-// ✨ МОДАЛКА ПРИВЕТСТВИЯ (новому игроку)
 function showRefWelcome(inviterNick) {
   const overlay = document.getElementById('refWelcomeOverlay');
   const nickEl = document.getElementById('refWelcomeNick');
@@ -1870,7 +1921,6 @@ function closeRefWelcome() {
   }, 400);
 }
 
-// РЕГИСТРАЦИЯ
 async function doRegister() {
   const login = document.getElementById('regLogin').value.trim();
   const password = document.getElementById('regPassword').value;
@@ -1892,7 +1942,6 @@ async function doRegister() {
   if (!selectedGender) { showToast('Выбери пол'); return; }
 
   const inviterNick = referrerNickname;
-  console.log('📤 Отправляем регистрацию:', { login, nickname: nick, phone, region, inviter: inviterNick });
 
   try {
     const resp = await fetch(API_URL + '/register', {
@@ -1907,10 +1956,7 @@ async function doRegister() {
       })
     });
 
-    console.log('📥 Ответ сервера:', resp.status, resp.statusText);
     const text = await resp.text();
-    console.log('📥 Тело ответа:', text);
-
     let data;
     try { data = JSON.parse(text); }
     catch (e) { showToast('✗ Сервер вернул не JSON: ' + text.slice(0, 80)); return; }
@@ -1919,34 +1965,27 @@ async function doRegister() {
 
     localStorage.removeItem('ingsoft_referrer_nickname');
     localStorage.removeItem('ingsoft_referrer_id');
-
     localStorage.setItem('last_login', login);
 
-    // ✅ Показываем приветственную модалку если пришёл по рефералке
     if (inviterNick) {
       showRefWelcome(inviterNick);
     } else {
       showRegisterSuccessModal(nick, login);
     }
 
-    // Сбрасываем реферера
     referrerNickname = null;
     referrerId = null;
 
   } catch (e) {
-    console.error('✗ Ошибка:', e);
     showToast('✗ Ошибка соединения: ' + e.message);
   }
 }
 
-// ВХОД
 async function doLogin() {
   const login = document.getElementById('loginLogin').value.trim();
   const password = document.getElementById('loginPassword').value;
 
   if (!login || !password) { showToast('Введи логин и пароль'); return; }
-
-  console.log('📤 Отправляем вход:', { login });
 
   try {
     const resp = await fetch(API_URL + '/login', {
@@ -1955,22 +1994,12 @@ async function doLogin() {
       body: JSON.stringify({login, password})
     });
 
-    console.log('📥 Ответ сервера:', resp.status, resp.statusText);
     const text = await resp.text();
-    console.log('📥 Тело ответа:', text);
-
     let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      showToast('✗ Сервер вернул не JSON: ' + text.slice(0, 80));
-      return;
-    }
+    try { data = JSON.parse(text); }
+    catch (e) { showToast('✗ Сервер вернул не JSON: ' + text.slice(0, 80)); return; }
 
-    if (!resp.ok || data.error) {
-      showToast('✗ ' + (data.error || 'Ошибка входа'));
-      return;
-    }
+    if (!resp.ok || data.error) { showToast('✗ ' + (data.error || 'Ошибка входа')); return; }
 
     const u = data.user;
     currentToken = u.token;
@@ -1983,9 +2012,7 @@ async function doLogin() {
     phone = u.phone;
     fullName = u.full_name;
     region = u.region;
-    if (!telegramId || telegramId === 999999999) {
-      telegramId = u.telegram_id || telegramId;
-    }
+    if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
     score = u.score || 0;
     energy = u.energy ?? 500;
     maxEnergy = u.max_energy ?? 500;
@@ -2014,14 +2041,9 @@ async function doLogin() {
     enterGame();
     showToast('🎉 С возвращением, ' + nickname + '!');
     setTimeout(() => {
-      loadReferral().then(() => {
-        // После первой загрузки сохраняем текущее количество, чтобы
-        // не показать старые уведомления
-        lastKnownReferralCount = myReferrals.length;
-      });
+      loadReferral().then(() => { lastKnownReferralCount = myReferrals.length; });
     }, 800);
   } catch (e) {
-    console.error('✗ Ошибка:', e);
     showToast('✗ Ошибка соединения: ' + e.message);
   }
 }
@@ -2029,17 +2051,16 @@ async function doLogin() {
 function showRegisterSuccessModal(nickname, login) {
   const old = document.getElementById('modal-regSuccess');
   if (old) old.remove();
-
   const modal = document.createElement('div');
   modal.id = 'modal-regSuccess';
-  modal.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(5,5,10,0.95);z-index:10000;align-items:center;justify-content:center;backdrop-filter:blur(12px);padding:20px;';
-  modal.innerHTML = '<div style="background: linear-gradient(180deg, #0f1520 0%, #0a0a0f 100%); border-radius: 24px; padding: 30px 24px; max-width: 420px; width: 100%; text-align: center; border-top: 3px solid #22c55e; box-shadow: 0 0 70px rgba(34,197,94,0.5);">' +
-      '<div style="font-size:64px; margin-bottom:16px;">🎉</div>' +
-      '<div style="font-size:22px; font-weight:900; color:#22c55e; margin-bottom:12px;">Регистрация прошла успешно!</div>' +
-      '<div style="font-size:15px; color:#ccc; line-height:1.6; margin-bottom:20px;">Добро пожаловать, <b style="color:#fff;">' + nickname + '</b>!<br>Теперь ты можешь зайти в свой аккаунт.</div>' +
-      '<div style="background:rgba(79,172,254,0.12); border:1px solid rgba(79,172,254,0.35); border-radius:12px; padding:12px; margin-bottom:20px; font-size:13px; color:#e8f4ff;">Твой логин: <b style="color:#4facfe; letter-spacing:1px;">' + login + '</b></div>' +
-      '<button onclick="goToLogin()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(34,197,94,0.5); margin-bottom:10px;">🔓 Зайти в аккаунт</button>' +
-      '<button onclick="closeRegSuccess()" style="width:100%; padding:12px; border-radius:12px; border:1px solid rgba(79,172,254,0.35); background:transparent; color:#8899aa; font-size:14px; cursor:pointer;">Закрыть</button>' +
+  modal.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(5,2,15,0.95);z-index:10000;align-items:center;justify-content:center;backdrop-filter:blur(15px);padding:20px;';
+  modal.innerHTML = '<div style="background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%); border-radius: 26px; padding: 32px 26px; max-width: 420px; width: 100%; text-align: center; border-top: 3px solid #22c55e; box-shadow: 0 0 80px rgba(34,197,94,0.55);">' +
+      '<div style="font-size:68px; margin-bottom:16px;">🎉</div>' +
+      '<div style="font-size:23px; font-weight:900; color:#22c55e; margin-bottom:12px;">Регистрация прошла успешно!</div>' +
+      '<div style="font-size:15px; color:#cbd5e1; line-height:1.6; margin-bottom:22px;">Добро пожаловать, <b style="color:#fff;">' + nickname + '</b>!<br>Теперь ты можешь зайти в свой аккаунт.</div>' +
+      '<div style="background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4); border-radius:14px; padding:14px; margin-bottom:22px; font-size:13px; color:#e0e7ff;">Твой логин: <b style="color:#a78bfa; letter-spacing:2px;">' + login + '</b></div>' +
+      '<button onclick="goToLogin()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 10px 35px rgba(34,197,94,0.5); margin-bottom:10px;">🔓 Зайти в аккаунт</button>' +
+      '<button onclick="closeRegSuccess()" style="width:100%; padding:12px; border-radius:12px; border:1px solid rgba(139,92,246,0.4); background:transparent; color:#94a3b8; font-size:14px; cursor:pointer;">Закрыть</button>' +
     '</div>';
   document.body.appendChild(modal);
   modal.dataset.login = login;
@@ -2049,33 +2070,26 @@ function goToLogin() {
   const modal = document.getElementById('modal-regSuccess');
   const login = modal?.dataset?.login || '';
   if (modal) modal.remove();
-
   document.getElementById('regLogin').value = '';
   document.getElementById('regPassword').value = '';
   document.getElementById('regNickname').value = '';
   document.getElementById('regPhone').value = '';
   document.getElementById('regRegion').value = '';
   document.getElementById('regFullName').value = '';
-
   selectedGender = null;
   const maleBtn = document.getElementById('genderMale');
   const femaleBtn = document.getElementById('genderFemale');
   if (maleBtn && femaleBtn) {
-    maleBtn.style.border = '2px solid rgba(79,172,254,0.3)';
-    maleBtn.style.background = 'rgba(10,10,15,0.7)';
+    maleBtn.style.border = '2px solid rgba(139,92,246,0.3)';
+    maleBtn.style.background = 'rgba(10,5,24,0.75)';
     maleBtn.style.boxShadow = 'none';
-    femaleBtn.style.border = '2px solid rgba(255,105,180,0.3)';
-    femaleBtn.style.background = 'rgba(10,10,15,0.7)';
+    femaleBtn.style.border = '2px solid rgba(236,72,153,0.3)';
+    femaleBtn.style.background = 'rgba(10,5,24,0.75)';
     femaleBtn.style.boxShadow = 'none';
   }
-
   showTab('login');
   document.getElementById('loginLogin').value = login;
-
-  setTimeout(() => {
-    document.getElementById('loginPassword').focus();
-  }, 100);
-
+  setTimeout(() => document.getElementById('loginPassword').focus(), 100);
   showToast('🔓 Введи пароль и войди');
 }
 
@@ -2085,50 +2099,32 @@ function closeRegSuccess() {
   showTab('login');
 }
 
-// ✅ Формирует и вставляет ссылку в поле refLink
 function updateRefLink() {
   const linkEl = document.getElementById('refLink');
   if (!linkEl) return;
   const nick = currentUser?.nickname || nickname;
-  if (!nick) {
-    linkEl.textContent = 'Войди в аккаунт';
-    return;
-  }
+  if (!nick) { linkEl.textContent = 'Войди в аккаунт'; return; }
   const base = window.location.origin + window.location.pathname;
   const link = base + '?ref=' + encodeURIComponent(nick);
   linkEl.textContent = link;
 }
 
 function enterGame() {
-  console.log('🎮 enterGame() called');
   const auth = document.getElementById('authScreen');
   const app = document.getElementById('app');
-  if (auth) {
-    auth.style.display = 'none';
-    auth.style.visibility = 'hidden';
-  }
-  if (app) {
-    app.style.display = 'flex';
-    app.style.visibility = 'visible';
-    app.style.opacity = '1';
-  }
+  if (auth) { auth.style.display = 'none'; auth.style.visibility = 'hidden'; }
+  if (app) { app.style.display = 'flex'; app.style.visibility = 'visible'; app.style.opacity = '1'; }
   try {
     updateUI();
     buildSidebar();
     loadISShop();
     saveToLocal();
     updateRefLink();
-    console.log('✓ Игра загружена');
-    // ✅ Сразу проверяем новые рефералы
     setTimeout(checkNewReferrals, 500);
     setTimeout(checkNewReferrals, 1500);
-  } catch (e) {
-    console.error('✗ Ошибка в enterGame():', e);
-    showToast('Ошибка загрузки: ' + e.message);
-  }
+  } catch (e) { showToast('Ошибка загрузки: ' + e.message); }
 }
 
-// ✨ Проверка новых рефералов + показ модалки благодарности
 async function checkNewReferrals() {
   if (!currentToken) return;
   try {
@@ -2137,20 +2133,15 @@ async function checkNewReferrals() {
     if (data.success) {
       const newList = data.referrals || [];
       const newCount = newList.length;
-
-      // Если появились новые друзья
       if (newCount > lastKnownReferralCount && lastKnownReferralCount > 0) {
         const newFriend = newList[newCount - 1];
         const rewardForThis = getReferralReward(newCount);
-        // Показываем модалку благодарности
         showRefThanks(newFriend.nickname || 'друг', rewardForThis);
-        // Автоматически начисляем на баланс
         isBalance += rewardForThis;
         updateUI();
         scheduleSave();
         showToast('🎉 +' + rewardForThis + ' IS за нового друга!');
       }
-
       lastKnownReferralCount = newCount;
       myReferrals = newList;
       renderReferralList();
@@ -2158,9 +2149,7 @@ async function checkNewReferrals() {
       const refCountEl = document.getElementById('refCount');
       if (refCountEl) refCountEl.textContent = newCount;
     }
-  } catch(e) {
-    console.warn('checkNewReferrals error:', e);
-  }
+  } catch(e) {}
 }
 
 function loadQuests() {
@@ -2192,7 +2181,7 @@ function loadBoosts() {
   const totalPages = Math.ceil(BOOSTS.length / BOOSTS_PER_PAGE);
   let html = '<div style="display:flex;justify-content:space-between;margin-bottom:12px;gap:8px;">';
   html += '<button class="btn-buy" ' + (boostPage === 0 ? 'disabled' : '') + ' onclick="changeBoostPage(-1)">← Назад</button>';
-  html += '<div style="color:#888;font-size:12px;padding:8px;">Стр. ' + (boostPage+1) + ' / ' + totalPages + '</div>';
+  html += '<div style="color:#94a3b8;font-size:12px;padding:8px;">Стр. ' + (boostPage+1) + ' / ' + totalPages + '</div>';
   html += '<button class="btn-buy" ' + (boostPage >= totalPages-1 ? 'disabled' : '') + ' onclick="changeBoostPage(1)">Далее →</button></div>';
   html += pageBoosts.map(b => {
     const owned = upgrades[b.id]; const canBuy = score >= b.price && !owned;
@@ -2234,63 +2223,39 @@ function loadReferralClaimed() {
     if (saved) referralClaimedTotal = parseInt(saved, 10) || 0;
   } catch(e) { referralClaimedTotal = 0; }
 }
-
 function saveReferralClaimed() {
   try { localStorage.setItem('ingsoft_referral_claimed', String(referralClaimedTotal)); } catch(e) {}
 }
 
 async function claimReferralReward() {
-  if (!currentToken) {
-    showToast('✗ Войди в аккаунт');
-    return;
-  }
-
+  if (!currentToken) { showToast('✗ Войди в аккаунт'); return; }
   const total = getTotalReferralEarnings(myReferrals.length);
   const available = total - referralClaimedTotal;
-
-  if (available <= 0) {
-    showToast('Нет награды к получению');
-    return;
-  }
-
+  if (available <= 0) { showToast('Нет награды к получению'); return; }
   try {
     const resp = await fetch(API_URL + '/claim-referral', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        token: currentToken,
-        amount: available
-      })
+      body: JSON.stringify({ token: currentToken, amount: available })
     });
     const data = await resp.json();
-
     if (data.success) {
       referralClaimedTotal += available;
       saveReferralClaimed();
       isBalance += available;
-      updateUI();
-      scheduleSave();
-      updateReferralUI();
+      updateUI(); scheduleSave(); updateReferralUI();
       showToast('🎉 Забрано ' + available + ' IS!');
-    } else {
-      showToast('✗ ' + (data.error || 'Ошибка'));
-    }
-  } catch(e) {
-    console.error(e);
-    showToast('✗ Ошибка соединения');
-  }
+    } else { showToast('✗ ' + (data.error || 'Ошибка')); }
+  } catch(e) { showToast('✗ Ошибка соединения'); }
 }
 
 function updateReferralUI() {
   const total = getTotalReferralEarnings(myReferrals.length);
   const available = total - referralClaimedTotal;
-
   const totalEl = document.getElementById('refEarnedTotal');
   if (totalEl) totalEl.textContent = total + ' IS';
-
   const availEl = document.getElementById('refClaimable');
   if (availEl) availEl.textContent = available + ' IS';
-
   const btn = document.getElementById('btnClaimRef');
   if (btn) {
     if (available > 0) {
@@ -2311,16 +2276,16 @@ function renderReferralList() {
   const wrap = document.getElementById('referralList');
   if (!wrap) return;
   if (!myReferrals.length) {
-    wrap.innerHTML = '<p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Ты пока никого не пригласил.<br>Отправь ссылку другу — получишь 100 IS за первого!</p>';
+    wrap.innerHTML = '<p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Ты пока никого не пригласил.<br>Отправь ссылку другу — получишь 100 IS за первого!</p>';
     updateReferralUI();
     return;
   }
   wrap.innerHTML = myReferrals.map((r, i) => {
     const reward = getReferralReward(i + 1);
-    return '<div style="display:flex; align-items:center; gap:10px; padding:10px 12px; margin-bottom:6px; background:linear-gradient(90deg, rgba(79,172,254,0.1), rgba(30,58,95,0.18)); border:1px solid rgba(79,172,254,0.25); border-radius:10px;">' +
-      '<div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#4facfe,#1e3a5f); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex-shrink:0;">' + (r.nickname ? r.nickname[0].toUpperCase() : '?') + '</div>' +
+    return '<div style="display:flex; align-items:center; gap:10px; padding:12px; margin-bottom:6px; background:linear-gradient(90deg, rgba(139,92,246,0.15), rgba(30,58,95,0.2)); border:1px solid rgba(139,92,246,0.3); border-radius:12px;">' +
+      '<div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex-shrink:0; box-shadow: 0 0 15px rgba(139,92,246,0.5);">' + (r.nickname ? r.nickname[0].toUpperCase() : '?') + '</div>' +
       '<div style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:600;">' + (r.nickname || 'Игрок') + '</div>' +
-      '<div style="font-size:12px; font-weight:800; color:#ffd700; white-space:nowrap;">+' + reward + ' IS</div>' +
+      '<div style="font-size:12px; font-weight:800; color:#ffd700; white-space:nowrap; text-shadow: 0 0 10px rgba(255,215,0,0.5);">+' + reward + ' IS</div>' +
     '</div>';
   }).join('');
   updateReferralUI();
@@ -2328,11 +2293,7 @@ function renderReferralList() {
 
 function copyRefLink() {
   const link = document.getElementById('refLink').textContent;
-  if (!link || link === 'Войди в аккаунт' || link === '—') { 
-    updateRefLink();
-    showToast('Подожди, ссылка формируется...');
-    return; 
-  }
+  if (!link || link === 'Войди в аккаунт' || link === '—') { updateRefLink(); showToast('Подожди, ссылка формируется...'); return; }
   navigator.clipboard.writeText(link).then(() => showToast('✓ Ссылка скопирована!'))
     .catch(() => {
       const ta = document.createElement('textarea');
@@ -2347,11 +2308,7 @@ function copyRefLink() {
 
 function shareRefLink() {
   const link = document.getElementById('refLink').textContent;
-  if (!link || link === 'Войди в аккаунт' || link === '—') { 
-    updateRefLink();
-    showToast('Подожди, ссылка формируется...');
-    return; 
-  }
+  if (!link || link === 'Войди в аккаунт' || link === '—') { updateRefLink(); showToast('Подожди, ссылка формируется...'); return; }
   const text = 'Привет! Заходи в IngSoft Tap — я уже там! 🎮';
   const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
   window.open(shareUrl, '_blank');
@@ -2379,12 +2336,12 @@ function loadReferralBonus() {
   ];
   el.innerHTML = rows.map((r, i) => {
     const done = count >= r.need;
-    return '<div style="display:flex; align-items:center; gap:10px; padding:12px; margin-bottom:6px; ' +
-      'background:' + (done ? 'linear-gradient(90deg, rgba(34,197,94,0.18), rgba(30,58,95,0.25))' : 'linear-gradient(90deg, rgba(30,58,95,0.18), rgba(15,21,32,0.35))') + '; ' +
-      'border:1px solid ' + (done ? 'rgba(34,197,94,0.45)' : 'rgba(79,172,254,0.2)') + '; border-radius:12px;">' +
-      '<div style="width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; ' +
-        'background:' + (done ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'rgba(255,255,255,0.05)') + '; ' +
-        'color:' + (done ? '#fff' : '#8899aa') + '; flex-shrink:0;">' + (done ? '✓' : (i + 1)) + '</div>' +
+    return '<div style="display:flex; align-items:center; gap:10px; padding:14px; margin-bottom:6px; ' +
+      'background:' + (done ? 'linear-gradient(90deg, rgba(34,197,94,0.2), rgba(30,58,95,0.25))' : 'linear-gradient(90deg, rgba(139,92,246,0.12), rgba(15,12,41,0.4))') + '; ' +
+      'border:1px solid ' + (done ? 'rgba(34,197,94,0.5)' : 'rgba(139,92,246,0.25)') + '; border-radius:14px;">' +
+      '<div style="width:30px; height:30px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; ' +
+        'background:' + (done ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'rgba(255,255,255,0.06)') + '; ' +
+        'color:' + (done ? '#fff' : '#94a3b8') + '; flex-shrink:0;">' + (done ? '✓' : (i + 1)) + '</div>' +
       '<div style="flex:1; font-size:13px; font-weight:700;">' + r.range + '</div>' +
       '<div style="font-size:13px; font-weight:800; color:' + (done ? '#22c55e' : '#ffd700') + '; white-space:nowrap;">' + r.reward + '</div>' +
     '</div>';
@@ -2404,10 +2361,10 @@ function loadDaily() {
   }
   html += '</div>';
   if (canClaim) {
-    html += '<p style="text-align:center;margin-bottom:14px;color:#ccc;">Сегодня: <b style="color:#ffd700">' + fmt(DAILY_REWARDS[nextDay].coins) + '</b></p>';
-    html += '<button class="btn-buy green" style="width:100%;padding:14px;" onclick="claimDaily()">◈ Забрать</button>';
+    html += '<p style="text-align:center;margin-bottom:16px;color:#cbd5e1;">Сегодня: <b style="color:#ffd700">' + fmt(DAILY_REWARDS[nextDay].coins) + '</b></p>';
+    html += '<button class="btn-buy green" style="width:100%;padding:16px;" onclick="claimDaily()">◈ Забрать</button>';
   } else {
-    html += '<p style="text-align:center;color:#888;">Серия: <b style="color:#e63946;">' + dailyStreak + ' дней</b></p>';
+    html += '<p style="text-align:center;color:#94a3b8;">Серия: <b style="color:#ec4899;">' + dailyStreak + ' дней</b></p>';
   }
   el.innerHTML = html;
 }
@@ -2439,9 +2396,7 @@ function logout() {
   localStorage.removeItem('ingsoft_token');
   localStorage.removeItem('ingsoft_referrer_nickname');
   localStorage.removeItem('ingsoft_referrer_id');
-  currentToken = null;
-  currentUser = null;
-  myUserId = null;
+  currentToken = null; currentUser = null; myUserId = null;
   nickname = null; phone = null; region = null; fullName = null;
   gender = null; selectedGender = null; avatarData = null;
   score = 0; energy = 500; maxEnergy = 500; multiplier = 1;
@@ -2458,23 +2413,16 @@ function logout() {
   closeAllModals();
   document.getElementById('app').style.display = 'none';
   document.getElementById('authScreen').style.display = 'flex';
-  document.getElementById('loginLogin').value = '';
-  document.getElementById('loginPassword').value = '';
-  document.getElementById('regLogin').value = '';
-  document.getElementById('regPassword').value = '';
-  document.getElementById('regNickname').value = '';
-  document.getElementById('regPhone').value = '';
-  document.getElementById('regRegion').value = '';
-  document.getElementById('regFullName').value = '';
+  ['loginLogin','loginPassword','regLogin','regPassword','regNickname','regPhone','regRegion','regFullName'].forEach(id => document.getElementById(id).value = '');
   selectedGender = null;
   const maleBtn = document.getElementById('genderMale');
   const femaleBtn = document.getElementById('genderFemale');
   if (maleBtn && femaleBtn) {
-    maleBtn.style.border = '2px solid rgba(79,172,254,0.3)';
-    maleBtn.style.background = 'rgba(10,10,15,0.7)';
+    maleBtn.style.border = '2px solid rgba(139,92,246,0.3)';
+    maleBtn.style.background = 'rgba(10,5,24,0.75)';
     maleBtn.style.boxShadow = 'none';
-    femaleBtn.style.border = '2px solid rgba(255,105,180,0.3)';
-    femaleBtn.style.background = 'rgba(10,10,15,0.7)';
+    femaleBtn.style.border = '2px solid rgba(236,72,153,0.3)';
+    femaleBtn.style.background = 'rgba(10,5,24,0.75)';
     femaleBtn.style.boxShadow = 'none';
   }
   showTab('login');
@@ -2484,8 +2432,8 @@ function logout() {
 function loadProfile() {
   const av = avatarData ? '<div class="profile-avatar" style="background-image:url(' + avatarData + ');background-size:cover;"></div>' : '<div class="profile-avatar">' + (nickname || '?')[0].toUpperCase() + '</div>';
   document.getElementById('profileContent').innerHTML = av +
-    '<div style="text-align:center;font-size:20px;font-weight:800;margin-bottom:4px;">' + (nickname || 'Игрок') + '</div>' +
-    '<div style="text-align:center;color:#888;font-size:12px;margin-bottom:16px;">@' + (username || 'аноним') + '</div>' +
+    '<div style="text-align:center;font-size:21px;font-weight:800;margin-bottom:4px;">' + (nickname || 'Игрок') + '</div>' +
+    '<div style="text-align:center;color:#94a3b8;font-size:12px;margin-bottom:18px;">@' + (username || 'аноним') + '</div>' +
     '<div class="profile-row"><span>Очки</span><span>' + fmt(score) + '</span></div>' +
     '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
     '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
@@ -2517,9 +2465,6 @@ function redeemPromo() {
   loadPromoHistory();
 }
 
-let promoActiveTab = 1;
-let promoActiveView = 'earn';
-
 const PROMO_QUESTS = [
   { id: 'invite3',  icon: '❖', name: 'Пригласи 3 друзей',   desc: 'За 3-х приведённых друзей', reward: '2%', need: 3 },
   { id: 'invite5',  icon: '❖', name: 'Пригласи 5 друзей',   desc: 'За 5-х приведённых друзей', reward: '3%', need: 5 },
@@ -2537,45 +2482,43 @@ const PROMO_QUESTS = [
 
 function switchPromoTab(n) {
   if (n !== 1) return;
-  promoActiveTab = n;
   for (let i = 1; i <= 10; i++) {
     const btn = document.getElementById('promoTab' + i);
     if (!btn) continue;
     if (i === n) {
       btn.style.background = 'linear-gradient(135deg,#ffd700,#ff8c00)';
-      btn.style.color = '#0a0a0f';
-      btn.style.boxShadow = '0 4px 15px rgba(255,215,0,0.5)';
+      btn.style.color = '#0a0518';
+      btn.style.boxShadow = '0 5px 18px rgba(255,215,0,0.5)';
     } else {
       btn.style.background = 'rgba(255,255,255,0.05)';
-      btn.style.color = '#667788';
+      btn.style.color = '#64748b';
       btn.style.boxShadow = 'none';
     }
   }
 }
 
 function switchPromoView(view) {
-  promoActiveView = view;
   const earnBtn = document.getElementById('promoViewEarn');
   const walletBtn = document.getElementById('promoViewWallet');
   const earnView = document.getElementById('promoEarnView');
   const walletView = document.getElementById('promoWalletView');
   if (view === 'earn') {
-    earnBtn.style.background = 'linear-gradient(135deg,#4facfe,#1e3a5f)';
+    earnBtn.style.background = 'linear-gradient(135deg,#8b5cf6,#4facfe)';
     earnBtn.style.color = '#fff';
     earnBtn.style.border = 'none';
     walletBtn.style.background = 'transparent';
-    walletBtn.style.color = '#8899aa';
-    walletBtn.style.border = '1px solid rgba(79,172,254,0.35)';
+    walletBtn.style.color = '#94a3b8';
+    walletBtn.style.border = '1px solid rgba(139,92,246,0.4)';
     earnView.style.display = 'block';
     walletView.style.display = 'none';
     loadPromoEarn();
   } else {
-    walletBtn.style.background = 'linear-gradient(135deg,#4facfe,#1e3a5f)';
+    walletBtn.style.background = 'linear-gradient(135deg,#8b5cf6,#4facfe)';
     walletBtn.style.color = '#fff';
     walletBtn.style.border = 'none';
     earnBtn.style.background = 'transparent';
-    earnBtn.style.color = '#8899aa';
-    earnBtn.style.border = '1px solid rgba(79,172,254,0.35)';
+    earnBtn.style.color = '#94a3b8';
+    earnBtn.style.border = '1px solid rgba(139,92,246,0.4)';
     earnView.style.display = 'none';
     walletView.style.display = 'block';
     loadPromoWallet();
@@ -2620,19 +2563,19 @@ function loadPromoWallet() {
   const el = document.getElementById('promoWalletList');
   if (!el) return;
   if (!earnedPromocodes.length) {
-    el.innerHTML = '<p style="text-align:center; color:#667788; font-size:13px; padding:20px;">У тебя пока нет промокодов.<br>Заработай их в разделе «Заработать».</p>';
+    el.innerHTML = '<p style="text-align:center; color:#64748b; font-size:13px; padding:20px;">У тебя пока нет промокодов.<br>Заработай их в разделе «Заработать».</p>';
     return;
   }
   el.innerHTML = earnedPromocodes.map(id => {
     const q = PROMO_QUESTS.find(x => x.id === id);
     if (!q) return '';
-    return '<div style="background:linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,140,0,0.1)); border:1px solid rgba(255,215,0,0.45); border-radius:12px; padding:14px; margin-bottom:8px; display:flex; align-items:center; gap:12px;">' +
-      '<div style="font-size:24px;">✎</div>' +
+    return '<div style="background:linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,140,0,0.1)); border:1px solid rgba(255,215,0,0.5); border-radius:14px; padding:16px; margin-bottom:8px; display:flex; align-items:center; gap:12px;">' +
+      '<div style="font-size:26px;">✎</div>' +
       '<div style="flex:1;">' +
         '<div style="font-size:14px; font-weight:900; color:#ffd700;">Скидка ' + q.reward + '</div>' +
-        '<div style="font-size:11px; color:#b8a060;">' + q.name + '</div>' +
+        '<div style="font-size:11px; color:#b8a060; margin-top: 2px;">' + q.name + '</div>' +
       '</div>' +
-      '<button class="btn-is" onclick="copyPromo(\'' + q.reward + '\')">📋 Копировать</button>' +
+      '<button class="btn-is" onclick="copyPromo(\'' + q.reward + '\')">📋</button>' +
     '</div>';
   }).join('');
 }
@@ -2646,8 +2589,8 @@ function copyPromo(code) {
 function loadPromoHistory() {
   const el = document.getElementById('promoHistory');
   if (!claimedPromos.length) { el.innerHTML = ''; return; }
-  el.innerHTML = '<div style="color:#888;font-size:12px;margin-bottom:6px;">Активированные:</div>' +
-    claimedPromos.map(c => '<div style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.35);padding:8px;border-radius:10px;margin-bottom:4px;font-size:12px;color:#22c55e;text-align:center;letter-spacing:2px;">✓ ' + c + '</div>').join('');
+  el.innerHTML = '<div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">Активированные:</div>' +
+    claimedPromos.map(c => '<div style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);padding:10px;border-radius:12px;margin-bottom:6px;font-size:12px;color:#22c55e;text-align:center;letter-spacing:2px;font-weight: 700;">✓ ' + c + '</div>').join('');
 }
 
 const GAME_COSTS = {};
@@ -2920,16 +2863,12 @@ async function loadProgressByToken(token) {
       walletTotal = u.wallet_total ?? 0;
       earnedPromocodes = u.earned_promocodes || [];
       myUserId = u.id;
-      if (!telegramId || telegramId === 999999999) {
-        telegramId = u.telegram_id || telegramId;
-      }
+      if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
       currentUser = u;
       applyGenderTheme();
       enterGame();
       setTimeout(() => {
-        loadReferral().then(() => {
-          lastKnownReferralCount = myReferrals.length;
-        });
+        loadReferral().then(() => { lastKnownReferralCount = myReferrals.length; });
       }, 800);
       return true;
     } else {
@@ -2938,7 +2877,6 @@ async function loadProgressByToken(token) {
       return false;
     }
   } catch (e) {
-    console.error('✗ loadProgressByToken error:', e);
     forceShowAuth();
     return false;
   }
@@ -2947,19 +2885,12 @@ async function loadProgressByToken(token) {
 function forceShowAuth() {
   const auth = document.getElementById('authScreen');
   const app = document.getElementById('app');
-  if (auth) {
-    auth.style.display = 'flex';
-    auth.style.visibility = 'visible';
-    auth.style.opacity = '1';
-    auth.style.zIndex = '9999';
-    auth.style.background = 'linear-gradient(160deg,#0f1520,#0a0a0f)';
-  }
+  if (auth) { auth.style.display = 'flex'; auth.style.visibility = 'visible'; auth.style.opacity = '1'; auth.style.zIndex = '9999'; auth.style.background = 'linear-gradient(160deg,#0f0c29,#0a0518)'; }
   if (app) app.style.display = 'none';
   const formLogin = document.getElementById('formLogin');
   const formRegister = document.getElementById('formRegister');
   if (formLogin) formLogin.style.display = 'none';
   if (formRegister) formRegister.style.display = 'block';
-  console.log('✓ Экран авторизации показан принудительно');
 }
 
 async function loadReferral() {
@@ -2976,13 +2907,8 @@ async function loadReferral() {
       if (refCountEl) refCountEl.textContent = myReferrals.length;
       updateRefLink();
       return myReferrals;
-    } else {
-      renderReferralList();
-    }
-  } catch(e) {
-    console.error('✗ loadReferral error:', e);
-    renderReferralList();
-  }
+    } else { renderReferralList(); }
+  } catch(e) { renderReferralList(); }
   return [];
 }
 
@@ -2991,72 +2917,47 @@ function init() {
     try {
       tg.ready();
       tg.expand();
-      tg.setHeaderColor('#0a0a0f');
-      tg.setBackgroundColor('#0a0a0f');
-    } catch(e) { console.warn('tg init warning:', e.message); }
+      tg.setHeaderColor('#0a0518');
+      tg.setBackgroundColor('#0a0518');
+    } catch(e) {}
   }
   getTelegramUser();
 
-  const isInTelegram = !!(tg && tg.initDataUnsafe && tg.initDataUnsafe.user);
-  console.log('🌐 Режим:', isInTelegram ? 'Telegram WebApp' : 'Обычный браузер');
-  console.log('🆔 Telegram ID:', telegramId);
-
   let startParam = null;
-  if (tg?.initDataUnsafe?.start_param) {
-    startParam = tg.initDataUnsafe.start_param;
-    console.log('🔗 start_param (Telegram):', startParam);
-  }
-
+  if (tg?.initDataUnsafe?.start_param) startParam = tg.initDataUnsafe.start_param;
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const refFromUrl = urlParams.get('ref');
-    if (refFromUrl) {
-      startParam = refFromUrl;
-      console.log('🔗 ref (URL):', refFromUrl);
-    }
+    if (refFromUrl) startParam = refFromUrl;
   } catch(e) {}
-
   if (!startParam) {
     try {
       const match = window.location.hash.match(/ref=([^&]+)/);
-      if (match) {
-        startParam = decodeURIComponent(match[1]);
-        console.log('🔗 ref (hash):', startParam);
-      }
+      if (match) startParam = decodeURIComponent(match[1]);
     } catch(e) {}
   }
 
   if (startParam) {
     let cleanParam = startParam;
     if (cleanParam.startsWith('ref_')) cleanParam = cleanParam.slice(4);
-
     const lastUnderscore = cleanParam.lastIndexOf('_');
     let refNick = '';
     let refTgId = null;
-
     if (lastUnderscore > 0) {
       const possibleId = cleanParam.slice(lastUnderscore + 1);
       if (/^\d+$/.test(possibleId)) {
         refNick = cleanParam.slice(0, lastUnderscore);
         refTgId = parseInt(possibleId, 10);
-      } else {
-        refNick = cleanParam;
-      }
-    } else {
-      refNick = cleanParam;
-    }
-
+      } else { refNick = cleanParam; }
+    } else { refNick = cleanParam; }
     refNick = decodeURIComponent(refNick);
-
     if (refNick && /^[a-zA-Z0-9_]+$/.test(refNick)) {
       referrerNickname = refNick;
       localStorage.setItem('ingsoft_referrer_nickname', refNick);
-      console.log('✓ referrer_nickname =', refNick);
     }
     if (refTgId && refTgId > 0 && refTgId < 9000000000) {
       referrerId = refTgId;
       localStorage.setItem('ingsoft_referrer_id', String(refTgId));
-      console.log('✓ referrer_id =', refTgId);
     }
   }
 
@@ -3065,33 +2966,21 @@ function init() {
     const btnReg = document.getElementById('tabRegister');
     if (btnLogin && !btnLogin.dataset.bound) {
       btnLogin.dataset.bound = '1';
-      btnLogin.addEventListener('click', function(e) {
-        e.preventDefault(); e.stopPropagation();
-        showTab('login');
-      });
+      btnLogin.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); showTab('login'); });
     }
     if (btnReg && !btnReg.dataset.bound) {
       btnReg.dataset.bound = '1';
-      btnReg.addEventListener('click', function(e) {
-        e.preventDefault(); e.stopPropagation();
-        showTab('register');
-      });
+      btnReg.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); showTab('register'); });
     }
     const btnDoLogin = document.getElementById('btnDoLogin');
     if (btnDoLogin && !btnDoLogin.dataset.bound) {
       btnDoLogin.dataset.bound = '1';
-      btnDoLogin.addEventListener('click', function(e) {
-        e.preventDefault(); e.stopPropagation();
-        doLogin();
-      });
+      btnDoLogin.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); doLogin(); });
     }
     const btnDoRegister = document.getElementById('btnDoRegister');
     if (btnDoRegister && !btnDoRegister.dataset.bound) {
       btnDoRegister.dataset.bound = '1';
-      btnDoRegister.addEventListener('click', function(e) {
-        e.preventDefault(); e.stopPropagation();
-        doRegister();
-      });
+      btnDoRegister.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); doRegister(); });
     }
   }
   bindAuthButtons();
@@ -3113,7 +3002,6 @@ function init() {
   setInterval(regenEnergy, 1000);
   setInterval(saveToLocal, 5000);
   setInterval(loadTop10, 5000);
-  // ✅ Каждые 10 секунд проверяем новых рефералов
   setInterval(checkNewReferrals, 10000);
   initSlideshow();
   window.addEventListener('beforeunload', saveToLocal);
