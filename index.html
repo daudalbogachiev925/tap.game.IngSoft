@@ -1737,6 +1737,8 @@ function enterGame() {
     buildSidebar();
     loadISShop();
     saveToLocal();
+    // ✅ СРАЗУ подставляем ссылку, не ждём сервер
+    updateRefLink();
     console.log('✅ Игра загружена');
   } catch (e) {
     console.error('❌ Ошибка в enterGame():', e);
