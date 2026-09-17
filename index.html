@@ -76,20 +76,40 @@ body::after {
 .header-fio { font-size:11px; color:#9ab; }
 .header-rank { font-size:11px; color:#8899aa; }
 .header-rank b { color:var(--ing-gold); }
-.header-actions { display: flex; flex-direction: column; gap: 6px; margin-left: 12px; padding-left: 12px; border-left: 1px solid rgba(79,172,254,0.2); }
-.header-btn { display: flex; align-items: center; gap: 6px; background: linear-gradient(135deg, rgba(79,172,254,0.15), rgba(30,58,95,0.25)); border: 1px solid rgba(79,172,254,0.3); border-radius: 10px; padding: 6px 10px; color: #e8f4ff; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+
+/* ✅ КНОПКИ В ШАПКЕ — СЕТКА 2x2 */
+.header-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 6px;
+  margin-left: 14px;
+  padding-left: 14px;
+  border-left: 1px solid rgba(79,172,254,0.2);
+  min-width: 180px;
+}
+.header-btn {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  background: linear-gradient(135deg, rgba(79,172,254,0.15), rgba(30,58,95,0.25));
+  border: 1px solid rgba(79,172,254,0.3);
+  border-radius: 10px; padding: 7px 8px;
+  color: #e8f4ff; font-size: 10px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
 .header-btn:hover { background: linear-gradient(135deg, rgba(79,172,254,0.3), rgba(30,58,95,0.4)); border-color: rgba(79,172,254,0.6); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(79,172,254,0.3); }
 .header-btn:active { transform: scale(0.95); }
 .header-btn.gold { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,140,0,0.15)); border-color: rgba(255,215,0,0.5); color: #ffe680; }
 .header-btn.gold:hover { background: linear-gradient(135deg, rgba(255,215,0,0.4), rgba(255,140,0,0.3)); border-color: rgba(255,215,0,0.8); box-shadow: 0 4px 15px rgba(255,215,0,0.4); }
-.header-btn-icon { font-size: 14px; }
+.header-btn-icon { font-size: 14px; line-height: 1; }
 .header-btn-label { font-size: 10px; }
+
 @media (max-width: 480px) {
-  .header-btn-label { display: none; }
-  .header-btn { padding: 6px 8px; }
-  .header-btn-icon { font-size: 16px; }
-  .header-actions { gap: 4px; margin-left: 8px; padding-left: 8px; }
+  .header-card { flex-wrap: wrap; gap: 10px; padding: 10px 14px; }
+  .header-actions { margin-left: 0; padding-left: 0; border-left: none; width: 100%; min-width: 0; }
+  .header-btn { padding: 6px 6px; font-size: 9px; }
+  .header-btn-icon { font-size: 13px; }
 }
+
 .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px; }
 .stat-card { background: linear-gradient(145deg, rgba(30,58,95,0.3), rgba(15,21,32,0.5)); border:1px solid rgba(79,172,254,0.2); border-radius:16px; padding:16px 8px; text-align:center; transition: transform 0.2s, box-shadow 0.3s; position: relative; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08); }
 .stat-card::before { content:''; position:absolute; inset:0; background: radial-gradient(circle at 50% -50%, rgba(79,172,254,0.15), transparent 70%); }
@@ -437,28 +457,28 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="header-card">
     <div class="avatar-wrap" onclick="uploadAvatar()">
       <div class="avatar" id="avatar">?</div>
-      <div class="avatar-edit">✎</div>
+      <div class="avatar-edit">✦</div>
     </div>
     <div class="header-info">
       <div class="header-nick" id="userName">Игрок</div>
       <div class="header-fio" id="headerFio">—</div>
-      <div class="header-rank">🏆 Место: <b id="headerRank">—</b></div>
+      <div class="header-rank">♛ Место: <b id="headerRank">—</b></div>
     </div>
     <div class="header-actions">
       <button class="header-btn" onclick="openModal('referral')" title="Друзья">
-        <span class="header-btn-icon">👥</span>
+        <span class="header-btn-icon">❖</span>
         <span class="header-btn-label">Друзья</span>
       </button>
       <button class="header-btn gold" onclick="openModal('referral-bonus')" title="Бонус за рефералку">
-        <span class="header-btn-icon">🎁</span>
+        <span class="header-btn-icon">✧</span>
         <span class="header-btn-label">Бонус</span>
       </button>
       <button class="header-btn" onclick="openModal('promocodes')" title="Промокоды">
-        <span class="header-btn-icon">🏷️</span>
-        <span class="header-btn-label">Промокоды</span>
+        <span class="header-btn-icon">✎</span>
+        <span class="header-btn-label">Промо</span>
       </button>
       <button class="header-btn" onclick="openModal('wallet')" title="Кошелёк">
-        <span class="header-btn-icon">💰</span>
+        <span class="header-btn-icon">◈</span>
         <span class="header-btn-label">Кошелёк</span>
       </button>
     </div>
@@ -496,10 +516,10 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 </div>
 
 <div class="quick-actions">
-  <button class="quick-btn" onclick="openModal('quests')"><span class="quick-icon">📋</span>Квесты</button>
+  <button class="quick-btn" onclick="openModal('quests')"><span class="quick-icon">✦</span>Квесты</button>
   <button class="quick-btn" onclick="openModal('boosts')"><span class="quick-icon">⚡</span>Бусты</button>
-  <button class="quick-btn" onclick="openModal('daily')"><span class="quick-icon">🎁</span>Награды</button>
-  <button class="quick-btn" onclick="openModal('promo')"><span class="quick-icon">🎫</span>Промокод</button>
+  <button class="quick-btn" onclick="openModal('daily')"><span class="quick-icon">◈</span>Награды</button>
+  <button class="quick-btn" onclick="openModal('promo')"><span class="quick-icon">✎</span>Промокод</button>
 </div>
 
 <div class="slideshow" id="slideshow">
@@ -517,7 +537,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 </div>
 
 <div class="is-balance">
-  <span class="is-icon">💎</span>
+  <span class="is-icon">◈</span>
   <span>IS:</span>
   <span class="is-val" id="isBalanceVal">0</span>
 </div>
@@ -525,7 +545,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 <div class="is-shop-panel">
   <div class="is-shop-header">
     <div>
-      <div class="is-shop-title" id="isShopTitle">🛒 IS Магазин</div>
+      <div class="is-shop-title" id="isShopTitle">◈ IS Магазин</div>
       <div class="is-shop-sub">Трать IS на бусты и тапы</div>
     </div>
     <button class="btn-is" onclick="openModal('isTasks')">+ Заработать</button>
@@ -536,7 +556,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 <div class="top-panel">
   <div class="top-panel-header">
     <div>
-      <div class="top-panel-title" id="topPanelTitle">🏆 Топ-10 игроков</div>
+      <div class="top-panel-title" id="topPanelTitle">♛ Топ-10 игроков</div>
       <div class="top-panel-sub">Лучшие тапальщики IngSoft</div>
     </div>
     <button class="btn-buy" style="padding:6px 12px;font-size:11px;" onclick="openModal('leaderboard')">Все</button>
@@ -545,32 +565,32 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 </div>
 
 <div class="modal" id="modal-games"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎮 <span>Игры на тапы</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
+  <div class="modal-header"><div class="modal-title">⬢ <span>Игры на тапы</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
   <div class="games-grid" id="gamesGrid"></div>
 </div></div>
 
 <div class="modal" id="modal-roulette"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎰 <span>Рулетка</span></div><button class="modal-close" onclick="closeModal('roulette')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◉ <span>Рулетка</span></div><button class="modal-close" onclick="closeModal('roulette')">×</button></div>
   <div class="game-area">
     <div class="roulette-wheel" id="rouletteWheel"></div>
     <div class="game-result" id="rouletteResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinRoulette()">🎰 Крутить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinRoulette()">Крутить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-dice"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎲 <span>Кубик</span></div><button class="modal-close" onclick="closeModal('dice')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◆ <span>Кубик</span></div><button class="modal-close" onclick="closeModal('dice')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="diceValue">🎲</div>
+    <div class="dice" id="diceValue">◆</div>
     <div class="game-result" id="diceResult">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="rollDice()">🎲 Бросить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="rollDice()">Бросить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-coin"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🪙 <span>Монетка</span></div><button class="modal-close" onclick="closeModal('coin')">×</button></div>
+  <div class="modal-header"><div class="modal-title">○ <span>Монетка</span></div><button class="modal-close" onclick="closeModal('coin')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="coinValue">🪙</div>
+    <div class="dice" id="coinValue">○</div>
     <div class="game-result" id="coinResult">Орёл или решка?</div>
     <div style="display:flex;gap:10px;">
       <button class="btn-buy" style="padding:12px 20px;" onclick="flipCoin('heads')">Орёл</button>
@@ -580,138 +600,138 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 </div></div>
 
 <div class="modal" id="modal-slots"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎰 <span>Слоты</span></div><button class="modal-close" onclick="closeModal('slots')">×</button></div>
+  <div class="modal-header"><div class="modal-title">✧ <span>Слоты</span></div><button class="modal-close" onclick="closeModal('slots')">×</button></div>
   <div class="game-area">
-    <div style="font-size:60px;letter-spacing:20px;" id="slotsDisplay">❓❓❓</div>
+    <div style="font-size:60px;letter-spacing:20px;" id="slotsDisplay">◇◇◇</div>
     <div class="game-result" id="slotsResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinSlots()">🎰 Крутить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinSlots()">Крутить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-basket"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🏀 <span>Баскетбол</span></div><button class="modal-close" onclick="closeModal('basket')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◉ <span>Баскетбол</span></div><button class="modal-close" onclick="closeModal('basket')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="basketDisplay">🏀</div>
+    <div class="dice" id="basketDisplay">◉</div>
     <div class="game-result" id="basketResult">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="throwBasket()">🏀 Бросить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="throwBasket()">Бросить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-mine"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">⛏️ <span>Майнинг</span></div><button class="modal-close" onclick="closeModal('mine')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◆ <span>Майнинг</span></div><button class="modal-close" onclick="closeModal('mine')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="mineDisplay">💎</div>
+    <div class="dice" id="mineDisplay">◆</div>
     <div class="game-result" id="mineResult">Копай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="digMine()">⛏️ Копать</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="digMine()">Копать</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-wheel"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎡 <span>Колесо Фортуны</span></div><button class="modal-close" onclick="closeModal('wheel')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◉ <span>Колесо Фортуны</span></div><button class="modal-close" onclick="closeModal('wheel')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="wheelDisplay">🎡</div>
+    <div class="dice" id="wheelDisplay">◉</div>
     <div class="game-result" id="wheelResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinWheel()">🎡 Крутить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="spinWheel()">Крутить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-darts"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎯 <span>Дартс</span></div><button class="modal-close" onclick="closeModal('darts')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◎ <span>Дартс</span></div><button class="modal-close" onclick="closeModal('darts')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="dartsDisplay">🎯</div>
+    <div class="dice" id="dartsDisplay">◎</div>
     <div class="game-result" id="dartsResult">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playDarts()">🎯 Бросить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playDarts()">Бросить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-fishing"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎣 <span>Рыбалка</span></div><button class="modal-close" onclick="closeModal('fishing')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◇ <span>Рыбалка</span></div><button class="modal-close" onclick="closeModal('fishing')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="fishingDisplay">🎣</div>
+    <div class="dice" id="fishingDisplay">◇</div>
     <div class="game-result" id="fishingResult">Закинь удочку!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playFishing()">🎣 Закинуть</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playFishing()">Закинуть</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-cards"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎴 <span>Карты</span></div><button class="modal-close" onclick="closeModal('cards')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◈ <span>Карты</span></div><button class="modal-close" onclick="closeModal('cards')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="cardsDisplay">🎴</div>
+    <div class="dice" id="cardsDisplay">◈</div>
     <div class="game-result" id="cardsResult">Тяни карту!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playCards()">🎴 Тянуть</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playCards()">Тянуть</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-shells"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎩 <span>Фокусник</span></div><button class="modal-close" onclick="closeModal('shells')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◐ <span>Фокусник</span></div><button class="modal-close" onclick="closeModal('shells')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="shellsDisplay">🎩</div>
+    <div class="dice" id="shellsDisplay">◐</div>
     <div class="game-result" id="shellsResult">Где шарик?</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playShells()">🎩 Угадать</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playShells()">Угадать</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-craps"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎲 <span>Кости</span></div><button class="modal-close" onclick="closeModal('craps')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◆ <span>Кости</span></div><button class="modal-close" onclick="closeModal('craps')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="crapsDisplay">🎲🎲</div>
+    <div class="dice" id="crapsDisplay">◆◆</div>
     <div class="game-result" id="crapsResult">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playCraps()">🎲 Бросить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playCraps()">Бросить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-archery"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🏹 <span>Лучник</span></div><button class="modal-close" onclick="closeModal('archery')">×</button></div>
+  <div class="modal-header"><div class="modal-title">➤ <span>Лучник</span></div><button class="modal-close" onclick="closeModal('archery')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="archeryDisplay">🏹</div>
+    <div class="dice" id="archeryDisplay">➤</div>
     <div class="game-result" id="archeryResult">Натяни тетиву!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playArchery()">🏹 Стрелять</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playArchery()">Стрелять</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-penalty"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">⚽ <span>Пенальти</span></div><button class="modal-close" onclick="closeModal('penalty')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◉ <span>Пенальти</span></div><button class="modal-close" onclick="closeModal('penalty')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="penaltyDisplay">⚽</div>
+    <div class="dice" id="penaltyDisplay">◉</div>
     <div class="game-result" id="penaltyResult">Бей!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playPenalty()">⚽ Ударить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playPenalty()">Ударить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-basket3"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🏀 <span>3-очковый</span></div><button class="modal-close" onclick="closeModal('basket3')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◉ <span>3-очковый</span></div><button class="modal-close" onclick="closeModal('basket3')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="basket3Display">🏀</div>
+    <div class="dice" id="basket3Display">◉</div>
     <div class="game-result" id="basket3Result">Бросай!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playBasket3()">🏀 Бросить</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playBasket3()">Бросить</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-mines"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">💣 <span>Сапёр</span></div><button class="modal-close" onclick="closeModal('mines')">×</button></div>
+  <div class="modal-header"><div class="modal-title">✸ <span>Сапёр</span></div><button class="modal-close" onclick="closeModal('mines')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="minesDisplay">💣</div>
+    <div class="dice" id="minesDisplay">✸</div>
     <div class="game-result" id="minesResult">Открой клетку!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playMines()">💣 Открыть</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playMines()">Открыть</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-poker"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎰 <span>Видеопокер</span></div><button class="modal-close" onclick="closeModal('poker')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◈ <span>Видеопокер</span></div><button class="modal-close" onclick="closeModal('poker')">×</button></div>
   <div class="game-area">
-    <div class="dice" id="pokerDisplay">🎰</div>
+    <div class="dice" id="pokerDisplay">◈</div>
     <div class="game-result" id="pokerResult">Крути!</div>
-    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playPoker()">🎰 Раздать</button>
+    <button class="btn-buy" style="padding:12px 30px;font-size:15px;" onclick="playPoker()">Раздать</button>
   </div>
 </div></div>
 
 <div class="modal" id="modal-leaderboard"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🏆 <span>Топ игроков</span></div><button class="modal-close" onclick="closeModal('leaderboard')">×</button></div>
+  <div class="modal-header"><div class="modal-title">♛ <span>Топ игроков</span></div><button class="modal-close" onclick="closeModal('leaderboard')">×</button></div>
   <div id="leaderList">Загрузка...</div>
 </div></div>
 
 <div class="modal" id="modal-quests"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">📋 <span>Квесты</span></div><button class="modal-close" onclick="closeModal('quests')">×</button></div>
+  <div class="modal-header"><div class="modal-title">✦ <span>Квесты</span></div><button class="modal-close" onclick="closeModal('quests')">×</button></div>
   <div id="questsList"></div>
 </div></div>
 
@@ -721,17 +741,17 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 </div></div>
 
 <div class="modal" id="modal-achievements"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🏅 <span>Достижения</span></div><button class="modal-close" onclick="closeModal('achievements')">×</button></div>
+  <div class="modal-header"><div class="modal-title">✧ <span>Достижения</span></div><button class="modal-close" onclick="closeModal('achievements')">×</button></div>
   <div id="achList"></div>
 </div></div>
 
 <div class="modal" id="modal-referral"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">👥 <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
-  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">Приглашай друзей — получай IS за каждого.<br><span style="color:#22c55e;font-size:11px;">✅ Ссылка работает и в браузере, и в Telegram</span></p>
+  <div class="modal-header"><div class="modal-title">❖ <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
+  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">Приглашай друзей — получай IS за каждого.<br><span style="color:#22c55e;font-size:11px;">✓ Ссылка работает и в браузере, и в Telegram</span></p>
 
   <div style="background:linear-gradient(135deg,rgba(79,172,254,0.1),rgba(30,58,95,0.2)); border:1px solid rgba(79,172,254,0.3); border-radius:12px; padding:12px; margin-bottom:12px;">
     <div style="font-size:11px; color:#8899aa; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;">Твоя ссылка:</div>
-    <div style="word-break:break-all; font-size:11px; color:#4facfe; font-family:monospace; padding:8px; background:rgba(10,10,15,0.5); border-radius:8px;" id="refLink">Загрузка...</div>
+    <div style="word-break:break-all; font-size:11px; color:#4facfe; font-family:monospace; padding:8px; background:rgba(10,10,15,0.5); border-radius:8px; min-height: 32px;" id="refLink">—</div>
   </div>
 
   <button class="btn-buy" style="width:100%;padding:12px;" onclick="copyRefLink()">📋 Копировать ссылку</button>
@@ -742,32 +762,33 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   </div>
 
   <div style="background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(22,163,74,0.05)); border:1px solid rgba(34,197,94,0.3); border-radius:14px; padding:14px; margin-top:16px;">
-    <div style="font-size:12px; color:#8899aa; margin-bottom:8px;">💰 Заработано всего:</div>
+    <div style="font-size:12px; color:#8899aa; margin-bottom:8px;">◈ Заработано всего:</div>
     <div style="font-size:24px; font-weight:900; color:#22c55e; text-shadow:0 0 15px rgba(34,197,94,0.5);" id="refEarnedTotal">0 IS</div>
     <div style="font-size:11px; color:#667788; margin-top:4px;">+ Можно забрать: <b style="color:#ffd700;" id="refClaimable">0 IS</b></div>
   </div>
 
   <button id="btnClaimRef" onclick="claimReferralReward()" class="btn-buy green" style="width:100%;padding:14px;margin-top:10px;font-size:14px;font-weight:800;" disabled>
-    🎁 Забрать награду
+    ✧ Забрать награду
   </button>
 
   <div style="font-size:11px; color:#8899aa; margin-top:14px; text-align:center; line-height:1.6;">
-    📊 <b style="color:#ffd700;">Таблица наград:</b><br>
+    ▤ <b style="color:#ffd700;">Таблица наград:</b><br>
     1 друг — 100 IS<br>
     2 друга — 150 IS<br>
     3-4 друга — по 150 IS<br>
-    5-100 друзей — по 100 IS<br>
+    5 друзей — 450 IS<br>
+    6-100 друзей — по 100 IS<br>
     100+ друзей — по 300 IS
   </div>
 
-  <div style="margin-top:20px; font-size:13px; font-weight:800; color:#4facfe; margin-bottom:8px;">📋 Твои друзья:</div>
+  <div style="margin-top:20px; font-size:13px; font-weight:800; color:#4facfe; margin-bottom:8px;">▤ Твои друзья:</div>
   <div id="referralList" style="margin-top:8px; max-height:280px; overflow-y:auto;">
     <p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Загрузка...</p>
   </div>
 </div></div>
 
 <div class="modal" id="modal-referral-bonus"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎁 <span>Бонус за рефералку</span></div><button class="modal-close" onclick="closeModal('referral-bonus')">×</button></div>
+  <div class="modal-header"><div class="modal-title">✧ <span>Бонус за рефералку</span></div><button class="modal-close" onclick="closeModal('referral-bonus')">×</button></div>
 
   <p style="color:#b8a060; font-size:12px; text-align:center; margin-bottom:16px;">Чем больше друзей — тем больше награда за каждого!</p>
 
@@ -782,80 +803,80 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:900; text-shadow:0 1px 4px rgba(0,0,0,0.9);" id="bonusProgressText">0 / 100</div>
   </div>
 
-  <div style="font-size:14px; font-weight:800; color:#4facfe; margin-bottom:10px;">📊 Таблица наград:</div>
+  <div style="font-size:14px; font-weight:800; color:#4facfe; margin-bottom:10px;">▤ Таблица наград:</div>
   <div id="bonusTable"></div>
 
   <p style="color:#8899aa; font-size:11px; text-align:center; margin-top:14px; line-height:1.6;">
-    💡 За каждого друга приходит IS автоматически<br>
+    ✦ За каждого друга приходит IS автоматически<br>
     после того, как друг зарегистрируется
   </p>
 </div></div>
 
 <div class="modal" id="modal-daily"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎁 <span>Награды</span></div><button class="modal-close" onclick="closeModal('daily')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◈ <span>Награды</span></div><button class="modal-close" onclick="closeModal('daily')">×</button></div>
   <div id="dailyContent"></div>
 </div></div>
 
 <div class="modal" id="modal-stats"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">📊 <span>Статистика</span></div><button class="modal-close" onclick="closeModal('stats')">×</button></div>
+  <div class="modal-header"><div class="modal-title">▤ <span>Статистика</span></div><button class="modal-close" onclick="closeModal('stats')">×</button></div>
   <div id="statsContent"></div>
 </div></div>
 
 <div class="modal" id="modal-profile"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">👤 <span>Профиль</span></div><button class="modal-close" onclick="closeModal('profile')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◉ <span>Профиль</span></div><button class="modal-close" onclick="closeModal('profile')">×</button></div>
   <div id="profileContent"></div>
   <button onclick="logout()" style="width:100%; padding:14px; margin-top:14px; border-radius:14px; border:1px solid rgba(230,57,70,0.4); background:linear-gradient(135deg, rgba(230,57,70,0.15), rgba(230,57,70,0.05)); color:#e63946; font-size:15px; font-weight:800; cursor:pointer;">
-    🚪 Выйти из аккаунта
+    ⏻ Выйти из аккаунта
   </button>
 </div></div>
 
 <div class="modal" id="modal-isTasks"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">💎 <span>Заработать IS</span></div><button class="modal-close" onclick="closeModal('isTasks')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◈ <span>Заработать IS</span></div><button class="modal-close" onclick="closeModal('isTasks')">×</button></div>
   <p style="color:#b8a060;font-size:12px;text-align:center;margin-bottom:14px;">Выполняй задания — получай IS</p>
   <div id="isTasksList" class="is-tasks-grid"></div>
 </div></div>
 
 <div class="modal" id="modal-promocodes"><div class="modal-content">
   <div class="modal-header">
-    <div class="modal-title">🏷️ <span>Промокоды IngSoft</span></div>
+    <div class="modal-title">✎ <span>Промокоды IngSoft</span></div>
     <button class="modal-close" onclick="closeModal('promocodes')">×</button>
   </div>
   <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:14px;">
     <button onclick="switchPromoTab(1)" id="promoTab1" style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#0a0a0f; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:pointer; box-shadow:0 4px 15px rgba(255,215,0,0.4);">IngSoft</button>
-    <button onclick="switchPromoTab(2)" id="promoTab2" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
-    <button onclick="switchPromoTab(3)" id="promoTab3" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
-    <button onclick="switchPromoTab(4)" id="promoTab4" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
-    <button onclick="switchPromoTab(5)" id="promoTab5" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
-    <button onclick="switchPromoTab(6)" id="promoTab6" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
-    <button onclick="switchPromoTab(7)" id="promoTab7" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
-    <button onclick="switchPromoTab(8)" id="promoTab8" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
-    <button onclick="switchPromoTab(9)" id="promoTab9" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
-    <button onclick="switchPromoTab(10)" id="promoTab10" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">🔒 Скоро</button>
+    <button onclick="switchPromoTab(2)" id="promoTab2" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(3)" id="promoTab3" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(4)" id="promoTab4" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(5)" id="promoTab5" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(6)" id="promoTab6" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(7)" id="promoTab7" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(8)" id="promoTab8" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(9)" id="promoTab9" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
+    <button onclick="switchPromoTab(10)" id="promoTab10" disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#667788; padding:10px 4px; border-radius:10px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
   </div>
   <div id="promoContent" style="background:linear-gradient(145deg, rgba(255,215,0,0.08), rgba(15,21,32,0.6)); border:1px solid rgba(255,215,0,0.25); border-radius:14px; padding:16px; margin-bottom:14px; font-size:13px; line-height:1.7; color:#e8e4dc;">
-    <div style="text-align:center; font-size:16px; font-weight:900; color:#ffd700; margin-bottom:12px;">🏷️ Промокоды IngSoft</div>
+    <div style="text-align:center; font-size:16px; font-weight:900; color:#ffd700; margin-bottom:12px;">✎ Промокоды IngSoft</div>
     <p style="margin-bottom:10px;">Промокоды на заказ на сайте <b style="color:#ffd700;">IngSoft</b> <span style="color:#888;">(ссылка)</span></p>
     <p style="margin-bottom:10px;">Скидка будет <b>до 5%</b>.</p>
     <p style="color:#888; font-size:11px;">Скоро тут появится ссылка на сайт IngSoft.</p>
   </div>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
-    <button onclick="switchPromoView('earn')" id="promoViewEarn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f); border:none; color:#fff; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(79,172,254,0.4);">💼 Заработать</button>
-    <button onclick="switchPromoView('wallet')" id="promoViewWallet" style="background:transparent; border:1px solid rgba(79,172,254,0.3); color:#8899aa; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer;">👛 Кошелёк</button>
+    <button onclick="switchPromoView('earn')" id="promoViewEarn" style="background:linear-gradient(135deg,#4facfe,#1e3a5f); border:none; color:#fff; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer; box-shadow:0 6px 20px rgba(79,172,254,0.4);">◈ Заработать</button>
+    <button onclick="switchPromoView('wallet')" id="promoViewWallet" style="background:transparent; border:1px solid rgba(79,172,254,0.3); color:#8899aa; padding:12px 8px; border-radius:12px; font-size:12px; font-weight:800; cursor:pointer;">◐ Кошелёк</button>
   </div>
   <div id="promoEarnView"><div id="promoEarnList"></div></div>
   <div id="promoWalletView" style="display:none;"><div id="promoWalletList"></div></div>
 </div></div>
 
 <div class="modal" id="modal-promo"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">🎫 <span>Промокод</span></div><button class="modal-close" onclick="closeModal('promo')">×</button></div>
+  <div class="modal-header"><div class="modal-title">✎ <span>Промокод</span></div><button class="modal-close" onclick="closeModal('promo')">×</button></div>
   <p style="color:#888;font-size:13px;margin-bottom:14px;text-align:center;">Введи промокод и получи награду</p>
   <input type="text" id="promoInput" class="promo-input" placeholder="ВВЕДИ КОД" maxlength="20">
-  <button class="btn-buy green" style="width:100%;padding:14px;font-size:15px;" onclick="redeemPromo()">🎁 Активировать</button>
+  <button class="btn-buy green" style="width:100%;padding:14px;font-size:15px;" onclick="redeemPromo()">✧ Активировать</button>
   <div id="promoHistory" style="margin-top:16px;"></div>
 </div></div>
 
 <div class="modal" id="modal-wallet"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">💰 <span>Кошелёк</span></div><button class="modal-close" onclick="closeModal('wallet')">×</button></div>
+  <div class="modal-header"><div class="modal-title">◈ <span>Кошелёк</span></div><button class="modal-close" onclick="closeModal('wallet')">×</button></div>
   <div class="wallet-balance">
     <div class="wallet-balance-val" id="walletVal">0 ₽</div>
     <div class="wallet-balance-lbl">Реальный баланс</div>
@@ -864,11 +885,11 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div class="profile-row"><span>К выводу</span><span id="walletAvail">0 ₽</span></div>
   <div class="profile-row"><span>В ожидании</span><span id="walletPending">0 ₽</span></div>
   <div class="profile-row"><span>Заработано всего</span><span id="walletTotal">0 ₽</span></div>
-  <button class="btn-buy blue" style="width:100%;padding:14px;margin-top:14px;font-size:14px;" onclick="showToast('Вывод станет доступен позже')">💸 Вывести</button>
+  <button class="btn-buy blue" style="width:100%;padding:14px;margin-top:14px;font-size:14px;" onclick="showToast('Вывод станет доступен позже')">↓ Вывести</button>
 </div></div>
 
 <div class="modal" id="modal-about"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">ℹ️ <span>О игре</span></div><button class="modal-close" onclick="closeModal('about')">×</button></div>
+  <div class="modal-header"><div class="modal-title">ⓘ <span>О игре</span></div><button class="modal-close" onclick="closeModal('about')">×</button></div>
   <p style="color:#ccc;line-height:1.7;font-size:13px;">
     <b style="color:#e63946;">IngSoft Tap</b> — тапалка внутри Telegram.<br><br>
     • Тапай — получай очки<br>
@@ -940,14 +961,14 @@ const PROMOS = {
 const DAILY_REWARDS = [{coins:100},{coins:200},{coins:300},{coins:500},{coins:1000},{coins:2000},{coins:5000}];
 
 const IS_SHOP = [
-  { id:'unlim15',  icon:'♾️', name:'Безлимит 15 мин', desc:'Тапай без лимита', price:100, apply:() => { unlimitedUntil = Date.now() + 15*60*1000; } },
-  { id:'unlim30',  icon:'♾️', name:'Безлимит 30 мин', desc:'Двойное время',   price:180, apply:() => { unlimitedUntil = Date.now() + 30*60*1000; } },
-  { id:'tap5000',  icon:'👆', name:'+5 000 тапов',     desc:'К дневной норме', price:75,  apply:() => { dailyTapLimit += 5000; } },
-  { id:'tap25000', icon:'👆', name:'+25 000 тапов',    desc:'К дневной норме', price:300, apply:() => { dailyTapLimit += 25000; } },
+  { id:'unlim15',  icon:'∞', name:'Безлимит 15 мин', desc:'Тапай без лимита', price:100, apply:() => { unlimitedUntil = Date.now() + 15*60*1000; } },
+  { id:'unlim30',  icon:'∞', name:'Безлимит 30 мин', desc:'Двойное время',   price:180, apply:() => { unlimitedUntil = Date.now() + 30*60*1000; } },
+  { id:'tap5000',  icon:'↟', name:'+5 000 тапов',     desc:'К дневной норме', price:75,  apply:() => { dailyTapLimit += 5000; } },
+  { id:'tap25000', icon:'↟', name:'+25 000 тапов',    desc:'К дневной норме', price:300, apply:() => { dailyTapLimit += 25000; } },
   { id:'energy',   icon:'⚡', name:'Полная энергия',   desc:'Мгновенно',       price:50,  apply:() => { energy = maxEnergy; } },
-  { id:'mult2day', icon:'✖️', name:'x2 очков 30 мин',  desc:'Временный буст',  price:120, apply:() => { isBoostMultUntil = Date.now() + 30*60*1000; } },
-  { id:'autotap',  icon:'🤖', name:'Автоклик 1 час',   desc:'+1 тап/сек',      price:200, apply:() => { isAutoTapUntil = Date.now() + 60*60*1000; } },
-  { id:'reset',    icon:'🔄', name:'Сброс лимита',     desc:'Обнулить счётчик',price:250, apply:() => { tapsToday = 0; } },
+  { id:'mult2day', icon:'✦', name:'x2 очков 30 мин',  desc:'Временный буст',  price:120, apply:() => { isBoostMultUntil = Date.now() + 30*60*1000; } },
+  { id:'autotap',  icon:'◉', name:'Автоклик 1 час',   desc:'+1 тап/сек',      price:200, apply:() => { isAutoTapUntil = Date.now() + 60*60*1000; } },
+  { id:'reset',    icon:'↻', name:'Сброс лимита',     desc:'Обнулить счётчик',price:250, apply:() => { tapsToday = 0; } },
 ];
 
 const API_URL = 'https://ingsofttap.bothost.tech';
@@ -958,8 +979,6 @@ const BOT_SHORT_NAME = 'tap';
 const SUB_REWARD = 50;
 const SUB_PENALTY = 500;
 
-// НОВАЯ ТАБЛИЦА НАГРАД ЗА РЕФЕРАЛОВ:
-// 1 = 100, 2 = 150, 3-4 = 150, 5 = 450, 6-100 = 100, 100+ = 300
 function getReferralReward(friendNumber) {
   if (friendNumber <= 0) return 0;
   if (friendNumber === 1) return 100;
@@ -978,53 +997,53 @@ function getTotalReferralEarnings(count) {
 }
 
 const IS_TASKS = [
-  { id:'sub_tg', icon:'📢', name:'Подписка на канал', desc:'Telegram-канал @' + TG_CHANNEL, reward:SUB_REWARD, link:TG_CHANNEL_URL, real:true, type:'subscribe' },
-  { id:'sub_yt',  icon:'▶️', name:'Подписка YouTube',   desc:'Ссылку на YouTube ещё не добавили', reward:0, link:'', todo:true },
-  { id:'sub_wa',  icon:'💬', name:'Подписка WhatsApp',  desc:'Ссылку на WhatsApp ещё не добавили', reward:0, link:'', todo:true },
-  { id:'like',    icon:'❤️', name:'Лайк видео',          desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
-  { id:'repost',  icon:'🔁', name:'Репост видео',        desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
-  { id:'comment', icon:'💬', name:'Комментарий под видео', desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
-  { id:'invite',  icon:'👥', name:'Пригласи друга',      desc:'За каждого друга', reward:100, link:'', invite:true },
+  { id:'sub_tg', icon:'◉', name:'Подписка на канал', desc:'Telegram-канал @' + TG_CHANNEL, reward:SUB_REWARD, link:TG_CHANNEL_URL, real:true, type:'subscribe' },
+  { id:'sub_yt',  icon:'▶', name:'Подписка YouTube',   desc:'Ссылку на YouTube ещё не добавили', reward:0, link:'', todo:true },
+  { id:'sub_wa',  icon:'◐', name:'Подписка WhatsApp',  desc:'Ссылку на WhatsApp ещё не добавили', reward:0, link:'', todo:true },
+  { id:'like',    icon:'♥', name:'Лайк видео',          desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
+  { id:'repost',  icon:'↻', name:'Репост видео',        desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
+  { id:'comment', icon:'✎', name:'Комментарий под видео', desc:'Ещё не добавили видео', reward:0, link:'', todo:true },
+  { id:'invite',  icon:'❖', name:'Пригласи друга',      desc:'За каждого друга', reward:100, link:'', invite:true },
 ];
 
 const QUESTS = [
-  { id:'tap100', name:'🌟 Первые шаги', desc:'100 тапов', reward:100, check: () => totalTaps >= 100 },
-  { id:'tap1k', name:'🔥 Новичок', desc:'1 000 тапов', reward:500, check: () => totalTaps >= 1000 },
+  { id:'tap100', name:'✦ Первые шаги', desc:'100 тапов', reward:100, check: () => totalTaps >= 100 },
+  { id:'tap1k', name:'✧ Новичок', desc:'1 000 тапов', reward:500, check: () => totalTaps >= 1000 },
   { id:'tap10k', name:'⚡ Любитель', desc:'10 000 тапов', reward:5000, check: () => totalTaps >= 10000 },
-  { id:'tap100k', name:'💎 Про', desc:'100 000 тапов', reward:50000, check: () => totalTaps >= 100000 },
-  { id:'tap1m', name:'🏆 Гуру', desc:'1 000 000 тапов', reward:500000, check: () => totalTaps >= 1000000 },
-  { id:'lvl5', name:'⬆️ Ур. 5', desc:'Достичь 5 уровня', reward:500, check: () => level >= 5 },
-  { id:'lvl25', name:'⬆️ Ур. 25', desc:'Достичь 25 уровня', reward:50000, check: () => level >= 25 },
+  { id:'tap100k', name:'◈ Про', desc:'100 000 тапов', reward:50000, check: () => totalTaps >= 100000 },
+  { id:'tap1m', name:'♛ Гуру', desc:'1 000 000 тапов', reward:500000, check: () => totalTaps >= 1000000 },
+  { id:'lvl5', name:'↟ Ур. 5', desc:'Достичь 5 уровня', reward:500, check: () => level >= 5 },
+  { id:'lvl25', name:'↟ Ур. 25', desc:'Достичь 25 уровня', reward:50000, check: () => level >= 25 },
   { id:'mult2', name:'⚡ x2', desc:'Купить множитель x2', reward:1000, check: () => multiplier >= 2 },
-  { id:'mult5', name:'🔥 x5', desc:'Купить множитель x5', reward:10000, check: () => multiplier >= 5 },
-  { id:'promo', name:'🎫 Промокод', desc:'Активировать промокод', reward:1000, check: () => claimedPromos.length >= 1 },
+  { id:'mult5', name:'✧ x5', desc:'Купить множитель x5', reward:10000, check: () => multiplier >= 5 },
+  { id:'promo', name:'✎ Промокод', desc:'Активировать промокод', reward:1000, check: () => claimedPromos.length >= 1 },
 ];
 
 const ACHIEVEMENTS = [
-  { id:'first', icon:'🌟', name:'Первый тап', desc:'1 тап', check: () => totalTaps >= 1 },
-  { id:'taps100', icon:'💯', name:'Сотня', desc:'100 тапов', check: () => totalTaps >= 100 },
-  { id:'taps1k', icon:'🔥', name:'Тысяча', desc:'1000 тапов', check: () => totalTaps >= 1000 },
-  { id:'taps10k', icon:'⚡', name:'10К', desc:'10 000 тапов', check: () => totalTaps >= 10000 },
-  { id:'taps100k', icon:'💎', name:'100К', desc:'100 000 тапов', check: () => totalTaps >= 100000 },
-  { id:'taps1m', icon:'👑', name:'Миллион', desc:'1 000 000 тапов', check: () => totalTaps >= 1000000 },
-  { id:'score1k', icon:'💰', name:'Тысячник', desc:'1000 очков', check: () => score >= 1000 },
-  { id:'score100k', icon:'💵', name:'Сто тысяч', desc:'100 000 очков', check: () => score >= 100000 },
-  { id:'score1m', icon:'💎', name:'Миллион', desc:'1 000 000 очков', check: () => score >= 1000000 },
+  { id:'first', icon:'✦', name:'Первый тап', desc:'1 тап', check: () => totalTaps >= 1 },
+  { id:'taps100', icon:'✧', name:'Сотня', desc:'100 тапов', check: () => totalTaps >= 100 },
+  { id:'taps1k', icon:'⚡', name:'Тысяча', desc:'1000 тапов', check: () => totalTaps >= 1000 },
+  { id:'taps10k', icon:'◈', name:'10К', desc:'10 000 тапов', check: () => totalTaps >= 10000 },
+  { id:'taps100k', icon:'◆', name:'100К', desc:'100 000 тапов', check: () => totalTaps >= 100000 },
+  { id:'taps1m', icon:'♛', name:'Миллион', desc:'1 000 000 тапов', check: () => totalTaps >= 1000000 },
+  { id:'score1k', icon:'◈', name:'Тысячник', desc:'1000 очков', check: () => score >= 1000 },
+  { id:'score100k', icon:'◉', name:'Сто тысяч', desc:'100 000 очков', check: () => score >= 100000 },
+  { id:'score1m', icon:'◆', name:'Миллион', desc:'1 000 000 очков', check: () => score >= 1000000 },
   { id:'mult5', icon:'⚡', name:'Магнат', desc:'Множитель x5', check: () => multiplier >= 5 },
-  { id:'lvl10', icon:'⬆️', name:'Десятка', desc:'Уровень 10', check: () => level >= 10 },
-  { id:'auto', icon:'🤖', name:'Автоматизация', desc:'Купить автоклик', check: () => autotapLevel > 0 },
-  { id:'passive', icon:'⏰', name:'Пассив', desc:'Пассивный доход', check: () => passiveIncome > 0 },
-  { id:'promo1', icon:'🎫', name:'Промо-мастер', desc:'Активировать промокод', check: () => claimedPromos.length >= 1 },
+  { id:'lvl10', icon:'↟', name:'Десятка', desc:'Уровень 10', check: () => level >= 10 },
+  { id:'auto', icon:'◉', name:'Автоматизация', desc:'Купить автоклик', check: () => autotapLevel > 0 },
+  { id:'passive', icon:'◐', name:'Пассив', desc:'Пассивный доход', check: () => passiveIncome > 0 },
+  { id:'promo1', icon:'✎', name:'Промо-мастер', desc:'Активировать промокод', check: () => claimedPromos.length >= 1 },
 ];
 
 const BOOST_NAMES = [
   {n:'⚡ Множитель', t:'mult', base:100000, step:2},
-  {n:'🔥 Супер-множитель', t:'mult', base:500000, step:5},
-  {n:'💎 Мега-множитель', t:'mult', base:2000000, step:10},
-  {n:'🔋 Энергия', t:'energy', base:50000, step:1000},
-  {n:'⚡ Энергия+', t:'energy', base:250000, step:5000},
-  {n:'🤖 Автоклик', t:'auto', base:100000000, step:1},
-  {n:'⏰ Пассив +1K/ч', t:'passive', base:1000000, step:1000},
+  {n:'✦ Супер-множитель', t:'mult', base:500000, step:5},
+  {n:'◆ Мега-множитель', t:'mult', base:2000000, step:10},
+  {n:'⚡ Энергия', t:'energy', base:50000, step:1000},
+  {n:'◈ Энергия+', t:'energy', base:250000, step:5000},
+  {n:'◉ Автоклик', t:'auto', base:100000000, step:1},
+  {n:'◐ Пассив +1K/ч', t:'passive', base:1000000, step:1000},
 ];
 
 const BOOSTS = [];
@@ -1076,6 +1095,7 @@ function openModal(name) {
   if (name === 'profile') loadProfile();
   if (name === 'wallet') loadWallet();
   if (name === 'referral') {
+    updateRefLink();
     loadReferral();
     if (window._referralInterval) clearInterval(window._referralInterval);
     window._referralInterval = setInterval(loadReferral, 3000);
@@ -1197,19 +1217,19 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
 function buildSidebar() {
   const isFem = (gender === 'female');
   const items = [
-    { icon: isFem ? '🌸' : '🏠', label:'Главная', action:'closeAllModals' },
-    { icon: isFem ? '🎀' : '🎮', label: isFem ? 'Развлечения' : 'Игры', action:'openModal(\'games\')' },
-    { icon: isFem ? '👑' : '🏆', label: 'Топ', action:'openModal(\'leaderboard\')' },
-    { icon: isFem ? '📝' : '📋', label: isFem ? 'Задания' : 'Квесты', action:'openModal(\'quests\')' },
-    { icon: isFem ? '💖' : '⚡', label: isFem ? 'Ускорители' : 'Бусты', action:'openModal(\'boosts\')' },
-    { icon: isFem ? '🌟' : '🏅', label: 'Достижения', action:'openModal(\'achievements\')' },
-    { icon: isFem ? '💕' : '👥', label:'Друзья', action:'openModal(\'referral\')' },
-    { icon:'🎁', label:'Бонус', action:'openModal(\'referral-bonus\')' },
-    { icon: isFem ? '🎀' : '🎁', label:'Награды', action:'openModal(\'daily\')' },
-    { icon: isFem ? '📈' : '📊', label:'Статистика', action:'openModal(\'stats\')' },
-    { icon: isFem ? '👸' : '👤', label:'Профиль', action:'openModal(\'profile\')' },
-    { icon: isFem ? '💝' : '🎫', label:'Промокод', action:'openModal(\'promo\')' },
-    { icon:'ℹ️', label:'О игре', action:'openModal(\'about\')' },
+    { icon: '◈', label:'Главная', action:'closeAllModals' },
+    { icon: '⬢', label: isFem ? 'Развлечения' : 'Игры', action:'openModal(\'games\')' },
+    { icon: '♛', label: 'Топ', action:'openModal(\'leaderboard\')' },
+    { icon: '✦', label: isFem ? 'Задания' : 'Квесты', action:'openModal(\'quests\')' },
+    { icon: '⚡', label: isFem ? 'Ускорители' : 'Бусты', action:'openModal(\'boosts\')' },
+    { icon: '✧', label: 'Достижения', action:'openModal(\'achievements\')' },
+    { icon: '❖', label:'Друзья', action:'openModal(\'referral\')' },
+    { icon:'✧', label:'Бонус', action:'openModal(\'referral-bonus\')' },
+    { icon:'◈', label:'Награды', action:'openModal(\'daily\')' },
+    { icon:'▤', label:'Статистика', action:'openModal(\'stats\')' },
+    { icon:'◉', label:'Профиль', action:'openModal(\'profile\')' },
+    { icon:'✎', label:'Промокод', action:'openModal(\'promo\')' },
+    { icon:'ⓘ', label:'О игре', action:'openModal(\'about\')' },
   ];
   const sb = document.getElementById('sidebarItems'); if (!sb) return;
   sb.innerHTML = items.map(it =>
@@ -1218,43 +1238,43 @@ function buildSidebar() {
 }
 
 const GAMES_MALE = [
-  { id:'roulette', icon:'🎰', name:'Рулетка', desc:'Крути колесо' },
-  { id:'dice', icon:'🎲', name:'Кубик', desc:'Бросай кубик' },
-  { id:'coin', icon:'🪙', name:'Монетка', desc:'Орёл или решка' },
-  { id:'slots', icon:'🎰', name:'Слоты', desc:'Собери комбо' },
-  { id:'basket', icon:'🏀', name:'Баскетбол', desc:'Забрось мяч' },
-  { id:'mine', icon:'⛏️', name:'Майнинг', desc:'Копай руду' },
-  { id:'wheel', icon:'🎡', name:'Колесо', desc:'Крути фортуну' },
-  { id:'darts', icon:'🎯', name:'Дартс', desc:'Попади в цель' },
-  { id:'fishing', icon:'🎣', name:'Рыбалка', desc:'Поймай рыбу' },
-  { id:'cards', icon:'🎴', name:'Карты', desc:'Угадай карту' },
-  { id:'shells', icon:'🎩', name:'Фокусник', desc:'Где шарик?' },
-  { id:'craps', icon:'🎲', name:'Кости', desc:'Сумма кубиков' },
-  { id:'archery', icon:'🏹', name:'Лучник', desc:'Попади в яблочко' },
-  { id:'penalty', icon:'⚽', name:'Пенальти', desc:'Забей гол' },
-  { id:'basket3', icon:'🏀', name:'3-очковый', desc:'Сложный бросок' },
-  { id:'mines', icon:'💣', name:'Сапёр', desc:'Открой клетку' },
-  { id:'poker', icon:'🎰', name:'Видеопокер', desc:'Собери комбо' },
+  { id:'roulette', icon:'◉', name:'Рулетка', desc:'Крути колесо' },
+  { id:'dice', icon:'◆', name:'Кубик', desc:'Бросай кубик' },
+  { id:'coin', icon:'○', name:'Монетка', desc:'Орёл или решка' },
+  { id:'slots', icon:'✧', name:'Слоты', desc:'Собери комбо' },
+  { id:'basket', icon:'◉', name:'Баскетбол', desc:'Забрось мяч' },
+  { id:'mine', icon:'◆', name:'Майнинг', desc:'Копай руду' },
+  { id:'wheel', icon:'◉', name:'Колесо', desc:'Крути фортуну' },
+  { id:'darts', icon:'◎', name:'Дартс', desc:'Попади в цель' },
+  { id:'fishing', icon:'◇', name:'Рыбалка', desc:'Поймай рыбу' },
+  { id:'cards', icon:'◈', name:'Карты', desc:'Угадай карту' },
+  { id:'shells', icon:'◐', name:'Фокусник', desc:'Где шарик?' },
+  { id:'craps', icon:'◆', name:'Кости', desc:'Сумма кубиков' },
+  { id:'archery', icon:'➤', name:'Лучник', desc:'Попади в яблочко' },
+  { id:'penalty', icon:'◉', name:'Пенальти', desc:'Забей гол' },
+  { id:'basket3', icon:'◉', name:'3-очковый', desc:'Сложный бросок' },
+  { id:'mines', icon:'✸', name:'Сапёр', desc:'Открой клетку' },
+  { id:'poker', icon:'◈', name:'Видеопокер', desc:'Собери комбо' },
 ];
 
 const GAMES_FEMALE = [
-  { id:'roulette', icon:'💐', name:'Букет', desc:'Собери букет' },
-  { id:'dice', icon:'💎', name:'Кристалл', desc:'Найди кристалл' },
-  { id:'coin', icon:'🦋', name:'Бабочка', desc:'Поймай бабочку' },
-  { id:'slots', icon:'🌸', name:'Цветы', desc:'Собери 3 цветка' },
-  { id:'basket', icon:'🎀', name:'Бантик', desc:'Подбери бантик' },
-  { id:'mine', icon:'💖', name:'Сердечко', desc:'Найди сердечко' },
-  { id:'wheel', icon:'🌈', name:'Радуга', desc:'Крути радугу' },
-  { id:'darts', icon:'🌟', name:'Звёздочка', desc:'Попади в звезду' },
-  { id:'fishing', icon:'🐚', name:'Ракушка', desc:'Найди ракушку' },
-  { id:'cards', icon:'🌹', name:'Роза', desc:'Собери букет роз' },
-  { id:'shells', icon:'👑', name:'Корона', desc:'Угадай, где корона' },
-  { id:'craps', icon:'🍰', name:'Пирожное', desc:'Выбери вкус' },
-  { id:'archery', icon:'💍', name:'Кольцо', desc:'Попади в цель' },
-  { id:'penalty', icon:'🍓', name:'Ягодка', desc:'Собери ягоды' },
-  { id:'basket3', icon:'🧁', name:'Капкейк', desc:'Укрась капкейк' },
-  { id:'mines', icon:'🎁', name:'Подарок', desc:'Открой подарок' },
-  { id:'poker', icon:'🧸', name:'Плюшевый', desc:'Собери коллекцию' },
+  { id:'roulette', icon:'✿', name:'Букет', desc:'Собери букет' },
+  { id:'dice', icon:'◆', name:'Кристалл', desc:'Найди кристалл' },
+  { id:'coin', icon:'❀', name:'Бабочка', desc:'Поймай бабочку' },
+  { id:'slots', icon:'✾', name:'Цветы', desc:'Собери 3 цветка' },
+  { id:'basket', icon:'✿', name:'Бантик', desc:'Подбери бантик' },
+  { id:'mine', icon:'♥', name:'Сердечко', desc:'Найди сердечко' },
+  { id:'wheel', icon:'◉', name:'Радуга', desc:'Крути радугу' },
+  { id:'darts', icon:'✦', name:'Звёздочка', desc:'Попади в звезду' },
+  { id:'fishing', icon:'✿', name:'Ракушка', desc:'Найди ракушку' },
+  { id:'cards', icon:'❀', name:'Роза', desc:'Собери букет роз' },
+  { id:'shells', icon:'♛', name:'Корона', desc:'Угадай, где корона' },
+  { id:'craps', icon:'❋', name:'Пирожное', desc:'Выбери вкус' },
+  { id:'archery', icon:'○', name:'Кольцо', desc:'Попади в цель' },
+  { id:'penalty', icon:'♥', name:'Ягодка', desc:'Собери ягоды' },
+  { id:'basket3', icon:'✾', name:'Капкейк', desc:'Укрась капкейк' },
+  { id:'mines', icon:'✦', name:'Подарок', desc:'Открой подарок' },
+  { id:'poker', icon:'❋', name:'Плюшевый', desc:'Собери коллекцию' },
 ];
 
 const FAKE_PLAYERS = [
@@ -1313,7 +1333,7 @@ function loadISShop() {
       '<div class="isi-icon">' + item.icon + '</div>' +
       '<div class="isi-name">' + item.name + '</div>' +
       '<div class="isi-desc">' + item.desc + '</div>' +
-      '<div class="isi-price" style="' + (can ? '' : 'opacity:0.4;') + '">💎 ' + item.price + '</div>' +
+      '<div class="isi-price" style="' + (can ? '' : 'opacity:0.4;') + '">◈ ' + item.price + '</div>' +
     '</div>';
   }).join('');
   const balEl = document.getElementById('isBalanceVal');
@@ -1332,11 +1352,11 @@ function loadISShop() {
 function buyIS(id) {
   const item = IS_SHOP.find(x => x.id === id);
   if (!item) return;
-  if (isBalance < item.price) { showToast('💎 Недостаточно IS'); return; }
+  if (isBalance < item.price) { showToast('◈ Недостаточно IS'); return; }
   isBalance -= item.price;
   item.apply();
   updateUI(); scheduleSave(); loadISShop();
-  showToast('✅ Куплено: ' + item.name);
+  showToast('✓ Куплено: ' + item.name);
 }
 
 function loadISTasks() {
@@ -1348,10 +1368,10 @@ function loadISTasks() {
     if (t.todo) {
       btn = '<button class="btn-is" disabled>Скоро</button>';
     } else if (t.invite) {
-      if (done) btn = '<button class="btn-is" disabled>✅ Выполнено</button>';
+      if (done) btn = '<button class="btn-is" disabled>✓ Выполнено</button>';
       else btn = '<button class="btn-is" onclick="doInvite()">Пригласить</button>';
     } else if (t.real) {
-      if (done) btn = '<button class="btn-is" disabled>✅ Подписан</button>';
+      if (done) btn = '<button class="btn-is" disabled>✓ Подписан</button>';
       else btn = '<button class="btn-is" onclick="subscribeTask()">Подписаться</button>';
     }
     return '<div class="is-task">' +
@@ -1359,7 +1379,7 @@ function loadISTasks() {
       '<div class="is-task-info">' +
         '<div class="is-task-name">' + t.name + '</div>' +
         '<div class="is-task-desc">' + t.desc + '</div>' +
-        (t.reward > 0 ? '<div class="is-task-reward">💎 +' + t.reward + ' IS</div>' : '') +
+        (t.reward > 0 ? '<div class="is-task-reward">◈ +' + t.reward + ' IS</div>' : '') +
       '</div>' + btn +
     '</div>';
   }).join('');
@@ -1367,7 +1387,7 @@ function loadISTasks() {
 
 function subscribeTask() {
   const warn = confirm(
-    '⚠️ ВНИМАНИЕ!\n\n' +
+    '⚠ ВНИМАНИЕ!\n\n' +
     'За подписку ты получишь ' + SUB_REWARD + ' IS.\n\n' +
     'Если ты ОТПИШЕШЬСЯ — с тебя автоматически спишут ' + SUB_PENALTY + ' IS ' +
     '(в 10 раз больше).\n\n' +
@@ -1389,7 +1409,7 @@ async function checkAndRewardSubscription() {
       const data = await resp.json();
       isSubscribed = data.subscribed === true;
     } catch (e) {
-      showToast('❌ Ошибка проверки');
+      showToast('✗ Ошибка проверки');
       return;
     }
   } else {
@@ -1402,11 +1422,11 @@ async function checkAndRewardSubscription() {
       subWasSubscribed = true;
       showToast('🎉 +' + SUB_REWARD + ' IS за подписку!');
     } else {
-      showToast('✅ Ты уже подписан');
+      showToast('✓ Ты уже подписан');
     }
     subWasSubscribed = true;
   } else {
-    showToast('❌ Ты ещё не подписался на канал');
+    showToast('✗ Ты ещё не подписался на канал');
   }
   updateUI(); scheduleSave(); loadISTasks(); loadISShop();
 }
@@ -1419,7 +1439,7 @@ async function checkUnsubscription() {
         const resp = await fetch(API_URL + '/check-sub?user_id=' + telegramId + '&channel=' + TG_CHANNEL);
         const data = await resp.json();
         if (data.subscribed === true) {
-          if (isBalance < 0) { isBalance = 0; showToast('✅ Ты снова подписан, минус обнулён!'); }
+          if (isBalance < 0) { isBalance = 0; showToast('✓ Ты снова подписан, минус обнулён!'); }
           subWasPunished = false;
           updateUI(); scheduleSave();
         }
@@ -1439,7 +1459,7 @@ async function checkUnsubscription() {
 function applyPenalty() {
   isBalance -= SUB_PENALTY;
   subWasPunished = true;
-  showToast('⚠️ Ты отписался! Штраф -' + SUB_PENALTY + ' IS');
+  showToast('⚠ Ты отписался! Штраф -' + SUB_PENALTY + ' IS');
   updateUI(); scheduleSave(); loadISShop();
 }
 
@@ -1448,7 +1468,7 @@ function doInvite() {
   isTasksDone.push('invite');
   isBalance += 100;
   updateUI(); scheduleSave(); loadISTasks(); loadISShop();
-  showToast('💎 +100 IS за приглашение');
+  showToast('◈ +100 IS за приглашение');
 }
 
 function uploadAvatar() {
@@ -1466,7 +1486,7 @@ function uploadAvatar() {
       av.style.backgroundSize = 'cover';
       av.textContent = '';
       saveToLocal();
-      showToast('✅ Аватар обновлён!');
+      showToast('✓ Аватар обновлён!');
     };
     reader.readAsDataURL(file);
   };
@@ -1505,8 +1525,8 @@ function applyGenderTheme() {
   }
   const isShop = document.getElementById('isShopTitle');
   const topTitle = document.getElementById('topPanelTitle');
-  if (isShop) isShop.textContent = isFem ? '💖 Монетки' : '🛒 IS Магазин';
-  if (topTitle) topTitle.textContent = isFem ? '👑 Топ красоток' : '🏆 Топ-10 игроков';
+  if (isShop) isShop.textContent = isFem ? '◈ Монетки' : '◈ IS Магазин';
+  if (topTitle) topTitle.textContent = isFem ? '♛ Топ красоток' : '♛ Топ-10 игроков';
 }
 
 function showTab(tab) {
@@ -1532,7 +1552,7 @@ async function doRegister() {
   if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
   if (!nick || nick.length < 2) { showToast('Никнейм минимум 2 символа'); return; }
   if (!/^[a-zA-Z0-9_]+$/.test(nick)) {
-    showToast('❌ Ник только латиница, цифры и _');
+    showToast('✗ Ник только латиница, цифры и _');
     return;
   }
   if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
@@ -1561,9 +1581,9 @@ async function doRegister() {
 
     let data;
     try { data = JSON.parse(text); }
-    catch (e) { showToast('❌ Сервер вернул не JSON: ' + text.slice(0, 80)); return; }
+    catch (e) { showToast('✗ Сервер вернул не JSON: ' + text.slice(0, 80)); return; }
 
-    if (!resp.ok || data.error) { showToast('❌ ' + (data.error || 'Ошибка')); return; }
+    if (!resp.ok || data.error) { showToast('✗ ' + (data.error || 'Ошибка')); return; }
 
     localStorage.removeItem('ingsoft_referrer_nickname');
     localStorage.removeItem('ingsoft_referrer_id');
@@ -1574,8 +1594,8 @@ async function doRegister() {
     showRegisterSuccessModal(nick, login);
 
   } catch (e) {
-    console.error('❌ Ошибка:', e);
-    showToast('❌ Ошибка соединения: ' + e.message);
+    console.error('✗ Ошибка:', e);
+    showToast('✗ Ошибка соединения: ' + e.message);
   }
 }
 
@@ -1603,12 +1623,12 @@ async function doLogin() {
     try {
       data = JSON.parse(text);
     } catch (e) {
-      showToast('❌ Сервер вернул не JSON: ' + text.slice(0, 80));
+      showToast('✗ Сервер вернул не JSON: ' + text.slice(0, 80));
       return;
     }
 
     if (!resp.ok || data.error) {
-      showToast('❌ ' + (data.error || 'Ошибка входа'));
+      showToast('✗ ' + (data.error || 'Ошибка входа'));
       return;
     }
 
@@ -1655,8 +1675,8 @@ async function doLogin() {
     showToast('🎉 С возвращением, ' + nickname + '!');
     setTimeout(loadReferral, 500);
   } catch (e) {
-    console.error('❌ Ошибка:', e);
-    showToast('❌ Ошибка соединения: ' + e.message);
+    console.error('✗ Ошибка:', e);
+    showToast('✗ Ошибка соединения: ' + e.message);
   }
 }
 
@@ -1719,6 +1739,20 @@ function closeRegSuccess() {
   showTab('login');
 }
 
+// ✅ Формирует и вставляет ссылку в поле refLink
+function updateRefLink() {
+  const linkEl = document.getElementById('refLink');
+  if (!linkEl) return;
+  const nick = currentUser?.nickname || nickname;
+  if (!nick) {
+    linkEl.textContent = 'Войди в аккаунт';
+    return;
+  }
+  const base = window.location.origin + window.location.pathname;
+  const link = base + '?ref=' + encodeURIComponent(nick);
+  linkEl.textContent = link;
+}
+
 function enterGame() {
   console.log('🎮 enterGame() called');
   const auth = document.getElementById('authScreen');
@@ -1737,11 +1771,10 @@ function enterGame() {
     buildSidebar();
     loadISShop();
     saveToLocal();
-    // ✅ СРАЗУ подставляем ссылку, не ждём сервер
-    updateRefLink();
-    console.log('✅ Игра загружена');
+    updateRefLink(); // ✅ Сразу показываем ссылку
+    console.log('✓ Игра загружена');
   } catch (e) {
-    console.error('❌ Ошибка в enterGame():', e);
+    console.error('✗ Ошибка в enterGame():', e);
     showToast('Ошибка загрузки: ' + e.message);
   }
 }
@@ -1752,10 +1785,10 @@ function loadQuests() {
     const isClaimed = claimedQuests.includes(q.id);
     const canClaim = q.check() && !isClaimed;
     let btn;
-    if (isClaimed) btn = '<button class="btn-buy" disabled>✅ Забрано</button>';
+    if (isClaimed) btn = '<button class="btn-buy" disabled>✓ Забрано</button>';
     else if (canClaim) btn = '<button class="btn-buy green" onclick="claimQuest(\'' + q.id + '\')">Забрать</button>';
     else btn = '<button class="btn-buy" disabled>Не выполнено</button>';
-    return '<div class="item-row"><div class="item-info"><div class="item-name">' + q.name + '</div><div class="item-desc">' + q.desc + '</div><div class="item-reward">💰 +' + fmt(q.reward) + '</div></div>' + btn + '</div>';
+    return '<div class="item-row"><div class="item-info"><div class="item-name">' + q.name + '</div><div class="item-desc">' + q.desc + '</div><div class="item-reward">◈ +' + fmt(q.reward) + '</div></div>' + btn + '</div>';
   }).join('');
 }
 function claimQuest(id) {
@@ -1780,7 +1813,7 @@ function loadBoosts() {
   html += pageBoosts.map(b => {
     const owned = upgrades[b.id]; const canBuy = score >= b.price && !owned;
     let btn;
-    if (owned) btn = '<button class="btn-buy" disabled>✅ Куплено</button>';
+    if (owned) btn = '<button class="btn-buy" disabled>✓ Куплено</button>';
     else if (canBuy) btn = '<button class="btn-buy green" onclick="buyBoost(\'' + b.id + '\')">' + fmt(b.price) + '</button>';
     else btn = '<button class="btn-buy" disabled>' + fmt(b.price) + '</button>';
     return '<div class="item-row"><div class="item-info"><div class="item-name">' + b.name + '</div><div class="item-desc">' + b.desc + '</div></div>' + btn + '</div>';
@@ -1799,7 +1832,7 @@ function buyBoost(id) {
   if (!b || score < b.price || upgrades[b.id]) return;
   score -= b.price; upgrades[b.id] = true; b.apply();
   updateUI(); scheduleSave();
-  showToast('✅ Куплено: ' + b.name); loadBoosts();
+  showToast('✓ Куплено: ' + b.name); loadBoosts();
 }
 
 function loadAchievements() {
@@ -1824,7 +1857,7 @@ function saveReferralClaimed() {
 
 async function claimReferralReward() {
   if (!currentToken) {
-    showToast('❌ Войди в аккаунт');
+    showToast('✗ Войди в аккаунт');
     return;
   }
 
@@ -1856,11 +1889,11 @@ async function claimReferralReward() {
       updateReferralUI();
       showToast('🎉 Забрано ' + available + ' IS!');
     } else {
-      showToast('❌ ' + (data.error || 'Ошибка'));
+      showToast('✗ ' + (data.error || 'Ошибка'));
     }
   } catch(e) {
     console.error(e);
-    showToast('❌ Ошибка соединения');
+    showToast('✗ Ошибка соединения');
   }
 }
 
@@ -1878,12 +1911,12 @@ function updateReferralUI() {
   if (btn) {
     if (available > 0) {
       btn.disabled = false;
-      btn.textContent = '🎁 Забрать ' + available + ' IS';
+      btn.textContent = '✧ Забрать ' + available + ' IS';
       btn.style.opacity = '1';
       btn.style.cursor = 'pointer';
     } else {
       btn.disabled = true;
-      btn.textContent = '🎁 Нет награды';
+      btn.textContent = '✧ Нет награды';
       btn.style.opacity = '0.5';
       btn.style.cursor = 'not-allowed';
     }
@@ -1911,8 +1944,12 @@ function renderReferralList() {
 
 function copyRefLink() {
   const link = document.getElementById('refLink').textContent;
-  if (!link || link === 'Загрузка...') { showToast('Подожди, ссылка ещё не готова'); return; }
-  navigator.clipboard.writeText(link).then(() => showToast('✅ Ссылка скопирована!'))
+  if (!link || link === 'Войди в аккаунт' || link === '—') { 
+    updateRefLink();
+    showToast('Подожди, ссылка формируется...');
+    return; 
+  }
+  navigator.clipboard.writeText(link).then(() => showToast('✓ Ссылка скопирована!'))
     .catch(() => {
       const ta = document.createElement('textarea');
       ta.value = link;
@@ -1920,13 +1957,17 @@ function copyRefLink() {
       ta.select();
       document.execCommand('copy');
       ta.remove();
-      showToast('✅ Ссылка скопирована!');
+      showToast('✓ Ссылка скопирована!');
     });
 }
 
 function shareRefLink() {
   const link = document.getElementById('refLink').textContent;
-  if (!link || link === 'Загрузка...') { showToast('Подожди, ссылка ещё не готова'); return; }
+  if (!link || link === 'Войди в аккаунт' || link === '—') { 
+    updateRefLink();
+    showToast('Подожди, ссылка формируется...');
+    return; 
+  }
   const text = 'Привет! Заходи в IngSoft Tap — я уже там! 🎮';
   const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
   window.open(shareUrl, '_blank');
@@ -1975,12 +2016,12 @@ function loadDaily() {
   for (let i = 0; i < 7; i++) {
     const claimed = i < (dailyStreak % 7);
     const isToday = i === nextDay && canClaim;
-    html += '<div class="daily-day ' + (claimed ? 'claimed' : '') + ' ' + (isToday ? 'today' : '') + '"><div style="font-size:14px;">' + (claimed ? '✅' : '🎁') + '</div><div style="font-size:9px;">День ' + (i+1) + '</div><div class="daily-reward">' + (claimed ? '✓' : fmt(DAILY_REWARDS[i].coins)) + '</div></div>';
+    html += '<div class="daily-day ' + (claimed ? 'claimed' : '') + ' ' + (isToday ? 'today' : '') + '"><div style="font-size:14px;">' + (claimed ? '✓' : '◈') + '</div><div style="font-size:9px;">День ' + (i+1) + '</div><div class="daily-reward">' + (claimed ? '✓' : fmt(DAILY_REWARDS[i].coins)) + '</div></div>';
   }
   html += '</div>';
   if (canClaim) {
     html += '<p style="text-align:center;margin-bottom:14px;color:#ccc;">Сегодня: <b style="color:#ffd700">' + fmt(DAILY_REWARDS[nextDay].coins) + '</b></p>';
-    html += '<button class="btn-buy green" style="width:100%;padding:14px;" onclick="claimDaily()">🎁 Забрать</button>';
+    html += '<button class="btn-buy green" style="width:100%;padding:14px;" onclick="claimDaily()">◈ Забрать</button>';
   } else {
     html += '<p style="text-align:center;color:#888;">Серия: <b style="color:#e63946;">' + dailyStreak + ' дней</b></p>';
   }
@@ -1992,7 +2033,7 @@ function claimDaily() {
   const reward = DAILY_REWARDS[dailyStreak % 7].coins;
   score += reward; dailyStreak += 1; lastDailyClaim = today;
   updateUI(); scheduleSave();
-  showToast('🎁 +' + fmt(reward) + '!'); loadDaily();
+  showToast('◈ +' + fmt(reward) + '!'); loadDaily();
 }
 
 function loadStats() {
@@ -2009,7 +2050,7 @@ function loadStats() {
 }
 
 function logout() {
-  const confirmOut = confirm('⚠️ Выйти из аккаунта?\n\nТы сможешь зайти снова по логину и паролю.');
+  const confirmOut = confirm('⚠ Выйти из аккаунта?\n\nТы сможешь зайти снова по логину и паролю.');
   if (!confirmOut) return;
   localStorage.removeItem('ingsoft_token');
   localStorage.removeItem('ingsoft_referrer_nickname');
@@ -2053,7 +2094,7 @@ function logout() {
     femaleBtn.style.boxShadow = 'none';
   }
   showTab('login');
-  showToast('🚪 Ты вышел из аккаунта');
+  showToast('Выход выполнен');
 }
 
 function loadProfile() {
@@ -2082,7 +2123,7 @@ function redeemPromo() {
   if (!code) { showToast('Введи промокод'); return; }
   if (claimedPromos.includes(code)) { showToast('Уже активирован!'); return; }
   const promo = PROMOS[code];
-  if (!promo) { showToast('❌ Неверный промокод'); return; }
+  if (!promo) { showToast('✗ Неверный промокод'); return; }
   if (promo.coins) score += promo.coins;
   if (promo.mult) multiplier = Math.max(multiplier, promo.mult);
   claimedPromos.push(code);
@@ -2096,18 +2137,18 @@ let promoActiveTab = 1;
 let promoActiveView = 'earn';
 
 const PROMO_QUESTS = [
-  { id: 'invite3',  icon: '👥', name: 'Пригласи 3 друзей',   desc: 'За 3-х приведённых друзей', reward: '2%', need: 3 },
-  { id: 'invite5',  icon: '👥', name: 'Пригласи 5 друзей',   desc: 'За 5-х приведённых друзей', reward: '3%', need: 5 },
-  { id: 'invite10', icon: '👥', name: 'Пригласи 10 друзей',  desc: 'За 10 приведённых друзей',  reward: '5%', need: 10 },
-  { id: 'taps10k',  icon: '👆', name: '10 000 тапов',        desc: 'Сделай 10 000 тапов',       reward: '1%', need: 10000 },
-  { id: 'taps50k',  icon: '👆', name: '50 000 тапов',        desc: 'Сделай 50 000 тапов',       reward: '2%', need: 50000 },
-  { id: 'taps100k', icon: '👆', name: '100 000 тапов',       desc: 'Сделай 100 000 тапов',      reward: '3%', need: 100000 },
-  { id: 'taps500k', icon: '👆', name: '500 000 тапов',       desc: 'Сделай 500 000 тапов',      reward: '4%', need: 500000 },
-  { id: 'taps1m',   icon: '👆', name: '1 000 000 тапов',     desc: 'Сделай миллион тапов',      reward: '5%', need: 1000000 },
-  { id: 'lvl10',    icon: '⬆️', name: 'Уровень 10',          desc: 'Достигни 10 уровня',        reward: '2%', need: 10 },
-  { id: 'lvl25',    icon: '⬆️', name: 'Уровень 25',          desc: 'Достигни 25 уровня',        reward: '4%', need: 25 },
-  { id: 'sub_tg',   icon: '📢', name: 'Подписка на канал',   desc: 'Подпишись на @IngSoftTab06', reward: '1%', need: 1 },
-  { id: 'daily7',   icon: '📅', name: '7 дней подряд',       desc: 'Заходи 7 дней подряд',      reward: '3%', need: 7 },
+  { id: 'invite3',  icon: '❖', name: 'Пригласи 3 друзей',   desc: 'За 3-х приведённых друзей', reward: '2%', need: 3 },
+  { id: 'invite5',  icon: '❖', name: 'Пригласи 5 друзей',   desc: 'За 5-х приведённых друзей', reward: '3%', need: 5 },
+  { id: 'invite10', icon: '❖', name: 'Пригласи 10 друзей',  desc: 'За 10 приведённых друзей',  reward: '5%', need: 10 },
+  { id: 'taps10k',  icon: '↟', name: '10 000 тапов',        desc: 'Сделай 10 000 тапов',       reward: '1%', need: 10000 },
+  { id: 'taps50k',  icon: '↟', name: '50 000 тапов',        desc: 'Сделай 50 000 тапов',       reward: '2%', need: 50000 },
+  { id: 'taps100k', icon: '↟', name: '100 000 тапов',       desc: 'Сделай 100 000 тапов',      reward: '3%', need: 100000 },
+  { id: 'taps500k', icon: '↟', name: '500 000 тапов',       desc: 'Сделай 500 000 тапов',      reward: '4%', need: 500000 },
+  { id: 'taps1m',   icon: '↟', name: '1 000 000 тапов',     desc: 'Сделай миллион тапов',      reward: '5%', need: 1000000 },
+  { id: 'lvl10',    icon: '↟', name: 'Уровень 10',          desc: 'Достигни 10 уровня',        reward: '2%', need: 10 },
+  { id: 'lvl25',    icon: '↟', name: 'Уровень 25',          desc: 'Достигни 25 уровня',        reward: '4%', need: 25 },
+  { id: 'sub_tg',   icon: '◉', name: 'Подписка на канал',   desc: 'Подпишись на @IngSoftTab06', reward: '1%', need: 1 },
+  { id: 'daily7',   icon: '◈', name: '7 дней подряд',       desc: 'Заходи 7 дней подряд',      reward: '3%', need: 7 },
 ];
 
 function switchPromoTab(n) {
@@ -2168,7 +2209,7 @@ function loadPromoEarn() {
                      q.id === 'daily7' ? dailyStreak : 0;
     const canClaim = progress >= q.need && !done;
     let btn;
-    if (done) btn = '<button class="btn-is" disabled>✅ Получен</button>';
+    if (done) btn = '<button class="btn-is" disabled>✓ Получен</button>';
     else if (canClaim) btn = '<button class="btn-is" onclick="claimPromoQuest(\'' + q.id + '\')">Забрать ' + q.reward + '</button>';
     else btn = '<button class="btn-is" disabled>' + progress + ' / ' + q.need + '</button>';
     return '<div class="is-task">' +
@@ -2176,7 +2217,7 @@ function loadPromoEarn() {
       '<div class="is-task-info">' +
         '<div class="is-task-name">' + q.name + '</div>' +
         '<div class="is-task-desc">' + q.desc + '</div>' +
-        '<div class="is-task-reward">🏷️ Скидка ' + q.reward + '</div>' +
+        '<div class="is-task-reward">✎ Скидка ' + q.reward + '</div>' +
       '</div>' + btn +
     '</div>';
   }).join('');
@@ -2202,7 +2243,7 @@ function loadPromoWallet() {
     const q = PROMO_QUESTS.find(x => x.id === id);
     if (!q) return '';
     return '<div style="background:linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,140,0,0.08)); border:1px solid rgba(255,215,0,0.4); border-radius:12px; padding:14px; margin-bottom:8px; display:flex; align-items:center; gap:12px;">' +
-      '<div style="font-size:24px;">🏷️</div>' +
+      '<div style="font-size:24px;">✎</div>' +
       '<div style="flex:1;">' +
         '<div style="font-size:14px; font-weight:900; color:#ffd700;">Скидка ' + q.reward + '</div>' +
         '<div style="font-size:11px; color:#b8a060;">' + q.name + '</div>' +
@@ -2214,7 +2255,7 @@ function loadPromoWallet() {
 
 function copyPromo(code) {
   navigator.clipboard.writeText('INGSOFT-' + code.replace('%','')).then(() => {
-    showToast('✅ Промокод скопирован: INGSOFT-' + code.replace('%',''));
+    showToast('✓ Промокод скопирован: INGSOFT-' + code.replace('%',''));
   });
 }
 
@@ -2265,7 +2306,7 @@ function flipCoin(choice) {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('coin');
   const result = Math.random() < 0.5 ? 'heads' : 'tails';
-  document.getElementById('coinValue').textContent = result === 'heads' ? '🦅' : '👑';
+  document.getElementById('coinValue').textContent = result === 'heads' ? '○' : '●';
   if (result === choice) { const reward = cost * 2; document.getElementById('coinResult').textContent = '🎉 Победа! +' + fmt(reward); score += reward; }
   else { document.getElementById('coinResult').textContent = '😢 Проигрыш'; }
   updateUI(); scheduleSave();
@@ -2275,7 +2316,7 @@ function spinSlots() {
   const cost = getGameCost('slots');
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('slots');
-  const symbols = ['🍒','🍋','💎','7️⃣','⭐','🔔'];
+  const symbols = ['✿','❀','◆','✦','✧','◉'];
   document.getElementById('slotsDisplay').textContent = symbols[Math.floor(Math.random()*6)] + symbols[Math.floor(Math.random()*6)] + symbols[Math.floor(Math.random()*6)];
   const win = Math.random() < 0.3;
   if (win) { const reward = cost * 3; document.getElementById('slotsResult').textContent = '🎉 +' + fmt(reward); score += reward; }
@@ -2288,8 +2329,8 @@ function throwBasket() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('basket');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 2; document.getElementById('basketDisplay').textContent = '🏀✅'; document.getElementById('basketResult').textContent = '🎉 Попал! +' + fmt(reward); score += reward; }
-  else { document.getElementById('basketDisplay').textContent = '🏀❌'; document.getElementById('basketResult').textContent = '😢 Мимо'; }
+  if (win) { const reward = cost * 2; document.getElementById('basketDisplay').textContent = '◉✓'; document.getElementById('basketResult').textContent = '🎉 Попал! +' + fmt(reward); score += reward; }
+  else { document.getElementById('basketDisplay').textContent = '◉✗'; document.getElementById('basketResult').textContent = '😢 Мимо'; }
   updateUI(); scheduleSave();
 }
 
@@ -2298,8 +2339,8 @@ function digMine() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('mine');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 3; document.getElementById('mineDisplay').textContent = '💎'; document.getElementById('mineResult').textContent = '🎉 +' + fmt(reward); score += reward; }
-  else { document.getElementById('mineDisplay').textContent = '🪨'; document.getElementById('mineResult').textContent = '😢 Пусто'; }
+  if (win) { const reward = cost * 3; document.getElementById('mineDisplay').textContent = '◆'; document.getElementById('mineResult').textContent = '🎉 +' + fmt(reward); score += reward; }
+  else { document.getElementById('mineDisplay').textContent = '◇'; document.getElementById('mineResult').textContent = '😢 Пусто'; }
   updateUI(); scheduleSave();
 }
 
@@ -2318,8 +2359,8 @@ function playDarts() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('darts');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 3; document.getElementById('dartsDisplay').textContent = '🎯✅'; document.getElementById('dartsResult').textContent = '🎉 +' + fmt(reward); score += reward; }
-  else { document.getElementById('dartsDisplay').textContent = '🎯❌'; document.getElementById('dartsResult').textContent = '😢 Мимо'; }
+  if (win) { const reward = cost * 3; document.getElementById('dartsDisplay').textContent = '◎✓'; document.getElementById('dartsResult').textContent = '🎉 +' + fmt(reward); score += reward; }
+  else { document.getElementById('dartsDisplay').textContent = '◎✗'; document.getElementById('dartsResult').textContent = '😢 Мимо'; }
   updateUI(); scheduleSave();
 }
 
@@ -2328,8 +2369,8 @@ function playFishing() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('fishing');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 3; document.getElementById('fishingDisplay').textContent = '🐟🎉'; document.getElementById('fishingResult').textContent = '🎉 Поймал! +' + fmt(reward); score += reward; }
-  else { document.getElementById('fishingDisplay').textContent = '🎣💨'; document.getElementById('fishingResult').textContent = '😢 Сорвалась'; }
+  if (win) { const reward = cost * 3; document.getElementById('fishingDisplay').textContent = '◆🎉'; document.getElementById('fishingResult').textContent = '🎉 Поймал! +' + fmt(reward); score += reward; }
+  else { document.getElementById('fishingDisplay').textContent = '◇💨'; document.getElementById('fishingResult').textContent = '😢 Сорвалась'; }
   updateUI(); scheduleSave();
 }
 
@@ -2350,8 +2391,8 @@ function playShells() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('shells');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 3; document.getElementById('shellsDisplay').textContent = '🎩🏀'; document.getElementById('shellsResult').textContent = '🎉 Угадал! +' + fmt(reward); score += reward; }
-  else { document.getElementById('shellsDisplay').textContent = '🎩❌'; document.getElementById('shellsResult').textContent = '😢 Мимо'; }
+  if (win) { const reward = cost * 3; document.getElementById('shellsDisplay').textContent = '◐✓'; document.getElementById('shellsResult').textContent = '🎉 Угадал! +' + fmt(reward); score += reward; }
+  else { document.getElementById('shellsDisplay').textContent = '◐✗'; document.getElementById('shellsResult').textContent = '😢 Мимо'; }
   updateUI(); scheduleSave();
 }
 
@@ -2359,7 +2400,7 @@ function playCraps() {
   const cost = getGameCost('craps');
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('craps');
-  document.getElementById('crapsDisplay').textContent = '🎲' + (Math.floor(Math.random()*6)+1) + ' + 🎲' + (Math.floor(Math.random()*6)+1);
+  document.getElementById('crapsDisplay').textContent = '◆' + (Math.floor(Math.random()*6)+1) + ' + ◆' + (Math.floor(Math.random()*6)+1);
   const win = Math.random() < 0.3;
   if (win) { const reward = cost * 2; document.getElementById('crapsResult').textContent = '🎉 +' + fmt(reward); score += reward; }
   else { document.getElementById('crapsResult').textContent = '😢 Проигрыш'; }
@@ -2371,8 +2412,8 @@ function playArchery() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('archery');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 3; document.getElementById('archeryDisplay').textContent = '🏹🎯'; document.getElementById('archeryResult').textContent = '🎉 +' + fmt(reward); score += reward; }
-  else { document.getElementById('archeryDisplay').textContent = '🏹💨'; document.getElementById('archeryResult').textContent = '😢 Мимо'; }
+  if (win) { const reward = cost * 3; document.getElementById('archeryDisplay').textContent = '➤◎'; document.getElementById('archeryResult').textContent = '🎉 +' + fmt(reward); score += reward; }
+  else { document.getElementById('archeryDisplay').textContent = '➤💨'; document.getElementById('archeryResult').textContent = '😢 Мимо'; }
   updateUI(); scheduleSave();
 }
 
@@ -2381,8 +2422,8 @@ function playPenalty() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('penalty');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 2; document.getElementById('penaltyDisplay').textContent = '⚽🥅'; document.getElementById('penaltyResult').textContent = '🎉 Гол! +' + fmt(reward); score += reward; }
-  else { document.getElementById('penaltyDisplay').textContent = '⚽❌'; document.getElementById('penaltyResult').textContent = '😢 Мимо'; }
+  if (win) { const reward = cost * 2; document.getElementById('penaltyDisplay').textContent = '◉✓'; document.getElementById('penaltyResult').textContent = '🎉 Гол! +' + fmt(reward); score += reward; }
+  else { document.getElementById('penaltyDisplay').textContent = '◉✗'; document.getElementById('penaltyResult').textContent = '😢 Мимо'; }
   updateUI(); scheduleSave();
 }
 
@@ -2391,8 +2432,8 @@ function playBasket3() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('basket3');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 3; document.getElementById('basket3Display').textContent = '🏀🎯'; document.getElementById('basket3Result').textContent = '🎉 3 очка! +' + fmt(reward); score += reward; }
-  else { document.getElementById('basket3Display').textContent = '🏀❌'; document.getElementById('basket3Result').textContent = '😢 Мимо'; }
+  if (win) { const reward = cost * 3; document.getElementById('basket3Display').textContent = '◉◎'; document.getElementById('basket3Result').textContent = '🎉 3 очка! +' + fmt(reward); score += reward; }
+  else { document.getElementById('basket3Display').textContent = '◉✗'; document.getElementById('basket3Result').textContent = '😢 Мимо'; }
   updateUI(); scheduleSave();
 }
 
@@ -2401,8 +2442,8 @@ function playMines() {
   if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
   score -= cost; increaseGameCost('mines');
   const win = Math.random() < 0.3;
-  if (win) { const reward = cost * 2; document.getElementById('minesDisplay').textContent = '💎✅'; document.getElementById('minesResult').textContent = '🎉 Безопасно! +' + fmt(reward); score += reward; }
-  else { document.getElementById('minesDisplay').textContent = '💣💥'; document.getElementById('minesResult').textContent = '💥 Взрыв! Проигрыш'; }
+  if (win) { const reward = cost * 2; document.getElementById('minesDisplay').textContent = '◆✓'; document.getElementById('minesResult').textContent = '🎉 Безопасно! +' + fmt(reward); score += reward; }
+  else { document.getElementById('minesDisplay').textContent = '✸💥'; document.getElementById('minesResult').textContent = '💥 Взрыв! Проигрыш'; }
   updateUI(); scheduleSave();
 }
 
@@ -2509,7 +2550,7 @@ async function loadProgressByToken(token) {
       return false;
     }
   } catch (e) {
-    console.error('❌ loadProgressByToken error:', e);
+    console.error('✗ loadProgressByToken error:', e);
     forceShowAuth();
     return false;
   }
@@ -2530,30 +2571,34 @@ function forceShowAuth() {
   const formRegister = document.getElementById('formRegister');
   if (formLogin) formLogin.style.display = 'none';
   if (formRegister) formRegister.style.display = 'block';
-  console.log('✅ Экран авторизации показан принудительно');
+  console.log('✓ Экран авторизации показан принудительно');
 }
 
 async function loadReferral() {
+  // Сначала всегда показываем ссылку
+  updateRefLink();
+
   if (!currentToken) return;
+
   try {
-    const resp = await fetch(API_URL + '/my-referrals?token=' + currentToken);
+    const resp = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken));
     const data = await resp.json();
     if (data.success) {
       myReferrals = data.referrals || [];
-      referrerNickname = data.my_referrer?.nickname || null;
       renderReferralList();
       loadReferralBonus();
       const refCountEl = document.getElementById('refCount');
       if (refCountEl) refCountEl.textContent = myReferrals.length;
-      const linkEl = document.getElementById('refLink');
-      if (linkEl && currentUser && currentUser.nickname) {
-        const base = window.location.origin + window.location.pathname;
-        linkEl.textContent = base + '?ref=' + encodeURIComponent(currentUser.nickname);
-      }
+      updateRefLink();
       return myReferrals;
+    } else {
+      console.warn('my-referrals ответил без success:', data);
+      renderReferralList();
     }
   } catch(e) {
-    console.error('❌ loadReferral error:', e);
+    console.error('✗ loadReferral error:', e);
+    // Даже при ошибке — список рендерим, чтобы не висело «Загрузка...»
+    renderReferralList();
   }
   return [];
 }
@@ -2623,12 +2668,12 @@ function init() {
     if (refNick && /^[a-zA-Z0-9_]+$/.test(refNick)) {
       referrerNickname = refNick;
       localStorage.setItem('ingsoft_referrer_nickname', refNick);
-      console.log('✅ referrer_nickname =', refNick);
+      console.log('✓ referrer_nickname =', refNick);
     }
     if (refTgId && refTgId > 0 && refTgId < 9000000000) {
       referrerId = refTgId;
       localStorage.setItem('ingsoft_referrer_id', String(refTgId));
-      console.log('✅ referrer_id =', refTgId);
+      console.log('✓ referrer_id =', refTgId);
     }
   }
 
