@@ -308,13 +308,8 @@ body::after {
   .score-big { font-size:42px; } .tap-button { width:160px; height:160px; font-size:22px; } .sidebar { width:44px; } .main { margin-left:44px; } .sidebar-label { font-size:5px; }
 }
 
-/* ============================================================
-   ЖЕНСКАЯ ТЕМА
-   ============================================================ */
-body.theme-female {
-  --ing-blue:#ff69b4;
-  --ing-gold:#ffb6d9;
-}
+/* ЖЕНСКАЯ ТЕМА */
+body.theme-female { --ing-blue:#ff69b4; --ing-gold:#ffb6d9; }
 body.theme-female::before {
   background:
     radial-gradient(ellipse 140% 60% at 20% 0%, rgba(217,70,239,0.5), transparent 60%),
@@ -342,7 +337,7 @@ body.theme-female .header-btn { background: linear-gradient(135deg, rgba(255,105
 body.theme-female .header-btn:hover { background: linear-gradient(135deg, rgba(255,105,180,0.3), rgba(217,70,239,0.35)); border-color: rgba(255,105,180,0.7); box-shadow: 0 4px 15px rgba(255,105,180,0.4); }
 body.theme-female .stat-card { background: linear-gradient(145deg, rgba(217,70,239,0.25), rgba(42,10,53,0.5)); border-color: rgba(255,105,180,0.3); }
 body.theme-female .stat-value { color: #ffd9ec; text-shadow: 0 0 15px rgba(255,105,180,0.6); }
-body.theme-female .level-fill { background: linear-gradient(90deg, #d946ef, #ff69b4, #ffb6d9, #d946ef); box-shadow: 0 0 25px rgba(255,105,180,0.6); }
+body.theme-female .level-fill { background: linear-gradient(90deg, #d946ef, #ff69b4, #ffb6d9, #d946ef); box-shadow: 0 0 25px rgba(255,105,180,0.6); animation: femGradient 4s ease infinite; }
 body.theme-female .score-big { background: linear-gradient(135deg, #ffffff 0%, #ffd9ec 30%, #ff69b4 70%, #d946ef 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 30px rgba(255,105,180,0.9)) drop-shadow(0 0 15px rgba(217,70,239,0.6)); }
 body.theme-female .tap-button { background: conic-gradient(from 0deg, #3d1450, #d946ef, #ff69b4, #ffb6d9, #ff69b4, #d946ef, #3d1450); box-shadow: 0 25px 90px rgba(255,105,180,0.4), 0 0 60px rgba(217,70,239,0.5), inset 0 -8px 30px rgba(0,0,0,0.6); }
 body.theme-female .tap-button::after { background: radial-gradient(circle at 35% 25%, #d946ef, #3d1450 60%, #1a0a1f 100%); box-shadow: inset 0 10px 30px rgba(255,105,180,0.2), inset 0 -10px 30px rgba(0,0,0,0.7); }
@@ -372,12 +367,7 @@ body.theme-female .btn-buy { background: linear-gradient(135deg, #ff69b4, #d946e
 body.theme-female .reg-btn { background: linear-gradient(135deg, #ff69b4, #d946ef); }
 body.theme-female .reg-btn.green { background: linear-gradient(135deg, #d946ef, #a855f7); }
 body.theme-female .toast { background: linear-gradient(135deg, #ff69b4, #d946ef); }
-body.theme-female .level-fill { animation: femGradient 4s ease infinite; }
-@keyframes femGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+@keyframes femGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,105,180,0.25), rgba(217,70,239,0.25)); border-color: rgba(255,105,180,0.5); }
 </style>
 </head>
@@ -405,7 +395,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     </div>
 
     <div id="formRegister">
-      <input type="text" id="regLogin" class="reg-input" placeholder="Логин (мин. 3 символа, любые символы)" maxlength="30" autocomplete="off">
+      <input type="text" id="regLogin" class="reg-input" placeholder="Логин (мин. 3 символа)" maxlength="30" autocomplete="off">
       <input type="password" id="regPassword" class="reg-input" placeholder="Пароль (мин. 6 символов)" maxlength="50" autocomplete="new-password">
       <input type="text" id="regNickname" class="reg-input" placeholder="Никнейм (любые символы, даже эмодзи)" maxlength="30" autocomplete="off">
       <input type="tel" id="regPhone" class="reg-input" placeholder="Номер телефона (+7...)" maxlength="20">
@@ -414,7 +404,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
         <option value="Ингушетия">🏔️ Ингушетия</option>
       </select>
       <input type="text" id="regFullName" class="reg-input" placeholder="ФИО полностью" maxlength="100">
-      
+
       <div style="margin-bottom:14px;">
         <p style="color:#8899aa; font-size:12px; margin-bottom:8px; text-align:left;">Выбери пол:</p>
         <div style="display:flex; gap:10px;">
@@ -426,7 +416,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
           </button>
         </div>
       </div>
-      
+
       <p style="color:#666; font-size:11px; margin:10px 0;">Регистрируясь, вы соглашаетесь с правилами игры.</p>
       <button id="btnDoRegister" type="button" class="reg-btn green">✅ Зарегистрироваться</button>
     </div>
@@ -735,49 +725,47 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
   <div id="achList"></div>
 </div></div>
 
-<!-- ============ МОДАЛКА "ДРУЗЬЯ" ============ -->
 <div class="modal" id="modal-referral"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">👥 <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
   <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">Приглашай друзей — получай IS за каждого</p>
-  
+
   <div style="background:linear-gradient(135deg,rgba(79,172,254,0.1),rgba(30,58,95,0.2)); border:1px solid rgba(79,172,254,0.3); border-radius:12px; padding:12px; margin-bottom:12px;">
     <div style="font-size:11px; color:#8899aa; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;">Твоя ссылка:</div>
     <div style="word-break:break-all; font-size:11px; color:#4facfe; font-family:monospace; padding:8px; background:rgba(10,10,15,0.5); border-radius:8px;" id="refLink">Загрузка...</div>
   </div>
-  
+
   <button class="btn-buy" style="width:100%;padding:12px;" onclick="copyRefLink()">📋 Копировать ссылку</button>
   <button class="btn-buy green" style="width:100%;padding:12px;margin-top:8px;" onclick="shareRefLink()">📤 Поделиться с другом</button>
-  
+
   <div style="margin-top:16px; text-align:center; font-size:13px; color:#888;">
     Приглашено: <span id="refCount" style="color:#ffd700; font-weight:800; font-size:16px;">0</span> друзей
   </div>
-  
+
   <div style="margin-top:20px; font-size:13px; font-weight:800; color:#4facfe; margin-bottom:8px;">📋 Твои друзья:</div>
   <div id="referralList" style="margin-top:8px; max-height:280px; overflow-y:auto;">
     <p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Загрузка...</p>
   </div>
 </div></div>
 
-<!-- ============ МОДАЛКА "БОНУС ЗА РЕФЕРАЛКУ" ============ -->
 <div class="modal" id="modal-referral-bonus"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">🎁 <span>Бонус за рефералку</span></div><button class="modal-close" onclick="closeModal('referral-bonus')">×</button></div>
-  
+
   <p style="color:#b8a060; font-size:12px; text-align:center; margin-bottom:16px;">Чем больше друзей — тем больше награда за каждого!</p>
-  
+
   <div style="background:linear-gradient(135deg,rgba(255,215,0,0.15),rgba(255,140,0,0.08)); border:1px solid rgba(255,215,0,0.5); border-radius:16px; padding:16px; margin-bottom:16px; text-align:center; box-shadow:0 0 30px rgba(255,215,0,0.2);">
     <div style="font-size:11px; color:#b8a060; text-transform:uppercase; letter-spacing:2px;">Приглашено друзей</div>
     <div style="font-size:44px; font-weight:900; color:#ffd700; margin:6px 0; text-shadow:0 0 25px rgba(255,215,0,0.6);" id="bonusFriendCount">0<span style="font-size:22px; color:#b8a060;"> / 100</span></div>
     <div style="font-size:12px; color:#8899aa;">Заработано: <b style="color:#ffd700; font-size:15px;" id="bonusTotalEarned">0 IS</b></div>
   </div>
-  
+
   <div style="background:rgba(10,10,15,0.7); border-radius:14px; overflow:hidden; height:28px; margin-bottom:20px; border:1px solid rgba(255,215,0,0.3); position:relative;">
     <div id="bonusProgressFill" style="height:100%; background:linear-gradient(90deg,#ff8c00,#ffd700); transition:width 0.5s; box-shadow:0 0 20px rgba(255,215,0,0.6); width:0%;"></div>
     <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:900; text-shadow:0 1px 4px rgba(0,0,0,0.9);" id="bonusProgressText">0 / 100</div>
   </div>
-  
+
   <div style="font-size:14px; font-weight:800; color:#4facfe; margin-bottom:10px;">📊 Таблица наград:</div>
   <div id="bonusTable"></div>
-  
+
   <p style="color:#8899aa; font-size:11px; text-align:center; margin-top:14px; line-height:1.6;">
     💡 За каждого друга приходит IS автоматически<br>
     после того, как друг зарегистрируется
@@ -829,7 +817,6 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     <div style="text-align:center; font-size:16px; font-weight:900; color:#ffd700; margin-bottom:12px;">🏷️ Промокоды IngSoft</div>
     <p style="margin-bottom:10px;">Промокоды на заказ на сайте <b style="color:#ffd700;">IngSoft</b> <span style="color:#888;">(ссылка)</span></p>
     <p style="margin-bottom:10px;">Скидка будет <b>до 5%</b>.</p>
-    <p style="margin-bottom:10px;"><b style="color:#ffd700;">Например:</b> у вас есть промокоды на <b>2%</b>, <b>3%</b>, <b>5%</b>. Вы сможете использовать <b>на 1 заказ</b> промокод <b>5%</b>, и только потом на следующий заказ использовать <b>2% + 3%</b>.</p>
     <p style="color:#888; font-size:11px;">Скоро тут появится ссылка на сайт IngSoft.</p>
   </div>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
@@ -883,20 +870,14 @@ const tg = window.Telegram?.WebApp;
 let telegramId=null, username=null, firstName=null;
 let score=0, energy=1000, maxEnergy=1000, multiplier=1;
 let dailyStreak=0, lastDailyClaim=null, totalTaps=0, level=1;
-
-// === ДНЕВНОЙ ЛИМИТ ===
 let dailyTapLimit = 20000;
 let tapsToday = 0;
 let lastTapDate = null;
 let unlimitedUntil = 0;
-
-// === ВАЛЮТА IS ===
 let isBalance = 0;
 let isTasksDone = [];
 let isBoostMultUntil = 0;
 let isAutoTapUntil = 0;
-
-// === ПОДПИСКА ===
 let subWasSubscribed = false;
 let subWasPunished = false;
 let claimedQuests=[], claimedPromos=[];
@@ -908,16 +889,10 @@ let passiveIncome=0;
 let walletBalance=0, walletTotal=0;
 let saveTimer=null;
 let upgrades = {};
-
-// === ПРОМОКОДЫ ===
 let earnedPromocodes = [];
-
-// === АВТОРИЗАЦИЯ ===
 let currentToken = null;
 let currentUser = null;
 let selectedGender = null;
-
-// === РЕФЕРАЛЬНАЯ СИСТЕМА ===
 let referrerNickname = null;
 let referrerId = null;
 let myReferrals = [];
@@ -1129,7 +1104,6 @@ function saveToLocal() {
   }
 }
 function scheduleSave() { if (saveTimer) return; saveTimer = setTimeout(() => { saveToLocal(); saveTimer = null; }, 500); }
-
 
 function updateUI() {
   document.getElementById('scoreBig').textContent = fmt(score);
@@ -1512,9 +1486,7 @@ function showTab(tab) {
   document.getElementById('tabRegister').style.border = isLogin ? '1px solid rgba(79,172,254,0.3)' : 'none';
 }
 
-// ============================================================
-// РЕГИСТРАЦИЯ — принимает ЛЮБЫЕ символы (кириллица, эмодзи, арабский, спецсимволы)
-// ============================================================
+// РЕГИСТРАЦИЯ — принимает любые символы
 async function doRegister() {
   const login = document.getElementById('regLogin').value.trim();
   const password = document.getElementById('regPassword').value;
@@ -1523,7 +1495,6 @@ async function doRegister() {
   const region = document.getElementById('regRegion').value;
   const full_name = document.getElementById('regFullName').value.trim();
 
-  // === МИНИМАЛЬНАЯ ВАЛИДАЦИЯ: только длина, никаких ограничений по символам ===
   if (!login || login.length < 3) { showToast('Логин минимум 3 символа'); return; }
   if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
   if (!nick || nick.length < 1) { showToast('Введи никнейм'); return; }
@@ -1578,9 +1549,7 @@ async function doRegister() {
   }
 }
 
-// ============================================================
-// ВХОД — принимает ЛЮБЫЕ символы
-// ============================================================
+// ВХОД — принимает любые символы
 async function doLogin() {
   const login = document.getElementById('loginLogin').value.trim();
   const password = document.getElementById('loginPassword').value;
@@ -1661,50 +1630,28 @@ async function doLogin() {
   }
 }
 
-// === МОДАЛКА "РЕГИСТРАЦИЯ УСПЕШНА" ===
 function showRegisterSuccessModal(nickname, login) {
   const old = document.getElementById('modal-regSuccess');
   if (old) old.remove();
 
   const modal = document.createElement('div');
   modal.id = 'modal-regSuccess';
-  modal.style.cssText = `
-    display: flex;
-    position: fixed;
-    inset: 0;
-    background: rgba(5,5,10,0.95);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(10px);
-    padding: 20px;
-  `;
-  modal.innerHTML = `
-    <div style="background: linear-gradient(180deg, #0f1520 0%, #0a0a0f 100%); border-radius: 24px; padding: 30px 24px; max-width: 420px; width: 100%; text-align: center; border-top: 3px solid #22c55e; box-shadow: 0 0 60px rgba(34,197,94,0.4);">
-      <div style="font-size:64px; margin-bottom:16px;">🎉</div>
-      <div style="font-size:22px; font-weight:900; color:#22c55e; margin-bottom:12px;">
-        Регистрация прошла успешно!
-      </div>
-      <div style="font-size:15px; color:#ccc; line-height:1.6; margin-bottom:20px;">
-        Добро пожаловать, <b style="color:#fff;">${nickname}</b>!<br>
-        Теперь ты можешь зайти в свой аккаунт.
-      </div>
-      <div style="background:rgba(79,172,254,0.1); border:1px solid rgba(79,172,254,0.3); border-radius:12px; padding:12px; margin-bottom:20px; font-size:13px; color:#e8f4ff;">
-        Твой логин: <b style="color:#4facfe; letter-spacing:1px;">${login}</b>
-      </div>
-      <button onclick="goToLogin('${login.replace(/'/g, "\\'")}')" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(34,197,94,0.4); margin-bottom:10px;">
-        🔓 Зайти в аккаунт
-      </button>
-      <button onclick="closeRegSuccess()" style="width:100%; padding:12px; border-radius:12px; border:1px solid rgba(79,172,254,0.3); background:transparent; color:#8899aa; font-size:14px; cursor:pointer;">
-        Закрыть
-      </button>
-    </div>
-  `;
+  modal.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(5,5,10,0.95);z-index:10000;align-items:center;justify-content:center;backdrop-filter:blur(10px);padding:20px;';
+  modal.innerHTML = '<div style="background: linear-gradient(180deg, #0f1520 0%, #0a0a0f 100%); border-radius: 24px; padding: 30px 24px; max-width: 420px; width: 100%; text-align: center; border-top: 3px solid #22c55e; box-shadow: 0 0 60px rgba(34,197,94,0.4);">' +
+      '<div style="font-size:64px; margin-bottom:16px;">🎉</div>' +
+      '<div style="font-size:22px; font-weight:900; color:#22c55e; margin-bottom:12px;">Регистрация прошла успешно!</div>' +
+      '<div style="font-size:15px; color:#ccc; line-height:1.6; margin-bottom:20px;">Добро пожаловать, <b style="color:#fff;">' + nickname + '</b>!<br>Теперь ты можешь зайти в свой аккаунт.</div>' +
+      '<div style="background:rgba(79,172,254,0.1); border:1px solid rgba(79,172,254,0.3); border-radius:12px; padding:12px; margin-bottom:20px; font-size:13px; color:#e8f4ff;">Твой логин: <b style="color:#4facfe; letter-spacing:1px;">' + login + '</b></div>' +
+      '<button onclick="goToLogin()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:800; cursor:pointer; box-shadow:0 8px 30px rgba(34,197,94,0.4); margin-bottom:10px;">🔓 Зайти в аккаунт</button>' +
+      '<button onclick="closeRegSuccess()" style="width:100%; padding:12px; border-radius:12px; border:1px solid rgba(79,172,254,0.3); background:transparent; color:#8899aa; font-size:14px; cursor:pointer;">Закрыть</button>' +
+    '</div>';
   document.body.appendChild(modal);
+  modal.dataset.login = login;
 }
 
-function goToLogin(login) {
+function goToLogin() {
   const modal = document.getElementById('modal-regSuccess');
+  const login = modal?.dataset?.login || '';
   if (modal) modal.remove();
 
   document.getElementById('regLogin').value = '';
@@ -1742,14 +1689,29 @@ function closeRegSuccess() {
   showTab('login');
 }
 
-
 function enterGame() {
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  updateUI();
-  buildSidebar();
-  loadISShop();
-  saveToLocal();
+  console.log('🎮 enterGame() called');
+  const auth = document.getElementById('authScreen');
+  const app = document.getElementById('app');
+  if (auth) {
+    auth.style.display = 'none';
+    auth.style.visibility = 'hidden';
+  }
+  if (app) {
+    app.style.display = 'flex';
+    app.style.visibility = 'visible';
+    app.style.opacity = '1';
+  }
+  try {
+    updateUI();
+    buildSidebar();
+    loadISShop();
+    saveToLocal();
+    console.log('✅ Игра загружена');
+  } catch (e) {
+    console.error('❌ Ошибка в enterGame():', e);
+    showToast('Ошибка загрузки: ' + e.message);
+  }
 }
 
 function loadQuests() {
@@ -1817,15 +1779,12 @@ function loadAchievements() {
 
 async function loadReferral() {
   if (!currentToken) return;
-
   const myNick = nickname || ('user' + telegramId);
   const myTgId = telegramId || '';
   const link = 'https://t.me/' + BOT_USERNAME + '/' + BOT_SHORT_NAME
              + '?startapp=ref_' + encodeURIComponent(myNick) + '_' + myTgId;
-
   const linkEl = document.getElementById('refLink');
   if (linkEl) linkEl.textContent = link;
-
   try {
     const resp = await fetch(API_URL + '/referrals?token=' + encodeURIComponent(currentToken));
     const data = await resp.json();
@@ -1835,8 +1794,6 @@ async function loadReferral() {
       if (cntEl) cntEl.textContent = myReferrals.length;
       myReferralBonus = getTotalReferralEarnings(myReferrals.length);
       renderReferralList();
-    } else {
-      console.warn('referrals error:', data.error);
     }
   } catch (e) {
     console.error('Ошибка загрузки рефералов:', e);
@@ -1891,15 +1848,12 @@ function loadReferralBonus() {
   const bonusProgressFill = document.getElementById('bonusProgressFill');
   const bonusProgressText = document.getElementById('bonusProgressText');
   const bonusTotalEarned = document.getElementById('bonusTotalEarned');
-  
   if (bonusCount) bonusCount.innerHTML = count + '<span style="font-size:22px; color:#b8a060;"> / 100</span>';
   if (bonusProgressFill) bonusProgressFill.style.width = Math.min(100, count) + '%';
   if (bonusProgressText) bonusProgressText.textContent = count + ' / 100';
   if (bonusTotalEarned) bonusTotalEarned.textContent = getTotalReferralEarnings(count) + ' IS';
-  
   const el = document.getElementById('bonusTable');
   if (!el) return;
-  
   const rows = [
     { range: '1 друг', reward: '+100 IS', need: 1 },
     { range: '2 друга', reward: '+200 IS', need: 2 },
@@ -1907,13 +1861,10 @@ function loadReferralBonus() {
     { range: '4-100 друзей', reward: '+100 IS за каждого', need: 4 },
     { range: '100+ друзей', reward: '+300 IS за каждого', need: 100 }
   ];
-  
   el.innerHTML = rows.map((r, i) => {
     const done = count >= r.need;
     return '<div style="display:flex; align-items:center; gap:10px; padding:12px; margin-bottom:6px; ' +
-      'background:' + (done 
-        ? 'linear-gradient(90deg, rgba(34,197,94,0.15), rgba(30,58,95,0.2))' 
-        : 'linear-gradient(90deg, rgba(30,58,95,0.15), rgba(15,21,32,0.3))') + '; ' +
+      'background:' + (done ? 'linear-gradient(90deg, rgba(34,197,94,0.15), rgba(30,58,95,0.2))' : 'linear-gradient(90deg, rgba(30,58,95,0.15), rgba(15,21,32,0.3))') + '; ' +
       'border:1px solid ' + (done ? 'rgba(34,197,94,0.4)' : 'rgba(79,172,254,0.15)') + '; border-radius:12px;">' +
       '<div style="width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; ' +
         'background:' + (done ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'rgba(255,255,255,0.05)') + '; ' +
@@ -1969,14 +1920,12 @@ function loadStats() {
 function logout() {
   const confirmOut = confirm('⚠️ Выйти из аккаунта?\n\nТы сможешь зайти снова по логину и паролю.');
   if (!confirmOut) return;
-
   localStorage.removeItem('ingsoft_token');
   localStorage.removeItem('ingsoft_referrer_nickname');
   localStorage.removeItem('ingsoft_referrer_id');
   currentToken = null;
   currentUser = null;
   myUserId = null;
-
   nickname = null; phone = null; region = null; fullName = null;
   gender = null; selectedGender = null; avatarData = null;
   score = 0; energy = 500; maxEnergy = 500; multiplier = 1;
@@ -1988,14 +1937,11 @@ function logout() {
   walletBalance = 0; walletTotal = 0;
   upgrades = {}; passiveIncome = 0;
   myReferrals = []; myReferralBonus = 0;
-
   document.body.classList.remove('theme-female');
   document.body.classList.remove('theme-male');
-
   closeAllModals();
   document.getElementById('app').style.display = 'none';
   document.getElementById('authScreen').style.display = 'flex';
-
   document.getElementById('loginLogin').value = '';
   document.getElementById('loginPassword').value = '';
   document.getElementById('regLogin').value = '';
@@ -2005,7 +1951,6 @@ function logout() {
   document.getElementById('regRegion').value = '';
   document.getElementById('regFullName').value = '';
   selectedGender = null;
-
   const maleBtn = document.getElementById('genderMale');
   const femaleBtn = document.getElementById('genderFemale');
   if (maleBtn && femaleBtn) {
@@ -2016,11 +1961,9 @@ function logout() {
     femaleBtn.style.background = 'rgba(10,10,15,0.7)';
     femaleBtn.style.boxShadow = 'none';
   }
-
   showTab('login');
   showToast('🚪 Ты вышел из аккаунта');
 }
-
 
 function loadProfile() {
   const av = avatarData ? '<div class="profile-avatar" style="background-image:url(' + avatarData + ');background-size:cover;"></div>' : '<div class="profile-avatar">' + (nickname || '?')[0].toUpperCase() + '</div>';
@@ -2468,35 +2411,58 @@ async function loadProgressByToken(token) {
       applyGenderTheme();
       enterGame();
       setTimeout(loadReferral, 500);
+      return true;
     } else {
       localStorage.removeItem('ingsoft_token');
-      document.getElementById('authScreen').style.display = 'flex';
+      forceShowAuth();
+      return false;
     }
   } catch (e) {
-    console.error(e);
-    document.getElementById('authScreen').style.display = 'flex';
+    console.error('❌ loadProgressByToken error:', e);
+    forceShowAuth();
+    return false;
   }
 }
 
+function forceShowAuth() {
+  const auth = document.getElementById('authScreen');
+  const app = document.getElementById('app');
+  if (auth) {
+    auth.style.display = 'flex';
+    auth.style.visibility = 'visible';
+    auth.style.opacity = '1';
+    auth.style.zIndex = '9999';
+    auth.style.background = 'linear-gradient(160deg,#0f1520,#0a0a0f)';
+  }
+  if (app) app.style.display = 'none';
+  const formLogin = document.getElementById('formLogin');
+  const formRegister = document.getElementById('formRegister');
+  if (formLogin) formLogin.style.display = 'none';
+  if (formRegister) formRegister.style.display = 'block';
+  console.log('✅ Экран авторизации показан принудительно');
+}
+
 function init() {
-  // === Telegram WebApp init ===
   if (tg) {
-    tg.ready();
-    tg.expand();
-    try { tg.setHeaderColor('#0a0a0f'); tg.setBackgroundColor('#0a0a0f'); } catch(e) {}
+    try {
+      tg.ready();
+      tg.expand();
+      tg.setHeaderColor('#0a0a0f');
+      tg.setBackgroundColor('#0a0a0f');
+    } catch(e) { console.warn('tg init warning:', e.message); }
   }
   getTelegramUser();
 
-  // === РЕФЕРАЛЬНАЯ СИСТЕМА: ловим start_param ===
+  const isInTelegram = !!(tg && tg.initDataUnsafe && tg.initDataUnsafe.user);
+  console.log('🌐 Режим:', isInTelegram ? 'Telegram WebApp' : 'Обычный браузер');
+
   try {
     const startParam = tg?.initDataUnsafe?.start_param;
     console.log('🔗 start_param =', startParam);
-
     if (startParam && startParam.startsWith('ref_')) {
       const parts = startParam.replace('ref_', '').split('_');
       const refNick = decodeURIComponent(parts[0] || '');
       const refTgId = parts[1] ? parseInt(parts[1], 10) : null;
-
       if (refNick && refNick.length > 0) {
         referrerNickname = refNick;
         localStorage.setItem('ingsoft_referrer_nickname', refNick);
@@ -2512,7 +2478,6 @@ function init() {
     console.error('start_param error:', e);
   }
 
-  // === ЖДЁМ DOM И ВЕШАЕМ ОБРАБОТЧИКИ ===
   function bindAuthButtons() {
     const btnLogin = document.getElementById('tabLogin');
     const btnReg = document.getElementById('tabRegister');
@@ -2530,7 +2495,6 @@ function init() {
         showTab('register');
       });
     }
-
     const btnDoLogin = document.getElementById('btnDoLogin');
     if (btnDoLogin && !btnDoLogin.dataset.bound) {
       btnDoLogin.dataset.bound = '1';
@@ -2539,7 +2503,6 @@ function init() {
         doLogin();
       });
     }
-
     const btnDoRegister = document.getElementById('btnDoRegister');
     if (btnDoRegister && !btnDoRegister.dataset.bound) {
       btnDoRegister.dataset.bound = '1';
@@ -2554,16 +2517,14 @@ function init() {
   setTimeout(bindAuthButtons, 100);
   setTimeout(bindAuthButtons, 500);
 
-  // === Проверяем сохранённый токен ===
   const savedToken = localStorage.getItem('ingsoft_token');
   if (savedToken) {
     currentToken = savedToken;
     loadProgressByToken(savedToken);
   } else {
-    document.getElementById('authScreen').style.display = 'flex';
+    forceShowAuth();
   }
 
-  // === Таймеры ===
   setInterval(runAutotap, 1000);
   setInterval(runPassive, 1000);
   setInterval(regenEnergy, 1000);
