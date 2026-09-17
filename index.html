@@ -1054,7 +1054,6 @@ function openModal(name) {
   if (name === 'wallet') loadWallet();
   if (name === 'referral') {
     loadReferral();
-    // Обновляем каждые 3 секунды, пока вкладка открыта
     if (window._referralInterval) clearInterval(window._referralInterval);
     window._referralInterval = setInterval(loadReferral, 3000);
   }
@@ -1064,7 +1063,6 @@ function openModal(name) {
 }
 function closeModal(name) {
   document.getElementById('modal-' + name)?.classList.remove('active');
-  // Останавливаем обновление рефералов
   if (name === 'referral' && window._referralInterval) {
     clearInterval(window._referralInterval);
     window._referralInterval = null;
@@ -1510,13 +1508,10 @@ async function doRegister() {
   if (!login || login.length < 3) { showToast('Логин минимум 3 символа'); return; }
   if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
   if (!nick || nick.length < 2) { showToast('Никнейм минимум 2 символа'); return; }
-
-  // === НИК: ТОЛЬКО ЛАТИНИЦА, ЦИФРЫ, ПОДЧЁРКИВАНИЕ ===
   if (!/^[a-zA-Z0-9_]+$/.test(nick)) {
     showToast('❌ Ник только латиница, цифры и _ (без кириллицы и эмодзи)');
     return;
   }
-
   if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
   if (!region) { showToast('Выбери регион'); return; }
   if (!full_name) { showToast('Введи ФИО'); return; }
@@ -1542,17 +1537,10 @@ async function doRegister() {
     console.log('📥 Тело ответа:', text);
 
     let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      showToast('❌ Сервер вернул не JSON: ' + text.slice(0, 80));
-      return;
-    }
+    try { data = JSON.parse(text); }
+    catch (e) { showToast('❌ Сервер вернул не JSON: ' + text.slice(0, 80)); return; }
 
-    if (!resp.ok || data.error) {
-      showToast('❌ ' + (data.error || 'Ошибка'));
-      return;
-    }
+    if (!resp.ok || data.error) { showToast('❌ ' + (data.error || 'Ошибка')); return; }
 
     localStorage.removeItem('ingsoft_referrer_nickname');
     localStorage.removeItem('ingsoft_referrer_id');
@@ -2477,38 +2465,31 @@ function init() {
   console.log('🆔 Telegram ID:', telegramId);
   console.log('👤 Username:', username);
 
-  // === РЕФЕРАЛЬНАЯ СИСТЕМА: ловим start_param из ТРЁХ источников ===
+  // === start_param из трёх источников ===
   let startParam = null;
 
-  // 1) Из Telegram WebApp
   if (tg?.initDataUnsafe?.start_param) {
     startParam = tg.initDataUnsafe.start_param;
-    console.log('🔗 start_param (из WebApp):', startParam);
+    console.log('🔗 start_param (WebApp):', startParam);
   }
-
-  // 2) Из URL (fallback)
   if (!startParam) {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       startParam = urlParams.get('startapp') || urlParams.get('tgWebAppStartParam');
-      if (startParam) console.log('🔗 start_param (из URL):', startParam);
+      if (startParam) console.log('🔗 start_param (URL):', startParam);
     } catch(e) {}
   }
-
-  // 3) Из хэша
   if (!startParam) {
     try {
-      const hash = window.location.hash;
-      const match = hash.match(/startapp=([^&]+)/);
+      const match = window.location.hash.match(/startapp=([^&]+)/);
       if (match) {
         startParam = decodeURIComponent(match[1]);
-        console.log('🔗 start_param (из hash):', startParam);
+        console.log('🔗 start_param (hash):', startParam);
       }
     } catch(e) {}
   }
 
   if (startParam && startParam.startsWith('ref_')) {
-    // Формат: ref_<nickname>_<telegram_id>
     const raw = startParam.replace('ref_', '');
     const lastUnderscore = raw.lastIndexOf('_');
     let refNick = '';
@@ -2521,28 +2502,20 @@ function init() {
     } else {
       refNick = raw;
     }
-
     refNick = decodeURIComponent(refNick);
 
-    if (refNick && refNick.length > 0) {
-      // Проверяем что ник латиницей
-      if (/^[a-zA-Z0-9_]+$/.test(refNick)) {
-        referrerNickname = refNick;
-        localStorage.setItem('ingsoft_referrer_nickname', refNick);
-        console.log('✅ referrer_nickname =', refNick);
-      } else {
-        console.warn('⚠️ Ник реферера содержит недопустимые символы:', refNick);
-      }
+    if (refNick && /^[a-zA-Z0-9_]+$/.test(refNick)) {
+      referrerNickname = refNick;
+      localStorage.setItem('ingsoft_referrer_nickname', refNick);
+      console.log('✅ referrer_nickname =', refNick);
     }
-
-    if (refTgId && !isNaN(refTgId) && refTgId > 0) {
+    if (refTgId && refTgId > 0) {
       referrerId = refTgId;
       localStorage.setItem('ingsoft_referrer_id', String(refTgId));
       console.log('✅ referrer_id =', refTgId);
     }
   }
 
-  // === ВЕШАЕМ ОБРАБОТЧИКИ НА КНОПКИ ===
   function bindAuthButtons() {
     const btnLogin = document.getElementById('tabLogin');
     const btnReg = document.getElementById('tabRegister');
@@ -2577,7 +2550,6 @@ function init() {
       });
     }
   }
-
   bindAuthButtons();
   setTimeout(bindAuthButtons, 100);
   setTimeout(bindAuthButtons, 500);
