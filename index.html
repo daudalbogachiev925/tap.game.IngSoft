@@ -420,6 +420,11 @@ body::after {
   <div class="slide" style="background-image:url('slide3.jpg')"></div>
   <div class="slide" style="background-image:url('slide4.jpg')"></div>
   <div class="slide" style="background-image:url('slide5.jpg')"></div>
+  <div class="slide" style="background-image:url('slide6.jpg')"></div>
+  <div class="slide" style="background-image:url('slide7.jpg')"></div>
+  <div class="slide" style="background-image:url('slide8.jpg')"></div>
+  <div class="slide" style="background-image:url('slide9.jpg')"></div>
+  <div class="slide" style="background-image:url('slide10.jpg')"></div>
   <div class="slide-dots" id="slideDots"></div>
 </div>
 
@@ -499,6 +504,31 @@ body::after {
   </div>
 </div></div>
 
+<div class="modal" id="modal-referral-bonus"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">✧ <span>Бонус за рефералку</span></div><button class="modal-close" onclick="closeModal('referral-bonus')">×</button></div>
+  <p style="color:#b8a060; font-size:12px; text-align:center; margin-bottom:18px;">Чем больше друзей — тем больше награда!</p>
+
+  <div style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.12)); border:1px solid rgba(255,215,0,0.6); border-radius:18px; padding:18px; margin-bottom:18px; text-align:center;">
+    <div style="font-size:11px; color:#b8a060; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Приглашено друзей</div>
+    <div style="font-size:48px; font-weight:900; color:#ffd700; margin:8px 0;" id="bonusFriendCount">0<span style="font-size:22px; color:#b8a060;"> / 100</span></div>
+    <div style="font-size:12px; color:#94a3b8;">Заработано: <b style="color:#ffd700; font-size:16px;" id="bonusTotalEarned">0 IS</b></div>
+  </div>
+
+  <div style="background:rgba(10,5,24,0.8); border-radius:14px; overflow:hidden; height:30px; margin-bottom:22px; border:1px solid rgba(255,215,0,0.4); position:relative;">
+    <div id="bonusProgressFill" style="height:100%; background:linear-gradient(90deg,#ff8c00,#ffd700); transition:width 0.5s; width:0%;"></div>
+    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:900;" id="bonusProgressText">0 / 100</div>
+  </div>
+
+  <div style="font-size:14px; font-weight:800; color:#a78bfa; margin-bottom:12px;">▤ Таблица наград:</div>
+  <div id="bonusTable"></div>
+
+  <p style="color:#94a3b8; font-size:11px; text-align:center; margin-top:16px; line-height:1.7;">
+    ✦ За каждого друга IS приходит автоматически<br>
+    сразу после того, как друг зарегистрируется
+  </p>
+</div></div>
+
+
 <div class="modal" id="modal-daily"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">◈ <span>Награды</span></div><button class="modal-close" onclick="closeModal('daily')">×</button></div>
   <div id="dailyContent"></div>
@@ -520,6 +550,47 @@ body::after {
   <p style="color:#b8a060;font-size:12px;text-align:center;margin-bottom:16px;">Выполняй задания — получай IS</p>
   <div id="isTasksList"></div>
 </div></div>
+
+<div class="modal" id="modal-promocodes"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">✎ <span>Промокоды IngSoft</span></div><button class="modal-close" onclick="closeModal('promocodes')">×</button></div>
+  <p style="text-align:center;color:#94a3b8;font-size:13px;margin-bottom:14px;">Введи один из промокодов ниже и получи награду</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+    <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.35);border-radius:12px;padding:12px;text-align:center;">
+      <div style="font-size:14px;font-weight:900;color:#ffd700;">INGSOFT</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">+50 000</div>
+    </div>
+    <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.35);border-radius:12px;padding:12px;text-align:center;">
+      <div style="font-size:14px;font-weight:900;color:#ffd700;">WELCOME</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">+10 000</div>
+    </div>
+    <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.35);border-radius:12px;padding:12px;text-align:center;">
+      <div style="font-size:14px;font-weight:900;color:#ffd700;">DAUD</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">+100 000</div>
+    </div>
+    <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.35);border-radius:12px;padding:12px;text-align:center;">
+      <div style="font-size:14px;font-weight:900;color:#ffd700;">BOOST2</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">Множ. x2</div>
+    </div>
+    <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.35);border-radius:12px;padding:12px;text-align:center;">
+      <div style="font-size:14px;font-weight:900;color:#ffd700;">GIFT</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">+500 000</div>
+    </div>
+    <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.35);border-radius:12px;padding:12px;text-align:center;">
+      <div style="font-size:14px;font-weight:900;color:#ffd700;">VIP</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">+1M и x3</div>
+    </div>
+    <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.35);border-radius:12px;padding:12px;text-align:center;">
+      <div style="font-size:14px;font-weight:900;color:#ffd700;">MEGA</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">+5M</div>
+    </div>
+    <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.35);border-radius:12px;padding:12px;text-align:center;">
+      <div style="font-size:14px;font-weight:900;color:#ffd700;">ДАУД123</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px;">+200 000</div>
+    </div>
+  </div>
+  <button class="btn-buy green" style="width:100%;padding:16px;font-size:15px;" onclick="closeModal('promocodes'); openModal('promo')">✎ Ввести промокод</button>
+</div></div>
+
 
 <div class="modal" id="modal-promo"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">✎ <span>Промокод</span></div><button class="modal-close" onclick="closeModal('promo')">×</button></div>
@@ -653,24 +724,50 @@ const QUESTS = [
   { id:'tap100', name:'✦ Первые шаги', desc:'100 тапов', reward:100, check:()=>totalTaps>=100 },
   { id:'tap1k', name:'✧ Новичок', desc:'1 000 тапов', reward:500, check:()=>totalTaps>=1000 },
   { id:'tap10k', name:'⚡ Любитель', desc:'10 000 тапов', reward:5000, check:()=>totalTaps>=10000 },
+  { id:'tap50k', name:'◉ Опытный', desc:'50 000 тапов', reward:25000, check:()=>totalTaps>=50000 },
   { id:'tap100k', name:'◈ Про', desc:'100 000 тапов', reward:50000, check:()=>totalTaps>=100000 },
+  { id:'tap500k', name:'◆ Мастер', desc:'500 000 тапов', reward:250000, check:()=>totalTaps>=500000 },
+  { id:'tap1m', name:'♛ Гуру', desc:'1 000 000 тапов', reward:500000, check:()=>totalTaps>=1000000 },
   { id:'lvl5', name:'↟ Ур. 5', desc:'Достичь 5 уровня', reward:500, check:()=>level>=5 },
+  { id:'lvl10', name:'↟ Ур. 10', desc:'Достичь 10 уровня', reward:5000, check:()=>level>=10 },
+  { id:'lvl25', name:'↟ Ур. 25', desc:'Достичь 25 уровня', reward:50000, check:()=>level>=25 },
+  { id:'mult2', name:'⚡ x2', desc:'Множитель x2', reward:1000, check:()=>multiplier>=2 },
+  { id:'mult5', name:'✧ x5', desc:'Множитель x5', reward:10000, check:()=>multiplier>=5 },
+  { id:'mult10', name:'◈ x10', desc:'Множитель x10', reward:100000, check:()=>multiplier>=10 },
+  { id:'promo', name:'✎ Промокод', desc:'Активировать промокод', reward:1000, check:()=>claimedPromos.length>=1 },
+  { id:'ref1', name:'❖ Друг', desc:'Пригласить друга', reward:500, check:()=>myReferrals.length>=1 },
+  { id:'ref5', name:'❖ 5 друзей', desc:'Пригласить 5 друзей', reward:5000, check:()=>myReferrals.length>=5 },
 ];
 
 const ACHIEVEMENTS = [
   { id:'first', icon:'✦', name:'Первый тап', desc:'1 тап', check:()=>totalTaps>=1 },
   { id:'taps100', icon:'✧', name:'Сотня', desc:'100 тапов', check:()=>totalTaps>=100 },
   { id:'taps1k', icon:'⚡', name:'Тысяча', desc:'1000 тапов', check:()=>totalTaps>=1000 },
+  { id:'taps10k', icon:'◈', name:'10К', desc:'10 000 тапов', check:()=>totalTaps>=10000 },
+  { id:'taps100k', icon:'◆', name:'100К', desc:'100 000 тапов', check:()=>totalTaps>=100000 },
+  { id:'taps1m', icon:'♛', name:'Миллион', desc:'1 000 000 тапов', check:()=>totalTaps>=1000000 },
+  { id:'score1k', icon:'◈', name:'Тысячник', desc:'1000 очков', check:()=>score>=1000 },
+  { id:'score100k', icon:'◉', name:'Сто тысяч', desc:'100 000 очков', check:()=>score>=100000 },
+  { id:'score1m', icon:'◆', name:'Миллион очков', desc:'1 000 000 очков', check:()=>score>=1000000 },
+  { id:'mult5', icon:'⚡', name:'Магнат', desc:'Множитель x5', check:()=>multiplier>=5 },
+  { id:'mult10', icon:'✦', name:'Магнат+', desc:'Множитель x10', check:()=>multiplier>=10 },
   { id:'lvl10', icon:'↟', name:'Десятка', desc:'Уровень 10', check:()=>level>=10 },
+  { id:'lvl25', icon:'↟', name:'25 уровней', desc:'Уровень 25', check:()=>level>=25 },
+  { id:'auto', icon:'◉', name:'Автоматизация', desc:'Автоклик', check:()=>autotapLevel>0 },
+  { id:'ref1', icon:'❖', name:'Первый друг', desc:'Пригласить друга', check:()=>myReferrals.length>=1 },
+  { id:'promo1', icon:'✎', name:'Промо-мастер', desc:'Активировать промокод', check:()=>claimedPromos.length>=1 },
 ];
 
 const BOOST_NAMES = [
   {n:'⚡ Множитель', t:'mult', base:100000, step:2},
+  {n:'✦ Супер-множитель', t:'mult', base:500000, step:5},
+  {n:'◆ Мега-множитель', t:'mult', base:2000000, step:10},
   {n:'⚡ Энергия', t:'energy', base:50000, step:1000},
+  {n:'◈ Энергия+', t:'energy', base:250000, step:5000},
 ];
 const BOOSTS = [];
 let boostId = 0;
-for (let lvl = 0; lvl < 10; lvl++) {
+for (let lvl = 0; lvl < 8; lvl++) {
   for (const b of BOOST_NAMES) {
     boostId++;
     const price = Math.floor(b.base * Math.pow(2, lvl));
@@ -1018,10 +1115,22 @@ function buildSidebar(){
 }
 
 const GAMES = [
-  { id:'roulette', icon:'◉', name:'Рулетка', desc:'Крути' },
-  { id:'dice', icon:'◆', name:'Кубик', desc:'Бросай' },
+  { id:'roulette', icon:'◉', name:'Рулетка', desc:'Крути колесо' },
+  { id:'dice', icon:'◆', name:'Кубик', desc:'Бросай кубик' },
   { id:'coin', icon:'○', name:'Монетка', desc:'Орёл/решка' },
-  { id:'slots', icon:'✧', name:'Слоты', desc:'Комбо' },
+  { id:'slots', icon:'✧', name:'Слоты', desc:'Собери комбо' },
+  { id:'basket', icon:'◉', name:'Баскетбол', desc:'Забрось мяч' },
+  { id:'mine', icon:'◆', name:'Майнинг', desc:'Копай руду' },
+  { id:'wheel', icon:'◉', name:'Колесо', desc:'Крути фортуну' },
+  { id:'darts', icon:'◎', name:'Дартс', desc:'Попади в цель' },
+  { id:'fishing', icon:'◇', name:'Рыбалка', desc:'Поймай рыбу' },
+  { id:'cards', icon:'◈', name:'Карты', desc:'Угадай карту' },
+  { id:'shells', icon:'◐', name:'Фокусник', desc:'Где шарик?' },
+  { id:'craps', icon:'◆', name:'Кости', desc:'Сумма кубиков' },
+  { id:'archery', icon:'➤', name:'Лучник', desc:'В яблочко' },
+  { id:'penalty', icon:'◉', name:'Пенальти', desc:'Забей гол' },
+  { id:'basket3', icon:'◉', name:'3-очковый', desc:'Сложный бросок' },
+  { id:'mines', icon:'✸', name:'Сапёр', desc:'Открой клетку' },
 ];
 
 function loadGames(){
@@ -1042,7 +1151,29 @@ function buyIS(id){
   updateUI(); scheduleSave(); loadISShop(); showToast('✓ Куплено');
 }
 
-function loadISTasks(){ const el = document.getElementById('isTasksList'); if (el) el.innerHTML = '<p style="text-align:center;color:#94a3b8;font-size:13px;padding:20px;">Скоро здесь появятся задания</p>'; }
+function loadISTasks(){
+  const el = document.getElementById('isTasksList');
+  if (!el) return;
+  const tasks = [
+    { icon:'◉', name:'Подписка на Telegram',  desc:'Скоро появится', reward:50 },
+    { icon:'▶', name:'Подписка на YouTube',   desc:'Скоро появится', reward:50 },
+    { icon:'◐', name:'Подписка на Instagram', desc:'Скоро появится', reward:50 },
+    { icon:'♥', name:'Лайк видео',            desc:'Скоро появится', reward:30 },
+    { icon:'✎', name:'Комментарий под видео', desc:'Скоро появится', reward:30 },
+    { icon:'↻', name:'Репост видео',          desc:'Скоро появится', reward:30 },
+    { icon:'❖', name:'Пригласи друга',        desc:'Скоро появится', reward:100 },
+  ];
+  el.innerHTML = tasks.map(t => (
+    '<div class="item-row" style="opacity:0.6;">' +
+      '<div class="item-info">' +
+        '<div class="item-name">' + t.icon + ' ' + t.name + '</div>' +
+        '<div class="item-desc">' + t.desc + '</div>' +
+        '<div style="font-size:11px;color:#ffd700;margin-top:3px;">◈ +' + t.reward + ' IS</div>' +
+      '</div>' +
+      '<button class="btn-buy" disabled>🔒 Скоро</button>' +
+    '</div>'
+  )).join('');
+}
 
 function loadQuests(){
   const el = document.getElementById('questsList');
@@ -1072,15 +1203,35 @@ function loadAchievements(){
 
 function loadDaily(){
   const el = document.getElementById('dailyContent');
-  const today = new Date().toISOString().split('T')[0];
+  // Авто-сброс раз в неделю
+  const now = new Date();
+  const day = now.getDay(); // 0 = вс
+  const weekStart = new Date(now);
+  weekStart.setDate(now.getDate() - day);
+  const weekKey = weekStart.toISOString().split('T')[0];
+  try {
+    const lastWeek = localStorage.getItem('ingsoft_daily_week');
+    if (lastWeek !== weekKey) {
+      dailyStreak = 0;
+      lastDailyClaim = null;
+      localStorage.setItem('ingsoft_daily_week', weekKey);
+    }
+  } catch(e) {}
+
+  const today = now.toISOString().split('T')[0];
   const can = lastDailyClaim !== today;
+  const nextDay = can ? (dailyStreak % 7) : (dailyStreak - 1) % 7;
+
   let h = '<div class="daily-grid">';
   for (let i = 0; i < 7; i++) {
     const cl = i < (dailyStreak % 7);
-    h += '<div class="daily-day '+(cl?'claimed':'')+'"><div>'+(cl?'✓':'◈')+'</div><div style="font-size:9px;">Д'+(i+1)+'</div><div class="daily-reward">'+fmt(DAILY_REWARDS[i].coins)+'</div></div>';
+    const isToday = i === nextDay && can;
+    h += '<div class="daily-day '+(cl?'claimed':'')+' '+(isToday?'today':'')+'" style="'+(isToday?'border-color:#ec4899;background:linear-gradient(145deg, rgba(236,72,153,0.3), rgba(139,92,246,0.2));':'')+'"><div>'+(cl?'✓':'◈')+'</div><div style="font-size:9px;">Д'+(i+1)+'</div><div class="daily-reward">'+fmt(DAILY_REWARDS[i].coins)+'</div></div>';
   }
   h += '</div>';
-  if (can) h += '<button class="btn-buy green" style="width:100%;padding:16px;" onclick="claimDaily()">◈ Забрать</button>';
+  if (can) h += '<p style="text-align:center;margin-bottom:14px;color:#cbd5e1;">Сегодня: <b style="color:#ffd700;">'+fmt(DAILY_REWARDS[nextDay].coins)+'</b></p>';
+  if (can) h += '<button class="btn-buy green" style="width:100%;padding:16px;" onclick="claimDaily()">◈ Забрать награду</button>';
+  else h += '<p style="text-align:center;color:#94a3b8;padding:12px;">Уже забрано сегодня. Приходи завтра! Серия: <b style="color:#ec4899;">'+dailyStreak+' дней</b></p>';
   el.innerHTML = h;
 }
 function claimDaily(){ const today = new Date().toISOString().split('T')[0]; if (lastDailyClaim === today) return; const r = DAILY_REWARDS[dailyStreak % 7].coins; score += r; dailyStreak += 1; lastDailyClaim = today; updateUI(); scheduleSave(); loadDaily(); }
@@ -1332,6 +1483,32 @@ function init(){
   setInterval(sendHeartbeat, 20000);
   setInterval(checkNewReferrals, 10000);
   window.addEventListener('beforeunload', saveToLocal);
+}
+/* ============ СЛАЙД-ШОУ (10 слайдов, авто-переключение) ============ */
+function initSlideshow(){
+  const slides = document.querySelectorAll('.slide');
+  const dotsWrap = document.getElementById('slideDots');
+  if (!slides.length || !dotsWrap) return;
+  dotsWrap.innerHTML = Array.from(slides).map((_, i) => '<div class="slide-dot' + (i === 0 ? ' active' : '') + '"></div>').join('');
+  const dots = document.querySelectorAll('.slide-dot');
+  let slideIndex = 0;
+  slides.forEach((s, i) => {
+    s.classList.remove('active','past','future');
+    if (i === 0) s.classList.add('active');
+    else s.classList.add('future');
+  });
+  setInterval(() => {
+    const total = slides.length;
+    const prev = slideIndex;
+    slideIndex = (slideIndex + 1) % total;
+    slides[prev].classList.remove('active');
+    slides[prev].classList.add('past');
+    setTimeout(()=>slides[prev].classList.remove('past'), 900);
+    setTimeout(()=>slides[prev].classList.add('future'), 950);
+    slides[slideIndex].classList.remove('future','past');
+    slides[slideIndex].classList.add('active');
+    dots.forEach((d,i) => d.classList.toggle('active', i === slideIndex));
+  }, 4000);
 }
 init();
 </script>
