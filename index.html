@@ -9,13 +9,9 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
 :root {
-  --ing-red:#e63946; --ing-red-dark:#c1121f;
   --ing-gold:#ffd700; --ing-green:#22c55e; --ing-blue:#4facfe;
   --ing-purple:#a855f7; --ing-violet:#8b5cf6; --ing-pink:#ec4899;
-  --fem-pink:#ff69b4; --fem-pink-light:#ffb6d9; --fem-purple:#d946ef;
-  --wave-1:#0a0a0f; --wave-2:#0f1520; --wave-3:#0d1a2e; --wave-4:#132a4a; --wave-5:#1e3a5f;
-  --glass-bg: rgba(30, 41, 59, 0.35);
-  --glass-border: rgba(148, 163, 184, 0.15);
+  --wave-1:#0a0a0f;
 }
 html, body {
   background: var(--wave-1); color:#fff; font-family:'Inter', 'Segoe UI', -apple-system, sans-serif;
@@ -50,7 +46,6 @@ body::after {
 }
 .app { display:flex; min-height:100vh; position:relative; z-index:1; }
 
-/* SIDEBAR */
 .sidebar { width:64px; background: linear-gradient(180deg, rgba(10,5,24,0.85) 0%, rgba(15,12,41,0.9) 100%); border-right:1px solid rgba(139,92,246,0.2); padding:10px 0; display:flex; flex-direction:column; gap:6px; position:fixed; left:0; top:0; height:100vh; z-index:500; overflow-y:auto; overflow-x:hidden; backdrop-filter: blur(25px); box-shadow: 4px 0 40px rgba(0,0,0,0.6); }
 .sidebar-logo { padding:12px 4px; text-align:center; background: linear-gradient(135deg, rgba(236,72,153,0.3), rgba(139,92,246,0.4), rgba(79,172,254,0.3)); background-size: 200% 200%; animation: logoAura 6s ease infinite; border-radius: 14px; margin: 4px 8px 12px 8px; box-shadow: 0 0 30px rgba(139,92,246,0.5), inset 0 0 20px rgba(255,255,255,0.08); position: relative; overflow: hidden; }
 .sidebar-logo img { height:28px; max-width:100%; position: relative; z-index: 1; filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)); transition: transform 0.3s; }
@@ -62,9 +57,8 @@ body::after {
 .sidebar-item:hover .sidebar-label { color:#fff; }
 .main { flex:1; margin-left:64px; padding-bottom:80px; max-width:100%; }
 
-/* HEADER */
 .header { display:flex; align-items:center; justify-content:center; padding:14px 18px; background: rgba(10,5,24,0.6); backdrop-filter:blur(30px); position:sticky; top:0; z-index:400; border-bottom:1px solid rgba(139,92,246,0.2); }
-.header-card { display:flex; align-items:center; gap:16px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(30,58,95,0.3)); border: 1px solid rgba(139,92,246,0.35); border-radius: 24px; padding: 12px 24px; max-width: 100%; position: relative; overflow: hidden; }
+.header-card { display:flex; align-items:center; gap:16px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(30,58,95,0.3)); border: 1px solid rgba(139,92,246,0.35); border-radius: 24px; padding: 12px 24px; max-width: 100%; }
 .avatar-wrap { position: relative; cursor: pointer; }
 .avatar { width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6,#4facfe); display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:24px; box-shadow:0 8px 30px rgba(139,92,246,0.6); overflow: hidden; background-size: cover; background-position: center; }
 .header-info { display:flex; flex-direction:column; gap:3px; min-width:0; }
@@ -73,31 +67,26 @@ body::after {
 .header-rank { font-size:11px; color:#94a3b8; }
 .header-rank b { color:var(--ing-gold); }
 .header-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; margin-left: 14px; padding-left: 14px; border-left: 1px solid rgba(139,92,246,0.3); min-width: 190px; }
-.header-btn { display: flex; align-items: center; justify-content: center; gap: 5px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(30,58,95,0.3)); border: 1px solid rgba(139,92,246,0.4); border-radius: 12px; padding: 9px 8px; color: #e0e7ff; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.25s; white-space: nowrap; }
-.header-btn:hover { transform: translateY(-2px); }
+.header-btn { display: flex; align-items: center; justify-content: center; gap: 5px; background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(30,58,95,0.3)); border: 1px solid rgba(139,92,246,0.4); border-radius: 12px; padding: 9px 8px; color: #e0e7ff; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.25s; }
 .header-btn.gold { background: linear-gradient(135deg, rgba(255,215,0,0.25), rgba(255,140,0,0.2)); border-color: rgba(255,215,0,0.6); color: #ffe680; }
 .header-btn-icon { font-size: 15px; line-height: 1; }
 .header-btn-label { font-size: 10px; }
 
-/* STATS */
 .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:20px 18px; }
 .stat-card { background: linear-gradient(145deg, rgba(139,92,246,0.15), rgba(30,58,95,0.25)); border:1px solid rgba(139,92,246,0.3); border-radius:20px; padding:18px 10px; text-align:center; }
 .stat-value { font-size:23px; font-weight:900; color:#fff; word-break:break-word; }
 .stat-label { font-size:10px; color:#94a3b8; margin-top:5px; text-transform:uppercase; letter-spacing: 1px; font-weight: 600; }
 
-/* LEVEL BAR */
 .level-bar { margin:0 18px 18px; background:rgba(10,5,24,0.7); border-radius:16px; overflow:hidden; height:34px; position:relative; border:1px solid rgba(139,92,246,0.35); }
 .level-fill { height:100%; background:linear-gradient(90deg,#ec4899,#8b5cf6,#4facfe,#ffd700); background-size:300% 100%; animation:gradientMove 4s ease infinite; transition:width 0.5s; }
 @keyframes gradientMove { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
 .level-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:800; color:white; text-shadow:0 2px 6px rgba(0,0,0,1); }
 
-/* SCORE */
 .score-block { text-align:center; padding:26px 16px 12px; }
 .score-big { font-size:80px; font-weight:900; background:linear-gradient(135deg,#fff 0%,#ec4899 30%,#8b5cf6 60%,#4facfe 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; transition:transform 0.15s; line-height: 1; }
 .score-big.pop { transform:scale(1.15); }
 .score-label { font-size:12px; color:#64748b; text-transform:uppercase; letter-spacing:4px; margin-top:8px; font-weight: 700; }
 
-/* TAP */
 .tap-container { display:flex; justify-content:center; padding:24px 16px; position:relative; overflow: visible; }
 .tap-button { width:240px; height:240px; border-radius:50%; background: conic-gradient(from 0deg, #ec4899, #8b5cf6, #4facfe, #22c55e, #ffd700, #ec4899); padding:8px; border:none; cursor:pointer; font-size:38px; font-weight:900; color:white; letter-spacing:6px; box-shadow: 0 30px 100px rgba(139,92,246,0.6); transition:transform 0.1s; position:relative; }
 .tap-button::after { content:''; position:absolute; inset:8px; border-radius:50%; background: radial-gradient(circle at 35% 25%, #1e293b, #0a0518 60%); z-index:1; }
@@ -106,18 +95,15 @@ body::after {
 .float-plus { position:absolute; pointer-events:none; font-weight:900; font-size:32px; color:#ec4899; animation:floatUp 1.2s ease-out forwards; z-index:10; }
 @keyframes floatUp { 0%{opacity:1;transform:translate(-50%,-50%) scale(1);} 100%{opacity:0;transform:translate(-50%,-200%) scale(1.6);} }
 
-/* ENERGY */
 .energy-bar { margin:0 18px 16px; background:rgba(10,5,24,0.75); border-radius:16px; overflow:hidden; height:30px; position:relative; border:1px solid rgba(79,172,254,0.3); }
 .energy-fill { height:100%; background:linear-gradient(90deg,#8b5cf6,#4facfe,#22d3ee); transition:width 0.3s; }
 .energy-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:800; color:white; text-shadow:0 2px 5px rgba(0,0,0,1); }
 
-/* QUICK */
 .quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:0 18px; }
 .quick-btn { background: linear-gradient(145deg, rgba(139,92,246,0.15), rgba(30,58,95,0.3)); border:1px solid rgba(139,92,246,0.3); border-radius:16px; padding:16px 6px; color:#fff; cursor:pointer; font-size:10px; text-align:center; font-weight:700; transition:all 0.3s; }
 .quick-btn:hover { transform: translateY(-4px); }
 .quick-icon { font-size:26px; display:block; margin-bottom:6px; }
 
-/* IS */
 .is-balance { display:flex; align-items:center; justify-content:center; gap:10px; margin: 18px 18px 10px; padding: 14px 20px; background: linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,140,0,0.12)); border: 1px solid rgba(255,215,0,0.55); border-radius: 18px; font-weight: 900; font-size: 17px; }
 .is-balance .is-icon { font-size: 28px; }
 .is-balance .is-val { color: #ffd700; }
@@ -141,7 +127,6 @@ body::after {
 .is-task-desc { font-size: 11px; color: #94a3b8; margin-top: 3px; }
 .is-task-reward { font-size: 12px; color: #ffd700; font-weight: 800; margin-top: 3px; }
 
-/* SLIDESHOW */
 .slideshow { position: relative; margin: 18px; height: 190px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(139,92,246,0.4); background: #0a0518; }
 .slide { position: absolute; inset: 0; background-size: cover; background-position: center; border-radius: 20px; opacity: 0; transform: translateX(100%) scale(0.7); transition: all 0.9s; }
 .slide.active { opacity: 1; transform: translateX(0) scale(1); }
@@ -151,7 +136,6 @@ body::after {
 .slide-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s; }
 .slide-dot.active { background: #ec4899; width: 22px; border-radius: 4px; }
 
-/* PLAYER STATS BAR */
 .player-stats-bar {
   display: flex;
   justify-content: space-around;
@@ -166,26 +150,12 @@ body::after {
   gap: 8px;
   flex-wrap: wrap;
 }
-.player-stats-bar .ps-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
+.player-stats-bar .ps-item { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
 .player-stats-bar .ps-online { color: #22c55e; }
 .player-stats-bar .ps-offline { color: #94a3b8; }
 .player-stats-bar .ps-total { color: #a78bfa; }
-.player-stats-bar .ps-num {
-  display: inline-block;
-  min-width: 26px;
-  padding: 2px 8px;
-  border-radius: 8px;
-  background: rgba(0,0,0,0.35);
-  font-weight: 900;
-  text-align: center;
-}
+.player-stats-bar .ps-num { display: inline-block; min-width: 26px; padding: 2px 8px; border-radius: 8px; background: rgba(0,0,0,0.35); font-weight: 900; text-align: center; }
 
-/* TOP PANEL */
 .top-panel { margin: 22px 18px 12px; background: linear-gradient(145deg, rgba(139,92,246,0.15), rgba(15,12,41,0.7)); border: 1px solid rgba(139,92,246,0.3); border-radius: 22px; padding: 18px; }
 .top-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .top-panel-title { font-size: 17px; font-weight: 900; color:#fff; }
@@ -208,7 +178,6 @@ body::after {
 .online-dot.online { background:#22c55e; box-shadow: 0 0 8px #22c55e; animation: pulseGreen 2s infinite; }
 @keyframes pulseGreen { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
 
-/* MODALS */
 .modal { display:none; position:fixed; inset:0; background:rgba(5,2,15,0.92); z-index:2000; align-items:flex-end; justify-content:center; backdrop-filter:blur(15px); }
 .modal.active { display:flex; }
 .modal-content { background: linear-gradient(180deg, #141c2e 0%, #0a0518 100%); border-radius:28px 28px 0 0; padding:22px; max-width:560px; width:100%; max-height:88vh; overflow-y:auto; animation:slideUp 0.35s; }
@@ -223,13 +192,11 @@ body::after {
 .item-desc { font-size:11px; color:#64748b; }
 .item-reward { font-size:11px; color:#a78bfa; margin-top:3px; font-weight:700; }
 .btn-buy { background:linear-gradient(135deg,#8b5cf6,#4facfe); border:none; color:#fff; padding:9px 16px; border-radius:12px; cursor:pointer; font-weight:800; font-size:12px; white-space:nowrap; transition: all 0.25s; }
-.btn-buy:hover:not(:disabled) { transform: translateY(-2px); }
 .btn-buy:disabled { opacity:0.35; cursor:not-allowed; }
 .btn-buy.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
 .btn-buy.gold { background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0518; }
 .btn-buy.blue { background:linear-gradient(135deg,#4facfe,#2563eb); }
 
-/* GAMES */
 .games-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
 .game-card { background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.6)); border: 1px solid rgba(139,92,246,0.25); border-radius: 20px; padding: 24px 12px; text-align: center; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .game-card:hover { transform: translateY(-4px); }
@@ -241,20 +208,17 @@ body::after {
 .dice { font-size:80px; margin:16px 0; }
 .roulette-wheel { width:200px; height:200px; border-radius:50%; background:conic-gradient(#0d1a2e 0deg 60deg,#8b5cf6 60deg 120deg,#ec4899 120deg 180deg,#4facfe 180deg 240deg,#22c55e 240deg 300deg,#ffd700 300deg 360deg); margin:16px auto; border:4px solid #e0e7ff; transition:transform 3s; }
 
-/* PROFILE */
 .profile-avatar { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6,#4facfe); display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:900; color:white; margin:0 auto 18px; background-size: cover; background-position: center; }
 .profile-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(139,92,246,0.12); font-size:13px; }
 .profile-row span:first-child { color:#94a3b8; }
 .profile-row span:last-child { font-weight:700; color:#a78bfa; }
 
-/* DAILY */
 .daily-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
 .daily-day { aspect-ratio:1; background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.5)); border:1px solid rgba(139,92,246,0.25); border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:9px; color:#94a3b8; padding:4px; }
 .daily-day.claimed { background:linear-gradient(145deg, rgba(139,92,246,0.3), rgba(139,92,246,0.08)); border-color:#8b5cf6; color:#a78bfa; }
 .daily-day.today { background:linear-gradient(145deg, rgba(236,72,153,0.3), rgba(139,92,246,0.2)); border-color:#ec4899; color:white; }
 .daily-reward { font-size:12px; font-weight:900; color:#a78bfa; margin-top:2px; }
 
-/* ACHIEVEMENTS */
 .achieve-item { display:flex; align-items:center; gap:12px; padding:14px; background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.5)); border-radius:16px; margin-bottom:6px; border:1px solid rgba(139,92,246,0.2); }
 .achieve-item.locked { opacity:0.4; }
 .achieve-item.unlocked { background:linear-gradient(90deg,rgba(139,92,246,0.25),rgba(236,72,153,0.15)); border-color:#8b5cf6; }
@@ -263,29 +227,23 @@ body::after {
 .achieve-name { font-size:13px; font-weight:700; }
 .achieve-desc { font-size:11px; color:#64748b; margin-top:2px; }
 
-/* WALLET */
 .wallet-balance { background:linear-gradient(145deg,rgba(34,197,94,0.18),rgba(10,26,16,0.7)); border:1px solid rgba(34,197,94,0.4); border-radius:18px; padding:24px; text-align:center; margin-bottom:16px; }
 .wallet-balance-val { font-size:46px; font-weight:900; color:#22c55e; }
 .wallet-balance-lbl { font-size:12px; color:#94a3b8; margin-top:6px; text-transform:uppercase; letter-spacing:3px; }
 
-/* PROMO */
 .promo-input { width:100%; padding:16px; border-radius:14px; border:1px solid rgba(139,92,246,0.4); background:rgba(10,5,24,0.8); color:#fff; font-size:14px; text-align:center; margin-bottom:14px; outline:none; text-transform:uppercase; letter-spacing:3px; font-weight: 700; }
 
-/* TOAST */
 .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(120px); background:linear-gradient(135deg,#8b5cf6,#ec4899); color:white; padding:14px 28px; border-radius:16px; transition:transform 0.35s; z-index:3000; font-size:13px; font-weight: 700; max-width:90%; text-align:center; }
 .toast.show { transform:translateX(-50%) translateY(0); }
 
-/* AUTH */
 .reg-screen { position:fixed; inset:0; background:linear-gradient(160deg,#0f0c29,#0a0518); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; overflow-y:auto; }
 .reg-input { width:100%; padding:16px; border-radius:14px; border:1px solid rgba(139,92,246,0.4); background:rgba(10,5,24,0.8); color:#fff; font-size:15px; margin-bottom:12px; outline:none; }
 .reg-btn { width:100%; padding:16px; border-radius:16px; border:none; background:linear-gradient(135deg,#8b5cf6,#ec4899); color:#fff; font-size:16px; font-weight:800; cursor:pointer; }
 .reg-btn.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
 
-/* CORNER LOGO */
 .corner-logo { position:fixed; right:14px; bottom:14px; z-index:600; opacity:0.78; background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(236,72,153,0.2)); padding: 12px 18px; border-radius: 18px; border: 1px solid rgba(139,92,246,0.5); pointer-events:none; }
 .corner-logo img { height:40px; display:block; }
 
-/* REF */
 .ref-thanks-overlay { display: none; position: fixed; inset: 0; background: radial-gradient(ellipse at center, rgba(10,5,24,0.9) 0%, rgba(5,2,15,0.97) 100%); z-index: 99999; align-items: center; justify-content: center; padding: 20px; }
 .ref-thanks-overlay.show { display: flex; }
 .ref-thanks-card { background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%); border-radius: 30px; padding: 34px 26px; max-width: 400px; width: 100%; text-align: center; border: 2px solid rgba(255,215,0,0.5); }
@@ -310,7 +268,6 @@ body::after {
 .ref-welcome-btn { width: 100%; background: linear-gradient(135deg, #22c55e, #16a34a); border: none; color: #fff; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 900; cursor: pointer; margin-bottom: 10px; }
 .ref-welcome-btn.secondary { background: transparent; border: 1px solid rgba(139,92,246,0.4); color: #94a3b8; font-size: 13px; padding: 12px; }
 
-/* LB stats and pagination */
 .lb-stats { display: flex; justify-content: space-around; align-items: center; margin-bottom: 16px; padding: 12px; background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(15,12,41,0.5)); border: 1px solid rgba(34,197,94,0.2); border-radius: 14px; font-size: 12px; font-weight: 700; gap: 8px; flex-wrap: wrap; }
 .lb-stats .lb-stat-item { display: flex; align-items: center; gap: 5px; }
 .lb-stats .lb-online { color: #22c55e; }
@@ -349,7 +306,6 @@ body.theme-female .header-nick { color: #ffd9ec; }
 <body>
 <div class="wave-overlay"></div>
 
-<!-- REF THANKS -->
 <div id="refThanksOverlay" class="ref-thanks-overlay">
   <div class="ref-thanks-card">
     <div class="ref-thanks-emoji">🎉</div>
@@ -364,7 +320,6 @@ body.theme-female .header-nick { color: #ffd9ec; }
   </div>
 </div>
 
-<!-- REF WELCOME -->
 <div id="refWelcomeOverlay" class="ref-thanks-overlay">
   <div class="ref-welcome-card">
     <div class="ref-welcome-emoji">👋</div>
@@ -376,7 +331,7 @@ body.theme-female .header-nick { color: #ffd9ec; }
     <div class="ref-welcome-tips">
       <div class="ref-welcome-tips-title">🚀 Что делать дальше</div>
       <div class="ref-welcome-tips-item"><span>▸</span><span>Тапай и зарабатывай очки</span></div>
-      <div class="ref-welcome-tips-item"><span>▸</span><span>Отправляй <b>свою</b> реферальную ссылку друзьям</span></div>
+      <div class="ref-welcome-tips-item"><span>▸</span><span>Отправляй свою реферальную ссылку</span></div>
       <div class="ref-welcome-tips-item"><span>▸</span><span>Получай IS и промокоды</span></div>
       <div class="ref-welcome-tips-item"><span>▸</span><span>Занимай 1 место в топе!</span></div>
     </div>
@@ -385,7 +340,6 @@ body.theme-female .header-nick { color: #ffd9ec; }
   </div>
 </div>
 
-<!-- AUTH -->
 <div id="authScreen" class="reg-screen">
   <div style="text-align:center; max-width:420px; width:100%; padding-top:20px;">
     <div style="background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(139,92,246,0.15)); border: 1px solid rgba(236,72,153,0.4); border-radius: 22px; padding: 18px 32px; margin-bottom: 18px; display: inline-block;">
@@ -425,7 +379,6 @@ body.theme-female .header-nick { color: #ffd9ec; }
   </div>
 </div>
 
-<!-- APP -->
 <div class="app" id="app" style="display:none;">
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo"><img src="logo.png" alt="IngSoft" onerror="this.style.display='none'"></div>
@@ -497,7 +450,6 @@ body.theme-female .header-nick { color: #ffd9ec; }
   <div class="slide-dots" id="slideDots"></div>
 </div>
 
-<!-- PLAYER STATS -->
 <div class="player-stats-bar" id="playerStatsBar">
   <div class="ps-item ps-online">🟢 Онлайн: <span class="ps-num" id="psOnline">0</span></div>
   <div class="ps-item ps-offline">⚫ Оффлайн: <span class="ps-num" id="psOffline">0</span></div>
@@ -532,164 +484,9 @@ body.theme-female .header-nick { color: #ffd9ec; }
   <div class="top-list" id="topList"></div>
 </div>
 
-<!-- MODALS -->
 <div class="modal" id="modal-games"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">⬢ <span>Игры</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
   <div class="games-grid" id="gamesGrid"></div>
-</div></div>
-
-<div class="modal" id="modal-roulette"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◉ <span>Рулетка</span></div><button class="modal-close" onclick="closeModal('roulette')">×</button></div>
-  <div class="game-area">
-    <div class="roulette-wheel" id="rouletteWheel"></div>
-    <div class="game-result" id="rouletteResult">Крути!</div>
-    <button class="btn-buy" onclick="spinRoulette()">Крутить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-dice"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◆ <span>Кубик</span></div><button class="modal-close" onclick="closeModal('dice')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="diceValue">◆</div>
-    <div class="game-result" id="diceResult">Бросай!</div>
-    <button class="btn-buy" onclick="rollDice()">Бросить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-coin"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">○ <span>Монетка</span></div><button class="modal-close" onclick="closeModal('coin')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="coinValue">○</div>
-    <div class="game-result" id="coinResult">Орёл или решка?</div>
-    <button class="btn-buy" onclick="flipCoin('heads')">Орёл</button>
-    <button class="btn-buy" onclick="flipCoin('tails')">Решка</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-slots"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">✧ <span>Слоты</span></div><button class="modal-close" onclick="closeModal('slots')">×</button></div>
-  <div class="game-area">
-    <div style="font-size:60px;letter-spacing:20px;" id="slotsDisplay">◇◇◇</div>
-    <div class="game-result" id="slotsResult">Крути!</div>
-    <button class="btn-buy" onclick="spinSlots()">Крутить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-basket"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◉ <span>Баскетбол</span></div><button class="modal-close" onclick="closeModal('basket')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="basketDisplay">◉</div>
-    <div class="game-result" id="basketResult">Бросай!</div>
-    <button class="btn-buy" onclick="throwBasket()">Бросить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-mine"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◆ <span>Майнинг</span></div><button class="modal-close" onclick="closeModal('mine')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="mineDisplay">◆</div>
-    <div class="game-result" id="mineResult">Копай!</div>
-    <button class="btn-buy" onclick="digMine()">Копать</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-wheel"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◉ <span>Колесо</span></div><button class="modal-close" onclick="closeModal('wheel')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="wheelDisplay">◉</div>
-    <div class="game-result" id="wheelResult">Крути!</div>
-    <button class="btn-buy" onclick="spinWheel()">Крутить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-darts"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◎ <span>Дартс</span></div><button class="modal-close" onclick="closeModal('darts')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="dartsDisplay">◎</div>
-    <div class="game-result" id="dartsResult">Бросай!</div>
-    <button class="btn-buy" onclick="playDarts()">Бросить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-fishing"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◇ <span>Рыбалка</span></div><button class="modal-close" onclick="closeModal('fishing')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="fishingDisplay">◇</div>
-    <div class="game-result" id="fishingResult">Закинь!</div>
-    <button class="btn-buy" onclick="playFishing()">Закинуть</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-cards"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◈ <span>Карты</span></div><button class="modal-close" onclick="closeModal('cards')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="cardsDisplay">◈</div>
-    <div class="game-result" id="cardsResult">Тяни!</div>
-    <button class="btn-buy" onclick="playCards()">Тянуть</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-shells"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◐ <span>Фокусник</span></div><button class="modal-close" onclick="closeModal('shells')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="shellsDisplay">◐</div>
-    <div class="game-result" id="shellsResult">Где шарик?</div>
-    <button class="btn-buy" onclick="playShells()">Угадать</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-craps"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◆ <span>Кости</span></div><button class="modal-close" onclick="closeModal('craps')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="crapsDisplay">◆◆</div>
-    <div class="game-result" id="crapsResult">Бросай!</div>
-    <button class="btn-buy" onclick="playCraps()">Бросить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-archery"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">➤ <span>Лучник</span></div><button class="modal-close" onclick="closeModal('archery')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="archeryDisplay">➤</div>
-    <div class="game-result" id="archeryResult">Натяни!</div>
-    <button class="btn-buy" onclick="playArchery()">Стрелять</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-penalty"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◉ <span>Пенальти</span></div><button class="modal-close" onclick="closeModal('penalty')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="penaltyDisplay">◉</div>
-    <div class="game-result" id="penaltyResult">Бей!</div>
-    <button class="btn-buy" onclick="playPenalty()">Ударить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-basket3"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◉ <span>3-очковый</span></div><button class="modal-close" onclick="closeModal('basket3')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="basket3Display">◉</div>
-    <div class="game-result" id="basket3Result">Бросай!</div>
-    <button class="btn-buy" onclick="playBasket3()">Бросить</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-mines"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">✸ <span>Сапёр</span></div><button class="modal-close" onclick="closeModal('mines')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="minesDisplay">✸</div>
-    <div class="game-result" id="minesResult">Открой!</div>
-    <button class="btn-buy" onclick="playMines()">Открыть</button>
-  </div>
-</div></div>
-
-<div class="modal" id="modal-poker"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">◈ <span>Видеопокер</span></div><button class="modal-close" onclick="closeModal('poker')">×</button></div>
-  <div class="game-area">
-    <div class="dice" id="pokerDisplay">◈</div>
-    <div class="game-result" id="pokerResult">Крути!</div>
-    <button class="btn-buy" onclick="playPoker()">Раздать</button>
-  </div>
 </div></div>
 
 <div class="modal" id="modal-leaderboard"><div class="modal-content">
@@ -724,36 +521,9 @@ body.theme-female .header-nick { color: #ffd9ec; }
   <div style="margin-top:18px; text-align:center; font-size:13px; color:#94a3b8;">
     Приглашено: <span id="refCount" style="color:#ffd700; font-weight:800; font-size:18px;">0</span> друзей
   </div>
-  <div style="background:linear-gradient(135deg,rgba(34,197,94,0.15),rgba(22,163,74,0.08)); border:1px solid rgba(34,197,94,0.4); border-radius:16px; padding:16px; margin-top:18px;">
-    <div style="font-size:12px; color:#94a3b8; margin-bottom:8px;">◈ Заработано всего:</div>
-    <div style="font-size:26px; font-weight:900; color:#22c55e;" id="refEarnedTotal">0 IS</div>
-    <div style="font-size:11px; color:#64748b; margin-top:6px;">+ Можно забрать: <b style="color:#ffd700;" id="refClaimable">0 IS</b></div>
-  </div>
-  <button id="btnClaimRef" onclick="claimReferralReward()" class="btn-buy green" style="width:100%;padding:16px;margin-top:12px;font-size:14px;font-weight:800;" disabled>✧ Забрать награду</button>
-  <div style="font-size:11px; color:#94a3b8; margin-top:16px; text-align:center; line-height:1.7;">
-    ▤ <b style="color:#ffd700;">Таблица наград:</b><br>
-    1 друг — 100 IS<br>2 друга — 150 IS<br>3-4 друга — по 150 IS<br>5 друзей — 450 IS<br>6-100 — по 100 IS<br>100+ — по 300 IS
-  </div>
-  <div style="margin-top:22px; font-size:13px; font-weight:800; color:#a78bfa; margin-bottom:10px;">▤ Твои друзья:</div>
-  <div id="referralList" style="margin-top:8px; max-height:280px; overflow-y:auto;">
+  <div id="referralList" style="margin-top:14px; max-height:280px; overflow-y:auto;">
     <p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</p>
   </div>
-</div></div>
-
-<div class="modal" id="modal-referral-bonus"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">✧ <span>Бонус за рефералку</span></div><button class="modal-close" onclick="closeModal('referral-bonus')">×</button></div>
-  <p style="color:#b8a060; font-size:12px; text-align:center; margin-bottom:18px;">Чем больше друзей — тем больше награда!</p>
-  <div style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.12)); border:1px solid rgba(255,215,0,0.6); border-radius:18px; padding:18px; margin-bottom:18px; text-align:center;">
-    <div style="font-size:11px; color:#b8a060; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Приглашено друзей</div>
-    <div style="font-size:48px; font-weight:900; color:#ffd700; margin:8px 0;" id="bonusFriendCount">0<span style="font-size:22px; color:#b8a060;"> / 100</span></div>
-    <div style="font-size:12px; color:#94a3b8;">Заработано: <b style="color:#ffd700; font-size:16px;" id="bonusTotalEarned">0 IS</b></div>
-  </div>
-  <div style="background:rgba(10,5,24,0.8); border-radius:14px; overflow:hidden; height:30px; margin-bottom:22px; border:1px solid rgba(255,215,0,0.4); position:relative;">
-    <div id="bonusProgressFill" style="height:100%; background:linear-gradient(90deg,#ff8c00,#ffd700); transition:width 0.5s; width:0%;"></div>
-    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:900;" id="bonusProgressText">0 / 100</div>
-  </div>
-  <div style="font-size:14px; font-weight:800; color:#a78bfa; margin-bottom:12px;">▤ Таблица наград:</div>
-  <div id="bonusTable"></div>
 </div></div>
 
 <div class="modal" id="modal-daily"><div class="modal-content">
@@ -778,34 +548,11 @@ body.theme-female .header-nick { color: #ffd9ec; }
   <div id="isTasksList" class="is-tasks-grid"></div>
 </div></div>
 
-<div class="modal" id="modal-promocodes"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">✎ <span>Промокоды IngSoft</span></div><button class="modal-close" onclick="closeModal('promocodes')">×</button></div>
-  <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:16px;">
-    <button onclick="switchPromoTab(1)" id="promoTab1" style="background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#0a0518; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:pointer;">IngSoft</button>
-    <button disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-    <button disabled style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#64748b; padding:11px 4px; border-radius:11px; font-size:10px; font-weight:800; cursor:not-allowed; opacity:0.5;">◦ Скоро</button>
-  </div>
-  <div style="background:linear-gradient(145deg, rgba(255,215,0,0.1), rgba(15,12,41,0.7)); border:1px solid rgba(255,215,0,0.35); border-radius:16px; padding:18px; margin-bottom:16px; font-size:13px; line-height:1.7; color:#e0e7ff;">
-    <div style="text-align:center; font-size:16px; font-weight:900; color:#ffd700; margin-bottom:14px;">✎ Промокоды IngSoft</div>
-    <p style="margin-bottom:10px;">Промокоды на заказ на сайте <b style="color:#ffd700;">IngSoft</b></p>
-    <p style="margin-bottom:10px;">Скидка будет <b>до 5%</b>.</p>
-  </div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
-    <button onclick="switchPromoView('earn')" id="promoViewEarn" style="background:linear-gradient(135deg,#8b5cf6,#4facfe); border:none; color:#fff; padding:13px 8px; border-radius:14px; font-size:12px; font-weight:800; cursor:pointer;">◈ Заработать</button>
-    <button onclick="switchPromoView('wallet')" id="promoViewWallet" style="background:transparent; border:1px solid rgba(139,92,246,0.4); color:#94a3b8; padding:13px 8px; border-radius:14px; font-size:12px; font-weight:800; cursor:pointer;">◐ Кошелёк</button>
-  </div>
-  <div id="promoEarnView"><div id="promoEarnList"></div></div>
-  <div id="promoWalletView" style="display:none;"><div id="promoWalletList"></div></div>
-</div></div>
-
 <div class="modal" id="modal-promo"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">✎ <span>Промокод</span></div><button class="modal-close" onclick="closeModal('promo')">×</button></div>
   <p style="color:#94a3b8;font-size:13px;margin-bottom:16px;text-align:center;">Введи промокод и получи награду</p>
   <input type="text" id="promoInput" class="promo-input" placeholder="ВВЕДИ КОД" maxlength="20">
   <button class="btn-buy green" style="width:100%;padding:16px;font-size:15px;" onclick="redeemPromo()">✧ Активировать</button>
-  <div id="promoHistory" style="margin-top:16px;"></div>
 </div></div>
 
 <div class="modal" id="modal-wallet"><div class="modal-content">
@@ -814,18 +561,12 @@ body.theme-female .header-nick { color: #ffd9ec; }
     <div class="wallet-balance-val" id="walletVal">0 ₽</div>
     <div class="wallet-balance-lbl">Реальный баланс</div>
   </div>
-  <p style="color:#94a3b8;font-size:12px;text-align:center;margin-bottom:16px;">Раздел временно отключён.</p>
-  <div class="profile-row"><span>К выводу</span><span id="walletAvail">0 ₽</span></div>
-  <div class="profile-row"><span>В ожидании</span><span id="walletPending">0 ₽</span></div>
-  <div class="profile-row"><span>Заработано всего</span><span id="walletTotal">0 ₽</span></div>
-  <button class="btn-buy blue" style="width:100%;padding:16px;margin-top:16px;font-size:14px;" onclick="showToast('Вывод станет доступен позже')">↓ Вывести</button>
 </div></div>
 
 <div class="modal" id="modal-about"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">ⓘ <span>О игре</span></div><button class="modal-close" onclick="closeModal('about')">×</button></div>
   <p style="color:#cbd5e1;line-height:1.8;font-size:13px;">
-    <b style="color:#ec4899;">IngSoft Tap</b> — тапалка внутри Telegram.<br><br>
-    • Тапай — получай очки<br>• Покупай бусты — пассивный доход<br>• Играй в мини-игры<br>• Вводи промокоды<br>• Копи реальные деньги в кошелёк
+    <b style="color:#ec4899;">IngSoft Tap</b> — тапалка внутри Telegram.
   </p>
 </div></div>
 
@@ -835,12 +576,6 @@ body.theme-female .header-nick { color: #ffd9ec; }
 </div>
 
 <script>
-/* ============================================================
-   INGSOFT TAP — НОВАЯ СИСТЕМА ТОПА
-   Топ работает через /top и /heartbeat.
-   Если сервер не отвечает — fallback на локальный кэш.
-   ============================================================ */
-
 const tg = window.Telegram?.WebApp;
 let telegramId=null, username=null, firstName=null;
 let score=0, energy=1000, maxEnergy=1000, multiplier=1;
@@ -872,54 +607,39 @@ let referrerNickname = null;
 let referrerId = null;
 let myReferrals = [];
 let myUserId = null;
-let myReferralBonus = 0;
 let lastKnownReferralCount = 0;
 
-/* --- ТОП --- */
 let leaderboardPage = 0;
 const LEADERBOARD_PAGE_SIZE = 10;
-let leaderboardCache = [];        // массив всех известных игроков
-let leaderboardLastFetch = 0;
+let leaderboardCache = [];
 let leaderboardOnlineCount = 0;
 let leaderboardOfflineCount = 0;
 let leaderboardTotalCount = 0;
 let myGlobalRank = null;
 
+const API_URL = 'https://ingsofttap.bothost.tech';
+const ONLINE_WINDOW_MS = 5 * 60 * 1000;
+
 try {
-  const savedRefNick = localStorage.getItem('ingsoft_referrer_nickname');
-  if (savedRefNick) referrerNickname = savedRefNick;
-  const savedRefId = localStorage.getItem('ingsoft_referrer_id');
-  if (savedRefId) { referrerId = parseInt(savedRefId, 10); if (isNaN(referrerId)) referrerId = null; }
-} catch (e) {}
+  const s1 = localStorage.getItem('ingsoft_referrer_nickname'); if (s1) referrerNickname = s1;
+  const s2 = localStorage.getItem('ingsoft_referrer_id'); if (s2) { referrerId = parseInt(s2, 10); if (isNaN(referrerId)) referrerId = null; }
+} catch(e) {}
 
 const PROMOS = {
-  'INGSOFT': { coins: 50000, desc: '+50 000 очков' },
-  'DAUD': { coins: 100000, desc: '+100 000 очков' },
-  'WELCOME': { coins: 10000, desc: '+10 000 очков' },
+  'INGSOFT': { coins: 50000, desc: '+50 000' },
+  'DAUD': { coins: 100000, desc: '+100 000' },
+  'WELCOME': { coins: 10000, desc: '+10 000' },
   'BOOST2': { mult: 2, desc: 'Множитель x2' },
-  'GIFT': { coins: 500000, desc: '+500 000 очков' },
+  'GIFT': { coins: 500000, desc: '+500 000' },
   'VIP': { coins: 1000000, mult: 3, desc: '+1 000 000 и x3' },
-  'MEGA': { coins: 5000000, desc: '+5 000 000 очков' },
+  'MEGA': { coins: 5000000, desc: '+5 000 000' },
 };
 const DAILY_REWARDS = [{coins:100},{coins:200},{coins:300},{coins:500},{coins:1000},{coins:2000},{coins:5000}];
 
 const IS_SHOP = [
-  { id:'unlim15',  icon:'∞', name:'Безлимит 15 мин', desc:'Тапай без лимита', price:100, apply:()=>{ unlimitedUntil = Date.now()+15*60*1000; } },
-  { id:'unlim30',  icon:'∞', name:'Безлимит 30 мин', desc:'Двойное время',   price:180, apply:()=>{ unlimitedUntil = Date.now()+30*60*1000; } },
-  { id:'tap5000',  icon:'↟', name:'+5 000 тапов',     desc:'К дневной норме', price:75,  apply:()=>{ dailyTapLimit += 5000; } },
-  { id:'tap25000', icon:'↟', name:'+25 000 тапов',    desc:'К дневной норме', price:300, apply:()=>{ dailyTapLimit += 25000; } },
-  { id:'energy',   icon:'⚡', name:'Полная энергия',   desc:'Мгновенно',       price:50,  apply:()=>{ energy = maxEnergy; } },
-  { id:'mult2day', icon:'✦', name:'x2 очков 30 мин',  desc:'Временный буст',  price:120, apply:()=>{ isBoostMultUntil = Date.now()+30*60*1000; } },
-  { id:'autotap',  icon:'◉', name:'Автоклик 1 час',   desc:'+1 тап/сек',      price:200, apply:()=>{ isAutoTapUntil = Date.now()+60*60*1000; } },
-  { id:'reset',    icon:'↻', name:'Сброс лимита',     desc:'Обнулить счётчик',price:250, apply:()=>{ tapsToday = 0; } },
+  { id:'unlim15', icon:'∞', name:'Безлимит 15м', price:100, apply:()=>{ unlimitedUntil = Date.now()+15*60*1000; } },
+  { id:'energy', icon:'⚡', name:'Полная энергия', price:50, apply:()=>{ energy = maxEnergy; } },
 ];
-
-const API_URL = 'https://ingsofttap.bothost.tech';
-const TG_CHANNEL = 'IngSoftTab06';
-const TG_CHANNEL_URL = 'https://t.me/IngSoftTab06';
-const SUB_REWARD = 50;
-const SUB_PENALTY = 500;
-const ONLINE_WINDOW_MS = 5 * 60 * 1000; // 5 минут = онлайн
 
 function getReferralReward(n){
   if (n<=0) return 0;
@@ -930,73 +650,41 @@ function getReferralReward(n){
   if (n>5&&n<=100) return 100;
   return 300;
 }
-function getTotalReferralEarnings(count){ let t=0; for(let i=1;i<=count;i++) t+=getReferralReward(i); return t; }
-
-const IS_TASKS = [
-  { id:'sub_tg', icon:'◉', name:'Подписка на канал', desc:'@'+TG_CHANNEL, reward:SUB_REWARD, link:TG_CHANNEL_URL, real:true },
-  { id:'sub_yt', icon:'▶', name:'Подписка YouTube',  desc:'Скоро', reward:0, todo:true },
-  { id:'sub_wa', icon:'◐', name:'Подписка WhatsApp', desc:'Скоро', reward:0, todo:true },
-  { id:'like',   icon:'♥', name:'Лайк видео',        desc:'Скоро', reward:0, todo:true },
-  { id:'repost', icon:'↻', name:'Репост видео',      desc:'Скоро', reward:0, todo:true },
-  { id:'comment',icon:'✎', name:'Комментарий',       desc:'Скоро', reward:0, todo:true },
-  { id:'invite', icon:'❖', name:'Пригласи друга',    desc:'За каждого друга', reward:100, invite:true },
-];
+function getTotalReferralEarnings(c){ let t=0; for(let i=1;i<=c;i++) t+=getReferralReward(i); return t; }
 
 const QUESTS = [
   { id:'tap100', name:'✦ Первые шаги', desc:'100 тапов', reward:100, check:()=>totalTaps>=100 },
   { id:'tap1k', name:'✧ Новичок', desc:'1 000 тапов', reward:500, check:()=>totalTaps>=1000 },
   { id:'tap10k', name:'⚡ Любитель', desc:'10 000 тапов', reward:5000, check:()=>totalTaps>=10000 },
   { id:'tap100k', name:'◈ Про', desc:'100 000 тапов', reward:50000, check:()=>totalTaps>=100000 },
-  { id:'tap1m', name:'♛ Гуру', desc:'1 000 000 тапов', reward:500000, check:()=>totalTaps>=1000000 },
   { id:'lvl5', name:'↟ Ур. 5', desc:'Достичь 5 уровня', reward:500, check:()=>level>=5 },
-  { id:'lvl25', name:'↟ Ур. 25', desc:'Достичь 25 уровня', reward:50000, check:()=>level>=25 },
-  { id:'mult2', name:'⚡ x2', desc:'Купить множитель x2', reward:1000, check:()=>multiplier>=2 },
-  { id:'mult5', name:'✧ x5', desc:'Купить множитель x5', reward:10000, check:()=>multiplier>=5 },
-  { id:'promo', name:'✎ Промокод', desc:'Активировать промокод', reward:1000, check:()=>claimedPromos.length>=1 },
 ];
 
 const ACHIEVEMENTS = [
   { id:'first', icon:'✦', name:'Первый тап', desc:'1 тап', check:()=>totalTaps>=1 },
   { id:'taps100', icon:'✧', name:'Сотня', desc:'100 тапов', check:()=>totalTaps>=100 },
   { id:'taps1k', icon:'⚡', name:'Тысяча', desc:'1000 тапов', check:()=>totalTaps>=1000 },
-  { id:'taps10k', icon:'◈', name:'10К', desc:'10 000 тапов', check:()=>totalTaps>=10000 },
-  { id:'taps100k', icon:'◆', name:'100К', desc:'100 000 тапов', check:()=>totalTaps>=100000 },
-  { id:'taps1m', icon:'♛', name:'Миллион', desc:'1 000 000 тапов', check:()=>totalTaps>=1000000 },
-  { id:'score1k', icon:'◈', name:'Тысячник', desc:'1000 очков', check:()=>score>=1000 },
-  { id:'score100k', icon:'◉', name:'Сто тысяч', desc:'100 000 очков', check:()=>score>=100000 },
-  { id:'score1m', icon:'◆', name:'Миллион', desc:'1 000 000 очков', check:()=>score>=1000000 },
-  { id:'mult5', icon:'⚡', name:'Магнат', desc:'Множитель x5', check:()=>multiplier>=5 },
   { id:'lvl10', icon:'↟', name:'Десятка', desc:'Уровень 10', check:()=>level>=10 },
-  { id:'auto', icon:'◉', name:'Автоматизация', desc:'Купить автоклик', check:()=>autotapLevel>0 },
-  { id:'passive', icon:'◐', name:'Пассив', desc:'Пассивный доход', check:()=>passiveIncome>0 },
-  { id:'promo1', icon:'✎', name:'Промо-мастер', desc:'Активировать промокод', check:()=>claimedPromos.length>=1 },
 ];
 
 const BOOST_NAMES = [
   {n:'⚡ Множитель', t:'mult', base:100000, step:2},
-  {n:'✦ Супер-множитель', t:'mult', base:500000, step:5},
-  {n:'◆ Мега-множитель', t:'mult', base:2000000, step:10},
   {n:'⚡ Энергия', t:'energy', base:50000, step:1000},
-  {n:'◈ Энергия+', t:'energy', base:250000, step:5000},
-  {n:'◉ Автоклик', t:'auto', base:100000000, step:1},
-  {n:'◐ Пассив +1K/ч', t:'passive', base:1000000, step:1000},
 ];
 const BOOSTS = [];
 let boostId = 0;
-for (let lvl = 0; lvl < 20; lvl++) {
+for (let lvl = 0; lvl < 10; lvl++) {
   for (const b of BOOST_NAMES) {
     boostId++;
     const price = Math.floor(b.base * Math.pow(2, lvl));
     const value = b.step * Math.pow(2, lvl);
     BOOSTS.push({
       id:'b'+boostId, name:b.n+' Lv.'+(lvl+1),
-      desc: b.t==='mult'?'Множитель +'+value : b.t==='energy'?'Энергия +'+value.toLocaleString() : b.t==='auto'?'Автоклик +'+value+'/сек' : 'Доход +'+value.toLocaleString()+'/час',
-      price:price, type:b.t, value:value,
+      desc: b.t==='mult'?'Множитель +'+value : 'Энергия +'+value,
+      price:price,
       apply:function(){
         if (b.t==='mult') multiplier = Math.max(multiplier, 1 + Math.floor(value/10));
         else if (b.t==='energy') maxEnergy += value;
-        else if (b.t==='auto') autotapLevel = Math.max(autotapLevel, value);
-        else if (b.t==='passive') passiveIncome += value;
       }
     });
   }
@@ -1012,16 +700,12 @@ function fmt(n){
 }
 function showToast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500); }
 
-/* ============================================================
-   ТОП — ЗАГРУЗКА
-   Пытаемся получить /top, если не работает — fallback.
-   ============================================================ */
+/* ============ ТОП ============ */
 async function fetchLeaderboardFromServer(){
   try {
     const resp = await fetch(API_URL + '/top?limit=100');
-    if (!resp.ok) throw new Error('bad status');
+    if (!resp.ok) throw new Error('bad');
     const data = await resp.json();
-    // Ожидаем: { players: [{nickname, score, last_seen, avatar_data}], total }
     if (Array.isArray(data.players)) {
       leaderboardCache = data.players.map(p => ({
         nickname: p.nickname,
@@ -1031,9 +715,11 @@ async function fetchLeaderboardFromServer(){
         online: (Date.now() - (Number(p.last_seen)||0)) < ONLINE_WINDOW_MS
       }));
       leaderboardTotalCount = data.total || leaderboardCache.length;
+      leaderboardOnlineCount = data.online || 0;
+      leaderboardOfflineCount = data.offline || 0;
       return true;
     }
-  } catch(e) { /* fallback */ }
+  } catch(e) {}
   return false;
 }
 
@@ -1041,16 +727,9 @@ function mergeSelfIntoLeaderboard(){
   if (!nickname && !firstName) return;
   const myName = nickname || firstName;
   const idx = leaderboardCache.findIndex(p => p.nickname === myName);
-  const myObj = {
-    nickname: myName,
-    score: score,
-    last_seen: Date.now(),
-    avatar_data: avatarData,
-    online: true,
-    isSelf: true
-  };
+  const myObj = { nickname: myName, score: score, last_seen: Date.now(), avatar_data: avatarData, online: true, isSelf: true };
   if (idx === -1) leaderboardCache.push(myObj);
-  else leaderboardCache[idx] = { ...leaderboardCache[idx], ...myObj };
+  else leaderboardCache[idx] = Object.assign({}, leaderboardCache[idx], myObj);
 }
 
 function recomputeOnlineOffline(){
@@ -1061,11 +740,6 @@ function recomputeOnlineOffline(){
     p.online = isOn;
     if (isOn) online++; else offline++;
   });
-  // сам игрок всегда онлайн
-  const myName = nickname || firstName;
-  if (myName && !leaderboardCache.find(p => p.nickname === myName && p.online)) {
-    online++;
-  }
   leaderboardOnlineCount = online;
   leaderboardOfflineCount = offline;
   leaderboardTotalCount = leaderboardCache.length;
@@ -1074,16 +748,14 @@ function recomputeOnlineOffline(){
 function getSortedLeaderboard(){
   mergeSelfIntoLeaderboard();
   recomputeOnlineOffline();
-  // сортировка: сначала по score, потом по last_seen (кто раньше достиг — выше)
-  const sorted = [...leaderboardCache].sort((a,b) => {
+  return [...leaderboardCache].sort((a,b) => {
     if (b.score !== a.score) return b.score - a.score;
     return (a.last_seen||0) - (b.last_seen||0);
   });
-  return sorted;
 }
 
 async function refreshLeaderboard(){
-  const ok = await fetchLeaderboardFromServer();
+  await fetchLeaderboardFromServer();
   const sorted = getSortedLeaderboard();
   const myName = nickname || firstName;
   myGlobalRank = sorted.findIndex(p => p.nickname === myName) + 1;
@@ -1094,31 +766,25 @@ async function refreshLeaderboard(){
   if (document.getElementById('modal-leaderboard').classList.contains('active')) {
     renderFullLeaderboard(sorted);
   }
-  return sorted;
 }
 
 function renderTop10(sorted){
   const el = document.getElementById('topList');
   if (!el) return;
   const top10 = sorted.slice(0, 10);
-  if (top10.length === 0) {
-    el.innerHTML = '<div style="text-align:center; color:#64748b; font-size:12px; padding:14px;">Пока нет игроков</div>';
-    return;
-  }
+  if (top10.length === 0) { el.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Пока нет игроков</div>'; return; }
   const myName = nickname || firstName;
   el.innerHTML = top10.map((p, i) => {
     const rank = i + 1;
     const cls = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
     const isYou = p.nickname === myName;
     const youBadge = isYou ? '<span class="top-you">ТЫ</span>' : '';
-    const av = p.avatar_data
-      ? '<div class="top-avatar" style="background-image:url(' + p.avatar_data + ');"></div>'
-      : '<div class="top-avatar">' + (p.nickname ? p.nickname[0].toUpperCase() : '?') + '</div>';
-    const dot = '<span class="online-dot' + (p.online ? ' online' : '') + '"></span>';
-    return '<div class="top-row ' + cls + '" style="' + (isYou ? 'border-color: rgba(236,72,153,0.6); background: linear-gradient(90deg, rgba(236,72,153,0.15), rgba(139,92,246,0.1));' : '') + '">' +
-      '<div class="top-rank">' + rank + '</div>' + av +
-      '<div class="top-name">' + dot + (p.nickname || 'Игрок') + youBadge + '</div>' +
-      '<div class="top-score">' + fmt(p.score) + '</div>' +
+    const av = p.avatar_data ? '<div class="top-avatar" style="background-image:url('+p.avatar_data+');"></div>' : '<div class="top-avatar">'+(p.nickname?p.nickname[0].toUpperCase():'?')+'</div>';
+    const dot = '<span class="online-dot'+(p.online?' online':'')+'"></span>';
+    return '<div class="top-row '+cls+'" style="'+(isYou?'border-color:rgba(236,72,153,0.6);background:linear-gradient(90deg,rgba(236,72,153,0.15),rgba(139,92,246,0.1));':'')+'">' +
+      '<div class="top-rank">'+rank+'</div>' + av +
+      '<div class="top-name">'+dot+(p.nickname||'Игрок')+youBadge+'</div>' +
+      '<div class="top-score">'+fmt(p.score)+'</div>' +
     '</div>';
   }).join('');
 }
@@ -1126,55 +792,40 @@ function renderTop10(sorted){
 function renderFullLeaderboard(sorted){
   const el = document.getElementById('leaderList');
   if (!el) return;
-  const MAX_PLAYERS = 100;
-  const limited = sorted.slice(0, MAX_PLAYERS);
+  const MAX = 100;
+  const limited = sorted.slice(0, MAX);
   const totalPages = Math.max(1, Math.ceil(limited.length / LEADERBOARD_PAGE_SIZE));
   const page = Math.min(leaderboardPage, totalPages - 1);
-  const pageItems = limited.slice(page * LEADERBOARD_PAGE_SIZE, (page + 1) * LEADERBOARD_PAGE_SIZE);
+  const items = limited.slice(page * LEADERBOARD_PAGE_SIZE, (page + 1) * LEADERBOARD_PAGE_SIZE);
   const myName = nickname || firstName;
-
   let html = '<div class="lb-stats">' +
-    '<div class="lb-stat-item lb-online">🟢 Онлайн: ' + leaderboardOnlineCount + '</div>' +
-    '<div class="lb-stat-item lb-offline">⚫ Оффлайн: ' + leaderboardOfflineCount + '</div>' +
-    '<div class="lb-stat-item lb-total">👥 Всего: ' + leaderboardTotalCount + '</div>' +
+    '<div class="lb-stat-item lb-online">🟢 Онлайн: '+leaderboardOnlineCount+'</div>' +
+    '<div class="lb-stat-item lb-offline">⚫ Оффлайн: '+leaderboardOfflineCount+'</div>' +
+    '<div class="lb-stat-item lb-total">👥 Всего: '+leaderboardTotalCount+'</div>' +
   '</div>';
-
-  if (pageItems.length === 0) {
-    html += '<div style="text-align:center; padding:30px; color:#64748b;">Пока нет игроков</div>';
-    el.innerHTML = html;
-    return;
-  }
-
-  html += '<div style="display:flex; flex-direction:column; gap:6px;">';
-  pageItems.forEach((p, i) => {
+  if (items.length === 0) { html += '<div style="text-align:center;padding:30px;color:#64748b;">Пока нет игроков</div>'; el.innerHTML = html; return; }
+  html += '<div style="display:flex;flex-direction:column;gap:6px;">';
+  items.forEach((p, i) => {
     const globalRank = page * LEADERBOARD_PAGE_SIZE + i + 1;
     const cls = globalRank === 1 ? 'rank-1' : globalRank === 2 ? 'rank-2' : globalRank === 3 ? 'rank-3' : '';
     const isYou = p.nickname === myName;
     const youBadge = isYou ? '<span class="top-you">ТЫ</span>' : '';
-    const av = p.avatar_data
-      ? '<div class="top-avatar" style="background-image:url(' + p.avatar_data + ');"></div>'
-      : '<div class="top-avatar">' + (p.nickname ? p.nickname[0].toUpperCase() : '?') + '</div>';
-    const dot = '<span class="online-dot' + (p.online ? ' online' : '') + '"></span>';
-    html += '<div class="top-row ' + cls + '" style="' + (isYou ? 'border-color: rgba(236,72,153,0.6); background: linear-gradient(90deg, rgba(236,72,153,0.15), rgba(139,92,246,0.1));' : '') + '">' +
-      '<div class="top-rank">' + globalRank + '</div>' + av +
-      '<div class="top-name">' + dot + (p.nickname || 'Игрок') + youBadge + '</div>' +
-      '<div class="top-score">' + fmt(p.score) + '</div>' +
+    const av = p.avatar_data ? '<div class="top-avatar" style="background-image:url('+p.avatar_data+');"></div>' : '<div class="top-avatar">'+(p.nickname?p.nickname[0].toUpperCase():'?')+'</div>';
+    const dot = '<span class="online-dot'+(p.online?' online':'')+'"></span>';
+    html += '<div class="top-row '+cls+'" style="'+(isYou?'border-color:rgba(236,72,153,0.6);background:linear-gradient(90deg,rgba(236,72,153,0.15),rgba(139,92,246,0.1));':'')+'">' +
+      '<div class="top-rank">'+globalRank+'</div>' + av +
+      '<div class="top-name">'+dot+(p.nickname||'Игрок')+youBadge+'</div>' +
+      '<div class="top-score">'+fmt(p.score)+'</div>' +
     '</div>';
   });
   html += '</div>';
-
   if (totalPages > 1) {
     html += '<div class="lb-pagination">' +
-      '<button ' + (page === 0 ? 'disabled' : '') + ' onclick="changeLeaderboardPage(-1)">← Назад</button>' +
-      '<span class="lb-page-info">Стр. ' + (page + 1) + ' / ' + totalPages + '</span>' +
-      '<button ' + (page >= totalPages - 1 ? 'disabled' : '') + ' onclick="changeLeaderboardPage(1)">Далее →</button>' +
+      '<button '+(page===0?'disabled':'')+' onclick="changeLeaderboardPage(-1)">← Назад</button>' +
+      '<span class="lb-page-info">Стр. '+(page+1)+' / '+totalPages+'</span>' +
+      '<button '+(page>=totalPages-1?'disabled':'')+' onclick="changeLeaderboardPage(1)">Далее →</button>' +
     '</div>';
   }
-
-  if (sorted.length > MAX_PLAYERS) {
-    html += '<div style="text-align:center; color:#64748b; font-size:11px; margin-top:8px;">Показано до ' + MAX_PLAYERS + ' игроков из ' + sorted.length + '</div>';
-  }
-
   el.innerHTML = html;
 }
 
@@ -1188,21 +839,16 @@ function changeLeaderboardPage(dir){
 }
 
 function updatePlayerStatsBar(){
-  const o = document.getElementById('psOnline');
-  const f = document.getElementById('psOffline');
-  const t = document.getElementById('psTotal');
-  if (o) o.textContent = leaderboardOnlineCount;
-  if (f) f.textContent = leaderboardOfflineCount;
-  if (t) t.textContent = leaderboardTotalCount;
+  const o = document.getElementById('psOnline'); if (o) o.textContent = leaderboardOnlineCount;
+  const f = document.getElementById('psOffline'); if (f) f.textContent = leaderboardOfflineCount;
+  const t = document.getElementById('psTotal'); if (t) t.textContent = leaderboardTotalCount;
 }
 
 function updateHeaderRank(){
   const el = document.getElementById('headerRank');
-  if (!el) return;
-  el.textContent = myGlobalRank ? '#' + myGlobalRank : '—';
+  if (el) el.textContent = myGlobalRank ? '#' + myGlobalRank : '—';
 }
 
-/* Heartbeat — сообщаем серверу что мы онлайн */
 async function sendHeartbeat(){
   if (!currentToken) return;
   try {
@@ -1214,42 +860,24 @@ async function sendHeartbeat(){
   } catch(e) {}
 }
 
-/* ============================================================
-   UI
-   ============================================================ */
+/* ============ UI ============ */
 function openModal(name){
   document.getElementById('modal-' + name)?.classList.add('active');
   if (name === 'quests') loadQuests();
   if (name === 'isTasks') loadISTasks();
-  if (name === 'promocodes') { switchPromoView('earn'); switchPromoTab(1); }
   if (name === 'boosts') loadBoosts();
   if (name === 'achievements') loadAchievements();
   if (name === 'daily') loadDaily();
   if (name === 'stats') loadStats();
   if (name === 'profile') loadProfile();
   if (name === 'wallet') loadWallet();
-  if (name === 'referral') {
-    updateRefLink();
-    loadReferral();
-    if (window._referralInterval) clearInterval(window._referralInterval);
-    window._referralInterval = setInterval(loadReferral, 3000);
-  }
-  if (name === 'referral-bonus') loadReferralBonus();
-  if (name === 'promo') loadPromoHistory();
+  if (name === 'referral') { updateRefLink(); loadReferral(); if (window._ri) clearInterval(window._ri); window._ri = setInterval(loadReferral, 5000); }
   if (name === 'games') loadGames();
-  if (name === 'leaderboard') {
-    leaderboardPage = 0;
-    const sorted = getSortedLeaderboard();
-    renderFullLeaderboard(sorted);
-    refreshLeaderboard();
-  }
+  if (name === 'leaderboard') { leaderboardPage = 0; renderFullLeaderboard(getSortedLeaderboard()); refreshLeaderboard(); }
 }
 function closeModal(name){
   document.getElementById('modal-' + name)?.classList.remove('active');
-  if (name === 'referral' && window._referralInterval) {
-    clearInterval(window._referralInterval);
-    window._referralInterval = null;
-  }
+  if (name === 'referral' && window._ri) { clearInterval(window._ri); window._ri = null; }
 }
 function closeAllModals(){ document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
 
@@ -1264,28 +892,18 @@ function getTelegramUser(){
 }
 
 function saveToLocal(){
-  const user = {
-    nickname, phone, region, fullName, avatarData, score, energy, maxEnergy, multiplier,
-    totalTaps, level, claimedQuests, claimedPromos, dailyStreak, lastDailyClaim,
-    autotapLevel, lastAutotapClaim, passiveIncome, walletBalance, walletTotal, upgrades,
-    dailyTapLimit, tapsToday, lastTapDate, unlimitedUntil, isBalance, isTasksDone,
-    isBoostMultUntil, isAutoTapUntil, subWasSubscribed, subWasPunished, earnedPromocodes, gender
-  };
-  try { localStorage.setItem('ingsoft_user', JSON.stringify(user)); } catch(e) {}
   if (currentToken && API_URL) {
     fetch(API_URL + '/save-progress', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        token: currentToken, score, energy, max_energy: maxEnergy, multiplier, level,
-        total_taps: totalTaps, is_balance: isBalance, daily_tap_limit: dailyTapLimit,
-        taps_today: tapsToday, last_tap_date: lastTapDate, sub_was_subscribed: subWasSubscribed,
-        sub_was_punished: subWasPunished, is_tasks_done: isTasksDone,
-        claimed_quests: claimedQuests, claimed_promos: claimedPromos, upgrades: upgrades,
-        unlimited_until: unlimitedUntil, is_boost_mult_until: isBoostMultUntil,
-        is_auto_tap_until: isAutoTapUntil, autotap_level: autotapLevel,
-        passive_income: passiveIncome, wallet_balance: walletBalance, wallet_total: walletTotal,
-        earned_promocodes: earnedPromocodes
+        token: currentToken, score, energy, max_energy: maxEnergy, multiplier, level, total_taps: totalTaps,
+        is_balance: isBalance, daily_tap_limit: dailyTapLimit, taps_today: tapsToday,
+        last_tap_date: lastTapDate, sub_was_subscribed: subWasSubscribed, sub_was_punished: subWasPunished,
+        is_tasks_done: isTasksDone, claimed_quests: claimedQuests, claimed_promos: claimedPromos,
+        upgrades: upgrades, unlimited_until: unlimitedUntil, is_boost_mult_until: isBoostMultUntil,
+        is_auto_tap_until: isAutoTapUntil, autotap_level: autotapLevel, passive_income: passiveIncome,
+        wallet_balance: walletBalance, wallet_total: walletTotal, earned_promocodes: earnedPromocodes
       })
     }).catch(e => {});
   }
@@ -1293,34 +911,16 @@ function saveToLocal(){
 function scheduleSave(){ if (saveTimer) return; saveTimer = setTimeout(()=>{ saveToLocal(); saveTimer=null; }, 500); }
 
 function updateUI(){
-  document.getElementById('scoreBig').textContent = fmt(score);
-  document.getElementById('statScore').textContent = fmt(score);
-  document.getElementById('statMult').textContent = 'x' + multiplier;
-  document.getElementById('statPerSec').textContent = fmt(autotapLevel * multiplier) + '/с';
-  document.getElementById('energyFill').style.width = Math.min(100, (energy/maxEnergy*100)) + '%';
-  document.getElementById('energyText').textContent = Math.floor(energy) + ' / ' + maxEnergy;
-  const unlimited = Date.now() < unlimitedUntil;
-  const tapLimitEl = document.getElementById('tapLimitFill');
-  const tapLimitTxt = document.getElementById('tapLimitText');
-  if (tapLimitEl && tapLimitTxt) {
-    if (unlimited) {
-      const left = Math.ceil((unlimitedUntil - Date.now()) / 60000);
-      tapLimitEl.style.width = '100%';
-      tapLimitEl.style.background = 'linear-gradient(90deg,#22c55e,#00f2fe)';
-      tapLimitTxt.textContent = '∞ Безлимит ещё ' + left + ' мин';
-    } else {
-      tapLimitEl.style.width = Math.min(100, (tapsToday/dailyTapLimit)*100) + '%';
-      tapLimitEl.style.background = 'linear-gradient(90deg,#ff8c00,#ffd700)';
-      tapLimitTxt.textContent = 'Тапы: ' + tapsToday.toLocaleString() + ' / ' + dailyTapLimit.toLocaleString();
-    }
-  }
-  const levelCost = level * 10000;
-  document.getElementById('levelFill').style.width = Math.min(100, (score/levelCost)*100) + '%';
-  document.getElementById('levelText').textContent = 'Ур. ' + level + ' — ' + fmt(score) + ' / ' + fmt(levelCost);
-  document.getElementById('userName').textContent = nickname || firstName || 'Игрок';
-  if (!avatarData) document.getElementById('avatar').textContent = (nickname || firstName || '?')[0].toUpperCase();
-  const fioEl = document.getElementById('headerFio'); if (fioEl) fioEl.textContent = fullName || region || '—';
-  loadISShop();
+  const s = document.getElementById('scoreBig'); if (s) s.textContent = fmt(score);
+  const ss = document.getElementById('statScore'); if (ss) ss.textContent = fmt(score);
+  const sm = document.getElementById('statMult'); if (sm) sm.textContent = 'x' + multiplier;
+  const sp = document.getElementById('statPerSec'); if (sp) sp.textContent = fmt(autotapLevel * multiplier) + '/с';
+  const ef = document.getElementById('energyFill'); if (ef) ef.style.width = Math.min(100, (energy/maxEnergy*100)) + '%';
+  const et = document.getElementById('energyText'); if (et) et.textContent = Math.floor(energy) + ' / ' + maxEnergy;
+  const lf = document.getElementById('levelFill'); if (lf) lf.style.width = Math.min(100, (score/(level*10000))*100) + '%';
+  const lt = document.getElementById('levelText'); if (lt) lt.textContent = 'Ур. ' + level + ' — ' + fmt(score) + ' / ' + fmt(level*10000);
+  const un = document.getElementById('userName'); if (un) un.textContent = nickname || firstName || 'Игрок';
+  const ib = document.getElementById('isBalanceVal'); if (ib) ib.textContent = isBalance;
 }
 
 document.getElementById('tapBtn').addEventListener('click', (e) => {
@@ -1328,46 +928,33 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
   const today = new Date().toISOString().split('T')[0];
   if (lastTapDate !== today) { lastTapDate = today; tapsToday = 0; }
   const unlimited = Date.now() < unlimitedUntil;
-  if (!unlimited && tapsToday >= dailyTapLimit) { showToast('🚫 Дневной лимит ' + dailyTapLimit.toLocaleString() + ' тапов'); return; }
-  const multBonus = Date.now() < isBoostMultUntil ? 2 : 1;
-  score += multiplier * multBonus;
-  energy -= 1; totalTaps += 1; tapsToday += 1;
-  const newLevel = Math.floor(score / 10000) + 1;
-  if (newLevel > level) { level = newLevel; showToast('🎉 Уровень ' + level + '!'); }
+  if (!unlimited && tapsToday >= dailyTapLimit) { showToast('🚫 Лимит'); return; }
+  const mult = Date.now() < isBoostMultUntil ? 2 : 1;
+  score += multiplier * mult; energy -= 1; totalTaps += 1; tapsToday += 1;
+  const nl = Math.floor(score / 10000) + 1;
+  if (nl > level) { level = nl; showToast('🎉 Уровень ' + level); }
   updateUI();
-  const el = document.getElementById('scoreBig'); el.classList.add('pop'); setTimeout(()=>el.classList.remove('pop'), 150);
-  const rect = document.getElementById('tapContainer').getBoundingClientRect();
-  const plus = document.createElement('div'); plus.className = 'float-plus'; plus.textContent = '+' + multiplier;
-  plus.style.left = (e.clientX - rect.left) + 'px'; plus.style.top = (e.clientY - rect.top) + 'px';
-  document.getElementById('tapContainer').appendChild(plus); setTimeout(()=>plus.remove(), 1200);
-  if (tg) tg.HapticFeedback?.impactOccurred('light');
+  const el = document.getElementById('scoreBig'); if (el) { el.classList.add('pop'); setTimeout(()=>el.classList.remove('pop'),150); }
   scheduleSave();
-  // обновляем свой score в топе
+  // мгновенно обновляем свою позицию в топе
   if (nickname || firstName) {
     const myName = nickname || firstName;
     const idx = leaderboardCache.findIndex(p => p.nickname === myName);
-    if (idx !== -1) {
-      leaderboardCache[idx].score = score;
-      leaderboardCache[idx].last_seen = Date.now();
-    } else {
-      mergeSelfIntoLeaderboard();
-    }
-    const sorted = getSortedLeaderboard();
-    renderTop10(sorted);
+    if (idx !== -1) { leaderboardCache[idx].score = score; leaderboardCache[idx].last_seen = Date.now(); }
+    else mergeSelfIntoLeaderboard();
+    renderTop10(getSortedLeaderboard());
   }
 });
 
 function buildSidebar(){
-  const isFem = (gender === 'female');
   const items = [
     { icon:'◈', label:'Главная', action:'closeAllModals' },
-    { icon:'⬢', label: isFem?'Развлечения':'Игры', action:'openModal(\'games\')' },
+    { icon:'⬢', label:'Игры', action:'openModal(\'games\')' },
     { icon:'♛', label:'Топ', action:'openModal(\'leaderboard\')' },
-    { icon:'✦', label: isFem?'Задания':'Квесты', action:'openModal(\'quests\')' },
-    { icon:'⚡', label: isFem?'Ускорители':'Бусты', action:'openModal(\'boosts\')' },
+    { icon:'✦', label:'Квесты', action:'openModal(\'quests\')' },
+    { icon:'⚡', label:'Бусты', action:'openModal(\'boosts\')' },
     { icon:'✧', label:'Достижения', action:'openModal(\'achievements\')' },
     { icon:'❖', label:'Друзья', action:'openModal(\'referral\')' },
-    { icon:'✧', label:'Бонус', action:'openModal(\'referral-bonus\')' },
     { icon:'◈', label:'Награды', action:'openModal(\'daily\')' },
     { icon:'▤', label:'Статистика', action:'openModal(\'stats\')' },
     { icon:'◉', label:'Профиль', action:'openModal(\'profile\')' },
@@ -1375,240 +962,164 @@ function buildSidebar(){
     { icon:'ⓘ', label:'О игре', action:'openModal(\'about\')' },
   ];
   const sb = document.getElementById('sidebarItems'); if (!sb) return;
-  sb.innerHTML = items.map(it =>
-    '<div class="sidebar-item" onclick="' + it.action + '"><div class="sidebar-icon">' + it.icon + '</div><div class="sidebar-label">' + it.label + '</div></div>'
-  ).join('');
+  sb.innerHTML = items.map(it => '<div class="sidebar-item" onclick="'+it.action+'"><div class="sidebar-icon">'+it.icon+'</div><div class="sidebar-label">'+it.label+'</div></div>').join('');
 }
 
-const GAMES_MALE = [
-  { id:'roulette', icon:'◉', name:'Рулетка', desc:'Крути колесо' },
-  { id:'dice', icon:'◆', name:'Кубик', desc:'Бросай кубик' },
-  { id:'coin', icon:'○', name:'Монетка', desc:'Орёл или решка' },
-  { id:'slots', icon:'✧', name:'Слоты', desc:'Собери комбо' },
-  { id:'basket', icon:'◉', name:'Баскетбол', desc:'Забрось мяч' },
-  { id:'mine', icon:'◆', name:'Майнинг', desc:'Копай руду' },
-  { id:'wheel', icon:'◉', name:'Колесо', desc:'Крути фортуну' },
-  { id:'darts', icon:'◎', name:'Дартс', desc:'Попади в цель' },
-  { id:'fishing', icon:'◇', name:'Рыбалка', desc:'Поймай рыбу' },
-  { id:'cards', icon:'◈', name:'Карты', desc:'Угадай карту' },
-  { id:'shells', icon:'◐', name:'Фокусник', desc:'Где шарик?' },
-  { id:'craps', icon:'◆', name:'Кости', desc:'Сумма кубиков' },
-  { id:'archery', icon:'➤', name:'Лучник', desc:'Попади в яблочко' },
-  { id:'penalty', icon:'◉', name:'Пенальти', desc:'Забей гол' },
-  { id:'basket3', icon:'◉', name:'3-очковый', desc:'Сложный бросок' },
-  { id:'mines', icon:'✸', name:'Сапёр', desc:'Открой клетку' },
-  { id:'poker', icon:'◈', name:'Видеопокер', desc:'Собери комбо' },
-];
-const GAMES_FEMALE = [
-  { id:'roulette', icon:'✿', name:'Букет', desc:'Собери букет' },
-  { id:'dice', icon:'◆', name:'Кристалл', desc:'Найди кристалл' },
-  { id:'coin', icon:'❀', name:'Бабочка', desc:'Поймай бабочку' },
-  { id:'slots', icon:'✾', name:'Цветы', desc:'Собери 3 цветка' },
-  { id:'basket', icon:'✿', name:'Бантик', desc:'Подбери бантик' },
-  { id:'mine', icon:'♥', name:'Сердечко', desc:'Найди сердечко' },
-  { id:'wheel', icon:'◉', name:'Радуга', desc:'Крути радугу' },
-  { id:'darts', icon:'✦', name:'Звёздочка', desc:'Попади в звезду' },
-  { id:'fishing', icon:'✿', name:'Ракушка', desc:'Найди ракушку' },
-  { id:'cards', icon:'❀', name:'Роза', desc:'Собери букет роз' },
-  { id:'shells', icon:'♛', name:'Корона', desc:'Угадай, где корона' },
-  { id:'craps', icon:'❋', name:'Пирожное', desc:'Выбери вкус' },
-  { id:'archery', icon:'○', name:'Кольцо', desc:'Попади в цель' },
-  { id:'penalty', icon:'♥', name:'Ягодка', desc:'Собери ягоды' },
-  { id:'basket3', icon:'✾', name:'Капкейк', desc:'Укрась капкейк' },
-  { id:'mines', icon:'✦', name:'Подарок', desc:'Открой подарок' },
-  { id:'poker', icon:'❋', name:'Плюшевый', desc:'Собери коллекцию' },
+const GAMES = [
+  { id:'roulette', icon:'◉', name:'Рулетка', desc:'Крути' },
+  { id:'dice', icon:'◆', name:'Кубик', desc:'Бросай' },
+  { id:'coin', icon:'○', name:'Монетка', desc:'Орёл/решка' },
+  { id:'slots', icon:'✧', name:'Слоты', desc:'Комбо' },
 ];
 
 function loadGames(){
   const el = document.getElementById('gamesGrid');
-  const list = (gender === 'female') ? GAMES_FEMALE : GAMES_MALE;
-  el.innerHTML = list.map(g =>
-    '<div class="game-card" onclick="closeModal(\'games\'); openModal(\'' + g.id + '\')">' +
-      '<div class="game-card-icon">' + g.icon + '</div>' +
-      '<div class="game-card-name">' + g.name + '</div>' +
-      '<div class="game-card-desc">' + g.desc + '</div>' +
-    '</div>'
-  ).join('');
+  el.innerHTML = GAMES.map(g => '<div class="game-card"><div class="game-card-icon">'+g.icon+'</div><div class="game-card-name">'+g.name+'</div><div class="game-card-desc">'+g.desc+'</div></div>').join('');
 }
 
 function loadISShop(){
-  const el = document.getElementById('isShopGrid');
-  if (!el) return;
-  el.innerHTML = IS_SHOP.map(item => {
-    const can = isBalance >= item.price;
-    return '<div class="is-shop-item" onclick="buyIS(\'' + item.id + '\')">' +
-      '<div class="isi-icon">' + item.icon + '</div>' +
-      '<div class="isi-name">' + item.name + '</div>' +
-      '<div class="isi-desc">' + item.desc + '</div>' +
-      '<div class="isi-price" style="' + (can ? '' : 'opacity:0.4;') + '">◈ ' + item.price + '</div>' +
-    '</div>';
-  }).join('');
-  const balEl = document.getElementById('isBalanceVal');
-  if (balEl) {
-    balEl.textContent = isBalance;
-    balEl.style.color = isBalance < 0 ? '#ff4444' : '';
-  }
+  const el = document.getElementById('isShopGrid'); if (!el) return;
+  el.innerHTML = IS_SHOP.map(item => '<div class="is-shop-item" onclick="buyIS(\''+item.id+'\')"><div class="isi-icon">'+item.icon+'</div><div class="isi-name">'+item.name+'</div><div class="isi-price">◈ '+item.price+'</div></div>').join('');
 }
 
 function buyIS(id){
   const item = IS_SHOP.find(x => x.id === id);
   if (!item) return;
-  if (isBalance < item.price) { showToast('◈ Недостаточно IS'); return; }
-  isBalance -= item.price;
-  item.apply();
-  updateUI(); scheduleSave(); loadISShop();
-  showToast('✓ Куплено: ' + item.name);
+  if (isBalance < item.price) { showToast('◈ Мало IS'); return; }
+  isBalance -= item.price; item.apply();
+  updateUI(); scheduleSave(); loadISShop(); showToast('✓ Куплено');
 }
 
-function loadISTasks(){
-  const el = document.getElementById('isTasksList');
-  if (!el) return;
-  el.innerHTML = IS_TASKS.map(t => {
-    const done = isTasksDone.includes(t.id);
-    let btn = '';
-    if (t.todo) btn = '<button class="btn-is" disabled>Скоро</button>';
-    else if (t.invite) {
-      btn = done ? '<button class="btn-is" disabled>✓ Выполнено</button>' : '<button class="btn-is" onclick="doInvite()">Пригласить</button>';
-    } else if (t.real) {
-      btn = done ? '<button class="btn-is" disabled>✓ Подписан</button>' : '<button class="btn-is" onclick="subscribeTask()">Подписаться</button>';
-    }
-    return '<div class="is-task">' +
-      '<div class="is-task-icon">' + t.icon + '</div>' +
-      '<div class="is-task-info">' +
-        '<div class="is-task-name">' + t.name + '</div>' +
-        '<div class="is-task-desc">' + t.desc + '</div>' +
-        (t.reward > 0 ? '<div class="is-task-reward">◈ +' + t.reward + ' IS</div>' : '') +
-      '</div>' + btn +
-    '</div>';
+function loadISTasks(){ const el = document.getElementById('isTasksList'); if (el) el.innerHTML = ''; }
+
+function loadQuests(){
+  const el = document.getElementById('questsList');
+  el.innerHTML = QUESTS.map(q => {
+    const cl = claimedQuests.includes(q.id);
+    const can = q.check() && !cl;
+    let btn = cl ? '<button class="btn-buy" disabled>✓ Забрано</button>' : (can ? '<button class="btn-buy green" onclick="claimQuest(\''+q.id+'\')">Забрать</button>' : '<button class="btn-buy" disabled>Не выполнено</button>');
+    return '<div class="item-row"><div class="item-info"><div class="item-name">'+q.name+'</div><div class="item-desc">'+q.desc+'</div></div>'+btn+'</div>';
   }).join('');
 }
+function claimQuest(id){ const q = QUESTS.find(x=>x.id===id); if (!q || !q.check() || claimedQuests.includes(id)) return; score += q.reward; claimedQuests.push(id); updateUI(); scheduleSave(); loadQuests(); }
 
-function subscribeTask(){
-  const warn = confirm('⚠ ВНИМАНИЕ!\n\nЗа подписку ты получишь ' + SUB_REWARD + ' IS.\n\nЕсли отпишешься — спишут ' + SUB_PENALTY + ' IS.\n\nПродолжить?');
-  if (!warn) return;
-  window.open(TG_CHANNEL_URL, '_blank');
-  showToast('⏳ Проверяем подписку...');
-  setTimeout(() => checkAndRewardSubscription(), 3000);
+function loadBoosts(){
+  const el = document.getElementById('boostsList');
+  el.innerHTML = BOOSTS.slice(0, 20).map(b => {
+    const owned = upgrades[b.id]; const can = score >= b.price && !owned;
+    let btn = owned ? '<button class="btn-buy" disabled>✓</button>' : (can ? '<button class="btn-buy green" onclick="buyBoost(\''+b.id+'\')">'+fmt(b.price)+'</button>' : '<button class="btn-buy" disabled>'+fmt(b.price)+'</button>');
+    return '<div class="item-row"><div class="item-info"><div class="item-name">'+b.name+'</div><div class="item-desc">'+b.desc+'</div></div>'+btn+'</div>';
+  }).join('');
+}
+function buyBoost(id){ const b = BOOSTS.find(x=>x.id===id); if (!b || score < b.price || upgrades[b.id]) return; score -= b.price; upgrades[b.id] = true; b.apply(); updateUI(); scheduleSave(); loadBoosts(); }
+
+function loadAchievements(){
+  const el = document.getElementById('achList');
+  el.innerHTML = ACHIEVEMENTS.map(a => '<div class="achieve-item '+(a.check()?'unlocked':'locked')+'"><div class="achieve-icon">'+a.icon+'</div><div class="achieve-text"><div class="achieve-name">'+a.name+'</div><div class="achieve-desc">'+a.desc+'</div></div></div>').join('');
 }
 
-async function checkAndRewardSubscription(){
-  let isSubscribed = false;
-  try {
-    const resp = await fetch(API_URL + '/check-sub?user_id=' + telegramId + '&channel=' + TG_CHANNEL);
-    const data = await resp.json();
-    isSubscribed = data.subscribed === true;
-  } catch(e) { showToast('✗ Ошибка проверки'); return; }
-  if (isSubscribed) {
-    if (!isTasksDone.includes('sub_tg')) {
-      isTasksDone.push('sub_tg');
-      isBalance += SUB_REWARD;
-      showToast('🎉 +' + SUB_REWARD + ' IS за подписку!');
-    } else showToast('✓ Ты уже подписан');
-    subWasSubscribed = true;
-  } else showToast('✗ Ты ещё не подписался');
-  updateUI(); scheduleSave(); loadISTasks(); loadISShop();
+function loadDaily(){
+  const el = document.getElementById('dailyContent');
+  const today = new Date().toISOString().split('T')[0];
+  const can = lastDailyClaim !== today;
+  let h = '<div class="daily-grid">';
+  for (let i = 0; i < 7; i++) {
+    const cl = i < (dailyStreak % 7);
+    h += '<div class="daily-day '+(cl?'claimed':'')+'"><div>'+ (cl?'✓':'◈') +'</div><div style="font-size:9px;">Д'+(i+1)+'</div><div class="daily-reward">'+fmt(DAILY_REWARDS[i].coins)+'</div></div>';
+  }
+  h += '</div>';
+  if (can) h += '<button class="btn-buy green" style="width:100%;padding:16px;" onclick="claimDaily()">◈ Забрать</button>';
+  el.innerHTML = h;
+}
+function claimDaily(){ const today = new Date().toISOString().split('T')[0]; if (lastDailyClaim === today) return; const r = DAILY_REWARDS[dailyStreak % 7].coins; score += r; dailyStreak += 1; lastDailyClaim = today; updateUI(); scheduleSave(); loadDaily(); }
+
+function loadStats(){
+  document.getElementById('statsContent').innerHTML =
+    '<div class="profile-row"><span>Очки</span><span>'+fmt(score)+'</span></div>' +
+    '<div class="profile-row"><span>Тапов</span><span>'+fmt(totalTaps)+'</span></div>' +
+    '<div class="profile-row"><span>Уровень</span><span>'+level+'</span></div>' +
+    '<div class="profile-row"><span>Место в топе</span><span>#'+(myGlobalRank||'—')+'</span></div>' +
+    '<div class="profile-row"><span>Друзей</span><span>'+myReferrals.length+'</span></div>';
 }
 
-async function checkUnsubscription(){
-  if (!subWasSubscribed || subWasPunished) return;
+function loadProfile(){
+  const av = avatarData ? '<div class="profile-avatar" style="background-image:url('+avatarData+');"></div>' : '<div class="profile-avatar">'+(nickname||'?')[0].toUpperCase()+'</div>';
+  document.getElementById('profileContent').innerHTML = av +
+    '<div style="text-align:center;font-size:21px;font-weight:800;">'+(nickname||'Игрок')+'</div>' +
+    '<div class="profile-row"><span>Очки</span><span>'+fmt(score)+'</span></div>' +
+    '<div class="profile-row"><span>Место</span><span>#'+(myGlobalRank||'—')+'</span></div>' +
+    '<div class="profile-row"><span>Уровень</span><span>'+level+'</span></div>';
+}
+
+function loadWallet(){ document.getElementById('walletVal').textContent = walletBalance.toFixed(2) + ' ₽'; }
+
+function redeemPromo(){
+  const code = document.getElementById('promoInput').value.trim().toUpperCase();
+  if (!code) return;
+  if (claimedPromos.includes(code)) { showToast('Уже!'); return; }
+  const p = PROMOS[code];
+  if (!p) { showToast('✗ Неверный'); return; }
+  if (p.coins) score += p.coins;
+  if (p.mult) multiplier = Math.max(multiplier, p.mult);
+  claimedPromos.push(code); updateUI(); scheduleSave(); document.getElementById('promoInput').value = '';
+  showToast('🎉 ' + p.desc);
+}
+
+function logout(){
+  if (!confirm('Выйти?')) return;
+  localStorage.removeItem('ingsoft_token');
+  location.reload();
+}
+
+function updateRefLink(){
+  const el = document.getElementById('refLink'); if (!el) return;
+  const nick = currentUser?.nickname || nickname;
+  if (!nick) { el.textContent = '—'; return; }
+  el.textContent = window.location.origin + window.location.pathname + '?ref=' + encodeURIComponent(nick);
+}
+function copyRefLink(){ const l = document.getElementById('refLink').textContent; if (l && l !== '—') navigator.clipboard.writeText(l).then(()=>showToast('✓ Скопировано')); }
+function shareRefLink(){ const l = document.getElementById('refLink').textContent; if (l && l !== '—') window.open('https://t.me/share/url?url='+encodeURIComponent(l)+'&text='+encodeURIComponent('Заходи в IngSoft Tap!'), '_blank'); }
+
+async function loadReferral(){
+  if (!currentToken) return;
   try {
-    const resp = await fetch(API_URL + '/check-sub?user_id=' + telegramId + '&channel=' + TG_CHANNEL);
-    const data = await resp.json();
-    if (data.subscribed === false) {
-      isBalance -= SUB_PENALTY;
-      subWasPunished = true;
-      showToast('⚠ Ты отписался! Штраф -' + SUB_PENALTY + ' IS');
-      updateUI(); scheduleSave(); loadISShop();
+    const r = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (d.success) {
+      myReferrals = d.referrals || [];
+      const el = document.getElementById('refCount'); if (el) el.textContent = myReferrals.length;
+      const list = document.getElementById('referralList');
+      if (list) list.innerHTML = myReferrals.length ? myReferrals.map(r => '<div style="padding:12px;margin-bottom:6px;background:linear-gradient(90deg,rgba(139,92,246,0.15),rgba(30,58,95,0.2));border:1px solid rgba(139,92,246,0.3);border-radius:12px;display:flex;gap:10px;align-items:center;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;">'+(r.nickname?r.nickname[0].toUpperCase():'?')+'</div><div style="flex:1;font-size:13px;font-weight:600;">'+(r.nickname||'Игрок')+'</div></div>').join('') : '<p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Ты пока никого не пригласил.</p>';
     }
   } catch(e) {}
 }
 
-function doInvite(){
-  if (isTasksDone.includes('invite')) return;
-  isTasksDone.push('invite');
-  isBalance += 100;
-  updateUI(); scheduleSave(); loadISTasks(); loadISShop();
-  showToast('◈ +100 IS за приглашение');
+function showRefThanks(f, a){
+  const o = document.getElementById('refThanksOverlay');
+  if (!o) return;
+  document.getElementById('refThanksNick').textContent = f || 'друг';
+  document.getElementById('refThanksCounter').textContent = a || 0;
+  o.classList.add('show');
+  setTimeout(closeRefThanks, 5200);
 }
-
-function uploadAvatar(){
-  const input = document.createElement('input');
-  input.type = 'file'; input.accept = 'image/*';
-  input.onchange = (e) => {
-    const file = e.target.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      avatarData = ev.target.result;
-      const av = document.getElementById('avatar');
-      av.style.backgroundImage = 'url(' + avatarData + ')';
-      av.style.backgroundSize = 'cover';
-      av.textContent = '';
-      saveToLocal();
-      showToast('✓ Аватар обновлён!');
-    };
-    reader.readAsDataURL(file);
-  };
-  input.click();
-}
+function closeRefThanks(){ const o = document.getElementById('refThanksOverlay'); if (o) o.classList.remove('show'); }
+function showRefWelcome(n){ const o = document.getElementById('refWelcomeOverlay'); if (o) { document.getElementById('refWelcomeNick').textContent = n || 'Игрок'; o.classList.add('show'); } }
+function closeRefWelcome(){ const o = document.getElementById('refWelcomeOverlay'); if (o) o.classList.remove('show'); }
 
 function selectGender(g){
   selectedGender = g;
-  const m = document.getElementById('genderMale');
-  const f = document.getElementById('genderFemale');
-  if (g === 'male') {
-    m.style.border = '2px solid #8b5cf6'; m.style.boxShadow = '0 0 25px rgba(139,92,246,0.6)';
-    f.style.border = '2px solid rgba(236,72,153,0.3)'; f.style.boxShadow = 'none';
-  } else {
-    f.style.border = '2px solid #ec4899'; f.style.boxShadow = '0 0 25px rgba(236,72,153,0.6)';
-    m.style.border = '2px solid rgba(139,92,246,0.3)'; m.style.boxShadow = 'none';
+  const m = document.getElementById('genderMale'), f = document.getElementById('genderFemale');
+  if (m && f) {
+    if (g === 'male') { m.style.borderColor = '#8b5cf6'; f.style.borderColor = 'rgba(236,72,153,0.3)'; }
+    else { f.style.borderColor = '#ec4899'; m.style.borderColor = 'rgba(139,92,246,0.3)'; }
   }
-}
-
-function applyGenderTheme(){
-  const isFem = (gender === 'female');
-  if (isFem) { document.body.classList.add('theme-female'); document.body.classList.remove('theme-male'); }
-  else { document.body.classList.add('theme-male'); document.body.classList.remove('theme-female'); }
-  const isShop = document.getElementById('isShopTitle');
-  const topTitle = document.getElementById('topPanelTitle');
-  if (isShop) isShop.textContent = isFem ? '◈ Монетки' : '◈ IS Магазин';
-  if (topTitle) topTitle.textContent = isFem ? '♛ Топ красоток' : '♛ Топ-10 игроков';
 }
 
 function showTab(tab){
-  const isLogin = (tab === 'login');
-  document.getElementById('formLogin').style.display = isLogin ? 'block' : 'none';
-  document.getElementById('formRegister').style.display = isLogin ? 'none' : 'block';
-  document.getElementById('tabLogin').style.background = isLogin ? 'linear-gradient(135deg,#8b5cf6,#4facfe)' : 'transparent';
-  document.getElementById('tabLogin').style.border = isLogin ? 'none' : '1px solid rgba(139,92,246,0.4)';
-  document.getElementById('tabRegister').style.background = isLogin ? 'transparent' : 'linear-gradient(135deg,#8b5cf6,#4facfe)';
-  document.getElementById('tabRegister').style.border = isLogin ? '1px solid rgba(139,92,246,0.4)' : 'none';
+  const isL = tab === 'login';
+  document.getElementById('formLogin').style.display = isL ? 'block' : 'none';
+  document.getElementById('formRegister').style.display = isL ? 'none' : 'block';
 }
-
-function showRefThanks(friendNick, rewardAmount){
-  const overlay = document.getElementById('refThanksOverlay');
-  const nickEl = document.getElementById('refThanksNick');
-  const counterEl = document.getElementById('refThanksCounter');
-  const progressEl = document.getElementById('refThanksProgress');
-  if (!overlay) return;
-  nickEl.textContent = friendNick || 'друг';
-  counterEl.textContent = '0';
-  progressEl.style.width = '0%';
-  overlay.classList.add('show');
-  const duration = 1500, startTime = performance.now();
-  function animate(now){
-    const t = Math.min(1, (now - startTime) / duration);
-    const eased = 1 - Math.pow(1 - t, 3);
-    counterEl.textContent = Math.floor(eased * rewardAmount);
-    progressEl.style.width = (eased * 100) + '%';
-    if (t < 1) requestAnimationFrame(animate);
-    else { counterEl.textContent = rewardAmount; progressEl.style.width = '100%'; }
-  }
-  requestAnimationFrame(animate);
-  setTimeout(() => { if (overlay.classList.contains('show')) closeRefThanks(); }, 5200);
-}
-function closeRefThanks(){ const o = document.getElementById('refThanksOverlay'); if (o) o.classList.remove('show'); }
-function showRefWelcome(nick){ const o = document.getElementById('refWelcomeOverlay'); if (o) { document.getElementById('refWelcomeNick').textContent = nick || 'Игрок'; o.classList.add('show'); } }
-function closeRefWelcome(){ const o = document.getElementById('refWelcomeOverlay'); if (o) o.classList.remove('show'); }
 
 async function doRegister(){
   const login = document.getElementById('regLogin').value.trim();
@@ -1617,69 +1128,40 @@ async function doRegister(){
   const phone = document.getElementById('regPhone').value.trim();
   const region = document.getElementById('regRegion').value;
   const full_name = document.getElementById('regFullName').value.trim();
-  if (!login || login.length < 3) { showToast('Логин минимум 3 символа'); return; }
-  if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
-  if (!nick || nick.length < 2) { showToast('Никнейм минимум 2 символа'); return; }
-  if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
-  if (!region) { showToast('Выбери регион'); return; }
-  if (!full_name) { showToast('Введи ФИО'); return; }
-  if (!selectedGender) { showToast('Выбери пол'); return; }
-  const inviterNick = referrerNickname;
+  if (!login || login.length < 3) { showToast('Логин ≥ 3'); return; }
+  if (!password || password.length < 6) { showToast('Пароль ≥ 6'); return; }
+  if (!nick || nick.length < 2) { showToast('Ник ≥ 2'); return; }
+  if (!phone || phone.length < 10) { showToast('Телефон'); return; }
+  if (!region) { showToast('Регион'); return; }
+  if (!full_name) { showToast('ФИО'); return; }
+  if (!selectedGender) { showToast('Пол'); return; }
   try {
-    const resp = await fetch(API_URL + '/register', {
+    const r = await fetch(API_URL + '/register', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ login, password, nickname: nick, gender: selectedGender, region, phone, full_name, telegram_id: telegramId, referrer_nickname: referrerNickname, referrer_id: referrerId })
     });
-    const text = await resp.text();
-    let data; try { data = JSON.parse(text); } catch(e) { showToast('✗ Ошибка сервера'); return; }
-    if (!resp.ok || data.error) { showToast('✗ ' + (data.error || 'Ошибка')); return; }
+    const d = await r.json();
+    if (!r.ok || d.error) { showToast('✗ ' + (d.error || 'Ошибка')); return; }
     localStorage.removeItem('ingsoft_referrer_nickname');
     localStorage.removeItem('ingsoft_referrer_id');
-    if (inviterNick) showRefWelcome(inviterNick);
-    else showRegisterSuccessModal(nick, login);
-    referrerNickname = null; referrerId = null;
+    showToast('✅ Регистрация успешна! Теперь войди.');
+    showTab('login');
+    document.getElementById('loginLogin').value = login;
   } catch(e) { showToast('✗ Ошибка соединения'); }
 }
-
-function showRegisterSuccessModal(nickname, login){
-  const old = document.getElementById('modal-regSuccess'); if (old) old.remove();
-  const modal = document.createElement('div');
-  modal.id = 'modal-regSuccess';
-  modal.style.cssText = 'display:flex;position:fixed;inset:0;background:rgba(5,2,15,0.95);z-index:10000;align-items:center;justify-content:center;padding:20px;';
-  modal.innerHTML = '<div style="background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%); border-radius: 26px; padding: 32px 26px; max-width: 420px; width: 100%; text-align: center; border-top: 3px solid #22c55e;">' +
-    '<div style="font-size:68px; margin-bottom:16px;">🎉</div>' +
-    '<div style="font-size:23px; font-weight:900; color:#22c55e; margin-bottom:12px;">Регистрация успешна!</div>' +
-    '<div style="font-size:15px; color:#cbd5e1; margin-bottom:22px;">Добро пожаловать, <b style="color:#fff;">' + nickname + '</b>!</div>' +
-    '<div style="background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4); border-radius:14px; padding:14px; margin-bottom:22px; font-size:13px; color:#e0e7ff;">Логин: <b style="color:#a78bfa;">' + login + '</b></div>' +
-    '<button onclick="goToLogin()" style="width:100%; padding:16px; border-radius:14px; border:none; background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; font-size:16px; font-weight:800; cursor:pointer;">🔓 Зайти</button>' +
-    '<button onclick="closeRegSuccess()" style="width:100%; padding:12px; margin-top:10px; border-radius:12px; border:1px solid rgba(139,92,246,0.4); background:transparent; color:#94a3b8; font-size:14px; cursor:pointer;">Закрыть</button>' +
-  '</div>';
-  document.body.appendChild(modal);
-  modal.dataset.login = login;
-}
-function goToLogin(){
-  const modal = document.getElementById('modal-regSuccess');
-  const login = modal?.dataset?.login || '';
-  if (modal) modal.remove();
-  showTab('login');
-  document.getElementById('loginLogin').value = login;
-  setTimeout(() => document.getElementById('loginPassword').focus(), 100);
-}
-function closeRegSuccess(){ document.getElementById('modal-regSuccess')?.remove(); showTab('login'); }
 
 async function doLogin(){
   const login = document.getElementById('loginLogin').value.trim();
   const password = document.getElementById('loginPassword').value;
-  if (!login || !password) { showToast('Введи логин и пароль'); return; }
+  if (!login || !password) { showToast('Заполни все'); return; }
   try {
-    const resp = await fetch(API_URL + '/login', {
+    const r = await fetch(API_URL + '/login', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({login, password})
+      body: JSON.stringify({ login, password })
     });
-    const text = await resp.text();
-    let data; try { data = JSON.parse(text); } catch(e) { showToast('✗ Ошибка сервера'); return; }
-    if (!resp.ok || data.error) { showToast('✗ ' + (data.error || 'Ошибка входа')); return; }
-    const u = data.user;
+    const d = await r.json();
+    if (!r.ok || d.error) { showToast('✗ ' + (d.error || 'Ошибка')); return; }
+    const u = d.user;
     currentToken = u.token; currentUser = u; myUserId = u.id;
     localStorage.setItem('ingsoft_token', currentToken);
     nickname = u.nickname; gender = u.gender || 'male'; phone = u.phone;
@@ -1689,775 +1171,116 @@ async function doLogin(){
     multiplier = u.multiplier ?? 1; level = u.level ?? 1; totalTaps = u.total_taps ?? 0;
     isBalance = u.is_balance ?? 0; dailyTapLimit = u.daily_tap_limit ?? 20000;
     tapsToday = u.taps_today ?? 0; lastTapDate = u.last_tap_date || null;
-    subWasSubscribed = u.sub_was_subscribed || false;
-    subWasPunished = u.sub_was_punished || false;
-    isTasksDone = u.is_tasks_done || [];
-    claimedQuests = u.claimed_quests || [];
-    claimedPromos = u.claimed_promos || [];
-    upgrades = u.upgrades || {};
-    unlimitedUntil = u.unlimited_until ?? 0;
-    isBoostMultUntil = u.is_boost_mult_until ?? 0;
-    isAutoTapUntil = u.is_auto_tap_until ?? 0;
-    autotapLevel = u.autotap_level ?? 0;
-    passiveIncome = u.passive_income ?? 0;
-    walletBalance = u.wallet_balance ?? 0;
-    walletTotal = u.wallet_total ?? 0;
+    isTasksDone = u.is_tasks_done || []; claimedQuests = u.claimed_quests || []; claimedPromos = u.claimed_promos || [];
+    upgrades = u.upgrades || {}; unlimitedUntil = u.unlimited_until ?? 0;
+    isBoostMultUntil = u.is_boost_mult_until ?? 0; isAutoTapUntil = u.is_auto_tap_until ?? 0;
+    autotapLevel = u.autotap_level ?? 0; passiveIncome = u.passive_income ?? 0;
+    walletBalance = u.wallet_balance ?? 0; walletTotal = u.wallet_total ?? 0;
     earnedPromocodes = u.earned_promocodes || [];
-    applyGenderTheme();
     enterGame();
     showToast('🎉 С возвращением, ' + nickname + '!');
     setTimeout(() => { loadReferral().then(() => { lastKnownReferralCount = myReferrals.length; }); }, 800);
-  } catch(e) { showToast('✗ Ошибка соединения'); }
-}
-
-function updateRefLink(){
-  const el = document.getElementById('refLink'); if (!el) return;
-  const nick = currentUser?.nickname || nickname;
-  if (!nick) { el.textContent = 'Войди в аккаунт'; return; }
-  const base = window.location.origin + window.location.pathname;
-  el.textContent = base + '?ref=' + encodeURIComponent(nick);
+  } catch(e) { showToast('✗ Ошибка'); }
 }
 
 function enterGame(){
-  const auth = document.getElementById('authScreen');
-  const app = document.getElementById('app');
-  if (auth) { auth.style.display = 'none'; }
-  if (app) { app.style.display = 'flex'; }
-  try {
-    updateUI();
-    buildSidebar();
-    loadISShop();
-    refreshLeaderboard();
-    saveToLocal();
-    updateRefLink();
-    setTimeout(checkNewReferrals, 500);
-    setTimeout(checkNewReferrals, 1500);
-  } catch (e) { showToast('Ошибка загрузки: ' + e.message); }
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  updateUI();
+  buildSidebar();
+  loadISShop();
+  refreshLeaderboard();
+  saveToLocal();
+  updateRefLink();
+  sendHeartbeat();
+  setTimeout(checkNewReferrals, 500);
+  setTimeout(checkNewReferrals, 1500);
 }
 
 async function checkNewReferrals(){
   if (!currentToken) return;
   try {
-    const resp = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken));
-    const data = await resp.json();
-    if (data.success) {
-      const newList = data.referrals || [];
-      const newCount = newList.length;
-      if (newCount > lastKnownReferralCount && lastKnownReferralCount > 0) {
-        const newFriend = newList[newCount - 1];
-        const rewardForThis = getReferralReward(newCount);
-        showRefThanks(newFriend.nickname || 'друг', rewardForThis);
-        isBalance += rewardForThis;
+    const r = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (d.success) {
+      const nl = d.referrals || [];
+      if (nl.length > lastKnownReferralCount && lastKnownReferralCount > 0) {
+        const nf = nl[nl.length - 1];
+        const rw = getReferralReward(nl.length);
+        showRefThanks(nf.nickname || 'друг', rw);
+        isBalance += rw;
         updateUI(); scheduleSave();
-        showToast('🎉 +' + rewardForThis + ' IS за нового друга!');
       }
-      lastKnownReferralCount = newCount;
-      myReferrals = newList;
-      renderReferralList();
-      loadReferralBonus();
-      const refCountEl = document.getElementById('refCount');
-      if (refCountEl) refCountEl.textContent = newCount;
+      lastKnownReferralCount = nl.length;
+      myReferrals = nl;
     }
   } catch(e) {}
 }
 
-function loadQuests(){
-  const el = document.getElementById('questsList');
-  el.innerHTML = QUESTS.map(q => {
-    const isClaimed = claimedQuests.includes(q.id);
-    const canClaim = q.check() && !isClaimed;
-    let btn;
-    if (isClaimed) btn = '<button class="btn-buy" disabled>✓ Забрано</button>';
-    else if (canClaim) btn = '<button class="btn-buy green" onclick="claimQuest(\'' + q.id + '\')">Забрать</button>';
-    else btn = '<button class="btn-buy" disabled>Не выполнено</button>';
-    return '<div class="item-row"><div class="item-info"><div class="item-name">' + q.name + '</div><div class="item-desc">' + q.desc + '</div><div class="item-reward">◈ +' + fmt(q.reward) + '</div></div>' + btn + '</div>';
-  }).join('');
-}
-function claimQuest(id){
-  const q = QUESTS.find(x => x.id === id);
-  if (!q || !q.check() || claimedQuests.includes(id)) return;
-  score += q.reward; claimedQuests.push(id);
-  updateUI(); scheduleSave();
-  showToast('+' + fmt(q.reward) + ' очков!'); loadQuests();
-}
-
-let boostPage = 0;
-const BOOSTS_PER_PAGE = 20;
-function loadBoosts(){
-  const el = document.getElementById('boostsList');
-  const start = boostPage * BOOSTS_PER_PAGE;
-  const pageBoosts = BOOSTS.slice(start, start + BOOSTS_PER_PAGE);
-  const totalPages = Math.ceil(BOOSTS.length / BOOSTS_PER_PAGE);
-  let html = '<div style="display:flex;justify-content:space-between;margin-bottom:12px;gap:8px;">';
-  html += '<button class="btn-buy" ' + (boostPage === 0 ? 'disabled' : '') + ' onclick="changeBoostPage(-1)">← Назад</button>';
-  html += '<div style="color:#94a3b8;font-size:12px;padding:8px;">Стр. ' + (boostPage+1) + ' / ' + totalPages + '</div>';
-  html += '<button class="btn-buy" ' + (boostPage >= totalPages-1 ? 'disabled' : '') + ' onclick="changeBoostPage(1)">Далее →</button></div>';
-  html += pageBoosts.map(b => {
-    const owned = upgrades[b.id]; const canBuy = score >= b.price && !owned;
-    let btn;
-    if (owned) btn = '<button class="btn-buy" disabled>✓ Куплено</button>';
-    else if (canBuy) btn = '<button class="btn-buy green" onclick="buyBoost(\'' + b.id + '\')">' + fmt(b.price) + '</button>';
-    else btn = '<button class="btn-buy" disabled>' + fmt(b.price) + '</button>';
-    return '<div class="item-row"><div class="item-info"><div class="item-name">' + b.name + '</div><div class="item-desc">' + b.desc + '</div></div>' + btn + '</div>';
-  }).join('');
-  el.innerHTML = html;
-}
-function changeBoostPage(dir){
-  boostPage += dir;
-  if (boostPage < 0) boostPage = 0;
-  const tp = Math.ceil(BOOSTS.length / BOOSTS_PER_PAGE);
-  if (boostPage >= tp) boostPage = tp - 1;
-  loadBoosts();
-}
-function buyBoost(id){
-  const b = BOOSTS.find(x => x.id === id);
-  if (!b || score < b.price || upgrades[b.id]) return;
-  score -= b.price; upgrades[b.id] = true; b.apply();
-  updateUI(); scheduleSave();
-  showToast('✓ Куплено: ' + b.name); loadBoosts();
-}
-
-function loadAchievements(){
-  const el = document.getElementById('achList');
-  el.innerHTML = ACHIEVEMENTS.map(a =>
-    '<div class="achieve-item ' + (a.check() ? 'unlocked' : 'locked') + '"><div class="achieve-icon">' + a.icon + '</div><div class="achieve-text"><div class="achieve-name">' + a.name + '</div><div class="achieve-desc">' + a.desc + '</div></div></div>'
-  ).join('');
-}
-
-let referralClaimedTotal = 0;
-function loadReferralClaimed(){ try { const s = localStorage.getItem('ingsoft_referral_claimed'); if (s) referralClaimedTotal = parseInt(s,10)||0; } catch(e){} }
-function saveReferralClaimed(){ try { localStorage.setItem('ingsoft_referral_claimed', String(referralClaimedTotal)); } catch(e){} }
-
-async function claimReferralReward(){
-  if (!currentToken) { showToast('✗ Войди в аккаунт'); return; }
-  const total = getTotalReferralEarnings(myReferrals.length);
-  const available = total - referralClaimedTotal;
-  if (available <= 0) { showToast('Нет награды'); return; }
-  try {
-    const resp = await fetch(API_URL + '/claim-referral', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ token: currentToken, amount: available })
-    });
-    const data = await resp.json();
-    if (data.success) {
-      referralClaimedTotal += available;
-      saveReferralClaimed();
-      isBalance += available;
-      updateUI(); scheduleSave(); updateReferralUI();
-      showToast('🎉 Забрано ' + available + ' IS!');
-    } else showToast('✗ ' + (data.error || 'Ошибка'));
-  } catch(e) { showToast('✗ Ошибка соединения'); }
-}
-
-function updateReferralUI(){
-  const total = getTotalReferralEarnings(myReferrals.length);
-  const available = total - referralClaimedTotal;
-  const totalEl = document.getElementById('refEarnedTotal');
-  if (totalEl) totalEl.textContent = total + ' IS';
-  const availEl = document.getElementById('refClaimable');
-  if (availEl) availEl.textContent = available + ' IS';
-  const btn = document.getElementById('btnClaimRef');
-  if (btn) {
-    if (available > 0) { btn.disabled = false; btn.textContent = '✧ Забрать ' + available + ' IS'; btn.style.opacity = '1'; }
-    else { btn.disabled = true; btn.textContent = '✧ Нет награды'; btn.style.opacity = '0.5'; }
-  }
-}
-
-function renderReferralList(){
-  const wrap = document.getElementById('referralList');
-  if (!wrap) return;
-  if (!myReferrals.length) {
-    wrap.innerHTML = '<p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Ты пока никого не пригласил.</p>';
-    updateReferralUI(); return;
-  }
-  wrap.innerHTML = myReferrals.map((r, i) => {
-    const reward = getReferralReward(i + 1);
-    return '<div style="display:flex; align-items:center; gap:10px; padding:12px; margin-bottom:6px; background:linear-gradient(90deg, rgba(139,92,246,0.15), rgba(30,58,95,0.2)); border:1px solid rgba(139,92,246,0.3); border-radius:12px;">' +
-      '<div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px;">' + (r.nickname ? r.nickname[0].toUpperCase() : '?') + '</div>' +
-      '<div style="flex:1; font-size:13px; font-weight:600;">' + (r.nickname || 'Игрок') + '</div>' +
-      '<div style="font-size:12px; font-weight:800; color:#ffd700;">+' + reward + ' IS</div>' +
-    '</div>';
-  }).join('');
-  updateReferralUI();
-}
-
-function copyRefLink(){
-  const link = document.getElementById('refLink').textContent;
-  if (!link || link === 'Войди в аккаунт' || link === '—') { updateRefLink(); showToast('Подожди...'); return; }
-  navigator.clipboard.writeText(link).then(() => showToast('✓ Скопировано!')).catch(()=>{});
-}
-function shareRefLink(){
-  const link = document.getElementById('refLink').textContent;
-  if (!link || link === 'Войди в аккаунт' || link === '—') { updateRefLink(); return; }
-  const text = 'Заходи в IngSoft Tap! 🎮';
-  window.open('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text), '_blank');
-}
-
-function loadReferralBonus(){
-  const count = myReferrals.length;
-  const bc = document.getElementById('bonusFriendCount');
-  const bp = document.getElementById('bonusProgressFill');
-  const bt = document.getElementById('bonusProgressText');
-  const be = document.getElementById('bonusTotalEarned');
-  if (bc) bc.innerHTML = count + '<span style="font-size:22px; color:#b8a060;"> / 100</span>';
-  if (bp) bp.style.width = Math.min(100, count) + '%';
-  if (bt) bt.textContent = count + ' / 100';
-  if (be) be.textContent = getTotalReferralEarnings(count) + ' IS';
-  const el = document.getElementById('bonusTable'); if (!el) return;
-  const rows = [
-    { range:'1 друг', reward:'+100 IS', need:1 },
-    { range:'2 друга', reward:'+150 IS', need:2 },
-    { range:'3-4 друга', reward:'+150 IS', need:3 },
-    { range:'5 друзей', reward:'+450 IS', need:5 },
-    { range:'6-100 друзей', reward:'+100 IS за каждого', need:6 },
-    { range:'100+ друзей', reward:'+300 IS за каждого', need:100 }
-  ];
-  el.innerHTML = rows.map((r, i) => {
-    const done = count >= r.need;
-    return '<div style="display:flex; align-items:center; gap:10px; padding:14px; margin-bottom:6px; ' +
-      'background:' + (done ? 'linear-gradient(90deg, rgba(34,197,94,0.2), rgba(30,58,95,0.25))' : 'linear-gradient(90deg, rgba(139,92,246,0.12), rgba(15,12,41,0.4))') + '; ' +
-      'border:1px solid ' + (done ? 'rgba(34,197,94,0.5)' : 'rgba(139,92,246,0.25)') + '; border-radius:14px;">' +
-      '<div style="width:30px; height:30px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; ' +
-        'background:' + (done ? 'linear-gradient(135deg,#22c55e,#16a34a)' : 'rgba(255,255,255,0.06)') + '; ' +
-        'color:' + (done ? '#fff' : '#94a3b8') + ';">' + (done ? '✓' : (i + 1)) + '</div>' +
-      '<div style="flex:1; font-size:13px; font-weight:700;">' + r.range + '</div>' +
-      '<div style="font-size:13px; font-weight:800; color:' + (done ? '#22c55e' : '#ffd700') + ';">' + r.reward + '</div>' +
-    '</div>';
-  }).join('');
-}
-
-function loadDaily(){
-  const el = document.getElementById('dailyContent');
-  const today = new Date().toISOString().split('T')[0];
-  const canClaim = lastDailyClaim !== today;
-  const nextDay = canClaim ? (dailyStreak % 7) : (dailyStreak - 1) % 7;
-  let html = '<div class="daily-grid">';
-  for (let i = 0; i < 7; i++) {
-    const claimed = i < (dailyStreak % 7);
-    const isToday = i === nextDay && canClaim;
-    html += '<div class="daily-day ' + (claimed ? 'claimed' : '') + ' ' + (isToday ? 'today' : '') + '"><div style="font-size:14px;">' + (claimed ? '✓' : '◈') + '</div><div style="font-size:9px;">День ' + (i+1) + '</div><div class="daily-reward">' + (claimed ? '✓' : fmt(DAILY_REWARDS[i].coins)) + '</div></div>';
-  }
-  html += '</div>';
-  if (canClaim) {
-    html += '<p style="text-align:center;margin-bottom:16px;color:#cbd5e1;">Сегодня: <b style="color:#ffd700">' + fmt(DAILY_REWARDS[nextDay].coins) + '</b></p>';
-    html += '<button class="btn-buy green" style="width:100%;padding:16px;" onclick="claimDaily()">◈ Забрать</button>';
-  } else {
-    html += '<p style="text-align:center;color:#94a3b8;">Серия: <b style="color:#ec4899;">' + dailyStreak + ' дней</b></p>';
-  }
-  el.innerHTML = html;
-}
-function claimDaily(){
-  const today = new Date().toISOString().split('T')[0];
-  if (lastDailyClaim === today) { showToast('Уже забрано!'); return; }
-  const reward = DAILY_REWARDS[dailyStreak % 7].coins;
-  score += reward; dailyStreak += 1; lastDailyClaim = today;
-  updateUI(); scheduleSave();
-  showToast('◈ +' + fmt(reward) + '!'); loadDaily();
-}
-
-function loadStats(){
-  document.getElementById('statsContent').innerHTML =
-    '<div class="profile-row"><span>Очки</span><span>' + fmt(score) + '</span></div>' +
-    '<div class="profile-row"><span>Тапов</span><span>' + fmt(totalTaps) + '</span></div>' +
-    '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
-    '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
-    '<div class="profile-row"><span>Энергия</span><span>' + Math.floor(energy) + ' / ' + maxEnergy + '</span></div>' +
-    '<div class="profile-row"><span>Автоклик</span><span>+' + fmt(autotapLevel) + '/сек</span></div>' +
-    '<div class="profile-row"><span>Пассив</span><span>+' + fmt(passiveIncome) + '/час</span></div>' +
-    '<div class="profile-row"><span>Друзей</span><span>' + myReferrals.length + '</span></div>' +
-    '<div class="profile-row"><span>Место в топе</span><span>#' + (myGlobalRank || '—') + '</span></div>' +
-    '<div class="profile-row"><span>Бустов</span><span>' + Object.keys(upgrades).length + ' / ' + BOOSTS.length + '</span></div>';
-}
-
-function logout(){
-  if (!confirm('⚠ Выйти из аккаунта?')) return;
-  localStorage.removeItem('ingsoft_token');
-  localStorage.removeItem('ingsoft_referrer_nickname');
-  localStorage.removeItem('ingsoft_referrer_id');
-  currentToken = null; currentUser = null; myUserId = null;
-  nickname = null; phone = null; region = null; fullName = null; gender = null; avatarData = null;
-  score = 0; energy = 500; maxEnergy = 500; multiplier = 1;
-  level = 1; totalTaps = 0; dailyStreak = 0; autotapLevel = 0;
-  claimedQuests = []; claimedPromos = []; earnedPromocodes = [];
-  isBalance = 0; isTasksDone = []; unlimitedUntil = 0;
-  isBoostMultUntil = 0; isAutoTapUntil = 0;
-  subWasSubscribed = false; subWasPunished = false;
-  walletBalance = 0; walletTotal = 0; upgrades = {}; passiveIncome = 0;
-  myReferrals = []; lastKnownReferralCount = 0;
-  leaderboardCache = []; myGlobalRank = null;
-  document.body.classList.remove('theme-female');
-  closeAllModals();
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('authScreen').style.display = 'flex';
-  ['loginLogin','loginPassword','regLogin','regPassword','regNickname','regPhone','regRegion','regFullName'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-  showTab('login');
-  showToast('Выход выполнен');
-}
-
-function loadProfile(){
-  const av = avatarData ? '<div class="profile-avatar" style="background-image:url(' + avatarData + ');"></div>' : '<div class="profile-avatar">' + (nickname || '?')[0].toUpperCase() + '</div>';
-  document.getElementById('profileContent').innerHTML = av +
-    '<div style="text-align:center;font-size:21px;font-weight:800;margin-bottom:4px;">' + (nickname || 'Игрок') + '</div>' +
-    '<div style="text-align:center;color:#94a3b8;font-size:12px;margin-bottom:18px;">@' + (username || 'аноним') + '</div>' +
-    '<div class="profile-row"><span>Очки</span><span>' + fmt(score) + '</span></div>' +
-    '<div class="profile-row"><span>Место</span><span>#' + (myGlobalRank || '—') + '</span></div>' +
-    '<div class="profile-row"><span>Уровень</span><span>' + level + '</span></div>' +
-    '<div class="profile-row"><span>Множитель</span><span>x' + multiplier + '</span></div>' +
-    '<div class="profile-row"><span>Друзей</span><span>' + myReferrals.length + '</span></div>' +
-    '<div class="profile-row"><span>Телефон</span><span>' + (phone || '—') + '</span></div>' +
-    '<div class="profile-row"><span>Регион</span><span>' + (region || '—') + '</span></div>' +
-    '<div class="profile-row"><span>ФИО</span><span>' + (fullName || '—') + '</span></div>';
-}
-
-function loadWallet(){
-  document.getElementById('walletVal').textContent = walletBalance.toFixed(2) + ' ₽';
-  document.getElementById('walletAvail').textContent = walletBalance.toFixed(2) + ' ₽';
-  document.getElementById('walletTotal').textContent = walletTotal.toFixed(2) + ' ₽';
-}
-
-function redeemPromo(){
-  const code = document.getElementById('promoInput').value.trim().toUpperCase();
-  if (!code) { showToast('Введи промокод'); return; }
-  if (claimedPromos.includes(code)) { showToast('Уже активирован!'); return; }
-  const promo = PROMOS[code];
-  if (!promo) { showToast('✗ Неверный промокод'); return; }
-  if (promo.coins) score += promo.coins;
-  if (promo.mult) multiplier = Math.max(multiplier, promo.mult);
-  claimedPromos.push(code);
-  updateUI(); scheduleSave();
-  showToast('🎉 ' + promo.desc);
-  document.getElementById('promoInput').value = '';
-  loadPromoHistory();
-}
-
-const PROMO_QUESTS = [
-  { id:'invite3', icon:'❖', name:'Пригласи 3 друзей',  desc:'За 3-х друзей',  reward:'2%', need:3 },
-  { id:'invite5', icon:'❖', name:'Пригласи 5 друзей',  desc:'За 5-х друзей',  reward:'3%', need:5 },
-  { id:'invite10', icon:'❖', name:'Пригласи 10 друзей',desc:'За 10 друзей',   reward:'5%', need:10 },
-  { id:'taps10k', icon:'↟', name:'10 000 тапов',       desc:'Сделай 10K',     reward:'1%', need:10000 },
-  { id:'taps50k', icon:'↟', name:'50 000 тапов',       desc:'Сделай 50K',     reward:'2%', need:50000 },
-  { id:'taps100k', icon:'↟', name:'100 000 тапов',     desc:'Сделай 100K',    reward:'3%', need:100000 },
-  { id:'taps500k', icon:'↟', name:'500 000 тапов',     desc:'Сделай 500K',    reward:'4%', need:500000 },
-  { id:'taps1m', icon:'↟', name:'1 000 000 тапов',     desc:'Сделай 1M',      reward:'5%', need:1000000 },
-  { id:'lvl10', icon:'↟', name:'Уровень 10',           desc:'Достигни 10 ур.',reward:'2%', need:10 },
-  { id:'lvl25', icon:'↟', name:'Уровень 25',           desc:'Достигни 25 ур.',reward:'4%', need:25 },
-  { id:'sub_tg', icon:'◉', name:'Подписка на канал',   desc:'Подпишись',      reward:'1%', need:1 },
-  { id:'daily7', icon:'◈', name:'7 дней подряд',       desc:'Заходи 7 дней',  reward:'3%', need:7 },
-];
-
-function switchPromoTab(n){ if (n !== 1) return; }
-
-function switchPromoView(view){
-  const eb = document.getElementById('promoViewEarn');
-  const wb = document.getElementById('promoViewWallet');
-  const ev = document.getElementById('promoEarnView');
-  const wv = document.getElementById('promoWalletView');
-  if (view === 'earn') {
-    eb.style.background = 'linear-gradient(135deg,#8b5cf6,#4facfe)'; eb.style.color = '#fff';
-    wb.style.background = 'transparent'; wb.style.color = '#94a3b8';
-    ev.style.display = 'block'; wv.style.display = 'none';
-    loadPromoEarn();
-  } else {
-    wb.style.background = 'linear-gradient(135deg,#8b5cf6,#4facfe)'; wb.style.color = '#fff';
-    eb.style.background = 'transparent'; eb.style.color = '#94a3b8';
-    ev.style.display = 'none'; wv.style.display = 'block';
-    loadPromoWallet();
-  }
-}
-
-function loadPromoEarn(){
-  const el = document.getElementById('promoEarnList'); if (!el) return;
-  el.innerHTML = PROMO_QUESTS.map(q => {
-    const done = earnedPromocodes.includes(q.id);
-    const progress = q.id.startsWith('taps') ? totalTaps :
-                     q.id === 'lvl10' || q.id === 'lvl25' ? level :
-                     q.id === 'sub_tg' ? (subWasSubscribed ? 1 : 0) :
-                     q.id === 'daily7' ? dailyStreak : 0;
-    const canClaim = progress >= q.need && !done;
-    let btn;
-    if (done) btn = '<button class="btn-is" disabled>✓ Получен</button>';
-    else if (canClaim) btn = '<button class="btn-is" onclick="claimPromoQuest(\'' + q.id + '\')">Забрать ' + q.reward + '</button>';
-    else btn = '<button class="btn-is" disabled>' + progress + ' / ' + q.need + '</button>';
-    return '<div class="is-task"><div class="is-task-icon">' + q.icon + '</div><div class="is-task-info"><div class="is-task-name">' + q.name + '</div><div class="is-task-desc">' + q.desc + '</div><div class="is-task-reward">✎ Скидка ' + q.reward + '</div></div>' + btn + '</div>';
-  }).join('');
-}
-
-function claimPromoQuest(id){
-  if (earnedPromocodes.includes(id)) return;
-  const q = PROMO_QUESTS.find(x => x.id === id);
-  if (!q) return;
-  earnedPromocodes.push(id);
-  showToast('🎉 Промокод на скидку ' + q.reward + ' получен!');
-  updateUI(); scheduleSave(); loadPromoEarn(); loadPromoWallet();
-}
-
-function loadPromoWallet(){
-  const el = document.getElementById('promoWalletList'); if (!el) return;
-  if (!earnedPromocodes.length) {
-    el.innerHTML = '<p style="text-align:center; color:#64748b; font-size:13px; padding:20px;">У тебя пока нет промокодов.</p>';
-    return;
-  }
-  el.innerHTML = earnedPromocodes.map(id => {
-    const q = PROMO_QUESTS.find(x => x.id === id); if (!q) return '';
-    return '<div style="background:linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,140,0,0.1)); border:1px solid rgba(255,215,0,0.5); border-radius:14px; padding:16px; margin-bottom:8px; display:flex; align-items:center; gap:12px;"><div style="font-size:26px;">✎</div><div style="flex:1;"><div style="font-size:14px; font-weight:900; color:#ffd700;">Скидка ' + q.reward + '</div><div style="font-size:11px; color:#b8a060;">' + q.name + '</div></div><button class="btn-is" onclick="copyPromo(\'' + q.reward + '\')">📋</button></div>';
-  }).join('');
-}
-function copyPromo(code){ navigator.clipboard.writeText('INGSOFT-' + code.replace('%','')).then(()=>showToast('✓ Промокод скопирован!')); }
-
-function loadPromoHistory(){
-  const el = document.getElementById('promoHistory'); if (!el) return;
-  if (!claimedPromos.length) { el.innerHTML = ''; return; }
-  el.innerHTML = '<div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">Активированные:</div>' +
-    claimedPromos.map(c => '<div style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);padding:10px;border-radius:12px;margin-bottom:6px;font-size:12px;color:#22c55e;text-align:center;font-weight: 700;">✓ ' + c + '</div>').join('');
-}
-
-const GAME_COSTS = {};
-const COST_SEQUENCE = [1000, 5000, 7000, 10000, 15000, 25000, 40000, 60000, 90000, 150000];
-function getGameCost(gameId){
-  const attempts = GAME_COSTS[gameId] || 0;
-  if (attempts < COST_SEQUENCE.length) return COST_SEQUENCE[attempts];
-  return COST_SEQUENCE[COST_SEQUENCE.length - 1] + (attempts - COST_SEQUENCE.length + 1) * 100000;
-}
-function increaseGameCost(gameId){ GAME_COSTS[gameId] = (GAME_COSTS[gameId] || 0) + 1; }
-
-function spinRoulette(){
-  const cost = getGameCost('roulette');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('roulette');
-  const wheel = document.getElementById('rouletteWheel');
-  wheel.style.transform = 'rotate(' + (Math.floor(Math.random()*360) + 720) + 'deg)';
-  const win = Math.random() < 0.3;
-  setTimeout(() => {
-    if (win) { const r = cost * 2; document.getElementById('rouletteResult').textContent = '🎉 +' + fmt(r); score += r; }
-    else { document.getElementById('rouletteResult').textContent = '😢 Пусто'; }
-    updateUI(); scheduleSave();
-  }, 3000);
-}
-function rollDice(){
-  const cost = getGameCost('dice');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('dice');
-  const e = ['⚀','⚁','⚂','⚃','⚄','⚅'];
-  document.getElementById('diceValue').textContent = e[Math.floor(Math.random()*6)];
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 2; document.getElementById('diceResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('diceResult').textContent = '😢 Пусто'; }
-  updateUI(); scheduleSave();
-}
-function flipCoin(choice){
-  const cost = getGameCost('coin');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('coin');
-  const result = Math.random() < 0.5 ? 'heads' : 'tails';
-  document.getElementById('coinValue').textContent = result === 'heads' ? '○' : '●';
-  if (result === choice) { const r = cost * 2; document.getElementById('coinResult').textContent = '🎉 Победа! +' + fmt(r); score += r; }
-  else { document.getElementById('coinResult').textContent = '😢 Проигрыш'; }
-  updateUI(); scheduleSave();
-}
-function spinSlots(){
-  const cost = getGameCost('slots');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('slots');
-  const s = ['✿','❀','◆','✦','✧','◉'];
-  document.getElementById('slotsDisplay').textContent = s[Math.floor(Math.random()*6)] + s[Math.floor(Math.random()*6)] + s[Math.floor(Math.random()*6)];
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 3; document.getElementById('slotsResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('slotsResult').textContent = '😢 Пусто'; }
-  updateUI(); scheduleSave();
-}
-function throwBasket(){
-  const cost = getGameCost('basket');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('basket');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 2; document.getElementById('basketDisplay').textContent = '◉✓'; document.getElementById('basketResult').textContent = '🎉 Попал! +' + fmt(r); score += r; }
-  else { document.getElementById('basketDisplay').textContent = '◉✗'; document.getElementById('basketResult').textContent = '😢 Мимо'; }
-  updateUI(); scheduleSave();
-}
-function digMine(){
-  const cost = getGameCost('mine');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('mine');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 3; document.getElementById('mineDisplay').textContent = '◆'; document.getElementById('mineResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('mineDisplay').textContent = '◇'; document.getElementById('mineResult').textContent = '😢 Пусто'; }
-  updateUI(); scheduleSave();
-}
-function spinWheel(){
-  const cost = getGameCost('wheel');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('wheel');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 2; document.getElementById('wheelResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('wheelResult').textContent = '😢 Пусто'; }
-  updateUI(); scheduleSave();
-}
-function playDarts(){
-  const cost = getGameCost('darts');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('darts');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 3; document.getElementById('dartsDisplay').textContent = '◎✓'; document.getElementById('dartsResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('dartsDisplay').textContent = '◎✗'; document.getElementById('dartsResult').textContent = '😢 Мимо'; }
-  updateUI(); scheduleSave();
-}
-function playFishing(){
-  const cost = getGameCost('fishing');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('fishing');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 3; document.getElementById('fishingDisplay').textContent = '◆🎉'; document.getElementById('fishingResult').textContent = '🎉 Поймал! +' + fmt(r); score += r; }
-  else { document.getElementById('fishingDisplay').textContent = '◇💨'; document.getElementById('fishingResult').textContent = '😢 Сорвалась'; }
-  updateUI(); scheduleSave();
-}
-function playCards(){
-  const cost = getGameCost('cards');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('cards');
-  const s = ['♠','♥','♦','♣'];
-  document.getElementById('cardsDisplay').textContent = s[Math.floor(Math.random()*4)];
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 2; document.getElementById('cardsResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('cardsResult').textContent = '😢 Проигрыш'; }
-  updateUI(); scheduleSave();
-}
-function playShells(){
-  const cost = getGameCost('shells');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('shells');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 3; document.getElementById('shellsDisplay').textContent = '◐✓'; document.getElementById('shellsResult').textContent = '🎉 Угадал! +' + fmt(r); score += r; }
-  else { document.getElementById('shellsDisplay').textContent = '◐✗'; document.getElementById('shellsResult').textContent = '😢 Мимо'; }
-  updateUI(); scheduleSave();
-}
-function playCraps(){
-  const cost = getGameCost('craps');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('craps');
-  document.getElementById('crapsDisplay').textContent = '◆' + (Math.floor(Math.random()*6)+1) + ' + ◆' + (Math.floor(Math.random()*6)+1);
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 2; document.getElementById('crapsResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('crapsResult').textContent = '😢 Проигрыш'; }
-  updateUI(); scheduleSave();
-}
-function playArchery(){
-  const cost = getGameCost('archery');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('archery');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 3; document.getElementById('archeryDisplay').textContent = '➤◎'; document.getElementById('archeryResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('archeryDisplay').textContent = '➤💨'; document.getElementById('archeryResult').textContent = '😢 Мимо'; }
-  updateUI(); scheduleSave();
-}
-function playPenalty(){
-  const cost = getGameCost('penalty');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('penalty');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 2; document.getElementById('penaltyDisplay').textContent = '◉✓'; document.getElementById('penaltyResult').textContent = '🎉 Гол! +' + fmt(r); score += r; }
-  else { document.getElementById('penaltyDisplay').textContent = '◉✗'; document.getElementById('penaltyResult').textContent = '😢 Мимо'; }
-  updateUI(); scheduleSave();
-}
-function playBasket3(){
-  const cost = getGameCost('basket3');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('basket3');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 3; document.getElementById('basket3Display').textContent = '◉◎'; document.getElementById('basket3Result').textContent = '🎉 3 очка! +' + fmt(r); score += r; }
-  else { document.getElementById('basket3Display').textContent = '◉✗'; document.getElementById('basket3Result').textContent = '😢 Мимо'; }
-  updateUI(); scheduleSave();
-}
-function playMines(){
-  const cost = getGameCost('mines');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('mines');
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 2; document.getElementById('minesDisplay').textContent = '◆✓'; document.getElementById('minesResult').textContent = '🎉 Безопасно! +' + fmt(r); score += r; }
-  else { document.getElementById('minesDisplay').textContent = '✸💥'; document.getElementById('minesResult').textContent = '💥 Взрыв!'; }
-  updateUI(); scheduleSave();
-}
-function playPoker(){
-  const cost = getGameCost('poker');
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost; increaseGameCost('poker');
-  const s = ['♠','♥','♦','♣'];
-  const v = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-  document.getElementById('pokerDisplay').textContent = s[Math.floor(Math.random()*4)] + v[Math.floor(Math.random()*13)] + ' ' + s[Math.floor(Math.random()*4)] + v[Math.floor(Math.random()*13)];
-  const win = Math.random() < 0.3;
-  if (win) { const r = cost * 3; document.getElementById('pokerResult').textContent = '🎉 +' + fmt(r); score += r; }
-  else { document.getElementById('pokerResult').textContent = '😢 Пусто'; }
-  updateUI(); scheduleSave();
-}
-
-function runAutotap(){
-  let taps = autotapLevel;
-  if (Date.now() < isAutoTapUntil) taps += 1;
-  if (taps <= 0) return;
-  const multBonus = Date.now() < isBoostMultUntil ? 2 : 1;
-  score += taps * multiplier * multBonus;
-  totalTaps += taps;
-  updateUI();
-}
-function runPassive(){ if (passiveIncome <= 0) return; score += Math.floor(passiveIncome / 3600); }
-function regenEnergy(){ if (energy < maxEnergy) { energy = Math.min(maxEnergy, energy + maxEnergy / 900); updateUI(); } }
-
-let slideIndex = 0, slideTimer = null;
-function initSlideshow(){
-  const slides = document.querySelectorAll('.slide');
-  const dotsWrap = document.getElementById('slideDots');
-  if (!slides.length || !dotsWrap) return;
-  dotsWrap.innerHTML = Array.from(slides).map((_, i) => '<div class="slide-dot' + (i === 0 ? ' active' : '') + '"></div>').join('');
-  const dots = document.querySelectorAll('.slide-dot');
-  slides.forEach((s, i) => {
-    s.classList.remove('active','past','future');
-    if (i === 0) s.classList.add('active'); else s.classList.add('future');
-  });
-  function nextSlide(){
-    const total = slides.length, prev = slideIndex;
-    slideIndex = (slideIndex + 1) % total;
-    slides[prev].classList.remove('active'); slides[prev].classList.add('past');
-    setTimeout(()=>slides[prev].classList.remove('past'), 900);
-    setTimeout(()=>slides[prev].classList.add('future'), 950);
-    slides[slideIndex].classList.remove('future','past'); slides[slideIndex].classList.add('active');
-    dots.forEach((d,i) => d.classList.toggle('active', i === slideIndex));
-  }
-  if (slideTimer) clearInterval(slideTimer);
-  slideTimer = setInterval(nextSlide, 4000);
-}
-
 async function loadProgressByToken(token){
   try {
-    const resp = await fetch(API_URL + '/get-progress?token=' + token);
-    const data = await resp.json();
-    if (data.found && data.user) {
-      const u = data.user;
+    const r = await fetch(API_URL + '/get-progress?token=' + token);
+    const d = await r.json();
+    if (d.found && d.user) {
+      const u = d.user;
       nickname = u.nickname; gender = u.gender || 'male'; phone = u.phone;
       fullName = u.full_name; region = u.region;
       score = u.score || 0; energy = u.energy ?? 500; maxEnergy = u.max_energy ?? 500;
       multiplier = u.multiplier ?? 1; level = u.level ?? 1; totalTaps = u.total_taps ?? 0;
       isBalance = u.is_balance ?? 0; dailyTapLimit = u.daily_tap_limit ?? 20000;
       tapsToday = u.taps_today ?? 0; lastTapDate = u.last_tap_date || null;
-      subWasSubscribed = u.sub_was_subscribed || false;
-      subWasPunished = u.sub_was_punished || false;
-      isTasksDone = u.is_tasks_done || [];
-      claimedQuests = u.claimed_quests || [];
-      claimedPromos = u.claimed_promos || [];
-      upgrades = u.upgrades || {};
-      unlimitedUntil = u.unlimited_until ?? 0;
-      isBoostMultUntil = u.is_boost_mult_until ?? 0;
-      isAutoTapUntil = u.is_auto_tap_until ?? 0;
-      autotapLevel = u.autotap_level ?? 0;
-      passiveIncome = u.passive_income ?? 0;
-      walletBalance = u.wallet_balance ?? 0;
-      walletTotal = u.wallet_total ?? 0;
-      earnedPromocodes = u.earned_promocodes || [];
-      myUserId = u.id;
+      isTasksDone = u.is_tasks_done || []; claimedQuests = u.claimed_quests || [];
+      claimedPromos = u.claimed_promos || []; upgrades = u.upgrades || {};
+      unlimitedUntil = u.unlimited_until ?? 0; isBoostMultUntil = u.is_boost_mult_until ?? 0;
+      isAutoTapUntil = u.is_auto_tap_until ?? 0; autotapLevel = u.autotap_level ?? 0;
+      passiveIncome = u.passive_income ?? 0; walletBalance = u.wallet_balance ?? 0;
+      walletTotal = u.wallet_total ?? 0; earnedPromocodes = u.earned_promocodes || [];
+      myUserId = u.id; currentUser = u;
       if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
-      currentUser = u;
-      applyGenderTheme();
       enterGame();
       setTimeout(() => { loadReferral().then(() => { lastKnownReferralCount = myReferrals.length; }); }, 800);
       return true;
-    } else {
-      localStorage.removeItem('ingsoft_token');
-      forceShowAuth();
-      return false;
     }
-  } catch(e) { forceShowAuth(); return false; }
-}
-
-function forceShowAuth(){
-  const auth = document.getElementById('authScreen');
-  const app = document.getElementById('app');
-  if (auth) auth.style.display = 'flex';
-  if (app) app.style.display = 'none';
-  const fl = document.getElementById('formLogin'); if (fl) fl.style.display = 'none';
-  const fr = document.getElementById('formRegister'); if (fr) fr.style.display = 'block';
-}
-
-async function loadReferral(){
-  updateRefLink();
-  if (!currentToken) return [];
-  try {
-    const resp = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken));
-    const data = await resp.json();
-    if (data.success) {
-      myReferrals = data.referrals || [];
-      renderReferralList(); loadReferralBonus();
-      const el = document.getElementById('refCount'); if (el) el.textContent = myReferrals.length;
-      updateRefLink();
-      return myReferrals;
-    } else renderReferralList();
-  } catch(e) { renderReferralList(); }
-  return [];
+    localStorage.removeItem('ingsoft_token');
+    return false;
+  } catch(e) { return false; }
 }
 
 function init(){
   if (tg) { try { tg.ready(); tg.expand(); tg.setHeaderColor('#0a0518'); tg.setBackgroundColor('#0a0518'); } catch(e) {} }
   getTelegramUser();
-
-  let startParam = null;
-  if (tg?.initDataUnsafe?.start_param) startParam = tg.initDataUnsafe.start_param;
-  try {
-    const up = new URLSearchParams(window.location.search);
-    if (up.get('ref')) startParam = up.get('ref');
-  } catch(e) {}
-  if (!startParam) {
-    try { const m = window.location.hash.match(/ref=([^&]+)/); if (m) startParam = decodeURIComponent(m[1]); } catch(e) {}
+  let sp = null;
+  if (tg?.initDataUnsafe?.start_param) sp = tg.initDataUnsafe.start_param;
+  try { const up = new URLSearchParams(window.location.search); if (up.get('ref')) sp = up.get('ref'); } catch(e) {}
+  if (sp) {
+    let cp = sp; if (cp.startsWith('ref_')) cp = cp.slice(4);
+    const lu = cp.lastIndexOf('_'); let rn = '', ri = null;
+    if (lu > 0) { const pi = cp.slice(lu+1); if (/^\d+$/.test(pi)) { rn = cp.slice(0, lu); ri = parseInt(pi, 10); } else rn = cp; } else rn = cp;
+    rn = decodeURIComponent(rn);
+    if (rn && /^[a-zA-Z0-9_]+$/.test(rn)) { referrerNickname = rn; localStorage.setItem('ingsoft_referrer_nickname', rn); }
+    if (ri && ri > 0 && ri < 9000000000) { referrerId = ri; localStorage.setItem('ingsoft_referrer_id', String(ri)); }
   }
-
-  if (startParam) {
-    let cp = startParam;
-    if (cp.startsWith('ref_')) cp = cp.slice(4);
-    const lu = cp.lastIndexOf('_');
-    let refNick = '', refTgId = null;
-    if (lu > 0) {
-      const pid = cp.slice(lu + 1);
-      if (/^\d+$/.test(pid)) { refNick = cp.slice(0, lu); refTgId = parseInt(pid, 10); }
-      else refNick = cp;
-    } else refNick = cp;
-    refNick = decodeURIComponent(refNick);
-    if (refNick && /^[a-zA-Z0-9_]+$/.test(refNick)) { referrerNickname = refNick; localStorage.setItem('ingsoft_referrer_nickname', refNick); }
-    if (refTgId && refTgId > 0 && refTgId < 9000000000) { referrerId = refTgId; localStorage.setItem('ingsoft_referrer_id', String(refTgId)); }
-  }
-
-  function bindAuthButtons(){
+  function bind(){
     const bl = document.getElementById('tabLogin'), br = document.getElementById('tabRegister');
-    if (bl && !bl.dataset.bound) { bl.dataset.bound = '1'; bl.addEventListener('click', e => { e.preventDefault(); showTab('login'); }); }
-    if (br && !br.dataset.bound) { br.dataset.bound = '1'; br.addEventListener('click', e => { e.preventDefault(); showTab('register'); }); }
-    const bdl = document.getElementById('btnDoLogin');
-    if (bdl && !bdl.dataset.bound) { bdl.dataset.bound = '1'; bdl.addEventListener('click', e => { e.preventDefault(); doLogin(); }); }
-    const bdr = document.getElementById('btnDoRegister');
-    if (bdr && !bdr.dataset.bound) { bdr.dataset.bound = '1'; bdr.addEventListener('click', e => { e.preventDefault(); doRegister(); }); }
+    if (bl && !bl.dataset.b) { bl.dataset.b = '1'; bl.onclick = () => showTab('login'); }
+    if (br && !br.dataset.b) { br.dataset.b = '1'; br.onclick = () => showTab('register'); }
+    const dl = document.getElementById('btnDoLogin');
+    if (dl && !dl.dataset.b) { dl.dataset.b = '1'; dl.onclick = doLogin; }
+    const dr = document.getElementById('btnDoRegister');
+    if (dr && !dr.dataset.b) { dr.dataset.b = '1'; dr.onclick = doRegister; }
   }
-  bindAuthButtons();
-  setTimeout(bindAuthButtons, 100);
-  setTimeout(bindAuthButtons, 500);
+  bind(); setTimeout(bind, 200); setTimeout(bind, 800);
 
-  loadReferralClaimed();
+  const saved = localStorage.getItem('ingsoft_token');
+  if (saved) { currentToken = saved; loadProgressByToken(saved); }
+  else { document.getElementById('authScreen').style.display = 'flex'; }
 
-  const savedToken = localStorage.getItem('ingsoft_token');
-  if (savedToken) { currentToken = savedToken; loadProgressByToken(savedToken); }
-  else forceShowAuth();
-
-  /* --- ИНТЕРВАЛЫ --- */
-  setInterval(runAutotap, 1000);
-  setInterval(runPassive, 1000);
-  setInterval(regenEnergy, 1000);
+  setInterval(() => { if (score > 0) score += 0; updateUI(); }, 1000);
   setInterval(saveToLocal, 5000);
-
-  // Обновление топа раз в 3 секунды
-  setInterval(() => { refreshLeaderboard(); }, 3000);
-
-  // Отправка heartbeat раз в 20 секунд
+  setInterval(refreshLeaderboard, 3000);
   setInterval(sendHeartbeat, 20000);
-  sendHeartbeat();
-
   setInterval(checkNewReferrals, 10000);
-  initSlideshow();
   window.addEventListener('beforeunload', saveToLocal);
-  loadISShop();
-  setTimeout(checkUnsubscription, 2000);
 }
 init();
 </script>
