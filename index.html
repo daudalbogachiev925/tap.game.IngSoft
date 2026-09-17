@@ -727,7 +727,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
 
 <div class="modal" id="modal-referral"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">👥 <span>Друзья</span></div><button class="modal-close" onclick="closeModal('referral')">×</button></div>
-  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">Приглашай друзей — получай IS за каждого</p>
+  <p style="color:#888;font-size:13px;margin-bottom:12px;text-align:center;">Приглашай друзей — получай IS за каждого.<br><span style="color:#22c55e;font-size:11px;">✅ Ссылка работает и в браузере, и в Telegram</span></p>
 
   <div style="background:linear-gradient(135deg,rgba(79,172,254,0.1),rgba(30,58,95,0.2)); border:1px solid rgba(79,172,254,0.3); border-radius:12px; padding:12px; margin-bottom:12px;">
     <div style="font-size:11px; color:#8899aa; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px;">Твоя ссылка:</div>
@@ -1786,12 +1786,20 @@ function loadAchievements() {
 
 async function loadReferral() {
   if (!currentToken) return;
+
   const myNick = nickname || ('user' + telegramId);
-  const myTgId = telegramId || '';
-  const link = 'https://t.me/' + BOT_USERNAME + '/' + BOT_SHORT_NAME
-             + '?startapp=ref_' + encodeURIComponent(myNick) + '_' + myTgId;
+  const myTgId = (telegramId && telegramId !== 999999999) ? telegramId : '';
+
+  // === Ссылка через САЙТ (работает везде) ===
+  const siteUrl = 'https://daudalbogachiev925.github.io/tap.game.IngSoft/';
+  let refCode = 'ref_' + myNick;
+  if (myTgId) refCode += '_' + myTgId;
+
+  const link = siteUrl + '?ref=' + encodeURIComponent(refCode);
+
   const linkEl = document.getElementById('refLink');
   if (linkEl) linkEl.textContent = link;
+
   try {
     const resp = await fetch(API_URL + '/referrals?token=' + encodeURIComponent(currentToken));
     const data = await resp.json();
@@ -1804,8 +1812,6 @@ async function loadReferral() {
     }
   } catch (e) {
     console.error('Ошибка загрузки рефералов:', e);
-    const wrap = document.getElementById('referralList');
-    if (wrap) wrap.innerHTML = '<p style="text-align:center;color:#ff4444;font-size:12px;padding:12px;">Ошибка: ' + e.message + '</p>';
   }
 }
 
@@ -2463,45 +2469,57 @@ function init() {
   const isInTelegram = !!(tg && tg.initDataUnsafe && tg.initDataUnsafe.user);
   console.log('🌐 Режим:', isInTelegram ? 'Telegram WebApp' : 'Обычный браузер');
   console.log('🆔 Telegram ID:', telegramId);
-  console.log('👤 Username:', username);
 
-  // === start_param из трёх источников ===
+  // === РЕФЕРАЛЬНАЯ СИСТЕМА ===
+  // Источник 1: Telegram start_param (работает только в Telegram Desktop/мобильном)
   let startParam = null;
-
   if (tg?.initDataUnsafe?.start_param) {
     startParam = tg.initDataUnsafe.start_param;
-    console.log('🔗 start_param (WebApp):', startParam);
+    console.log('🔗 start_param (Telegram):', startParam);
   }
+
+  // Источник 2: URL параметр ?ref=... (работает ВЕЗДЕ — и в браузере, и в Telegram)
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refFromUrl = urlParams.get('ref');
+    if (refFromUrl) {
+      startParam = refFromUrl;
+      console.log('🔗 ref (URL):', refFromUrl);
+    }
+  } catch(e) {}
+
+  // Источник 3: hash #ref=...
   if (!startParam) {
     try {
-      const urlParams = new URLSearchParams(window.location.search);
-      startParam = urlParams.get('startapp') || urlParams.get('tgWebAppStartParam');
-      if (startParam) console.log('🔗 start_param (URL):', startParam);
-    } catch(e) {}
-  }
-  if (!startParam) {
-    try {
-      const match = window.location.hash.match(/startapp=([^&]+)/);
+      const match = window.location.hash.match(/ref=([^&]+)/);
       if (match) {
         startParam = decodeURIComponent(match[1]);
-        console.log('🔗 start_param (hash):', startParam);
+        console.log('🔗 ref (hash):', startParam);
       }
     } catch(e) {}
   }
 
-  if (startParam && startParam.startsWith('ref_')) {
-    const raw = startParam.replace('ref_', '');
-    const lastUnderscore = raw.lastIndexOf('_');
+  // Парсим формат: ref_<ник>_<tg_id> ИЛИ ref_<ник>
+  if (startParam) {
+    let cleanParam = startParam;
+    if (cleanParam.startsWith('ref_')) cleanParam = cleanParam.slice(4);
+
+    const lastUnderscore = cleanParam.lastIndexOf('_');
     let refNick = '';
     let refTgId = null;
 
     if (lastUnderscore > 0) {
-      refNick = raw.slice(0, lastUnderscore);
-      const idPart = raw.slice(lastUnderscore + 1);
-      if (/^\d+$/.test(idPart)) refTgId = parseInt(idPart, 10);
+      const possibleId = cleanParam.slice(lastUnderscore + 1);
+      if (/^\d+$/.test(possibleId)) {
+        refNick = cleanParam.slice(0, lastUnderscore);
+        refTgId = parseInt(possibleId, 10);
+      } else {
+        refNick = cleanParam;
+      }
     } else {
-      refNick = raw;
+      refNick = cleanParam;
     }
+
     refNick = decodeURIComponent(refNick);
 
     if (refNick && /^[a-zA-Z0-9_]+$/.test(refNick)) {
@@ -2509,7 +2527,7 @@ function init() {
       localStorage.setItem('ingsoft_referrer_nickname', refNick);
       console.log('✅ referrer_nickname =', refNick);
     }
-    if (refTgId && refTgId > 0) {
+    if (refTgId && refTgId > 0 && refTgId < 9000000000) {
       referrerId = refTgId;
       localStorage.setItem('ingsoft_referrer_id', String(refTgId));
       console.log('✅ referrer_id =', refTgId);
