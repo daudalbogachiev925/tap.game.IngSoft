@@ -741,6 +741,25 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(255,10
     Приглашено: <span id="refCount" style="color:#ffd700; font-weight:800; font-size:16px;">0</span> друзей
   </div>
 
+  <div style="background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(22,163,74,0.05)); border:1px solid rgba(34,197,94,0.3); border-radius:14px; padding:14px; margin-top:16px;">
+    <div style="font-size:12px; color:#8899aa; margin-bottom:8px;">💰 Заработано всего:</div>
+    <div style="font-size:24px; font-weight:900; color:#22c55e; text-shadow:0 0 15px rgba(34,197,94,0.5);" id="refEarnedTotal">0 IS</div>
+    <div style="font-size:11px; color:#667788; margin-top:4px;">+ Можно забрать: <b style="color:#ffd700;" id="refClaimable">0 IS</b></div>
+  </div>
+
+  <button id="btnClaimRef" onclick="claimReferralReward()" class="btn-buy green" style="width:100%;padding:14px;margin-top:10px;font-size:14px;font-weight:800;" disabled>
+    🎁 Забрать награду
+  </button>
+
+  <div style="font-size:11px; color:#8899aa; margin-top:14px; text-align:center; line-height:1.6;">
+    📊 <b style="color:#ffd700;">Таблица наград:</b><br>
+    1 друг — 100 IS<br>
+    2 друга — 150 IS<br>
+    3-4 друга — по 150 IS<br>
+    5-100 друзей — по 100 IS<br>
+    100+ друзей — по 300 IS
+  </div>
+
   <div style="margin-top:20px; font-size:13px; font-weight:800; color:#4facfe; margin-bottom:8px;">📋 Твои друзья:</div>
   <div id="referralList" style="margin-top:8px; max-height:280px; overflow-y:auto;">
     <p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Загрузка...</p>
@@ -939,11 +958,15 @@ const BOT_SHORT_NAME = 'tap';
 const SUB_REWARD = 50;
 const SUB_PENALTY = 500;
 
+// НОВАЯ ТАБЛИЦА НАГРАД ЗА РЕФЕРАЛОВ:
+// 1 = 100, 2 = 150, 3-4 = 150, 5 = 450, 6-100 = 100, 100+ = 300
 function getReferralReward(friendNumber) {
   if (friendNumber <= 0) return 0;
   if (friendNumber === 1) return 100;
-  if (friendNumber === 2) return 200;
-  if (friendNumber === 3) return 250;
+  if (friendNumber === 2) return 150;
+  if (friendNumber >= 3 && friendNumber <= 4) return 150;
+  if (friendNumber === 5) return 450;
+  if (friendNumber > 5 && friendNumber <= 100) return 100;
   if (friendNumber > 100) return 300;
   return 100;
 }
@@ -1496,7 +1519,7 @@ function showTab(tab) {
   document.getElementById('tabRegister').style.border = isLogin ? '1px solid rgba(79,172,254,0.3)' : 'none';
 }
 
-// РЕГИСТРАЦИЯ — принимает любые символы
+// РЕГИСТРАЦИЯ
 async function doRegister() {
   const login = document.getElementById('regLogin').value.trim();
   const password = document.getElementById('regPassword').value;
@@ -1509,7 +1532,7 @@ async function doRegister() {
   if (!password || password.length < 6) { showToast('Пароль минимум 6 символов'); return; }
   if (!nick || nick.length < 2) { showToast('Никнейм минимум 2 символа'); return; }
   if (!/^[a-zA-Z0-9_]+$/.test(nick)) {
-    showToast('❌ Ник только латиница, цифры и _ (без кириллицы и эмодзи)');
+    showToast('❌ Ник только латиница, цифры и _');
     return;
   }
   if (!phone || phone.length < 10) { showToast('Введи телефон'); return; }
@@ -1556,7 +1579,7 @@ async function doRegister() {
   }
 }
 
-// ВХОД — принимает любые символы
+// ВХОД
 async function doLogin() {
   const login = document.getElementById('loginLogin').value.trim();
   const password = document.getElementById('loginPassword').value;
@@ -1784,34 +1807,84 @@ function loadAchievements() {
   ).join('');
 }
 
-async function loadReferral() {
-  if (!currentToken) return;
+let referralClaimedTotal = 0;
 
-  const myNick = nickname || ('user' + telegramId);
-  const myTgId = (telegramId && telegramId !== 999999999) ? telegramId : '';
+function loadReferralClaimed() {
+  try {
+    const saved = localStorage.getItem('ingsoft_referral_claimed');
+    if (saved) referralClaimedTotal = parseInt(saved, 10) || 0;
+  } catch(e) { referralClaimedTotal = 0; }
+}
 
-  // === Ссылка через САЙТ (работает везде) ===
-  const siteUrl = 'https://daudalbogachiev925.github.io/tap.game.IngSoft/';
-  let refCode = 'ref_' + myNick;
-  if (myTgId) refCode += '_' + myTgId;
+function saveReferralClaimed() {
+  try { localStorage.setItem('ingsoft_referral_claimed', String(referralClaimedTotal)); } catch(e) {}
+}
 
-  const link = siteUrl + '?ref=' + encodeURIComponent(refCode);
+async function claimReferralReward() {
+  if (!currentToken) {
+    showToast('❌ Войди в аккаунт');
+    return;
+  }
 
-  const linkEl = document.getElementById('refLink');
-  if (linkEl) linkEl.textContent = link;
+  const total = getTotalReferralEarnings(myReferrals.length);
+  const available = total - referralClaimedTotal;
+
+  if (available <= 0) {
+    showToast('Нет награды к получению');
+    return;
+  }
 
   try {
-    const resp = await fetch(API_URL + '/referrals?token=' + encodeURIComponent(currentToken));
+    const resp = await fetch(API_URL + '/claim-referral', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        token: currentToken,
+        amount: available
+      })
+    });
     const data = await resp.json();
-    if (data.ok) {
-      myReferrals = data.referrals || [];
-      const cntEl = document.getElementById('refCount');
-      if (cntEl) cntEl.textContent = myReferrals.length;
-      myReferralBonus = getTotalReferralEarnings(myReferrals.length);
-      renderReferralList();
+
+    if (data.success) {
+      referralClaimedTotal += available;
+      saveReferralClaimed();
+      isBalance += available;
+      updateUI();
+      scheduleSave();
+      updateReferralUI();
+      showToast('🎉 Забрано ' + available + ' IS!');
+    } else {
+      showToast('❌ ' + (data.error || 'Ошибка'));
     }
-  } catch (e) {
-    console.error('Ошибка загрузки рефералов:', e);
+  } catch(e) {
+    console.error(e);
+    showToast('❌ Ошибка соединения');
+  }
+}
+
+function updateReferralUI() {
+  const total = getTotalReferralEarnings(myReferrals.length);
+  const available = total - referralClaimedTotal;
+
+  const totalEl = document.getElementById('refEarnedTotal');
+  if (totalEl) totalEl.textContent = total + ' IS';
+
+  const availEl = document.getElementById('refClaimable');
+  if (availEl) availEl.textContent = available + ' IS';
+
+  const btn = document.getElementById('btnClaimRef');
+  if (btn) {
+    if (available > 0) {
+      btn.disabled = false;
+      btn.textContent = '🎁 Забрать ' + available + ' IS';
+      btn.style.opacity = '1';
+      btn.style.cursor = 'pointer';
+    } else {
+      btn.disabled = true;
+      btn.textContent = '🎁 Нет награды';
+      btn.style.opacity = '0.5';
+      btn.style.cursor = 'not-allowed';
+    }
   }
 }
 
@@ -1820,6 +1893,7 @@ function renderReferralList() {
   if (!wrap) return;
   if (!myReferrals.length) {
     wrap.innerHTML = '<p style="text-align:center;color:#667788;font-size:12px;padding:12px;">Ты пока никого не пригласил.<br>Отправь ссылку другу — получишь 100 IS за первого!</p>';
+    updateReferralUI();
     return;
   }
   wrap.innerHTML = myReferrals.map((r, i) => {
@@ -1830,6 +1904,7 @@ function renderReferralList() {
       '<div style="font-size:12px; font-weight:800; color:#ffd700; white-space:nowrap;">+' + reward + ' IS</div>' +
     '</div>';
   }).join('');
+  updateReferralUI();
 }
 
 function copyRefLink() {
@@ -1869,9 +1944,10 @@ function loadReferralBonus() {
   if (!el) return;
   const rows = [
     { range: '1 друг', reward: '+100 IS', need: 1 },
-    { range: '2 друга', reward: '+200 IS', need: 2 },
-    { range: '3 друга', reward: '+250 IS', need: 3 },
-    { range: '4-100 друзей', reward: '+100 IS за каждого', need: 4 },
+    { range: '2 друга', reward: '+150 IS', need: 2 },
+    { range: '3-4 друга', reward: '+150 IS', need: 3 },
+    { range: '5 друзей', reward: '+450 IS', need: 5 },
+    { range: '6-100 друзей', reward: '+100 IS за каждого', need: 6 },
     { range: '100+ друзей', reward: '+300 IS за каждого', need: 100 }
   ];
   el.innerHTML = rows.map((r, i) => {
@@ -2455,6 +2531,31 @@ function forceShowAuth() {
   console.log('✅ Экран авторизации показан принудительно');
 }
 
+async function loadReferral() {
+  if (!currentToken) return;
+  try {
+    const resp = await fetch(API_URL + '/my-referrals?token=' + currentToken);
+    const data = await resp.json();
+    if (data.success) {
+      myReferrals = data.referrals || [];
+      referrerNickname = data.my_referrer?.nickname || null;
+      renderReferralList();
+      loadReferralBonus();
+      const refCountEl = document.getElementById('refCount');
+      if (refCountEl) refCountEl.textContent = myReferrals.length;
+      const linkEl = document.getElementById('refLink');
+      if (linkEl && currentUser && currentUser.nickname) {
+        const base = window.location.origin + window.location.pathname;
+        linkEl.textContent = base + '?ref=' + encodeURIComponent(currentUser.nickname);
+      }
+      return myReferrals;
+    }
+  } catch(e) {
+    console.error('❌ loadReferral error:', e);
+  }
+  return [];
+}
+
 function init() {
   if (tg) {
     try {
@@ -2470,15 +2571,12 @@ function init() {
   console.log('🌐 Режим:', isInTelegram ? 'Telegram WebApp' : 'Обычный браузер');
   console.log('🆔 Telegram ID:', telegramId);
 
-  // === РЕФЕРАЛЬНАЯ СИСТЕМА ===
-  // Источник 1: Telegram start_param (работает только в Telegram Desktop/мобильном)
   let startParam = null;
   if (tg?.initDataUnsafe?.start_param) {
     startParam = tg.initDataUnsafe.start_param;
     console.log('🔗 start_param (Telegram):', startParam);
   }
 
-  // Источник 2: URL параметр ?ref=... (работает ВЕЗДЕ — и в браузере, и в Telegram)
   try {
     const urlParams = new URLSearchParams(window.location.search);
     const refFromUrl = urlParams.get('ref');
@@ -2488,7 +2586,6 @@ function init() {
     }
   } catch(e) {}
 
-  // Источник 3: hash #ref=...
   if (!startParam) {
     try {
       const match = window.location.hash.match(/ref=([^&]+)/);
@@ -2499,7 +2596,6 @@ function init() {
     } catch(e) {}
   }
 
-  // Парсим формат: ref_<ник>_<tg_id> ИЛИ ref_<ник>
   if (startParam) {
     let cleanParam = startParam;
     if (cleanParam.startsWith('ref_')) cleanParam = cleanParam.slice(4);
@@ -2571,6 +2667,8 @@ function init() {
   bindAuthButtons();
   setTimeout(bindAuthButtons, 100);
   setTimeout(bindAuthButtons, 500);
+
+  loadReferralClaimed();
 
   const savedToken = localStorage.getItem('ingsoft_token');
   if (savedToken) {
