@@ -251,17 +251,15 @@ body::after {
 .ref-welcome-btn.secondary { background: transparent; border: 1px solid rgba(139,92,246,0.4); color: #94a3b8; font-size: 13px; padding: 12px; }
 
 /* Чат */
-.chat-tabs { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
-.chat-tab { padding:10px; border-radius:12px; border:1px solid rgba(139,92,246,0.4); background:transparent; color:#94a3b8; font-weight:800; font-size:12px; cursor:pointer; transition: all 0.2s; }
-.chat-tab.active-male { background:linear-gradient(135deg,#8b5cf6,#4facfe); color:#fff; border-color:transparent; }
-.chat-tab.active-female { background:linear-gradient(135deg,#ec4899,#d946ef); color:#fff; border-color:transparent; }
 .chat-messages { flex:1; overflow-y:auto; min-height:300px; max-height:50vh; padding:10px; background:rgba(10,5,24,0.5); border-radius:14px; border:1px solid rgba(139,92,246,0.2); display:flex; flex-direction:column; gap:8px; }
 .chat-msg { display:flex; justify-content:flex-end; }
 .chat-msg.other { justify-content:flex-start; }
 .chat-bubble { max-width:80%; padding:10px 14px; border-radius:14px; }
 .chat-bubble.me { background:linear-gradient(135deg, rgba(139,92,246,0.4), rgba(79,172,254,0.3)); border:1px solid rgba(139,92,246,0.6); }
 .chat-bubble.other { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+.chat-bubble.girl { background:linear-gradient(135deg, rgba(236,72,153,0.4), rgba(217,70,239,0.3)); border:1px solid rgba(236,72,153,0.6); }
 .chat-author { font-size:11px; font-weight:800; color:#a78bfa; margin-bottom:3px; }
+.chat-author.girl { color:#ec4899; }
 .chat-text { font-size:13px; color:#fff; word-wrap:break-word; white-space:pre-wrap; }
 .chat-input-row { display:flex; gap:8px; margin-top:12px; }
 .chat-input-row input { margin:0 !important; text-align:left !important; letter-spacing:0 !important; text-transform:none !important; }
@@ -286,7 +284,6 @@ body::after {
 <body>
 <div class="wave-overlay"></div>
 
-<!-- REF THANKS -->
 <div id="refThanksOverlay" class="ref-thanks-overlay">
   <div class="ref-thanks-card">
     <div class="ref-thanks-emoji">🎉</div>
@@ -301,7 +298,6 @@ body::after {
   </div>
 </div>
 
-<!-- REF WELCOME -->
 <div id="refWelcomeOverlay" class="ref-thanks-overlay">
   <div class="ref-welcome-card">
     <div class="ref-welcome-emoji">👋</div>
@@ -322,7 +318,6 @@ body::after {
   </div>
 </div>
 
-<!-- AUTH -->
 <div id="authScreen" class="reg-screen">
   <div style="text-align:center; max-width:420px; width:100%; padding-top:20px;">
     <div style="background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(139,92,246,0.15)); border: 1px solid rgba(236,72,153,0.4); border-radius: 22px; padding: 18px 32px; margin-bottom: 18px; display: inline-block;">
@@ -362,7 +357,6 @@ body::after {
   </div>
 </div>
 
-<!-- APP -->
 <div class="app" id="app" style="display:none;">
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo"><img src="logo.png" alt="IngSoft" onerror="this.style.display='none'"></div>
@@ -463,7 +457,6 @@ body::after {
   <div class="top-list" id="topList"></div>
 </div>
 
-<!-- MODALS -->
 <div class="modal" id="modal-games"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">⬢ <span>Игры</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
   <div class="games-grid" id="gamesGrid"></div>
@@ -550,16 +543,11 @@ body::after {
   </p>
 </div></div>
 
-<!-- ЧАТ -->
+<!-- ЧАТ (без переключателя — только свой чат) -->
 <div class="modal" id="modal-chat"><div class="modal-content" style="display:flex;flex-direction:column;max-height:88vh;">
   <div class="modal-header">
     <div class="modal-title"><span id="chatTitle">💬 Чат парней</span></div>
     <button class="modal-close" onclick="closeModal('chat')">×</button>
-  </div>
-
-  <div class="chat-tabs" id="chatTabs">
-    <button class="chat-tab" id="chatTabMale" onclick="switchChat('male')">❖ Чат парней</button>
-    <button class="chat-tab" id="chatTabFemale" onclick="switchChat('female')">✿ Чат девчонок</button>
   </div>
 
   <div class="chat-messages" id="chatMessages">
@@ -592,13 +580,11 @@ let isBalance = 0;
 let isTasksDone = [];
 let isBoostMultUntil = 0;
 let isAutoTapUntil = 0;
-let subWasSubscribed = false;
-let subWasPunished = false;
 let claimedQuests=[], claimedPromos=[];
 let nickname=null, phone=null, region=null, fullName=null;
 let gender = null;
 let avatarData=null;
-let autotapLevel=0, lastAutotapClaim=null;
+let autotapLevel=0;
 let passiveIncome=0;
 let walletBalance=0, walletTotal=0;
 let saveTimer=null;
@@ -711,7 +697,7 @@ function fmt(n){
 }
 function showToast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500); }
 
-/* ============ ТОП ============ */
+/* ТОП */
 async function fetchLeaderboardFromServer(){
   try {
     const resp = await fetch(API_URL + '/top?limit=100');
@@ -834,15 +820,14 @@ async function sendHeartbeat(){
   } catch(e) {}
 }
 
-/* ============ ЧАТ ============ */
-let currentChat = 'male';
+/* ============ ЧАТ — только свой чат ============ */
 let chatInterval = null;
 let lastChatMessageId = 0;
 
 function openChatModal(){
-  currentChat = (gender === 'female') ? 'female' : 'male';
   document.getElementById('modal-chat').classList.add('active');
-  renderChatTabs();
+  // Заголовок зависит от пола
+  document.getElementById('chatTitle').textContent = (gender === 'female') ? '💬 Чат девчонок' : '💬 Чат парней';
   loadChatMessages(true);
   if (chatInterval) clearInterval(chatInterval);
   chatInterval = setInterval(() => loadChatMessages(false), 3000);
@@ -860,35 +845,20 @@ closeModal = function(name){
   _origCloseModal(name);
   if (name === 'chat') closeChatModal();
 };
-function renderChatTabs(){
-  const maleBtn = document.getElementById('chatTabMale');
-  const femBtn = document.getElementById('chatTabFemale');
-  if (currentChat === 'male') {
-    maleBtn.className = 'chat-tab active-male';
-    femBtn.className = 'chat-tab';
-  } else {
-    femBtn.className = 'chat-tab active-female';
-    maleBtn.className = 'chat-tab';
-  }
-  document.getElementById('chatTitle').textContent = (currentChat === 'female') ? '💬 Чат девчонок' : '💬 Чат парней';
-}
-function switchChat(type){
-  currentChat = type;
-  renderChatTabs();
-  lastChatMessageId = 0;
-  loadChatMessages(true);
-}
+
 async function loadChatMessages(fullReload){
   if (!currentToken) return;
   const box = document.getElementById('chatMessages');
   const warn = document.getElementById('chatWarning');
   try {
-    const url = API_URL + '/get-messages?token=' + encodeURIComponent(currentToken) + '&chat=' + currentChat;
+    // Сервер сам определит чат по полу игрока — chat в query игнорируется
+    const url = API_URL + '/get-messages?token=' + encodeURIComponent(currentToken);
     const r = await fetch(url);
     const d = await r.json();
     if (!d.success) {
       if (d.error) { warn.style.display = 'block'; warn.textContent = '⚠ ' + d.error; }
-      box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Чат доступен только для игроков из Ингушетии</div>';
+      box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">' +
+        (d.error || 'Чат недоступен') + '</div>';
       return;
     }
     warn.style.display = 'none';
@@ -898,12 +868,15 @@ async function loadChatMessages(fullReload){
       return;
     }
     const myName = nickname || firstName;
+    const isFem = (gender === 'female');
     box.innerHTML = msgs.map(m => {
       const isMe = (m.nickname === myName);
       const time = new Date(m.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      const bubbleCls = isMe ? 'me' : (isFem ? 'girl' : 'other');
+      const authorCls = isFem ? 'girl' : '';
       return '<div class="chat-msg '+(isMe?'':'other')+'">' +
-        '<div class="chat-bubble '+(isMe?'me':'other')+'">' +
-          '<div class="chat-author">' + (isMe ? 'Ты' : (m.nickname || 'Игрок')) + ' · ' + time + '</div>' +
+        '<div class="chat-bubble ' + bubbleCls + '">' +
+          '<div class="chat-author ' + authorCls + '">' + (isMe ? 'Ты' : (m.nickname || 'Игрок')) + ' · ' + time + '</div>' +
           '<div class="chat-text">' + escapeHtml(m.text) + '</div>' +
         '</div>' +
       '</div>';
@@ -911,7 +884,9 @@ async function loadChatMessages(fullReload){
     const lastId = msgs[msgs.length - 1]?.id || 0;
     if (fullReload || lastId > lastChatMessageId) box.scrollTop = box.scrollHeight;
     lastChatMessageId = lastId;
-  } catch(e) {}
+  } catch(e) {
+    console.error('Chat load error:', e);
+  }
 }
 async function sendChatMessage(){
   if (!currentToken) { showToast('Войди в аккаунт'); return; }
@@ -927,13 +902,17 @@ async function sendChatMessage(){
     const d = await r.json();
     if (!d.success) { showToast('✗ ' + (d.error || 'Ошибка')); input.value = text; return; }
     loadChatMessages(true);
-  } catch(e) { showToast('✗ Ошибка соединения'); input.value = text; }
+  } catch(e) {
+    showToast('✗ Ошибка соединения');
+    input.value = text;
+    console.error('Chat send error:', e);
+  }
 }
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-/* ============ UI ============ */
+/* UI */
 function openModal(name){
   document.getElementById('modal-' + name)?.classList.add('active');
   if (name === 'quests') loadQuests();
