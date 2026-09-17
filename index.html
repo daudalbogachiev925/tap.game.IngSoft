@@ -47,10 +47,10 @@ body::after {
 .app { display:flex; min-height:100vh; position:relative; z-index:1; }
 
 .sidebar { width:64px; background: linear-gradient(180deg, rgba(10,5,24,0.85) 0%, rgba(15,12,41,0.9) 100%); border-right:1px solid rgba(139,92,246,0.2); padding:10px 0; display:flex; flex-direction:column; gap:6px; position:fixed; left:0; top:0; height:100vh; z-index:500; overflow-y:auto; overflow-x:hidden; backdrop-filter: blur(25px); box-shadow: 4px 0 40px rgba(0,0,0,0.6); }
-.sidebar-logo { padding:12px 4px; text-align:center; background: linear-gradient(135deg, rgba(236,72,153,0.3), rgba(139,92,246,0.4), rgba(79,172,254,0.3)); background-size: 200% 200%; animation: logoAura 6s ease infinite; border-radius: 14px; margin: 4px 8px 12px 8px; box-shadow: 0 0 30px rgba(139,92,246,0.5), inset 0 0 20px rgba(255,255,255,0.08); position: relative; overflow: hidden; }
+.sidebar-logo { padding:12px 4px; text-align:center; background: linear-gradient(135deg, rgba(236,72,153,0.3), rgba(139,92,246,0.4), rgba(79,172,254,0.3)); background-size: 200% 200%; animation: logoAura 6s ease infinite; border-radius: 14px; margin: 4px 8px 12px 8px; box-shadow: 0 0 30px rgba(139,92,246,0.5); position: relative; overflow: hidden; }
 .sidebar-logo img { height:28px; max-width:100%; position: relative; z-index: 1; filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)); transition: transform 0.3s; }
 @keyframes logoAura { 0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;} }
-.sidebar-item { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 2px; cursor:pointer; border-radius:12px; margin:0 8px; transition: all 0.3s; position: relative; overflow: hidden; }
+.sidebar-item { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 2px; cursor:pointer; border-radius:12px; margin:0 8px; transition: all 0.3s; position: relative; }
 .sidebar-item:hover, .sidebar-item:active { background:rgba(139,92,246,0.15); transform: translateX(3px); }
 .sidebar-icon { font-size:18px; line-height:1; }
 .sidebar-label { font-size:8px; color:#94a3b8; margin-top:3px; font-weight:700; text-align:center; white-space:nowrap; }
@@ -119,13 +119,6 @@ body::after {
 .is-shop-item .isi-desc { font-size: 10px; color: #94a3b8; margin-bottom: 8px; }
 .is-shop-item .isi-price { display: inline-block; padding: 5px 12px; background: linear-gradient(135deg, #ffd700, #ff8c00); color: #0a0518; font-weight: 900; font-size: 12px; border-radius: 10px; }
 .btn-is { background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; color: #0a0518; padding: 9px 16px; border-radius: 12px; cursor: pointer; font-weight: 900; font-size: 12px; white-space: nowrap; }
-.is-tasks-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-.is-task { display: flex; align-items: center; gap: 12px; padding: 14px; background: linear-gradient(145deg, rgba(255,215,0,0.08), rgba(15,12,41,0.6)); border: 1px solid rgba(255,215,0,0.2); border-radius: 16px; }
-.is-task-icon { font-size: 28px; flex-shrink: 0; }
-.is-task-info { flex: 1; min-width: 0; }
-.is-task-name { font-size: 13px; font-weight: 700; }
-.is-task-desc { font-size: 11px; color: #94a3b8; margin-top: 3px; }
-.is-task-reward { font-size: 12px; color: #ffd700; font-weight: 800; margin-top: 3px; }
 
 .slideshow { position: relative; margin: 18px; height: 190px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(139,92,246,0.4); background: #0a0518; }
 .slide { position: absolute; inset: 0; background-size: cover; background-position: center; border-radius: 20px; opacity: 0; transform: translateX(100%) scale(0.7); transition: all 0.9s; }
@@ -190,23 +183,13 @@ body::after {
 .item-info { flex:1; min-width:0; }
 .item-name { font-size:14px; font-weight:700; margin-bottom:3px; }
 .item-desc { font-size:11px; color:#64748b; }
-.item-reward { font-size:11px; color:#a78bfa; margin-top:3px; font-weight:700; }
 .btn-buy { background:linear-gradient(135deg,#8b5cf6,#4facfe); border:none; color:#fff; padding:9px 16px; border-radius:12px; cursor:pointer; font-weight:800; font-size:12px; white-space:nowrap; transition: all 0.25s; }
 .btn-buy:disabled { opacity:0.35; cursor:not-allowed; }
 .btn-buy.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
 .btn-buy.gold { background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0518; }
-.btn-buy.blue { background:linear-gradient(135deg,#4facfe,#2563eb); }
 
-.games-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
 .game-card { background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.6)); border: 1px solid rgba(139,92,246,0.25); border-radius: 20px; padding: 24px 12px; text-align: center; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.game-card:hover { transform: translateY(-4px); }
-.game-card-icon { font-size: 48px; }
-.game-card-name { font-size: 14px; font-weight: 800; }
-.game-card-desc { font-size: 11px; color: #94a3b8; }
-.game-area { background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.6)); border:1px solid rgba(139,92,246,0.25); border-radius:20px; padding:26px; text-align:center; margin-bottom:16px; min-height:250px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.game-result { font-size:32px; font-weight:900; margin:16px 0; color:#fff; }
-.dice { font-size:80px; margin:16px 0; }
-.roulette-wheel { width:200px; height:200px; border-radius:50%; background:conic-gradient(#0d1a2e 0deg 60deg,#8b5cf6 60deg 120deg,#ec4899 120deg 180deg,#4facfe 180deg 240deg,#22c55e 240deg 300deg,#ffd700 300deg 360deg); margin:16px auto; border:4px solid #e0e7ff; transition:transform 3s; }
+.games-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
 
 .profile-avatar { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6,#4facfe); display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:900; color:white; margin:0 auto 18px; background-size: cover; background-position: center; }
 .profile-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(139,92,246,0.12); font-size:13px; }
@@ -216,7 +199,6 @@ body::after {
 .daily-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px; }
 .daily-day { aspect-ratio:1; background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.5)); border:1px solid rgba(139,92,246,0.25); border-radius:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:9px; color:#94a3b8; padding:4px; }
 .daily-day.claimed { background:linear-gradient(145deg, rgba(139,92,246,0.3), rgba(139,92,246,0.08)); border-color:#8b5cf6; color:#a78bfa; }
-.daily-day.today { background:linear-gradient(145deg, rgba(236,72,153,0.3), rgba(139,92,246,0.2)); border-color:#ec4899; color:white; }
 .daily-reward { font-size:12px; font-weight:900; color:#a78bfa; margin-top:2px; }
 
 .achieve-item { display:flex; align-items:center; gap:12px; padding:14px; background: linear-gradient(145deg, rgba(139,92,246,0.12), rgba(15,12,41,0.5)); border-radius:16px; margin-bottom:6px; border:1px solid rgba(139,92,246,0.2); }
@@ -268,15 +250,22 @@ body::after {
 .ref-welcome-btn { width: 100%; background: linear-gradient(135deg, #22c55e, #16a34a); border: none; color: #fff; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 900; cursor: pointer; margin-bottom: 10px; }
 .ref-welcome-btn.secondary { background: transparent; border: 1px solid rgba(139,92,246,0.4); color: #94a3b8; font-size: 13px; padding: 12px; }
 
-.lb-stats { display: flex; justify-content: space-around; align-items: center; margin-bottom: 16px; padding: 12px; background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(15,12,41,0.5)); border: 1px solid rgba(34,197,94,0.2); border-radius: 14px; font-size: 12px; font-weight: 700; gap: 8px; flex-wrap: wrap; }
-.lb-stats .lb-stat-item { display: flex; align-items: center; gap: 5px; }
-.lb-stats .lb-online { color: #22c55e; }
-.lb-stats .lb-offline { color: #94a3b8; }
-.lb-stats .lb-total { color: #a78bfa; }
-.lb-pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 16px; }
-.lb-pagination button { background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(30,58,95,0.3)); border: 1px solid rgba(139,92,246,0.4); color: #e0e7ff; padding: 8px 16px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; }
-.lb-pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
-.lb-pagination .lb-page-info { color: #94a3b8; font-size: 12px; padding: 0 8px; }
+/* Чат */
+.chat-tabs { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; }
+.chat-tab { padding:10px; border-radius:12px; border:1px solid rgba(139,92,246,0.4); background:transparent; color:#94a3b8; font-weight:800; font-size:12px; cursor:pointer; transition: all 0.2s; }
+.chat-tab.active-male { background:linear-gradient(135deg,#8b5cf6,#4facfe); color:#fff; border-color:transparent; }
+.chat-tab.active-female { background:linear-gradient(135deg,#ec4899,#d946ef); color:#fff; border-color:transparent; }
+.chat-messages { flex:1; overflow-y:auto; min-height:300px; max-height:50vh; padding:10px; background:rgba(10,5,24,0.5); border-radius:14px; border:1px solid rgba(139,92,246,0.2); display:flex; flex-direction:column; gap:8px; }
+.chat-msg { display:flex; justify-content:flex-end; }
+.chat-msg.other { justify-content:flex-start; }
+.chat-bubble { max-width:80%; padding:10px 14px; border-radius:14px; }
+.chat-bubble.me { background:linear-gradient(135deg, rgba(139,92,246,0.4), rgba(79,172,254,0.3)); border:1px solid rgba(139,92,246,0.6); }
+.chat-bubble.other { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); }
+.chat-author { font-size:11px; font-weight:800; color:#a78bfa; margin-bottom:3px; }
+.chat-text { font-size:13px; color:#fff; word-wrap:break-word; white-space:pre-wrap; }
+.chat-input-row { display:flex; gap:8px; margin-top:12px; }
+.chat-input-row input { margin:0 !important; text-align:left !important; letter-spacing:0 !important; text-transform:none !important; }
+.chat-warning { display:none; color:#e63946; font-size:12px; text-align:center; margin-top:8px; }
 
 @media (max-width: 480px) {
   .sidebar { width:54px; } .sidebar-label { font-size:6px; } .main { margin-left:54px; }
@@ -285,10 +274,6 @@ body::after {
   .score-big { font-size:56px; } .tap-button { width:190px; height:190px; font-size:28px; }
   .quick-actions { grid-template-columns:repeat(2,1fr); padding:0 12px; }
   .modal-content { padding:18px; border-radius:24px 24px 0 0; }
-  .player-stats-bar { font-size: 11px; padding: 8px 10px; }
-}
-@media (min-width: 768px) {
-  .modal-content { border-radius:28px; margin:auto; } .modal { align-items:center; }
 }
 @media (min-width: 1100px) {
   .sidebar { width:190px; }
@@ -296,16 +281,12 @@ body::after {
   .sidebar-label { font-size:13px; margin-top:0; }
   .main { max-width:900px; margin:0 auto; padding-left:190px; }
 }
-
-body.theme-female { --ing-gold:#ffb6d9; }
-body.theme-female::before { background: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(236,72,153,0.4), transparent 55%), radial-gradient(ellipse 100% 60% at 100% 100%, rgba(217,70,239,0.3), transparent 55%), linear-gradient(180deg, #1a0518 0%, #2a0a35 25%, #3d1450 60%, #1a0518 100%); }
-body.theme-female .tap-button { background: conic-gradient(from 0deg, #ff69b4, #d946ef, #ffb6d9, #ec4899, #ff69b4); }
-body.theme-female .header-nick { color: #ffd9ec; }
 </style>
 </head>
 <body>
 <div class="wave-overlay"></div>
 
+<!-- REF THANKS -->
 <div id="refThanksOverlay" class="ref-thanks-overlay">
   <div class="ref-thanks-card">
     <div class="ref-thanks-emoji">🎉</div>
@@ -320,6 +301,7 @@ body.theme-female .header-nick { color: #ffd9ec; }
   </div>
 </div>
 
+<!-- REF WELCOME -->
 <div id="refWelcomeOverlay" class="ref-thanks-overlay">
   <div class="ref-welcome-card">
     <div class="ref-welcome-emoji">👋</div>
@@ -340,6 +322,7 @@ body.theme-female .header-nick { color: #ffd9ec; }
   </div>
 </div>
 
+<!-- AUTH -->
 <div id="authScreen" class="reg-screen">
   <div style="text-align:center; max-width:420px; width:100%; padding-top:20px;">
     <div style="background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(139,92,246,0.15)); border: 1px solid rgba(236,72,153,0.4); border-radius: 22px; padding: 18px 32px; margin-bottom: 18px; display: inline-block;">
@@ -379,6 +362,7 @@ body.theme-female .header-nick { color: #ffd9ec; }
   </div>
 </div>
 
+<!-- APP -->
 <div class="app" id="app" style="display:none;">
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo"><img src="logo.png" alt="IngSoft" onerror="this.style.display='none'"></div>
@@ -429,11 +413,6 @@ body.theme-female .header-nick { color: #ffd9ec; }
   <div class="energy-text" id="energyText">500 / 500</div>
 </div>
 
-<div class="energy-bar" style="background:rgba(255,215,0,0.1);border-color:rgba(255,215,0,0.3);">
-  <div class="energy-fill" id="tapLimitFill" style="width:0%;background:linear-gradient(90deg,#ff8c00,#ffd700);"></div>
-  <div class="energy-text" id="tapLimitText">Тапы: 0 / 20 000</div>
-</div>
-
 <div class="quick-actions">
   <button class="quick-btn" onclick="openModal('quests')"><span class="quick-icon">✦</span>Квесты</button>
   <button class="quick-btn" onclick="openModal('boosts')"><span class="quick-icon">⚡</span>Бусты</button>
@@ -476,7 +455,7 @@ body.theme-female .header-nick { color: #ffd9ec; }
 <div class="top-panel">
   <div class="top-panel-header">
     <div>
-      <div class="top-panel-title" id="topPanelTitle">♛ Топ-10 игроков</div>
+      <div class="top-panel-title" id="topPanelTitle">♛ Топ-5 игроков</div>
       <div class="top-panel-sub">Лучшие тапальщики IngSoft</div>
     </div>
     <button class="btn-buy" style="padding:7px 14px;font-size:11px;" onclick="openModal('leaderboard')">Все</button>
@@ -484,6 +463,7 @@ body.theme-female .header-nick { color: #ffd9ec; }
   <div class="top-list" id="topList"></div>
 </div>
 
+<!-- MODALS -->
 <div class="modal" id="modal-games"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">⬢ <span>Игры</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
   <div class="games-grid" id="gamesGrid"></div>
@@ -545,7 +525,7 @@ body.theme-female .header-nick { color: #ffd9ec; }
 <div class="modal" id="modal-isTasks"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">◈ <span>Заработать IS</span></div><button class="modal-close" onclick="closeModal('isTasks')">×</button></div>
   <p style="color:#b8a060;font-size:12px;text-align:center;margin-bottom:16px;">Выполняй задания — получай IS</p>
-  <div id="isTasksList" class="is-tasks-grid"></div>
+  <div id="isTasksList"></div>
 </div></div>
 
 <div class="modal" id="modal-promo"><div class="modal-content">
@@ -568,6 +548,30 @@ body.theme-female .header-nick { color: #ffd9ec; }
   <p style="color:#cbd5e1;line-height:1.8;font-size:13px;">
     <b style="color:#ec4899;">IngSoft Tap</b> — тапалка внутри Telegram.
   </p>
+</div></div>
+
+<!-- ЧАТ -->
+<div class="modal" id="modal-chat"><div class="modal-content" style="display:flex;flex-direction:column;max-height:88vh;">
+  <div class="modal-header">
+    <div class="modal-title"><span id="chatTitle">💬 Чат парней</span></div>
+    <button class="modal-close" onclick="closeModal('chat')">×</button>
+  </div>
+
+  <div class="chat-tabs" id="chatTabs">
+    <button class="chat-tab" id="chatTabMale" onclick="switchChat('male')">❖ Чат парней</button>
+    <button class="chat-tab" id="chatTabFemale" onclick="switchChat('female')">✿ Чат девчонок</button>
+  </div>
+
+  <div class="chat-messages" id="chatMessages">
+    <div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>
+  </div>
+
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" class="promo-input" placeholder="Напиши сообщение..." maxlength="500" onkeydown="if(event.key==='Enter')sendChatMessage()">
+    <button class="btn-buy" onclick="sendChatMessage()" style="padding:14px 20px;font-size:14px;">➤</button>
+  </div>
+
+  <div class="chat-warning" id="chatWarning"></div>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -637,8 +641,16 @@ const PROMOS = {
 const DAILY_REWARDS = [{coins:100},{coins:200},{coins:300},{coins:500},{coins:1000},{coins:2000},{coins:5000}];
 
 const IS_SHOP = [
-  { id:'unlim15', icon:'∞', name:'Безлимит 15м', price:100, apply:()=>{ unlimitedUntil = Date.now()+15*60*1000; } },
-  { id:'energy', icon:'⚡', name:'Полная энергия', price:50, apply:()=>{ energy = maxEnergy; } },
+  { id:'unlim5',    icon:'∞', name:'Безлимит 5 мин',      desc:'Тапай без лимита', price:250, apply:()=>{ unlimitedUntil = Date.now()+5*60*1000; } },
+  { id:'energy',    icon:'⚡', name:'Полная энергия',      desc:'Мгновенно',        price:50,  apply:()=>{ energy = maxEnergy; } },
+  { id:'tap5000',   icon:'↟', name:'+5 000 тапов',         desc:'К дневной норме',  price:100, apply:()=>{ dailyTapLimit += 5000; } },
+  { id:'tap25000',  icon:'↟', name:'+25 000 тапов',        desc:'К дневной норме',  price:300, apply:()=>{ dailyTapLimit += 25000; } },
+  { id:'auto1',     icon:'◉', name:'Автоклик +1/сек',      desc:'Пассивный доход',  price:2000,  apply:()=>{ autotapLevel += 1; } },
+  { id:'auto2',     icon:'◉', name:'Автоклик +2/сек',      desc:'Пассивный доход',  price:4000,  apply:()=>{ autotapLevel += 2; } },
+  { id:'auto3',     icon:'◉', name:'Автоклик +3/сек',      desc:'Пассивный доход',  price:7000,  apply:()=>{ autotapLevel += 3; } },
+  { id:'auto5',     icon:'◉', name:'Автоклик +5/сек',      desc:'Пассивный доход',  price:15000, apply:()=>{ autotapLevel += 5; } },
+  { id:'auto7',     icon:'◉', name:'Автоклик +7/сек',      desc:'Пассивный доход',  price:25000, apply:()=>{ autotapLevel += 7; } },
+  { id:'auto10',    icon:'◉', name:'Автоклик +10/сек',     desc:'Максимальный буст',price:50000, apply:()=>{ autotapLevel += 10; } },
 ];
 
 function getReferralReward(n){
@@ -650,7 +662,6 @@ function getReferralReward(n){
   if (n>5&&n<=100) return 100;
   return 300;
 }
-function getTotalReferralEarnings(c){ let t=0; for(let i=1;i<=c;i++) t+=getReferralReward(i); return t; }
 
 const QUESTS = [
   { id:'tap100', name:'✦ Первые шаги', desc:'100 тапов', reward:100, check:()=>totalTaps>=100 },
@@ -722,7 +733,6 @@ async function fetchLeaderboardFromServer(){
   } catch(e) {}
   return false;
 }
-
 function mergeSelfIntoLeaderboard(){
   if (!nickname && !firstName) return;
   const myName = nickname || firstName;
@@ -731,29 +741,12 @@ function mergeSelfIntoLeaderboard(){
   if (idx === -1) leaderboardCache.push(myObj);
   else leaderboardCache[idx] = Object.assign({}, leaderboardCache[idx], myObj);
 }
-
-function recomputeOnlineOffline(){
-  const now = Date.now();
-  let online = 0, offline = 0;
-  leaderboardCache.forEach(p => {
-    const isOn = (now - (p.last_seen||0)) < ONLINE_WINDOW_MS;
-    p.online = isOn;
-    if (isOn) online++; else offline++;
-  });
-  leaderboardOnlineCount = online;
-  leaderboardOfflineCount = offline;
-  leaderboardTotalCount = leaderboardCache.length;
-}
-
 function getSortedLeaderboard(){
   mergeSelfIntoLeaderboard();
-  recomputeOnlineOffline();
-  return [...leaderboardCache].sort((a,b) => {
-    if (b.score !== a.score) return b.score - a.score;
-    return (a.last_seen||0) - (b.last_seen||0);
-  });
+  const now = Date.now();
+  leaderboardCache.forEach(p => p.online = (now - (p.last_seen||0)) < ONLINE_WINDOW_MS);
+  return [...leaderboardCache].sort((a,b) => (b.score - a.score) || ((a.last_seen||0) - (b.last_seen||0)));
 }
-
 async function refreshLeaderboard(){
   await fetchLeaderboardFromServer();
   const sorted = getSortedLeaderboard();
@@ -763,15 +756,11 @@ async function refreshLeaderboard(){
   renderTop10(sorted);
   updatePlayerStatsBar();
   updateHeaderRank();
-  if (document.getElementById('modal-leaderboard').classList.contains('active')) {
-    renderFullLeaderboard(sorted);
-  }
+  if (document.getElementById('modal-leaderboard').classList.contains('active')) renderFullLeaderboard(sorted);
 }
-
 function renderTop10(sorted){
-  const el = document.getElementById('topList');
-  if (!el) return;
-  const top10 = sorted.slice(0, 10);
+  const el = document.getElementById('topList'); if (!el) return;
+  const top10 = sorted.slice(0, 5);
   if (top10.length === 0) { el.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Пока нет игроков</div>'; return; }
   const myName = nickname || firstName;
   el.innerHTML = top10.map((p, i) => {
@@ -788,47 +777,39 @@ function renderTop10(sorted){
     '</div>';
   }).join('');
 }
-
 function renderFullLeaderboard(sorted){
-  const el = document.getElementById('leaderList');
-  if (!el) return;
+  const el = document.getElementById('leaderList'); if (!el) return;
   const MAX = 100;
   const limited = sorted.slice(0, MAX);
   const totalPages = Math.max(1, Math.ceil(limited.length / LEADERBOARD_PAGE_SIZE));
   const page = Math.min(leaderboardPage, totalPages - 1);
   const items = limited.slice(page * LEADERBOARD_PAGE_SIZE, (page + 1) * LEADERBOARD_PAGE_SIZE);
   const myName = nickname || firstName;
-  let html = '<div class="lb-stats">' +
-    '<div class="lb-stat-item lb-online">🟢 Онлайн: '+leaderboardOnlineCount+'</div>' +
-    '<div class="lb-stat-item lb-offline">⚫ Оффлайн: '+leaderboardOfflineCount+'</div>' +
-    '<div class="lb-stat-item lb-total">👥 Всего: '+leaderboardTotalCount+'</div>' +
+  let html = '<div style="display:flex;justify-content:space-around;margin-bottom:16px;padding:12px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);border-radius:14px;font-size:12px;font-weight:700;gap:8px;">' +
+    '<div style="color:#22c55e;">🟢 Онлайн: '+leaderboardOnlineCount+'</div>' +
+    '<div style="color:#94a3b8;">⚫ Оффлайн: '+leaderboardOfflineCount+'</div>' +
+    '<div style="color:#a78bfa;">👥 Всего: '+leaderboardTotalCount+'</div>' +
   '</div>';
   if (items.length === 0) { html += '<div style="text-align:center;padding:30px;color:#64748b;">Пока нет игроков</div>'; el.innerHTML = html; return; }
   html += '<div style="display:flex;flex-direction:column;gap:6px;">';
   items.forEach((p, i) => {
-    const globalRank = page * LEADERBOARD_PAGE_SIZE + i + 1;
-    const cls = globalRank === 1 ? 'rank-1' : globalRank === 2 ? 'rank-2' : globalRank === 3 ? 'rank-3' : '';
+    const gr = page * LEADERBOARD_PAGE_SIZE + i + 1;
+    const cls = gr === 1 ? 'rank-1' : gr === 2 ? 'rank-2' : gr === 3 ? 'rank-3' : '';
     const isYou = p.nickname === myName;
-    const youBadge = isYou ? '<span class="top-you">ТЫ</span>' : '';
     const av = p.avatar_data ? '<div class="top-avatar" style="background-image:url('+p.avatar_data+');"></div>' : '<div class="top-avatar">'+(p.nickname?p.nickname[0].toUpperCase():'?')+'</div>';
     const dot = '<span class="online-dot'+(p.online?' online':'')+'"></span>';
-    html += '<div class="top-row '+cls+'" style="'+(isYou?'border-color:rgba(236,72,153,0.6);background:linear-gradient(90deg,rgba(236,72,153,0.15),rgba(139,92,246,0.1));':'')+'">' +
-      '<div class="top-rank">'+globalRank+'</div>' + av +
-      '<div class="top-name">'+dot+(p.nickname||'Игрок')+youBadge+'</div>' +
-      '<div class="top-score">'+fmt(p.score)+'</div>' +
-    '</div>';
+    html += '<div class="top-row '+cls+'"><div class="top-rank">'+gr+'</div>'+av+'<div class="top-name">'+dot+(p.nickname||'Игрок')+(isYou?'<span class="top-you">ТЫ</span>':'')+'</div><div class="top-score">'+fmt(p.score)+'</div></div>';
   });
   html += '</div>';
   if (totalPages > 1) {
-    html += '<div class="lb-pagination">' +
-      '<button '+(page===0?'disabled':'')+' onclick="changeLeaderboardPage(-1)">← Назад</button>' +
-      '<span class="lb-page-info">Стр. '+(page+1)+' / '+totalPages+'</span>' +
-      '<button '+(page>=totalPages-1?'disabled':'')+' onclick="changeLeaderboardPage(1)">Далее →</button>' +
+    html += '<div style="display:flex;justify-content:center;gap:8px;margin-top:16px;">' +
+      '<button class="btn-buy" '+(page===0?'disabled':'')+' onclick="changeLeaderboardPage(-1)">← Назад</button>' +
+      '<span style="color:#94a3b8;font-size:12px;padding:10px;">Стр. '+(page+1)+' / '+totalPages+'</span>' +
+      '<button class="btn-buy" '+(page>=totalPages-1?'disabled':'')+' onclick="changeLeaderboardPage(1)">Далее →</button>' +
     '</div>';
   }
   el.innerHTML = html;
 }
-
 function changeLeaderboardPage(dir){
   leaderboardPage += dir;
   if (leaderboardPage < 0) leaderboardPage = 0;
@@ -837,27 +818,119 @@ function changeLeaderboardPage(dir){
   if (leaderboardPage >= totalPages) leaderboardPage = totalPages - 1;
   renderFullLeaderboard(sorted);
 }
-
 function updatePlayerStatsBar(){
   const o = document.getElementById('psOnline'); if (o) o.textContent = leaderboardOnlineCount;
   const f = document.getElementById('psOffline'); if (f) f.textContent = leaderboardOfflineCount;
   const t = document.getElementById('psTotal'); if (t) t.textContent = leaderboardTotalCount;
 }
-
 function updateHeaderRank(){
   const el = document.getElementById('headerRank');
   if (el) el.textContent = myGlobalRank ? '#' + myGlobalRank : '—';
 }
-
 async function sendHeartbeat(){
   if (!currentToken) return;
   try {
-    await fetch(API_URL + '/heartbeat', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ token: currentToken, score: score })
-    });
+    await fetch(API_URL + '/heartbeat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ token: currentToken, score: score }) });
   } catch(e) {}
+}
+
+/* ============ ЧАТ ============ */
+let currentChat = 'male';
+let chatInterval = null;
+let lastChatMessageId = 0;
+
+function openChatModal(){
+  currentChat = (gender === 'female') ? 'female' : 'male';
+  document.getElementById('modal-chat').classList.add('active');
+  renderChatTabs();
+  loadChatMessages(true);
+  if (chatInterval) clearInterval(chatInterval);
+  chatInterval = setInterval(() => loadChatMessages(false), 3000);
+  setTimeout(() => {
+    const box = document.getElementById('chatMessages');
+    if (box) box.scrollTop = box.scrollHeight;
+  }, 200);
+}
+function closeChatModal(){
+  document.getElementById('modal-chat').classList.remove('active');
+  if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+}
+const _origCloseModal = closeModal;
+closeModal = function(name){
+  _origCloseModal(name);
+  if (name === 'chat') closeChatModal();
+};
+function renderChatTabs(){
+  const maleBtn = document.getElementById('chatTabMale');
+  const femBtn = document.getElementById('chatTabFemale');
+  if (currentChat === 'male') {
+    maleBtn.className = 'chat-tab active-male';
+    femBtn.className = 'chat-tab';
+  } else {
+    femBtn.className = 'chat-tab active-female';
+    maleBtn.className = 'chat-tab';
+  }
+  document.getElementById('chatTitle').textContent = (currentChat === 'female') ? '💬 Чат девчонок' : '💬 Чат парней';
+}
+function switchChat(type){
+  currentChat = type;
+  renderChatTabs();
+  lastChatMessageId = 0;
+  loadChatMessages(true);
+}
+async function loadChatMessages(fullReload){
+  if (!currentToken) return;
+  const box = document.getElementById('chatMessages');
+  const warn = document.getElementById('chatWarning');
+  try {
+    const url = API_URL + '/get-messages?token=' + encodeURIComponent(currentToken) + '&chat=' + currentChat;
+    const r = await fetch(url);
+    const d = await r.json();
+    if (!d.success) {
+      if (d.error) { warn.style.display = 'block'; warn.textContent = '⚠ ' + d.error; }
+      box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Чат доступен только для игроков из Ингушетии</div>';
+      return;
+    }
+    warn.style.display = 'none';
+    const msgs = d.messages || [];
+    if (msgs.length === 0) {
+      box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Пока сообщений нет. Напиши первым! 👋</div>';
+      return;
+    }
+    const myName = nickname || firstName;
+    box.innerHTML = msgs.map(m => {
+      const isMe = (m.nickname === myName);
+      const time = new Date(m.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      return '<div class="chat-msg '+(isMe?'':'other')+'">' +
+        '<div class="chat-bubble '+(isMe?'me':'other')+'">' +
+          '<div class="chat-author">' + (isMe ? 'Ты' : (m.nickname || 'Игрок')) + ' · ' + time + '</div>' +
+          '<div class="chat-text">' + escapeHtml(m.text) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    const lastId = msgs[msgs.length - 1]?.id || 0;
+    if (fullReload || lastId > lastChatMessageId) box.scrollTop = box.scrollHeight;
+    lastChatMessageId = lastId;
+  } catch(e) {}
+}
+async function sendChatMessage(){
+  if (!currentToken) { showToast('Войди в аккаунт'); return; }
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  try {
+    const r = await fetch(API_URL + '/send-message', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, text: text })
+    });
+    const d = await r.json();
+    if (!d.success) { showToast('✗ ' + (d.error || 'Ошибка')); input.value = text; return; }
+    loadChatMessages(true);
+  } catch(e) { showToast('✗ Ошибка соединения'); input.value = text; }
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
 /* ============ UI ============ */
@@ -894,8 +967,7 @@ function getTelegramUser(){
 function saveToLocal(){
   if (currentToken && API_URL) {
     fetch(API_URL + '/save-progress', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      method: 'POST', headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         token: currentToken, score, energy, max_energy: maxEnergy, multiplier, level, total_taps: totalTaps,
         is_balance: isBalance, daily_tap_limit: dailyTapLimit, taps_today: tapsToday,
@@ -936,7 +1008,6 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
   updateUI();
   const el = document.getElementById('scoreBig'); if (el) { el.classList.add('pop'); setTimeout(()=>el.classList.remove('pop'),150); }
   scheduleSave();
-  // мгновенно обновляем свою позицию в топе
   if (nickname || firstName) {
     const myName = nickname || firstName;
     const idx = leaderboardCache.findIndex(p => p.nickname === myName);
@@ -947,12 +1018,14 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
 });
 
 function buildSidebar(){
+  const isFem = (gender === 'female');
   const items = [
     { icon:'◈', label:'Главная', action:'closeAllModals' },
     { icon:'⬢', label:'Игры', action:'openModal(\'games\')' },
     { icon:'♛', label:'Топ', action:'openModal(\'leaderboard\')' },
     { icon:'✦', label:'Квесты', action:'openModal(\'quests\')' },
     { icon:'⚡', label:'Бусты', action:'openModal(\'boosts\')' },
+    { icon: isFem?'✿':'❖', label: isFem?'Чат девчонок':'Чат парней', action:'openChatModal()' },
     { icon:'✧', label:'Достижения', action:'openModal(\'achievements\')' },
     { icon:'❖', label:'Друзья', action:'openModal(\'referral\')' },
     { icon:'◈', label:'Награды', action:'openModal(\'daily\')' },
@@ -974,12 +1047,12 @@ const GAMES = [
 
 function loadGames(){
   const el = document.getElementById('gamesGrid');
-  el.innerHTML = GAMES.map(g => '<div class="game-card"><div class="game-card-icon">'+g.icon+'</div><div class="game-card-name">'+g.name+'</div><div class="game-card-desc">'+g.desc+'</div></div>').join('');
+  el.innerHTML = GAMES.map(g => '<div class="game-card"><div style="font-size:48px;">'+g.icon+'</div><div style="font-size:14px;font-weight:800;">'+g.name+'</div><div style="font-size:11px;color:#94a3b8;">'+g.desc+'</div></div>').join('');
 }
 
 function loadISShop(){
   const el = document.getElementById('isShopGrid'); if (!el) return;
-  el.innerHTML = IS_SHOP.map(item => '<div class="is-shop-item" onclick="buyIS(\''+item.id+'\')"><div class="isi-icon">'+item.icon+'</div><div class="isi-name">'+item.name+'</div><div class="isi-price">◈ '+item.price+'</div></div>').join('');
+  el.innerHTML = IS_SHOP.map(item => '<div class="is-shop-item" onclick="buyIS(\''+item.id+'\')"><div class="isi-icon">'+item.icon+'</div><div class="isi-name">'+item.name+'</div><div class="isi-desc">'+item.desc+'</div><div class="isi-price">◈ '+item.price+'</div></div>').join('');
 }
 
 function buyIS(id){
@@ -990,7 +1063,7 @@ function buyIS(id){
   updateUI(); scheduleSave(); loadISShop(); showToast('✓ Куплено');
 }
 
-function loadISTasks(){ const el = document.getElementById('isTasksList'); if (el) el.innerHTML = ''; }
+function loadISTasks(){ const el = document.getElementById('isTasksList'); if (el) el.innerHTML = '<p style="text-align:center;color:#94a3b8;font-size:13px;padding:20px;">Скоро здесь появятся задания</p>'; }
 
 function loadQuests(){
   const el = document.getElementById('questsList');
@@ -1025,7 +1098,7 @@ function loadDaily(){
   let h = '<div class="daily-grid">';
   for (let i = 0; i < 7; i++) {
     const cl = i < (dailyStreak % 7);
-    h += '<div class="daily-day '+(cl?'claimed':'')+'"><div>'+ (cl?'✓':'◈') +'</div><div style="font-size:9px;">Д'+(i+1)+'</div><div class="daily-reward">'+fmt(DAILY_REWARDS[i].coins)+'</div></div>';
+    h += '<div class="daily-day '+(cl?'claimed':'')+'"><div>'+(cl?'✓':'◈')+'</div><div style="font-size:9px;">Д'+(i+1)+'</div><div class="daily-reward">'+fmt(DAILY_REWARDS[i].coins)+'</div></div>';
   }
   h += '</div>';
   if (can) h += '<button class="btn-buy green" style="width:100%;padding:16px;" onclick="claimDaily()">◈ Забрать</button>';
@@ -1095,8 +1168,7 @@ async function loadReferral(){
 }
 
 function showRefThanks(f, a){
-  const o = document.getElementById('refThanksOverlay');
-  if (!o) return;
+  const o = document.getElementById('refThanksOverlay'); if (!o) return;
   document.getElementById('refThanksNick').textContent = f || 'друг';
   document.getElementById('refThanksCounter').textContent = a || 0;
   o.classList.add('show');
@@ -1275,7 +1347,7 @@ function init(){
   if (saved) { currentToken = saved; loadProgressByToken(saved); }
   else { document.getElementById('authScreen').style.display = 'flex'; }
 
-  setInterval(() => { if (score > 0) score += 0; updateUI(); }, 1000);
+  setInterval(() => { updateUI(); }, 1000);
   setInterval(saveToLocal, 5000);
   setInterval(refreshLeaderboard, 3000);
   setInterval(sendHeartbeat, 20000);
