@@ -232,6 +232,31 @@ body::after {
 .top-score { font-size: 13px; font-weight: 800; color: #a78bfa; text-shadow: 0 0 10px rgba(139,92,246,0.5); }
 .top-you { font-size: 10px; color: #ec4899; background: rgba(236,72,153,0.2); padding: 2px 8px; border-radius: 8px; margin-left: 6px; font-weight: 800; }
 
+/* PLAYER STATS BAR */
+.player-stats-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 12px 18px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(15,12,41,0.6));
+  border: 1px solid rgba(34,197,94,0.25);
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.player-stats-bar .ps-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.player-stats-bar .ps-online { color: #22c55e; text-shadow: 0 0 10px rgba(34,197,94,0.5); }
+.player-stats-bar .ps-offline { color: #94a3b8; }
+.player-stats-bar .ps-total { color: #a78bfa; text-shadow: 0 0 10px rgba(139,92,246,0.5); }
+
 /* MODALS */
 .modal { display:none; position:fixed; inset:0; background:rgba(5,2,15,0.92); z-index:2000; align-items:flex-end; justify-content:center; backdrop-filter:blur(15px); }
 .modal.active { display:flex; }
@@ -561,6 +586,67 @@ body::after {
 }
 .ref-welcome-btn.secondary:hover { background: rgba(139,92,246,0.15); color: #fff; }
 
+/* PLAYER STATS IN LEADERBOARD */
+.lb-stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(15,12,41,0.5));
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lb-stats .lb-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.lb-stats .lb-online { color: #22c55e; }
+.lb-stats .lb-offline { color: #94a3b8; }
+.lb-stats .lb-total { color: #a78bfa; }
+
+/* PAGINATION */
+.lb-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.lb-pagination button {
+  background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(30,58,95,0.3));
+  border: 1px solid rgba(139,92,246,0.4);
+  color: #e0e7ff;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.lb-pagination button:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(139,92,246,0.4), rgba(79,172,254,0.3));
+  border-color: rgba(139,92,246,0.8);
+  transform: translateY(-2px);
+}
+.lb-pagination button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.lb-pagination .lb-page-info {
+  color: #94a3b8;
+  font-size: 12px;
+  padding: 0 8px;
+}
+
 /* RESPONSIVE */
 @media (min-width: 768px) {
   .sidebar { width:72px; } .sidebar-icon { font-size:20px; } .sidebar-label { font-size:9px; }
@@ -606,6 +692,8 @@ body::after {
   .ref-thanks-counter-value { font-size: 42px; }
   .ref-welcome-emoji { font-size: 60px; }
   .ref-welcome-title { font-size: 19px; }
+  .player-stats-bar { font-size: 11px; padding: 8px 10px; gap: 6px; }
+  .lb-pagination button { padding: 7px 12px; font-size: 12px; }
 }
 @media (max-width: 360px) {
   .score-big { font-size:46px; } .tap-button { width:170px; height:170px; font-size:24px; } .sidebar { width:48px; } .main { margin-left:48px; } .sidebar-label { font-size:5px; }
@@ -850,6 +938,13 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(236,72
   <div class="slide" style="background-image:url('slide9.jpg')"></div>
   <div class="slide" style="background-image:url('slide10.jpg')"></div>
   <div class="slide-dots" id="slideDots"></div>
+</div>
+
+<!-- ИНФО-ПАНЕЛЬ ИГРОКОВ (онлайн/оффлайн/всего) -->
+<div class="player-stats-bar" id="playerStatsBar">
+  <div class="ps-item ps-online">🟢 Онлайн: <span id="psOnline">—</span></div>
+  <div class="ps-item ps-offline">⚫ Оффлайн: <span id="psOffline">—</span></div>
+  <div class="ps-item ps-total">👥 Всего: <span id="psTotal">—</span></div>
 </div>
 
 <div class="is-balance">
@@ -1224,7 +1319,7 @@ body.theme-female .corner-logo { background: linear-gradient(135deg, rgba(236,72
 </div>
 
 <script>
-// ============ ВЕСЬ JS-КОД ИЗ ПРЕДЫДУЩЕЙ ВЕРСИИ ============
+// ============ НОВАЯ СИСТЕМА ТОПА ============
 const tg = window.Telegram?.WebApp;
 let telegramId=null, username=null, firstName=null;
 let score=0, energy=1000, maxEnergy=1000, multiplier=1;
@@ -1258,6 +1353,16 @@ let myReferrals = [];
 let myUserId = null;
 let myReferralBonus = 0;
 let lastKnownReferralCount = 0;
+
+// === НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ ТОПА ===
+let leaderboardPage = 0;          // текущая страница (0 = 1-10, 1 = 11-20, ...)
+const LEADERBOARD_PAGE_SIZE = 10;
+let totalPlayersCount = 0;
+let onlinePlayersCount = 0;
+let offlinePlayersCount = 0;
+let currentLeaderboardData = [];  // данные текущей страницы
+let totalLeaderboardPlayers = 0;  // всего игроков в БД
+let leaderboardLoaded = false;
 
 try {
   const savedRefNick = localStorage.getItem('ingsoft_referrer_nickname');
@@ -1423,6 +1528,10 @@ function openModal(name) {
   if (name === 'referral-bonus') loadReferralBonus();
   if (name === 'promo') loadPromoHistory();
   if (name === 'games') loadGames();
+  if (name === 'leaderboard') {
+    leaderboardPage = 0;
+    loadFullLeaderboard();
+  }
 }
 function closeModal(name) {
   document.getElementById('modal-' + name)?.classList.remove('active');
@@ -1441,6 +1550,155 @@ function getTelegramUser() {
   }
   telegramId = 999999999; username = 'test_user'; firstName = 'Test';
   return false;
+}
+
+// ============ НОВАЯ ФУНКЦИЯ: ЗАГРУЗКА ТОПА С СЕРВЕРА ============
+async function loadLeaderboardData(page = 0, limit = 10) {
+  try {
+    const offset = page * limit;
+    const resp = await fetch(API_URL + '/leaderboard?offset=' + offset + '&limit=' + limit);
+    const data = await resp.json();
+    if (data.success) {
+      currentLeaderboardData = data.players || [];
+      totalLeaderboardPlayers = data.total || 0;
+      onlinePlayersCount = data.online || 0;
+      offlinePlayersCount = data.offline || 0;
+      totalPlayersCount = data.total || 0;
+      leaderboardLoaded = true;
+      return data;
+    }
+  } catch (e) {
+    console.error('Leaderboard load error:', e);
+  }
+  return null;
+}
+
+// Обновление статистики игроков на главной
+function updatePlayerStatsBar() {
+  const onlineEl = document.getElementById('psOnline');
+  const offlineEl = document.getElementById('psOffline');
+  const totalEl = document.getElementById('psTotal');
+  if (onlineEl) onlineEl.textContent = onlinePlayersCount > 0 ? onlinePlayersCount : '—';
+  if (offlineEl) offlineEl.textContent = offlinePlayersCount > 0 ? offlinePlayersCount : '—';
+  if (totalEl) totalEl.textContent = totalPlayersCount > 0 ? totalPlayersCount : '—';
+}
+
+// Загрузка Топ-10 на главной (только топ-10, без пагинации)
+async function loadTop10() {
+  const el = document.getElementById('topList');
+  if (!el) return;
+  
+  const data = await loadLeaderboardData(0, 10);
+  if (!data || !data.players || data.players.length === 0) {
+    el.innerHTML = '<div style="text-align:center; color:#64748b; font-size:12px; padding:14px;">Пока нет игроков</div>';
+    updatePlayerStatsBar();
+    return;
+  }
+  
+  const players = data.players;
+  // Добавляем себя, если не в топ-10
+  const myIndex = players.findIndex(p => p.nickname === (nickname || firstName));
+  const showSelf = myIndex === -1 && (nickname || firstName) && score > 0;
+  
+  el.innerHTML = players.map((p, i) => {
+    const rank = i + 1;
+    const cls = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
+    const isYou = p.nickname === (nickname || firstName);
+    const youBadge = isYou ? '<span class="top-you">ТЫ</span>' : '';
+    const avatarContent = p.avatar || (p.nickname ? p.nickname[0].toUpperCase() : '?');
+    return '<div class="top-row ' + cls + '">' +
+      '<div class="top-rank">' + rank + '</div>' +
+      '<div class="top-avatar" style="' + (p.avatar_data ? 'background-image:url(' + p.avatar_data + ');' : '') + '">' + avatarContent + '</div>' +
+      '<div class="top-name">' + (p.nickname || 'Игрок') + youBadge + '</div>' +
+      '<div class="top-score">' + fmt(p.score) + '</div>' +
+    '</div>';
+  }).join('');
+  
+  if (showSelf) {
+    el.innerHTML += '<div class="top-row" style="border-color: rgba(236,72,153,0.5); background: linear-gradient(90deg, rgba(236,72,153,0.15), rgba(139,92,246,0.1));">' +
+      '<div class="top-rank" style="background: rgba(236,72,153,0.3);">?</div>' +
+      '<div class="top-avatar">' + (nickname || firstName || '?')[0].toUpperCase() + '</div>' +
+      '<div class="top-name">' + (nickname || firstName) + '<span class="top-you">ТЫ</span></div>' +
+      '<div class="top-score">' + fmt(score) + '</div>' +
+    '</div>';
+  }
+  
+  updatePlayerStatsBar();
+}
+
+// Полная таблица лидеров (модалка) с пагинацией до 100 игроков
+async function loadFullLeaderboard() {
+  const el = document.getElementById('leaderList');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8;">Загрузка...</div>';
+  
+  // Максимум 10 страниц по 10 = 100 игроков
+  const MAX_PAGES = 10;
+  const page = Math.min(leaderboardPage, MAX_PAGES - 1);
+  
+  const data = await loadLeaderboardData(page, LEADERBOARD_PAGE_SIZE);
+  if (!data) {
+    el.innerHTML = '<div style="text-align:center; padding:30px; color:#64748b;">Ошибка загрузки</div>';
+    return;
+  }
+  
+  const players = data.players || [];
+  const total = data.total || 0;
+  const totalPages = Math.min(MAX_PAGES, Math.ceil(total / LEADERBOARD_PAGE_SIZE));
+  
+  // Статистика
+  let html = '<div class="lb-stats">' +
+    '<div class="lb-stat-item lb-online">🟢 Онлайн: ' + (data.online || 0) + '</div>' +
+    '<div class="lb-stat-item lb-offline">⚫ Оффлайн: ' + (data.offline || 0) + '</div>' +
+    '<div class="lb-stat-item lb-total">👥 Всего: ' + total + '</div>' +
+  '</div>';
+  
+  if (players.length === 0) {
+    html += '<div style="text-align:center; padding:30px; color:#64748b;">Пока нет игроков</div>';
+    el.innerHTML = html;
+    return;
+  }
+  
+  // Список игроков
+  html += '<div style="display:flex; flex-direction:column; gap:6px;">';
+  players.forEach((p, i) => {
+    const globalRank = page * LEADERBOARD_PAGE_SIZE + i + 1;
+    const cls = globalRank === 1 ? 'rank-1' : globalRank === 2 ? 'rank-2' : globalRank === 3 ? 'rank-3' : '';
+    const isYou = p.nickname === (nickname || firstName);
+    const youBadge = isYou ? '<span class="top-you">ТЫ</span>' : '';
+    const avatarContent = p.avatar || (p.nickname ? p.nickname[0].toUpperCase() : '?');
+    const onlineDot = p.online ? '🟢' : '⚫';
+    
+    html += '<div class="top-row ' + cls + '" style="' + (isYou ? 'border-color: rgba(236,72,153,0.6); background: linear-gradient(90deg, rgba(236,72,153,0.15), rgba(139,92,246,0.1));' : '') + '">' +
+      '<div class="top-rank">' + globalRank + '</div>' +
+      '<div class="top-avatar" style="' + (p.avatar_data ? 'background-image:url(' + p.avatar_data + ');' : '') + '">' + avatarContent + '</div>' +
+      '<div class="top-name">' + onlineDot + ' ' + (p.nickname || 'Игрок') + youBadge + '</div>' +
+      '<div class="top-score">' + fmt(p.score) + '</div>' +
+    '</div>';
+  });
+  html += '</div>';
+  
+  // Пагинация (максимум 10 страниц)
+  if (totalPages > 1) {
+    html += '<div class="lb-pagination">';
+    html += '<button ' + (page === 0 ? 'disabled' : '') + ' onclick="changeLeaderboardPage(-1)">← Назад</button>';
+    html += '<span class="lb-page-info">Стр. ' + (page + 1) + ' / ' + totalPages + '</span>';
+    html += '<button ' + (page >= totalPages - 1 ? 'disabled' : '') + ' onclick="changeLeaderboardPage(1)">Далее →</button>';
+    html += '</div>';
+  }
+  
+  if (total > MAX_PAGES * LEADERBOARD_PAGE_SIZE) {
+    html += '<div style="text-align:center; color:#64748b; font-size:11px; margin-top:8px;">Показано до ' + (MAX_PAGES * LEADERBOARD_PAGE_SIZE) + ' игроков из ' + total + '</div>';
+  }
+  
+  el.innerHTML = html;
+}
+
+function changeLeaderboardPage(dir) {
+  leaderboardPage += dir;
+  if (leaderboardPage < 0) leaderboardPage = 0;
+  if (leaderboardPage >= 10) leaderboardPage = 9;
+  loadFullLeaderboard();
 }
 
 function saveToLocal() {
@@ -1508,8 +1766,20 @@ function updateUI() {
   document.getElementById('userName').textContent = nickname || firstName || 'Игрок';
   if (!avatarData) document.getElementById('avatar').textContent = (nickname || firstName || '?')[0].toUpperCase();
   const fioEl = document.getElementById('headerFio'); if (fioEl) fioEl.textContent = fullName || region || '—';
-  const rankEl = document.getElementById('headerRank'); if (rankEl) rankEl.textContent = '#' + (Math.floor(Math.random() * 100) + 1);
-  loadTop10();
+  
+  // Ранг из загруженного топа
+  const rankEl = document.getElementById('headerRank');
+  if (rankEl && leaderboardLoaded && currentLeaderboardData.length > 0) {
+    const myRank = currentLeaderboardData.findIndex(p => p.nickname === (nickname || firstName));
+    if (myRank !== -1) {
+      rankEl.textContent = '#' + (leaderboardPage * LEADERBOARD_PAGE_SIZE + myRank + 1);
+    } else {
+      rankEl.textContent = '—';
+    }
+  } else if (rankEl) {
+    rankEl.textContent = '—';
+  }
+  
   loadISShop();
 }
 
@@ -1596,41 +1866,6 @@ const GAMES_FEMALE = [
   { id:'mines', icon:'✦', name:'Подарок', desc:'Открой подарок' },
   { id:'poker', icon:'❋', name:'Плюшевый', desc:'Собери коллекцию' },
 ];
-
-const FAKE_PLAYERS = [
-  { name: 'Джонни', score: 12500000, avatar: 'J' },
-  { name: 'Мария', score: 8900000, avatar: 'M' },
-  { name: 'Алекс', score: 7200000, avatar: 'A' },
-  { name: 'Дауд', score: 6500000, avatar: 'D' },
-  { name: 'Сергей', score: 5400000, avatar: 'S' },
-  { name: 'Иван', score: 4800000, avatar: 'I' },
-  { name: 'Ольга', score: 3500000, avatar: 'O' },
-  { name: 'Максим', score: 2800000, avatar: 'M' },
-  { name: 'Егор', score: 1900000, avatar: 'E' },
-  { name: 'Анна', score: 1200000, avatar: 'A' },
-];
-
-function loadTop10() {
-  const el = document.getElementById('topList');
-  if (!el) return;
-  const players = [...FAKE_PLAYERS];
-  if (nickname && score > 0) {
-    players.push({ name: nickname, score: score, avatar: nickname[0].toUpperCase(), you: true });
-  }
-  players.sort((a, b) => b.score - a.score);
-  const top10 = players.slice(0, 10);
-  el.innerHTML = top10.map((p, i) => {
-    const rank = i + 1;
-    const cls = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : '';
-    const youBadge = p.you ? '<span class="top-you">ТЫ</span>' : '';
-    const av = p.avatarData ? '<div class="top-avatar" style="background-image:url(' + p.avatarData + ');"></div>' : '<div class="top-avatar">' + p.avatar + '</div>';
-    return '<div class="top-row ' + cls + '">' +
-      '<div class="top-rank">' + rank + '</div>' + av +
-      '<div class="top-name">' + p.name + youBadge + '</div>' +
-      '<div class="top-score">' + fmt(p.score) + '</div>' +
-    '</div>';
-  }).join('');
-}
 
 function loadGames() {
   const el = document.getElementById('gamesGrid');
@@ -2118,6 +2353,7 @@ function enterGame() {
     updateUI();
     buildSidebar();
     loadISShop();
+    loadTop10(); // загружаем топ-10 с сервера
     saveToLocal();
     updateRefLink();
     setTimeout(checkNewReferrals, 500);
@@ -2408,6 +2644,8 @@ function logout() {
   walletBalance = 0; walletTotal = 0;
   upgrades = {}; passiveIncome = 0;
   myReferrals = []; myReferralBonus = 0; lastKnownReferralCount = 0;
+  leaderboardLoaded = false;
+  currentLeaderboardData = [];
   document.body.classList.remove('theme-female');
   document.body.classList.remove('theme-male');
   closeAllModals();
@@ -3001,7 +3239,7 @@ function init() {
   setInterval(runPassive, 1000);
   setInterval(regenEnergy, 1000);
   setInterval(saveToLocal, 5000);
-  setInterval(loadTop10, 5000);
+  setInterval(loadTop10, 10000); // обновление топ-10 каждые 10 сек
   setInterval(checkNewReferrals, 10000);
   initSlideshow();
   window.addEventListener('beforeunload', saveToLocal);
