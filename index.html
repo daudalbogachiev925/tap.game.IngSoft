@@ -478,14 +478,9 @@ body::after {
 </div>
 
 <div class="modal" id="modal-games"><div class="modal-content">
-  <div class="modal-header">
-    <div class="modal-title"><span id="chatTitle" class="chat-title-clickable" onclick="toggleChatMembers()">💬 Чат парней</span></div>
-    <button class="modal-close" onclick="closeModal('chat')">×</button>
-  </div>
-
-  <div class="chat-members-list" id="chatMembersList">
-    <div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>
-  </div>
+  <div class="modal-header"><div class="modal-title">⬢ <span>Игры</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
+  <div class="games-grid" id="gamesGrid"></div>
+</div></div>
 
 <div class="modal" id="modal-leaderboard"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">♛ <span>Топ игроков</span></div><button class="modal-close" onclick="closeModal('leaderboard')">×</button></div>
@@ -609,8 +604,12 @@ body::after {
 <!-- ЧАТ (без переключателя — только свой чат) -->
 <div class="modal" id="modal-chat"><div class="modal-content" style="display:flex;flex-direction:column;max-height:88vh;">
   <div class="modal-header">
-    <div class="modal-title"><span id="chatTitle">💬 Чат парней</span></div>
+    <div class="modal-title"><span id="chatTitle" class="chat-title-clickable" onclick="toggleChatMembers()">💬 Чат парней</span></div>
     <button class="modal-close" onclick="closeModal('chat')">×</button>
+  </div>
+
+  <div class="chat-members-list" id="chatMembersList">
+    <div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>
   </div>
 
   <div class="chat-stats-bar" id="chatStatsBar">
