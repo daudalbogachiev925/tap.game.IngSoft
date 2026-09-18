@@ -2171,7 +2171,41 @@ function openSetAdmin(userId, nick, isAdmin, canDel, canKick, canPin, canEdit){
       '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;"><input type="checkbox" id="pa_admin" '+(isAdmin?'checked':'')+'> 🛡 Админ</label>' +
       '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;"><input type="checkbox" id="pa_del" '+(canDel?'checked':'')+'> 🗑 Удалять сообщения</label>' +
       '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;"><input type="checkbox" id="pa_kick" '+(canKick?'checked':'')+'> 🚪 Кикать участников</label>' +
-      '<label style
+      '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;"><input type="checkbox" id="pa_pin" '+(canPin?'checked':'')+'> 📌 Закреплять</label>' +
+      '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;"><input type="checkbox" id="pa_edit" '+(canEdit?'checked':'')+'> ✏ Редактировать</label>' +
+      '<div style="display:flex;gap:6px;margin-top:10px;">' +
+        '<button class="btn-buy green" style="flex:1;padding:8px;font-size:12px;" onclick="saveSetAdmin('+userId+')">💾 Сохранить</button>' +
+        '<button class="btn-buy" style="flex:1;padding:8px;font-size:12px;background:rgba(255,255,255,0.1);" onclick="showGroupMembers()">Отмена</button>' +
+      '</div>' +
+    '</div>';
+  box.innerHTML = html;
+}
+
+async function saveSetAdmin(userId){
+  const isAdmin = document.getElementById('pa_admin').checked;
+  const canDel = document.getElementById('pa_del').checked;
+  const canKick = document.getElementById('pa_kick').checked;
+  const canPin = document.getElementById('pa_pin').checked;
+  const canEdit = document.getElementById('pa_edit').checked;
+  try {
+    const r = await fetch(API_URL + '/groups/set-admin', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        token: currentToken, chat_id: currentGroupId, user_id: userId,
+        is_admin: isAdmin,
+        perms: {
+          can_delete_messages: canDel,
+          can_kick: canKick,
+          can_pin: canPin,
+          can_edit: canEdit
+        }
+      })
+    });
+    const d = await r.json();
+    if (d.success) { showToast('✅ Права сохранены'); showGroupMembers(); }
+    else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
+}
 
 async function addMemberToGroup(){
   if (!currentGroupId) return;
