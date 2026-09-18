@@ -264,6 +264,12 @@ body::after {
 .chat-input-row { display:flex; gap:8px; margin-top:12px; }
 .chat-input-row input { margin:0 !important; text-align:left !important; letter-spacing:0 !important; text-transform:none !important; }
 .chat-warning { display:none; color:#e63946; font-size:12px; text-align:center; margin-top:8px; }
+.context-menu { position: fixed; background: #1a1a2e; border: 1px solid rgba(139,92,246,0.5); border-radius: 12px; padding: 6px; z-index: 9999; min-width: 160px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+.context-menu div { padding: 10px 14px; font-size: 13px; color: #e0e7ff; cursor: pointer; border-radius: 8px; }
+.context-menu div:hover { background: rgba(139,92,246,0.2); }
+.chat-stats-bar { display: flex; justify-content: space-around; gap: 8px; padding: 10px; margin-bottom: 10px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.3); border-radius: 12px; font-size: 11px; font-weight: 700; flex-wrap: wrap; }
+.chat-stats-bar span { color: #a78bfa; }
+
 
 @media (max-width: 480px) {
   .sidebar { width:54px; } .sidebar-label { font-size:6px; } .main { margin-left:54px; }
@@ -593,6 +599,12 @@ body::after {
     <button class="modal-close" onclick="closeModal('chat')">×</button>
   </div>
 
+  <div class="chat-stats-bar" id="chatStatsBar">
+    <span>👥 Всего в игре: <b id="csTotal">0</b></span>
+    <span>💬 Писали в чат: <b id="csChatters">0</b></span>
+    <span>🟢 Онлайн: <b id="csOnline">0</b></span>
+  </div>
+
   <div class="chat-messages" id="chatMessages">
     <div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>
   </div>
@@ -911,11 +923,11 @@ let lastChatMessageId = 0;
 
 function openChatModal(){
   document.getElementById('modal-chat').classList.add('active');
-  // Заголовок зависит от пола
   document.getElementById('chatTitle').textContent = (gender === 'female') ? '💬 Чат девчонок' : '💬 Чат парней';
   loadChatMessages(true);
+  loadChatStats();
   if (chatInterval) clearInterval(chatInterval);
-  chatInterval = setInterval(() => loadChatMessages(false), 3000);
+  chatInterval = setInterval(() => { loadChatMessages(false); loadChatStats(); }, 3000);
   setTimeout(() => {
     const box = document.getElementById('chatMessages');
     if (box) box.scrollTop = box.scrollHeight;
@@ -936,7 +948,6 @@ async function loadChatMessages(fullReload){
   const box = document.getElementById('chatMessages');
   const warn = document.getElementById('chatWarning');
   try {
-    // Сервер сам определит чат по полу игрока — chat в query игнорируется
     const url = API_URL + '/get-messages?token=' + encodeURIComponent(currentToken);
     const r = await fetch(url);
     const d = await r.json();
@@ -959,19 +970,101 @@ async function loadChatMessages(fullReload){
       const time = new Date(m.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
       const bubbleCls = isMe ? 'me' : (isFem ? 'girl' : 'other');
       const authorCls = isFem ? 'girl' : '';
-      return '<div class="chat-msg '+(isMe?'':'other')+'">' +
+      return '<div class="chat-msg '+(isMe?'':'other')+'" data-msg-id="'+m.id+'" data-msg-text="'+escapeHtml(m.text).replace(/"/g,'&quot;')+'">' +
         '<div class="chat-bubble ' + bubbleCls + '">' +
           '<div class="chat-author ' + authorCls + '">' + (isMe ? 'Ты' : (m.nickname || 'Игрок')) + ' · ' + time + '</div>' +
           '<div class="chat-text">' + escapeHtml(m.text) + '</div>' +
         '</div>' +
       '</div>';
     }).join('');
+
+    box.querySelectorAll('.chat-msg').forEach(el => {
+      el.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        showChatContextMenu(e.pageX, e.pageY, el.dataset.msgId, el.dataset.msgText);
+      });
+    });
+
     const lastId = msgs[msgs.length - 1]?.id || 0;
     if (fullReload || lastId > lastChatMessageId) box.scrollTop = box.scrollHeight;
     lastChatMessageId = lastId;
   } catch(e) {
     console.error('Chat load error:', e);
   }
+}
+
+async function loadChatStats(){
+  if (!currentToken) return;
+  try {
+    const r = await fetch(API_URL + '/chat-stats?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (d.success) {
+      const t = document.getElementById('csTotal'); if (t) t.textContent = d.total_players;
+      const ch = document.getElementById('csChatters'); if (ch) ch.textContent = d.unique_chatters;
+      const on = document.getElementById('csOnline'); if (on) on.textContent = d.online_now;
+    }
+  } catch(e) {}
+}
+
+function showChatContextMenu(x, y, msgId, text){
+  document.querySelectorAll('.context-menu').forEach(m => m.remove());
+  const menu = document.createElement('div');
+  menu.className = 'context-menu';
+  menu.style.left = x + 'px';
+  menu.style.top = y + 'px';
+
+  menu.innerHTML = '<div onclick="copyChatText(\''+text.replace(/'/g,"\\'")+'\')">📋 Копировать</div>';
+
+  if (currentUser && currentUser.role === 'admin') {
+    menu.innerHTML += '<div onclick="editChatMessage('+msgId+')">✏ Редактировать</div>';
+    menu.innerHTML += '<div onclick="deleteChatMessage('+msgId+')">🗑 Удалить</div>';
+    menu.innerHTML += '<div onclick="pinChatMessage('+msgId+')">📌 Закрепить</div>';
+  }
+  document.body.appendChild(menu);
+  setTimeout(() => document.addEventListener('click', () => menu.remove(), { once: true }), 10);
+}
+
+function copyChatText(text){
+  navigator.clipboard.writeText(text).then(() => showToast('✓ Скопировано'));
+}
+
+async function deleteChatMessage(id){
+  if (!confirm('Удалить сообщение?')) return;
+  try {
+    const r = await fetch(API_URL + '/delete-message', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, message_id: id })
+    });
+    const d = await r.json();
+    if (d.success) { showToast('🗑 Удалено'); loadChatMessages(true); }
+    else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+async function editChatMessage(id){
+  const newText = prompt('Новый текст:');
+  if (!newText || !newText.trim()) return;
+  try {
+    const r = await fetch(API_URL + '/edit-message', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, message_id: id, text: newText })
+    });
+    const d = await r.json();
+    if (d.success) { showToast('✏ Изменено'); loadChatMessages(true); }
+    else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+async function pinChatMessage(id){
+  try {
+    const r = await fetch(API_URL + '/pin-message', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, message_id: id })
+    });
+    const d = await r.json();
+    if (d.success) showToast('📌 Закреплено');
+    else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
 }
 async function sendChatMessage(){
   if (!currentToken) { showToast('Войди в аккаунт'); return; }
@@ -1146,12 +1239,8 @@ function increaseGameCost(gameId){ GAME_COSTS[gameId] = (GAME_COSTS[gameId] || 0
 function playGame(gameId){
   const g = GAMES.find(x => x.id === gameId);
   if (!g) return;
-  // Открываем новую модалку игры
   const existing = document.getElementById('modal-playing');
   if (existing) existing.remove();
-
-  const cost = getGameCost(gameId);
-  const canPlay = score >= cost;
 
   const modal = document.createElement('div');
   modal.id = 'modal-playing';
@@ -1164,17 +1253,118 @@ function playGame(gameId){
       '</div>' +
       '<div id="gameArea" style="background:linear-gradient(145deg,rgba(139,92,246,0.12),rgba(15,12,41,0.6));border:1px solid rgba(139,92,246,0.25);border-radius:20px;padding:30px;text-align:center;margin-bottom:16px;min-height:280px;display:flex;flex-direction:column;align-items:center;justify-content:center;">' +
         '<div id="gameIcon" style="font-size:100px;line-height:1;transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1);">' + g.icon + '</div>' +
-        '<div id="gameResult" style="font-size:22px;font-weight:900;color:#fff;margin-top:18px;min-height:30px;">Нажми "Играть"</div>' +
+        '<div id="gameResult" style="font-size:22px;font-weight:900;color:#fff;margin-top:18px;min-height:30px;">Введи ставку</div>' +
       '</div>' +
-      '<div style="text-align:center;color:#94a3b8;font-size:12px;margin-bottom:12px;">Стоимость: <b style="color:#ffd700;">' + fmt(cost) + '</b> очков</div>' +
-      '<button class="btn-buy green" style="width:100%;padding:16px;font-size:15px;" onclick="runGame(\''+gameId+'\')" ' + (canPlay ? '' : 'disabled') + '>Играть</button>' +
+      '<div style="margin-bottom:12px;">' +
+        '<input type="number" id="betInput" class="promo-input" placeholder="Ставка (1000 - 1 000 000)" min="1000" max="1000000" style="text-align:center;text-transform:none;letter-spacing:0;">' +
+        '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;justify-content:center;">' +
+          '<button class="btn-buy" onclick="setBet(1000)">1000</button>' +
+          '<button class="btn-buy" onclick="setBet(5000)">5000</button>' +
+          '<button class="btn-buy" onclick="setBet(10000)">10K</button>' +
+          '<button class="btn-buy" onclick="setBet(50000)">50K</button>' +
+          '<button class="btn-buy" onclick="setBet(100000)">100K</button>' +
+          '<button class="btn-buy" onclick="setBet(1000000)">1M</button>' +
+        '</div>' +
+      '</div>' +
+      '<div style="text-align:center;color:#94a3b8;font-size:12px;margin-bottom:12px;">Твой баланс: <b style="color:#ffd700;">' + fmt(score) + '</b></div>' +
+      '<button class="btn-buy green" style="width:100%;padding:16px;font-size:15px;" onclick="runGame(\''+gameId+'\')">Играть</button>' +
     '</div>';
   document.body.appendChild(modal);
+}
+
+function setBet(val){
+  const inp = document.getElementById('betInput');
+  if (inp) inp.value = val;
 }
 
 function closePlaying(){
   const m = document.getElementById('modal-playing');
   if (m) m.remove();
+}
+
+function runGame(gameId){
+  const betInput = document.getElementById('betInput');
+  const bet = parseInt(betInput.value, 10);
+
+  if (isNaN(bet) || bet < 1000 || bet > 1000000) {
+    showToast('Ставка от 1000 до 1 000 000');
+    return;
+  }
+  if (score < bet) {
+    showToast('Недостаточно очков для ставки');
+    return;
+  }
+
+  const iconEl = document.getElementById('gameIcon');
+  const resultEl = document.getElementById('gameResult');
+  if (!iconEl || !resultEl) return;
+
+  // Блокируем кнопку на время игры
+  const playBtn = document.querySelector('#modal-playing .btn-buy.green');
+  if (playBtn) playBtn.disabled = true;
+
+  const emojiSets = {
+    roulette: ['◉','◐','◓','◑','◒'],
+    dice:     ['⚀','⚁','⚂','⚃','⚄','⚅'],
+    coin:     ['○','●'],
+    slots:    ['✿','❀','◆','✦','✧','◉'],
+    basket:   ['◉','◍','◎','●'],
+    mine:     ['◆','◇','◈','◉'],
+    wheel:    ['◉','◍','◎','◐','◑'],
+    darts:    ['◎','◉','⊙','◍'],
+    fishing:  ['◇','◆','◈','◉'],
+    cards:    ['♠','♥','♦','♣'],
+    shells:   ['◐','◑','◒','◓'],
+    craps:    ['◆','◆◆','◆◆◆'],
+    archery:  ['➤','→','⇒','⟹'],
+    penalty:  ['◉','⚽','◎'],
+    basket3:  ['◉','◎','◍'],
+    mines:    ['✸','✹','✺'],
+  };
+  const set = emojiSets[gameId] || ['?'];
+
+  let ticks = 0;
+  const maxTicks = 14;
+  const interval = setInterval(() => {
+    iconEl.textContent = set[Math.floor(Math.random()*set.length)];
+    iconEl.style.transform = 'scale(' + (1 + Math.random()*0.2) + ') rotate(' + (Math.random()*40-20) + 'deg)';
+    ticks++;
+    if (ticks >= maxTicks) {
+      clearInterval(interval);
+
+      // ⚠️ НИЗКИЙ КОЭФФИЦИЕНТ ВЫИГРЫША — 25% (было 35%)
+      const win = Math.random() < 0.25;
+
+      const finalIcon = set[Math.floor(Math.random()*set.length)];
+      iconEl.textContent = finalIcon;
+      iconEl.style.transform = 'scale(1) rotate(0deg)';
+
+      if (win) {
+        // ВЫИГРЫШ x2 — ставка НЕ вычитается, а начисляется bet * 2
+        const reward = bet * 2;
+        score += reward;
+        resultEl.textContent = '🎉 ВЫИГРЫШ x2! +' + fmt(reward);
+        resultEl.style.color = '#22c55e';
+        resultEl.style.textShadow = '0 0 20px rgba(34,197,94,0.9)';
+        iconEl.style.filter = 'drop-shadow(0 0 30px #22c55e)';
+      } else {
+        // ПРОИГРЫШ — только здесь списываем ставку
+        score -= bet;
+        resultEl.textContent = '😢 ПРОИГРЫШ −' + fmt(bet);
+        resultEl.style.color = '#e63946';
+        resultEl.style.textShadow = '0 0 20px rgba(230,57,70,0.9)';
+        iconEl.style.filter = 'drop-shadow(0 0 30px #e63946)';
+      }
+
+      updateUI();
+      scheduleSave();
+
+      setTimeout(() => {
+        if (iconEl) iconEl.style.filter = '';
+        if (playBtn) playBtn.disabled = false;
+      }, 1800);
+    }
+  }, 80);
 }
 
 function runGame(gameId){
@@ -1288,17 +1478,28 @@ function loadQuests(){
     return '<div class="item-row"><div class="item-info"><div class="item-name">'+q.name+'</div><div class="item-desc">'+q.desc+'</div></div>'+btn+'</div>';
   }).join('');
 }
-function claimQuest(id){
+async function claimQuest(id){
   const q = QUESTS.find(x => x.id === id);
   if (!q) { showToast('Квест не найден'); return; }
   if (claimedQuests.includes(id)) { showToast('Уже забрано'); return; }
   if (!q.check()) { showToast('Не выполнено'); return; }
-  score += q.reward;
-  claimedQuests.push(id);
-  updateUI();
-  scheduleSave();
-  showToast('🎉 +' + fmt(q.reward) + ' очков!');
-  loadQuests();
+
+  try {
+    const r = await fetch(API_URL + '/claim-quest', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, quest_id: id, reward: q.reward })
+    });
+    const d = await r.json();
+    if (!d.success) { showToast('✗ ' + (d.error || 'Ошибка')); return; }
+    claimedQuests = d.claimed || claimedQuests.concat(id);
+    score = d.new_score;
+    updateUI();
+    loadQuests();
+    showToast('🎉 +' + fmt(q.reward) + ' очков!');
+  } catch(e) {
+    showToast('✗ Ошибка соединения');
+  }
 }
 
 function loadBoosts(){
@@ -1461,6 +1662,11 @@ async function doRegister(){
     if (!r.ok || d.error) { showToast('✗ ' + (d.error || 'Ошибка')); return; }
     localStorage.removeItem('ingsoft_referrer_nickname');
     localStorage.removeItem('ingsoft_referrer_id');
+    if (referrerNickname) {
+      showRefWelcome(referrerNickname);
+      isBalance += 500;
+      updateUI();
+    }
     showToast('✅ Регистрация успешна! Теперь войди.');
     showTab('login');
     document.getElementById('loginLogin').value = login;
@@ -1480,6 +1686,7 @@ async function doLogin(){
     if (!r.ok || d.error) { showToast('✗ ' + (d.error || 'Ошибка')); return; }
     const u = d.user;
     currentToken = u.token; currentUser = u; myUserId = u.id;
+    if (u.role) currentUser.role = u.role;
     localStorage.setItem('ingsoft_token', currentToken);
     nickname = u.nickname; gender = u.gender || 'male'; phone = u.phone;
     fullName = u.full_name; region = u.region;
@@ -1524,6 +1731,16 @@ async function checkNewReferrals(){
       if (nl.length > lastKnownReferralCount && lastKnownReferralCount > 0) {
         const nf = nl[nl.length - 1];
         const rw = getReferralReward(nl.length);
+
+        await fetch(API_URL + '/give-referral-reward', {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            referrer_nickname: nickname || firstName,
+            new_user_token: currentToken,
+            amount: rw
+          })
+        }).catch(() => {});
+
         showRefThanks(nf.nickname || 'друг', rw);
         isBalance += rw;
         updateUI(); scheduleSave();
@@ -1553,6 +1770,7 @@ async function loadProgressByToken(token){
       passiveIncome = u.passive_income ?? 0; walletBalance = u.wallet_balance ?? 0;
       walletTotal = u.wallet_total ?? 0; earnedPromocodes = u.earned_promocodes || [];
       myUserId = u.id; currentUser = u;
+      if (u.role) currentUser.role = u.role;
       if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
       enterGame();
       setTimeout(() => { loadReferral().then(() => { lastKnownReferralCount = myReferrals.length; }); }, 800);
