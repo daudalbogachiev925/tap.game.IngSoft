@@ -278,6 +278,16 @@ body::after {
 .chat-title-clickable { cursor: pointer; transition: all 0.2s; user-select: none; }
 .chat-title-clickable:hover { color: #ec4899; }
 .chat-title-clickable::after { content: ' ▾'; font-size: 14px; color: #a78bfa; }
+button, .btn-buy, .quick-btn, .sidebar-item, .header-btn, .game-card, .is-shop-item, .reg-btn, .btn-is, .modal-close {
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(139,92,246,0.25);
+  touch-action: manipulation;
+  transition: transform 0.08s ease, filter 0.15s ease;
+}
+button:active, .btn-buy:active, .quick-btn:active, .header-btn:active, .game-card:active, .is-shop-item:active, .reg-btn:active, .btn-is:active, .modal-close:active {
+  transform: scale(0.95);
+  filter: brightness(1.2);
+}
 
 
 @media (max-width: 480px) {
@@ -594,17 +604,49 @@ body::after {
   </div>
 </div></div>
 
-<div class="modal" id="modal-about"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">ⓘ <span>О игре</span></div><button class="modal-close" onclick="closeModal('about')">×</button></div>
-  <p style="color:#cbd5e1;line-height:1.8;font-size:13px;">
-    <b style="color:#ec4899;">IngSoft Tap</b> — тапалка внутри Telegram.
-  </p>
+<div class="modal" id="modal-groups"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">👥 <span>Мои группы</span></div><button class="modal-close" onclick="closeModal('groups')">×</button></div>
+
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button class="btn-buy green" style="flex:1;padding:12px;font-size:13px;" onclick="createGroup()">+ Создать чат</button>
+    <button class="btn-buy" style="flex:1;padding:12px;font-size:13px;" onclick="joinGroupByCode()">🔗 Войти по коду</button>
+  </div>
+
+  <div id="groupsList" style="max-height:400px;overflow-y:auto;">
+    <p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</p>
+  </div>
 </div></div>
+
+<div class="modal" id="modal-group-chat"><div class="modal-content" style="display:flex;flex-direction:column;max-height:88vh;">
+  <div class="modal-header">
+    <div class="modal-title"><span id="groupChatTitle">👥 Группа</span></div>
+    <button class="modal-close" onclick="closeModal('group-chat')">×</button>
+  </div>
+
+  <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+    <button class="btn-buy" style="font-size:11px;padding:8px 12px;" onclick="showGroupMembers()">👥 Участники</button>
+    <button class="btn-buy" style="font-size:11px;padding:8px 12px;" onclick="addMemberToGroup()">➕ Добавить</button>
+    <button class="btn-buy" style="font-size:11px;padding:8px 12px;" onclick="shareGroupLink()">🔗 Ссылка</button>
+    <button class="btn-buy" style="font-size:11px;padding:8px 12px;background:linear-gradient(135deg,#e63946,#b91c1c);" onclick="leaveGroup()">🚪 Выйти</button>
+  </div>
+
+  <div id="groupMembersBox" style="display:none;flex-direction:column;gap:6px;padding:10px;margin-bottom:10px;background:rgba(10,5,24,0.7);border:1px solid rgba(139,92,246,0.4);border-radius:12px;max-height:220px;overflow-y:auto;"></div>
+
+  <div class="chat-messages" id="groupMessages" style="flex:1;overflow-y:auto;min-height:280px;max-height:50vh;padding:10px;background:rgba(10,5,24,0.5);border-radius:14px;border:1px solid rgba(139,92,246,0.2);display:flex;flex-direction:column;gap:8px;">
+    <div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>
+  </div>
+
+  <div class="chat-input-row">
+    <input type="text" id="groupInput" class="promo-input" placeholder="Сообщение..." maxlength="500" onkeydown="if(event.key==='Enter')sendGroupMessage()">
+    <button class="btn-buy" onclick="sendGroupMessage()" style="padding:14px 20px;font-size:14px;">➤</button>
+  </div>
+</div></div>
+
 
 <!-- ЧАТ (без переключателя — только свой чат) -->
 <div class="modal" id="modal-chat"><div class="modal-content" style="display:flex;flex-direction:column;max-height:88vh;">
   <div class="modal-header">
-    <div class="modal-title"><span id="chatTitle" class="chat-title-clickable" onclick="toggleChatMembers()">💬 Чат парней</span></div>
+    <div class="modal-title"><span id="chatTitle" class="chat-title-clickable" onclick="toggleChatMembers()">💬 Чат</span></div>
     <button class="modal-close" onclick="closeModal('chat')">×</button>
   </div>
 
@@ -1151,6 +1193,7 @@ function escapeHtml(s){
 function openModal(name){
   document.getElementById('modal-' + name)?.classList.add('active');
   if (name === 'promocodes') { switchPromoBrand('ingsoft'); }
+  if (name === 'groups') loadGroupsList();
   if (name === 'quests') loadQuests();
   if (name === 'isTasks') loadISTasks();
   if (name === 'boosts') loadBoosts();
@@ -1166,6 +1209,8 @@ function openModal(name){
 function closeModal(name){
   document.getElementById('modal-' + name)?.classList.remove('active');
   if (name === 'referral' && window._ri) { clearInterval(window._ri); window._ri = null; }
+  if (name === 'group-chat' && groupInterval) { clearInterval(groupInterval); groupInterval = null; }
+
 }
 function closeAllModals(){ document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
 
@@ -1242,6 +1287,7 @@ function buildSidebar(){
     { icon:'⚡', label:'Бусты', action:'openModal(\'boosts\')' },
     { icon: isFem?'✿':'❖', label: isFem?'Чат девчонок':'Чат парней', action:'openChatModal()' },
     { icon:'✧', label:'Достижения', action:'openModal(\'achievements\')' },
+    { icon:'👥', label:'Группы', action:'openModal(\'groups\')' },
     { icon:'❖', label:'Друзья', action:'openModal(\'referral\')' },
     { icon:'◈', label:'Награды', action:'openModal(\'daily\')' },
     { icon:'▤', label:'Статистика', action:'openModal(\'stats\')' },
@@ -1776,6 +1822,23 @@ function enterGame(){
   sendHeartbeat();
   setTimeout(checkNewReferrals, 500);
   setTimeout(checkNewReferrals, 1500);
+  if (window._pendingJoinCode) {
+    setTimeout(async () => {
+      const code = window._pendingJoinCode;
+      window._pendingJoinCode = null;
+      try {
+        const r = await fetch(API_URL + '/groups/join', {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ token: currentToken, invite_code: code })
+        });
+        const d = await r.json();
+        if (d.success) {
+          showToast('✅ Ты присоединился к группе «' + d.name + '»!');
+          try { history.replaceState({}, '', window.location.pathname); } catch(e) {}
+        }
+      } catch(e) {}
+    }, 1500);
+  }
 }
 
 async function checkNewReferrals(){
@@ -1838,9 +1901,217 @@ async function loadProgressByToken(token){
   } catch(e) { return false; }
 }
 
+/* ============ ГРУППОВЫЕ ЧАТЫ ============ */
+let currentGroupId = null;
+let currentGroupName = null;
+let groupInterval = null;
+
+async function loadGroupsList(){
+  const box = document.getElementById('groupsList');
+  if (!box) return;
+  box.innerHTML = '<p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</p>';
+  try {
+    const r = await fetch(API_URL + '/groups/list?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (!d.success || !d.chats || d.chats.length === 0) {
+      box.innerHTML = '<p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">У тебя пока нет групп. Создай первую!</p>';
+      return;
+    }
+    box.innerHTML = d.chats.map(g =>
+      '<div class="item-row" style="cursor:pointer;" onclick="openGroupChat('+g.id+', \''+g.name.replace(/'/g,"\\'")+'\')">' +
+        '<div class="item-info">' +
+          '<div class="item-name">👥 ' + escapeHtml(g.name) + (g.is_owner ? ' 👑' : '') + '</div>' +
+          '<div class="item-desc">Код: ' + g.invite_code + '</div>' +
+        '</div>' +
+        '<button class="btn-buy green" style="pointer-events:none;">Открыть</button>' +
+      '</div>'
+    ).join('');
+  } catch(e) {
+    box.innerHTML = '<p style="text-align:center;color:#e63946;font-size:12px;padding:14px;">Ошибка загрузки</p>';
+  }
+}
+
+async function createGroup(){
+  const name = prompt('Название группы:');
+  if (!name || !name.trim()) return;
+  try {
+    const r = await fetch(API_URL + '/groups/create', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, name: name.trim() })
+    });
+    const d = await r.json();
+    if (d.success) {
+      showToast('✅ Группа создана!');
+      loadGroupsList();
+      openGroupChat(d.chat_id, d.name);
+    } else {
+      showToast('✗ ' + (d.error || 'Ошибка'));
+    }
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+async function joinGroupByCode(){
+  const code = prompt('Введите код приглашения:');
+  if (!code || !code.trim()) return;
+  try {
+    const r = await fetch(API_URL + '/groups/join', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, invite_code: code.trim() })
+    });
+    const d = await r.json();
+    if (d.success) {
+      showToast('✅ Ты в группе!');
+      loadGroupsList();
+      openGroupChat(d.chat_id, d.name);
+    } else {
+      showToast('✗ ' + (d.error || 'Ошибка'));
+    }
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+function openGroupChat(chatId, name){
+  currentGroupId = chatId;
+  currentGroupName = name;
+  document.getElementById('groupChatTitle').textContent = '👥 ' + name;
+  closeModal('groups');
+  document.getElementById('modal-group-chat').classList.add('active');
+  document.getElementById('groupMembersBox').style.display = 'none';
+  loadGroupMessages(true);
+  if (groupInterval) clearInterval(groupInterval);
+  groupInterval = setInterval(() => loadGroupMessages(false), 3000);
+}
+
+async function loadGroupMessages(scroll){
+  if (!currentGroupId || !currentToken) return;
+  const box = document.getElementById('groupMessages');
+  try {
+    const r = await fetch(API_URL + '/groups/messages?token=' + encodeURIComponent(currentToken) + '&chat_id=' + currentGroupId);
+    const d = await r.json();
+    if (!d.success) {
+      box.innerHTML = '<div style="text-align:center;color:#e63946;font-size:12px;padding:14px;">' + (d.error || 'Ошибка') + '</div>';
+      return;
+    }
+    const msgs = d.messages || [];
+    if (msgs.length === 0) {
+      box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Пока сообщений нет. Напиши первым!</div>';
+      return;
+    }
+    const myName = nickname || firstName;
+    box.innerHTML = msgs.map(m => {
+      const isMe = (m.nickname === myName);
+      const time = new Date(m.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      const bubbleCls = isMe ? 'me' : 'other';
+      return '<div class="chat-msg '+(isMe?'':'other')+'">' +
+        '<div class="chat-bubble ' + bubbleCls + '">' +
+          '<div class="chat-author">' + (isMe ? 'Ты' : (m.nickname || 'Игрок')) + ' · ' + time + '</div>' +
+          '<div class="chat-text">' + escapeHtml(m.text) + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    if (scroll) box.scrollTop = box.scrollHeight;
+  } catch(e) {}
+}
+
+async function sendGroupMessage(){
+  if (!currentGroupId || !currentToken) return;
+  const input = document.getElementById('groupInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  try {
+    const r = await fetch(API_URL + '/groups/send', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, chat_id: currentGroupId, text: text })
+    });
+    const d = await r.json();
+    if (!d.success) { showToast('✗ ' + (d.error || 'Ошибка')); input.value = text; return; }
+    loadGroupMessages(true);
+  } catch(e) { showToast('✗ Ошибка соединения'); }
+}
+
+async function showGroupMembers(){
+  if (!currentGroupId) return;
+  const box = document.getElementById('groupMembersBox');
+  if (box.style.display === 'flex') { box.style.display = 'none'; return; }
+  box.style.display = 'flex';
+  box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:8px;">Загрузка...</div>';
+  try {
+    const r = await fetch(API_URL + '/groups/members?token=' + encodeURIComponent(currentToken) + '&chat_id=' + currentGroupId);
+    const d = await r.json();
+    if (!d.success) {
+      box.innerHTML = '<div style="text-align:center;color:#e63946;font-size:12px;padding:8px;">' + (d.error || 'Ошибка') + '</div>';
+      return;
+    }
+    const mem = d.members || [];
+    box.innerHTML = '<div style="text-align:center;color:#a78bfa;font-size:11px;font-weight:800;padding:4px;">👥 Участники: ' + mem.length + '</div>' +
+      mem.map(m => '<div class="chat-member-row">' +
+        '<div class="chat-member-avatar">' + (m.nickname ? m.nickname[0].toUpperCase() : '?') + '</div>' +
+        '<div class="chat-member-name">' + escapeHtml(m.nickname) + '</div>' +
+      '</div>').join('');
+  } catch(e) {}
+}
+
+async function addMemberToGroup(){
+  if (!currentGroupId) return;
+  const nick = prompt('Ник игрока (точно как в игре):');
+  if (!nick || !nick.trim()) return;
+  try {
+    const r = await fetch(API_URL + '/groups/add-member', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, chat_id: currentGroupId, nickname: nick.trim() })
+    });
+    const d = await r.json();
+    if (d.success) { showToast('✅ Добавлен: ' + d.nickname); showGroupMembers(); }
+    else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+async function shareGroupLink(){
+  if (!currentGroupId) return;
+  try {
+    const r = await fetch(API_URL + '/groups/list?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (!d.success) return;
+    const g = (d.chats || []).find(x => x.id === currentGroupId);
+    if (!g) return;
+    const link = window.location.origin + window.location.pathname + '?join=' + g.invite_code;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(link).then(() => showToast('✓ Ссылка скопирована'));
+    } else {
+      prompt('Скопируй ссылку:', link);
+    }
+  } catch(e) {}
+}
+
+async function leaveGroup(){
+  if (!currentGroupId) return;
+  if (!confirm('Выйти из группы?')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/leave', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, chat_id: currentGroupId })
+    });
+    const d = await r.json();
+    if (d.success) {
+      showToast('🚪 Вышел из группы');
+      closeModal('group-chat');
+      currentGroupId = null;
+      if (groupInterval) { clearInterval(groupInterval); groupInterval = null; }
+      loadGroupsList();
+    }
+  } catch(e) {}
+}
+
+
 function init(){
   if (tg) { try { tg.ready(); tg.expand(); tg.setHeaderColor('#0a0518'); tg.setBackgroundColor('#0a0518'); } catch(e) {} }
   getTelegramUser();
+  try {
+    const upJ = new URLSearchParams(window.location.search);
+    const joinCode = upJ.get('join');
+    if (joinCode) { window._pendingJoinCode = joinCode; }
+  } catch(e) {}
+
   let sp = null;
   if (tg?.initDataUnsafe?.start_param) sp = tg.initDataUnsafe.start_param;
   try { const up = new URLSearchParams(window.location.search); if (up.get('ref')) sp = up.get('ref'); } catch(e) {}
