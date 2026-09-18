@@ -98,6 +98,10 @@ body::after {
 .energy-bar { margin:0 18px 16px; background:rgba(10,5,24,0.75); border-radius:16px; overflow:hidden; height:30px; position:relative; border:1px solid rgba(79,172,254,0.3); }
 .energy-fill { height:100%; background:linear-gradient(90deg,#8b5cf6,#4facfe,#22d3ee); transition:width 0.3s; }
 .energy-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:800; color:white; text-shadow:0 2px 5px rgba(0,0,0,1); }
+.tap-limit-bar { margin: 8px 18px 16px; background:rgba(10,5,24,0.75); border-radius:16px; overflow:hidden; height:30px; position:relative; border:1px solid rgba(236,72,153,0.35); }
+.tap-limit-fill { height:100%; background:linear-gradient(90deg,#ec4899,#a855f7,#f59e0b); transition:width 0.3s; }
+.tap-limit-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:12px; font-weight:800; color:white; text-shadow:0 2px 5px rgba(0,0,0,1); }
+.tap-limit-bar.limit-reached { border-color:#e63946; box-shadow: 0 0 15px rgba(230,57,70,0.6); }
 
 .quick-actions { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:0 18px; }
 .quick-btn { background: linear-gradient(145deg, rgba(139,92,246,0.15), rgba(30,58,95,0.3)); border:1px solid rgba(139,92,246,0.3); border-radius:16px; padding:16px 6px; color:#fff; cursor:pointer; font-size:10px; text-align:center; font-weight:700; transition:all 0.3s; }
@@ -430,6 +434,11 @@ button:active, .btn-buy:active, .quick-btn:active, .header-btn:active, .game-car
 <div class="energy-bar">
   <div class="energy-fill" id="energyFill" style="width:100%"></div>
   <div class="energy-text" id="energyText">500 / 500</div>
+</div>
+
+<div class="tap-limit-bar" id="tapLimitBar">
+  <div class="tap-limit-fill" id="tapLimitFill" style="width:0%"></div>
+  <div class="tap-limit-text" id="tapLimitText">Тапов: 0 / 20 000</div>
 </div>
 
 <div class="quick-actions">
@@ -1253,14 +1262,34 @@ function updateUI(){
   const lt = document.getElementById('levelText'); if (lt) lt.textContent = 'Ур. ' + level + ' — ' + fmt(score) + ' / ' + fmt(level*10000);
   const un = document.getElementById('userName'); if (un) un.textContent = nickname || firstName || 'Игрок';
   const ib = document.getElementById('isBalanceVal'); if (ib) ib.textContent = isBalance;
+
+  // Счётчик дневных тапов
+  const tlf = document.getElementById('tapLimitFill');
+  const tlt = document.getElementById('tapLimitText');
+  const tlb = document.getElementById('tapLimitBar');
+  if (tlf && tlt && tlb) {
+    const pct = Math.min(100, (tapsToday / dailyTapLimit) * 100);
+    tlf.style.width = pct + '%';
+    tlt.textContent = 'Тапов: ' + fmt(tapsToday) + ' / ' + fmt(dailyTapLimit);
+    if (tapsToday >= dailyTapLimit && Date.now() >= unlimitedUntil) {
+      tlb.classList.add('limit-reached');
+    } else {
+      tlb.classList.remove('limit-reached');
+    }
+  }
 }
 
 document.getElementById('tapBtn').addEventListener('click', (e) => {
   if (energy <= 0) { showToast('⚡ Энергия кончилась!'); return; }
   const today = new Date().toISOString().split('T')[0];
-  if (lastTapDate !== today) { lastTapDate = today; tapsToday = 0; }
+  if (lastTapDate !== today) {
+    lastTapDate = today;
+    tapsToday = 0;
+    // Каждый новый день лимит снова 20 000 (бусты действуют 1 день)
+    dailyTapLimit = 20000;
+  }
   const unlimited = Date.now() < unlimitedUntil;
-  if (!unlimited && tapsToday >= dailyTapLimit) { showToast('🚫 Лимит'); return; }
+  if (!unlimited && tapsToday >= dailyTapLimit) { showToast('🚫 Дневной лимит тапов исчерпан'); return; }
   const mult = Date.now() < isBoostMultUntil ? 2 : 1;
   score += multiplier * mult; energy -= 1; totalTaps += 1; tapsToday += 1;
   const nl = Math.floor(score / 10000) + 1;
@@ -1813,6 +1842,18 @@ async function doLogin(){
 function enterGame(){
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
+
+  // Сброс дневного лимита тапов при новом дне
+  const today = new Date().toISOString().split('T')[0];
+  if (lastTapDate !== today) {
+    lastTapDate = today;
+    tapsToday = 0;
+    // ВАЖНО: Сбрасываем лимит обратно к 20 000 каждое утро
+    // (купленные бусты действуют только на 1 день)
+    dailyTapLimit = 20000;
+    scheduleSave();
+  }
+
   updateUI();
   buildSidebar();
   loadISShop();
