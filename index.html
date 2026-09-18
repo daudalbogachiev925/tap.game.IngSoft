@@ -269,6 +269,15 @@ body::after {
 .context-menu div:hover { background: rgba(139,92,246,0.2); }
 .chat-stats-bar { display: flex; justify-content: space-around; gap: 8px; padding: 10px; margin-bottom: 10px; background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.3); border-radius: 12px; font-size: 11px; font-weight: 700; flex-wrap: wrap; }
 .chat-stats-bar span { color: #a78bfa; }
+.chat-members-list { display: none; flex-direction: column; gap: 6px; padding: 10px; margin-bottom: 10px; background: rgba(10,5,24,0.7); border: 1px solid rgba(139,92,246,0.4); border-radius: 12px; max-height: 260px; overflow-y: auto; }
+.chat-members-list.show { display: flex; }
+.chat-member-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: linear-gradient(90deg, rgba(139,92,246,0.12), rgba(30,58,95,0.15)); border: 1px solid rgba(139,92,246,0.25); border-radius: 10px; font-size: 12px; }
+.chat-member-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg,#ec4899,#8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; color: #fff; flex-shrink: 0; }
+.chat-member-name { flex: 1; font-weight: 700; color: #e0e7ff; }
+.chat-member-time { font-size: 10px; color: #94a3b8; }
+.chat-title-clickable { cursor: pointer; transition: all 0.2s; user-select: none; }
+.chat-title-clickable:hover { color: #ec4899; }
+.chat-title-clickable::after { content: ' ▾'; font-size: 14px; color: #a78bfa; }
 
 
 @media (max-width: 480px) {
@@ -469,9 +478,14 @@ body::after {
 </div>
 
 <div class="modal" id="modal-games"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">⬢ <span>Игры</span></div><button class="modal-close" onclick="closeModal('games')">×</button></div>
-  <div class="games-grid" id="gamesGrid"></div>
-</div></div>
+  <div class="modal-header">
+    <div class="modal-title"><span id="chatTitle" class="chat-title-clickable" onclick="toggleChatMembers()">💬 Чат парней</span></div>
+    <button class="modal-close" onclick="closeModal('chat')">×</button>
+  </div>
+
+  <div class="chat-members-list" id="chatMembersList">
+    <div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>
+  </div>
 
 <div class="modal" id="modal-leaderboard"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">♛ <span>Топ игроков</span></div><button class="modal-close" onclick="closeModal('leaderboard')">×</button></div>
@@ -924,6 +938,8 @@ let lastChatMessageId = 0;
 function openChatModal(){
   document.getElementById('modal-chat').classList.add('active');
   document.getElementById('chatTitle').textContent = (gender === 'female') ? '💬 Чат девчонок' : '💬 Чат парней';
+  const membersBox = document.getElementById('chatMembersList');
+  if (membersBox) { membersBox.classList.remove('show'); membersBox.innerHTML = ''; }
   loadChatMessages(true);
   loadChatStats();
   if (chatInterval) clearInterval(chatInterval);
@@ -992,6 +1008,48 @@ async function loadChatMessages(fullReload){
     console.error('Chat load error:', e);
   }
 }
+
+async function toggleChatMembers(){
+  const box = document.getElementById('chatMembersList');
+  if (!box) return;
+  if (box.classList.contains('show')) {
+    box.classList.remove('show');
+    return;
+  }
+  box.classList.add('show');
+  box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>';
+
+  if (!currentToken) {
+    box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Войди в аккаунт</div>';
+    return;
+  }
+
+  try {
+    const r = await fetch(API_URL + '/chat-stats?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (!d.success) {
+      box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Ошибка загрузки</div>';
+      return;
+    }
+    const history = d.history || [];
+    if (history.length === 0) {
+      box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Пока никто не писал в чат</div>';
+      return;
+    }
+    box.innerHTML = '<div style="text-align:center;color:#a78bfa;font-size:11px;font-weight:800;padding:4px 0 8px;">👥 Всего писали: ' + d.unique_chatters + ' из ' + d.total_players + '</div>' +
+      history.map(h => {
+        const time = new Date(h.last_time).toLocaleString('ru-RU', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+        return '<div class="chat-member-row">' +
+          '<div class="chat-member-avatar">' + (h.nickname ? h.nickname[0].toUpperCase() : '?') + '</div>' +
+          '<div class="chat-member-name">' + escapeHtml(h.nickname || 'Игрок') + '</div>' +
+          '<div class="chat-member-time">' + time + '</div>' +
+        '</div>';
+      }).join('');
+  } catch(e) {
+    box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Ошибка соединения</div>';
+  }
+}
+
 
 async function loadChatStats(){
   if (!currentToken) return;
