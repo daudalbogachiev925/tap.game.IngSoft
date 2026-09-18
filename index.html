@@ -1723,11 +1723,22 @@ function logout(){
   location.reload();
 }
 
-function updateRefLink(){
+async function updateRefLink(){
   const el = document.getElementById('refLink'); if (!el) return;
-  const nick = currentUser?.nickname || nickname;
-  if (!nick) { el.textContent = '—'; return; }
-  el.textContent = window.location.origin + window.location.pathname + '?ref=' + encodeURIComponent(nick);
+  if (!currentToken) { el.textContent = '—'; return; }
+  try {
+    const r = await fetch(API_URL + '/my-id?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (d.success && d.id) {
+      el.textContent = window.location.origin + window.location.pathname + '?ref=' + d.id;
+    } else {
+      const nick = currentUser?.nickname || nickname;
+      el.textContent = nick ? (window.location.origin + window.location.pathname + '?ref=' + encodeURIComponent(nick)) : '—';
+    }
+  } catch(e) {
+    const nick = currentUser?.nickname || nickname;
+    el.textContent = nick ? (window.location.origin + window.location.pathname + '?ref=' + encodeURIComponent(nick)) : '—';
+  }
 }
 function copyRefLink(){ const l = document.getElementById('refLink').textContent; if (l && l !== '—') navigator.clipboard.writeText(l).then(()=>showToast('✓ Скопировано')); }
 function shareRefLink(){ const l = document.getElementById('refLink').textContent; if (l && l !== '—') window.open('https://t.me/share/url?url='+encodeURIComponent(l)+'&text='+encodeURIComponent('Заходи в IngSoft Tap!'), '_blank'); }
