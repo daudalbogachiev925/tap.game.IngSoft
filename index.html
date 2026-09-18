@@ -1969,6 +1969,9 @@ async function joinGroupByCode(){
   } catch(e) { showToast('✗ Ошибка'); }
 }
 
+let groupOwnerId = null;
+let groupMyPerms = { is_owner: false, is_admin: false, can_delete_messages: false, can_kick: false, can_pin: false, can_edit: false };
+
 function openGroupChat(chatId, name){
   currentGroupId = chatId;
   currentGroupName = name;
@@ -1991,25 +1994,103 @@ async function loadGroupMessages(scroll){
       box.innerHTML = '<div style="text-align:center;color:#e63946;font-size:12px;padding:14px;">' + (d.error || 'Ошибка') + '</div>';
       return;
     }
+    groupOwnerId = d.owner_id;
+    groupMyPerms = d.my_perms || groupMyPerms;
+
     const msgs = d.messages || [];
     if (msgs.length === 0) {
       box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Пока сообщений нет. Напиши первым!</div>';
       return;
     }
     const myName = nickname || firstName;
+    const canModerate = groupMyPerms.is_owner || groupMyPerms.can_delete_messages || groupMyPerms.can_edit;
+
     box.innerHTML = msgs.map(m => {
       const isMe = (m.nickname === myName);
+      const isOwnerMsg = (m.user_id === groupOwnerId);
       const time = new Date(m.created_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
       const bubbleCls = isMe ? 'me' : 'other';
-      return '<div class="chat-msg '+(isMe?'':'other')+'">' +
+      const ownerBadge = isOwnerMsg ? ' <span style="color:#ffd700;font-size:10px;">👑</span>' : '';
+      const canDel = canModerate || isMe;
+      const actions = canDel
+        ? '<div class="gmsg-actions">' +
+            '<span onclick="deleteGroupMessage('+m.id+')" title="Удалить">🗑</span>' +
+            (groupMyPerms.is_owner || groupMyPerms.can_edit || isMe ? '<span onclick="editGroupMessage('+m.id+', \''+escapeHtml(m.text).replace(/'/g,"\\'").replace(/"/g,'&quot;')+'\')" title="Изменить">✏</span>' : '') +
+          '</div>'
+        : '';
+      return '<div class="chat-msg '+(isMe?'':'other')+'" data-msg-id="'+m.id+'">' +
         '<div class="chat-bubble ' + bubbleCls + '">' +
-          '<div class="chat-author">' + (isMe ? 'Ты' : (m.nickname || 'Игрок')) + ' · ' + time + '</div>' +
+          '<div class="chat-author">' + (isMe ? 'Ты' : (m.nickname || 'Игрок')) + ownerBadge + ' · ' + time + '</div>' +
           '<div class="chat-text">' + escapeHtml(m.text) + '</div>' +
+          actions +
         '</div>' +
       '</div>';
     }).join('');
     if (scroll) box.scrollTop = box.scrollHeight;
   } catch(e) {}
+}
+
+async function deleteGroupMessage(msgId){
+  if (!confirm('Удалить сообщение?')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/message/delete', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, chat_id: currentGroupId, message_id: msgId })
+    });
+    const d = await r.json();
+    if (d.success) { showToast('🗑 Удалено'); loadGroupMessages(true); }
+    else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+async function editGroupMessage(msgId, oldText){
+  const newText = prompt('Новый текст:', oldText);
+  if (!newText || !newText.trim()) return;
+  try {
+    const r = await fetch(API_URL + '/groups/message/edit', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, chat_id: currentGroupId, message_id: msgId, text: newText.trim() })
+    });
+    const d = await r.json();
+    if (d.success) { showToast('✏ Изменено'); loadGroupMessages(true); }
+    else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+async function deleteGroup(){
+  if (!confirm('Удалить группу для ВСЕХ? Это действие необратимо.')) return;
+  if (!confirm('Точно удалить? Все сообщения и участники будут удалены.')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/delete', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, chat_id: currentGroupId })
+    });
+    const d = await r.json();
+    if (d.success) {
+      showToast('🗑 Группа удалена');
+      closeModal('group-chat');
+      currentGroupId = null;
+      if (groupInterval) { clearInterval(groupInterval); groupInterval = null; }
+      loadGroupsList();
+    } else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+async function renameGroup(){
+  const newName = prompt('Новое название группы:', currentGroupName || '');
+  if (!newName || !newName.trim()) return;
+  try {
+    const r = await fetch(API_URL + '/groups/rename', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, chat_id: currentGroupId, name: newName.trim() })
+    });
+    const d = await r.json();
+    if (d.success) {
+      currentGroupName = d.name;
+      document.getElementById('groupChatTitle').textContent = '👥 ' + d.name;
+      showToast('✏ Название изменено');
+    } else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
 }
 
 async function sendGroupMessage(){
@@ -2043,13 +2124,54 @@ async function showGroupMembers(){
       return;
     }
     const mem = d.members || [];
+    const ownerId = d.owner_id;
+    const iAmOwner = (groupMyPerms.is_owner);
+    const iCanKick = iAmOwner || groupMyPerms.can_kick;
+
     box.innerHTML = '<div style="text-align:center;color:#a78bfa;font-size:11px;font-weight:800;padding:4px;">👥 Участники: ' + mem.length + '</div>' +
-      mem.map(m => '<div class="chat-member-row">' +
-        '<div class="chat-member-avatar">' + (m.nickname ? m.nickname[0].toUpperCase() : '?') + '</div>' +
-        '<div class="chat-member-name">' + escapeHtml(m.nickname) + '</div>' +
-      '</div>').join('');
+      mem.map(m => {
+        const isOwner = (m.id === ownerId);
+        const crown = isOwner ? ' 👑' : (m.is_admin ? ' 🛡' : '');
+        const canKick = iCanKick && !isOwner && m.id !== myUserId;
+        const ownerActions = iAmOwner && !isOwner
+          ? '<div style="display:flex;gap:4px;margin-left:6px;">' +
+              '<button class="btn-buy" style="font-size:10px;padding:5px 8px;background:linear-gradient(135deg,#8b5cf6,#4facfe);" onclick="openSetAdmin('+m.id+', \''+escapeHtml(m.nickname).replace(/'/g,"\\'")+'\', '+(m.is_admin?1:0)+', '+(m.can_delete_messages?1:0)+', '+(m.can_kick?1:0)+', '+(m.can_pin?1:0)+', '+(m.can_edit?1:0)+')">⚙</button>' +
+            '</div>'
+          : '';
+        const kickBtn = canKick
+          ? '<button class="btn-buy" style="font-size:10px;padding:5px 8px;background:linear-gradient(135deg,#e63946,#b91c1c);margin-left:4px;" onclick="kickGroupMember('+m.id+', \''+escapeHtml(m.nickname).replace(/'/g,"\\'")+'\')">🚪</button>'
+          : '';
+        return '<div class="chat-member-row">' +
+          '<div class="chat-member-avatar">' + (m.nickname ? m.nickname[0].toUpperCase() : '?') + '</div>' +
+          '<div class="chat-member-name">' + escapeHtml(m.nickname) + crown + '</div>' +
+          ownerActions + kickBtn +
+        '</div>';
+      }).join('');
   } catch(e) {}
 }
+
+async function kickGroupMember(userId, nick){
+  if (!confirm('Кикнуть ' + nick + ' из группы?')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/kick', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ token: currentToken, chat_id: currentGroupId, user_id: userId })
+    });
+    const d = await r.json();
+    if (d.success) { showToast('🚪 Кикнут: ' + nick); showGroupMembers(); }
+    else showToast('✗ ' + (d.error || 'Ошибка'));
+  } catch(e) { showToast('✗ Ошибка'); }
+}
+
+function openSetAdmin(userId, nick, isAdmin, canDel, canKick, canPin, canEdit){
+  const box = document.getElementById('groupMembersBox');
+  const html =
+    '<div style="padding:10px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);border-radius:12px;margin-top:8px;">' +
+      '<div style="font-size:13px;font-weight:800;color:#a78bfa;margin-bottom:10px;">⚙ Права для ' + escapeHtml(nick) + '</div>' +
+      '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;"><input type="checkbox" id="pa_admin" '+(isAdmin?'checked':'')+'> 🛡 Админ</label>' +
+      '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;"><input type="checkbox" id="pa_del" '+(canDel?'checked':'')+'> 🗑 Удалять сообщения</label>' +
+      '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;"><input type="checkbox" id="pa_kick" '+(canKick?'checked':'')+'> 🚪 Кикать участников</label>' +
+      '<label style
 
 async function addMemberToGroup(){
   if (!currentGroupId) return;
