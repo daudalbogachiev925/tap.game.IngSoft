@@ -717,7 +717,7 @@ let referrerId = null;
 let myReferrals = [];
 let myUserId = null;
 let lastKnownReferralCount = 0;
-
+let lastKnownReferralId = 0;
 let energyRegenInterval = null;
 let leaderboardPage = 0;
 const LEADERBOARD_PAGE_SIZE = 10;
@@ -1847,7 +1847,16 @@ async function doLogin(){
     earnedPromocodes = u.earned_promocodes || [];
     enterGame();
     showToast('🎉 С возвращением, ' + nickname + '!');
-    setTimeout(() => { loadReferral().then(() => { lastKnownReferralCount = myReferrals.length; }); }, 800);
+setTimeout(async () => {
+  await loadReferral();
+  lastKnownReferralCount = myReferrals.length;
+  try {
+    const rr = await fetch(API_URL + '/referrals/check-new?token=' +
+      encodeURIComponent(currentToken) + '&since_id=0');
+    const dd = await rr.json();
+    if (dd.success) lastKnownReferralId = dd.max_id || 0;
+  } catch(e) {}
+}, 800);
   } catch(e) { showToast('✗ Ошибка'); }
 }
 /* Автопополнение энергии: +1 каждую секунду */
@@ -1886,8 +1895,7 @@ function enterGame(){
   saveToLocal();
   updateRefLink();
   sendHeartbeat();
-  setTimeout(checkNewReferrals, 500);
-  setTimeout(checkNewReferrals, 1500);
+setTimeout(checkNewReferrals, 2500);
   if (window._pendingJoinCode) {
     setTimeout(async () => {
       const code = window._pendingJoinCode;
@@ -1910,33 +1918,47 @@ function enterGame(){
 async function checkNewReferrals(){
   if (!currentToken) return;
   try {
-    const r = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken));
+    const r = await fetch(
+      API_URL + '/referrals/check-new?token=' +
+      encodeURIComponent(currentToken) + '&since_id=' + lastKnownReferralId
+    );
     const d = await r.json();
-    if (d.success) {
-      const nl = d.referrals || [];
-      if (nl.length > lastKnownReferralCount && lastKnownReferralCount > 0) {
-        const nf = nl[nl.length - 1];
-        const rw = getReferralReward(nl.length);
+    if (!d.success) return;
 
-        await fetch(API_URL + '/give-referral-reward', {
-          method: 'POST', headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            referrer_nickname: nickname || firstName,
-            new_user_token: currentToken,
-            amount: rw
-          })
-        }).catch(() => {});
+    const newOnes = d.new || [];
 
-        showRefThanks(nf.nickname || 'друг', rw);
-        isBalance += rw;
-        updateUI(); scheduleSave();
-      }
-      lastKnownReferralCount = nl.length;
-      myReferrals = nl;
+    if (lastKnownReferralId === 0) {
+      lastKnownReferralId = d.max_id || 0;
+      lastKnownReferralCount = d.count || 0;
+      return;
     }
-  } catch(e) {}
+
+    if (newOnes.length > 0) {
+      for (const nf of newOnes) {
+        const reward = computeReferralReward(d.count);
+        showRefThanks(nf.nickname || 'друг', reward);
+        isBalance += reward;
+      }
+      updateUI();
+      scheduleSave();
+      lastKnownReferralId = d.max_id;
+      lastKnownReferralCount = d.count;
+      loadReferral();
+    }
+  } catch(e) {
+    console.error('checkNewReferrals error', e);
+  }
 }
 
+function computeReferralReward(n){
+  if (n <= 0) return 0;
+  if (n === 1) return 100;
+  if (n === 2) return 150;
+  if (n >= 3 && n <= 4) return 150;
+  if (n === 5) return 450;
+  if (n > 5 && n <= 100) return 100;
+  return 300;
+}
 async function loadProgressByToken(token){
   try {
     const r = await fetch(API_URL + '/get-progress?token=' + token);
@@ -1959,7 +1981,16 @@ async function loadProgressByToken(token){
       if (u.role) currentUser.role = u.role;
       if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
       enterGame();
-      setTimeout(() => { loadReferral().then(() => { lastKnownReferralCount = myReferrals.length; }); }, 800);
+setTimeout(async () => {
+  await loadReferral();
+  lastKnownReferralCount = myReferrals.length;
+  try {
+    const rr = await fetch(API_URL + '/referrals/check-new?token=' +
+      encodeURIComponent(currentToken) + '&since_id=0');
+    const dd = await rr.json();
+    if (dd.success) lastKnownReferralId = dd.max_id || 0;
+  } catch(e) {}
+}, 800);
       return true;
     }
     localStorage.removeItem('ingsoft_token');
@@ -2355,6 +2386,8 @@ function init(){
     if (dr && !dr.dataset.b) { dr.dataset.b = '1'; dr.onclick = doRegister; }
   }
   bind(); setTimeout(bind, 200); setTimeout(bind, 800);
+lastKnownReferralId = 0;
+lastKnownReferralCount = 0;
 
   const saved = localStorage.getItem('ingsoft_token');
   if (saved) { currentToken = saved; loadProgressByToken(saved); }
