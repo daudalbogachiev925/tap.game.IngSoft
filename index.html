@@ -2370,14 +2370,45 @@ function init(){
   let sp = null;
   if (tg?.initDataUnsafe?.start_param) sp = tg.initDataUnsafe.start_param;
   try { const up = new URLSearchParams(window.location.search); if (up.get('ref')) sp = up.get('ref'); } catch(e) {}
-  if (sp) {
-    let cp = sp; if (cp.startsWith('ref_')) cp = cp.slice(4);
-    const lu = cp.lastIndexOf('_'); let rn = '', ri = null;
-    if (lu > 0) { const pi = cp.slice(lu+1); if (/^\d+$/.test(pi)) { rn = cp.slice(0, lu); ri = parseInt(pi, 10); } else rn = cp; } else rn = cp;
-    rn = decodeURIComponent(rn);
-    if (rn && /^[a-zA-Z0-9_]+$/.test(rn)) { referrerNickname = rn; localStorage.setItem('ingsoft_referrer_nickname', rn); }
-    if (ri && ri > 0 && ri < 9000000000) { referrerId = ri; localStorage.setItem('ingsoft_referrer_id', String(ri)); }
-  }
+if (sp) {
+    let cp = String(sp).trim();
+    if (cp.startsWith('ref_')) cp = cp.slice(4);
+    cp = decodeURIComponent(cp);
+
+    let rn = '';
+    let ri = null;
+
+    if (/^\d+$/.test(cp)) {
+        ri = parseInt(cp, 10);
+        if (ri > 0 && ri < 9000000000) {
+            referrerId = ri;
+            localStorage.setItem('ingsoft_referrer_id', String(ri));
+        }
+    } else {
+        const lu = cp.lastIndexOf('_');
+        if (lu > 0) {
+            const pi = cp.slice(lu + 1);
+            if (/^\d+$/.test(pi)) {
+                rn = cp.slice(0, lu);
+                ri = parseInt(pi, 10);
+                if (ri > 0 && ri < 9000000000) {
+                    referrerId = ri;
+                    localStorage.setItem('ingsoft_referrer_id', String(ri));
+                }
+            } else {
+                rn = cp;
+            }
+        } else {
+            rn = cp;
+        }
+        rn = decodeURIComponent(rn);
+        if (rn && /^[a-zA-Z0-9_а-яА-ЯёЁ\-]+$/.test(rn)) {
+            referrerNickname = rn;
+            localStorage.setItem('ingsoft_referrer_nickname', rn);
+        }
+    }
+    console.log('🔗 Referral parsed:', { referrerNickname, referrerId, from: sp });
+}
   function bind(){
     const bl = document.getElementById('tabLogin'), br = document.getElementById('tabRegister');
     if (bl && !bl.dataset.b) { bl.dataset.b = '1'; bl.onclick = () => showTab('login'); }
