@@ -230,9 +230,9 @@ body::after {
 .corner-logo { position:fixed; right:14px; bottom:14px; z-index:600; opacity:0.78; background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(236,72,153,0.2)); padding: 12px 18px; border-radius: 18px; border: 1px solid rgba(139,92,246,0.5); pointer-events:none; }
 .corner-logo img { height:40px; display:block; }
 
-.ref-thanks-overlay { display: none; position: fixed; inset: 0; background: radial-gradient(ellipse at center, rgba(10,5,24,0.9) 0%, rgba(5,2,15,0.97) 100%); z-index: 99999; align-items: center; justify-content: center; padding: 20px; }
+.ref-thanks-overlay { display: none; position: fixed; inset: 0; background: radial-gradient(ellipse at center, rgba(10,5,24,0.9) 0%, rgba(5,2,15,0.97) 100%); z-index: 99999; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
 .ref-thanks-overlay.show { display: flex; }
-.ref-thanks-card { background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%); border-radius: 30px; padding: 34px 26px; max-width: 400px; width: 100%; text-align: center; border: 2px solid rgba(255,215,0,0.5); }
+.ref-thanks-card { background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%); border-radius: 30px; padding: 34px 26px; max-width: 400px; width: 100%; text-align: center; border: 2px solid rgba(255,215,0,0.5); position: relative; z-index: 2; }
 .ref-thanks-emoji { font-size: 78px; margin-bottom: 14px; }
 .ref-thanks-title { font-size: 24px; font-weight: 900; color: #ffd700; margin-bottom: 10px; }
 .ref-thanks-sub { font-size: 14px; color: #cbd5e1; margin-bottom: 22px; line-height: 1.55; }
@@ -243,8 +243,9 @@ body::after {
 .ref-thanks-progress { height: 10px; background: rgba(10,5,24,0.75); border-radius: 5px; overflow: hidden; margin-top: 14px; border: 1px solid rgba(34,197,94,0.35); }
 .ref-thanks-progress-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #00f2fe, #ffd700); width: 0%; transition: width 0.1s linear; }
 .ref-thanks-close { margin-top: 12px; background: linear-gradient(135deg, #ffd700, #ff8c00); border: none; color: #0a0518; padding: 14px 34px; border-radius: 14px; font-size: 15px; font-weight: 900; cursor: pointer; }
+.ref-thanks-tip { font-size: 11px; color: #b8a060; margin-top: 6px; }
 
-.ref-welcome-card { background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%); border-radius: 30px; padding: 32px 26px; max-width: 420px; width: 100%; text-align: center; border: 2px solid rgba(139,92,246,0.55); }
+.ref-welcome-card { background: linear-gradient(160deg, #141c2e 0%, #0a0518 100%); border-radius: 30px; padding: 32px 26px; max-width: 420px; width: 100%; text-align: center; border: 2px solid rgba(139,92,246,0.55); position: relative; z-index: 2; }
 .ref-welcome-emoji { font-size: 72px; margin-bottom: 14px; }
 .ref-welcome-title { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 12px; }
 .ref-welcome-text { font-size: 13px; color: #cbd5e1; line-height: 1.7; margin-bottom: 18px; text-align: left; }
@@ -253,6 +254,26 @@ body::after {
 .ref-welcome-tips-item { font-size: 12px; color: #cbd5e1; padding: 6px 0; display: flex; gap: 9px; }
 .ref-welcome-btn { width: 100%; background: linear-gradient(135deg, #22c55e, #16a34a); border: none; color: #fff; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 900; cursor: pointer; margin-bottom: 10px; }
 .ref-welcome-btn.secondary { background: transparent; border: 1px solid rgba(139,92,246,0.4); color: #94a3b8; font-size: 13px; padding: 12px; }
+
+/* ===== Хлопки / конфетти ===== */
+.confetti-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  font-size: 22px;
+  animation: confettiFall linear forwards;
+  will-change: transform, opacity;
+}
+@keyframes confettiFall {
+  0%   { transform: translateY(-20px) rotate(0deg) scale(1);   opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg) scale(0.8); opacity: 0; }
+}
 
 /* Чат */
 .chat-messages { flex:1; overflow-y:auto; min-height:300px; max-height:50vh; padding:10px; background:rgba(10,5,24,0.5); border-radius:14px; border:1px solid rgba(139,92,246,0.2); display:flex; flex-direction:column; gap:8px; }
@@ -313,27 +334,38 @@ button:active, .btn-buy:active, .quick-btn:active, .header-btn:active, .game-car
 <body>
 <div class="wave-overlay"></div>
 
+<!-- Оверлей для ПРИГЛАСИВШЕГО: фон + хлопки + текст -->
 <div id="refThanksOverlay" class="ref-thanks-overlay">
+  <div class="confetti-layer" id="thanksConfetti"></div>
   <div class="ref-thanks-card">
-    <div class="ref-thanks-emoji">🎉</div>
-    <div class="ref-thanks-title">Спасибо тебе!</div>
-    <div class="ref-thanks-sub">По твоей ссылке зарегистрировался <b id="refThanksNick">друг</b>!<br>Мы начисляем тебе награду:</div>
+    <div class="ref-thanks-emoji">🎉👏🎊</div>
+    <div class="ref-thanks-title">Ты пригласил друга!</div>
+    <div class="ref-thanks-sub">
+      По твоей ссылке зарегистрировался <b id="refThanksNick">друг</b>.<br>
+      Тебе начислено за прокачку аккаунта:
+    </div>
     <div class="ref-thanks-counter">
       <div class="ref-thanks-counter-label">💰 Начислено IS</div>
       <div class="ref-thanks-counter-value"><span id="refThanksCounter">0</span><span class="unit">IS</span></div>
       <div class="ref-thanks-progress"><div class="ref-thanks-progress-fill" id="refThanksProgress"></div></div>
     </div>
+    <div class="ref-thanks-tip">Продолжай приглашать — награда растёт!</div>
     <button class="ref-thanks-close" onclick="closeRefThanks()">Отлично! ✨</button>
   </div>
 </div>
 
+<!-- Оверлей для ПРИГЛАШЁННОГО: фон + хлопки + текст -->
 <div id="refWelcomeOverlay" class="ref-thanks-overlay">
+  <div class="confetti-layer" id="welcomeConfetti"></div>
   <div class="ref-welcome-card">
-    <div class="ref-welcome-emoji">👋</div>
-    <div class="ref-welcome-title">Ты пришёл по ссылке друга!</div>
+    <div class="ref-welcome-emoji">👋🎉🎊</div>
+    <div class="ref-welcome-title">Ты зашёл по ссылке друга!</div>
     <div class="ref-welcome-text">
-      Твой друг <b id="refWelcomeNick">Игрок</b> пригласил тебя в <b>IngSoft Tap</b>!<br><br>
-      За то, что ты зашёл по реферальной ссылке — <span style="color:#22c55e;font-weight:700;">твоему другу начислили IS</span>.
+      Тебя пригласил <b id="refWelcomeNick">Игрок</b> в <b>IngSoft Tap</b>!<br><br>
+      За то, что ты зарегистрировался по реферальной ссылке,
+      <span style="color:#22c55e;font-weight:700;">твой друг получил 100 IS</span>
+      для прокачки своего аккаунта.<br><br>
+      Хочешь так же? Присоединяйся, приглашай людей и получай IS!
     </div>
     <div class="ref-welcome-tips">
       <div class="ref-welcome-tips-title">🚀 Что делать дальше</div>
@@ -726,6 +758,8 @@ let leaderboardOnlineCount = 0;
 let leaderboardOfflineCount = 0;
 let leaderboardTotalCount = 0;
 let myGlobalRank = null;
+let subWasSubscribed = false;
+let subWasPunished = false;
 
 const API_URL = 'https://ingsofttap.bothost.tech';
 const ONLINE_WINDOW_MS = 5 * 60 * 1000;
@@ -758,16 +792,6 @@ const IS_SHOP = [
   { id:'auto7',     icon:'◉', name:'Автоклик +7/сек',      desc:'Пассивный доход',  price:25000, apply:()=>{ autotapLevel += 7; } },
   { id:'auto10',    icon:'◉', name:'Автоклик +10/сек',     desc:'Максимальный буст',price:50000, apply:()=>{ autotapLevel += 10; } },
 ];
-
-function getReferralReward(n){
-  if (n<=0) return 0;
-  if (n===1) return 100;
-  if (n===2) return 150;
-  if (n>=3&&n<=4) return 150;
-  if (n===5) return 450;
-  if (n>5&&n<=100) return 100;
-  return 300;
-}
 
 const QUESTS = [
   { id:'tap100', name:'✦ Первые шаги', desc:'100 тапов', reward:100, check:()=>totalTaps>=100 },
@@ -1004,11 +1028,6 @@ function closeChatModal(){
   document.getElementById('modal-chat').classList.remove('active');
   if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
 }
-const _origCloseModal = closeModal;
-closeModal = function(name){
-  _origCloseModal(name);
-  if (name === 'chat') closeChatModal();
-};
 
 async function loadChatMessages(fullReload){
   if (!currentToken) return;
@@ -1220,7 +1239,7 @@ function closeModal(name){
   document.getElementById('modal-' + name)?.classList.remove('active');
   if (name === 'referral' && window._ri) { clearInterval(window._ri); window._ri = null; }
   if (name === 'group-chat' && groupInterval) { clearInterval(groupInterval); groupInterval = null; }
-
+  if (name === 'chat') closeChatModal();
 }
 function closeAllModals(){ document.querySelectorAll('.modal').forEach(m => m.classList.remove('active')); }
 
@@ -1264,7 +1283,6 @@ function updateUI(){
   const un = document.getElementById('userName'); if (un) un.textContent = nickname || firstName || 'Игрок';
   const ib = document.getElementById('isBalanceVal'); if (ib) ib.textContent = isBalance;
 
-  // Счётчик дневных тапов
   const tlf = document.getElementById('tapLimitFill');
   const tlt = document.getElementById('tapLimitText');
   const tlb = document.getElementById('tapLimitBar');
@@ -1286,7 +1304,6 @@ document.getElementById('tapBtn').addEventListener('click', (e) => {
   if (lastTapDate !== today) {
     lastTapDate = today;
     tapsToday = 0;
-    // Каждый новый день лимит снова 20 000 (бусты действуют 1 день)
     dailyTapLimit = 20000;
   }
   const unlimited = Date.now() < unlimitedUntil;
@@ -1359,16 +1376,6 @@ function loadGames(){
   ).join('');
 }
 
-/* === ИГРЫ === */
-const GAME_COSTS = {};
-const COST_SEQUENCE = [1000, 5000, 7000, 10000, 15000, 25000, 40000, 60000, 90000, 150000];
-function getGameCost(gameId){
-  const a = GAME_COSTS[gameId] || 0;
-  if (a < COST_SEQUENCE.length) return COST_SEQUENCE[a];
-  return COST_SEQUENCE[COST_SEQUENCE.length-1] + (a - COST_SEQUENCE.length + 1) * 100000;
-}
-function increaseGameCost(gameId){ GAME_COSTS[gameId] = (GAME_COSTS[gameId] || 0) + 1; }
-
 function playGame(gameId){
   const g = GAMES.find(x => x.id === gameId);
   if (!g) return;
@@ -1432,7 +1439,6 @@ function runGame(gameId){
   const resultEl = document.getElementById('gameResult');
   if (!iconEl || !resultEl) return;
 
-  // Блокируем кнопку на время игры
   const playBtn = document.querySelector('#modal-playing .btn-buy.green');
   if (playBtn) playBtn.disabled = true;
 
@@ -1465,7 +1471,7 @@ function runGame(gameId){
     if (ticks >= maxTicks) {
       clearInterval(interval);
 
-      // ⚠️ НИЗКИЙ КОЭФФИЦИЕНТ ВЫИГРЫША — 25% (было 35%)
+      // 25% выигрыш, x2 награда. Ставка НЕ списывается при выигрыше.
       const win = Math.random() < 0.25;
 
       const finalIcon = set[Math.floor(Math.random()*set.length)];
@@ -1473,7 +1479,6 @@ function runGame(gameId){
       iconEl.style.transform = 'scale(1) rotate(0deg)';
 
       if (win) {
-        // ВЫИГРЫШ x2 — ставка НЕ вычитается, а начисляется bet * 2
         const reward = bet * 2;
         score += reward;
         resultEl.textContent = '🎉 ВЫИГРЫШ x2! +' + fmt(reward);
@@ -1481,7 +1486,6 @@ function runGame(gameId){
         resultEl.style.textShadow = '0 0 20px rgba(34,197,94,0.9)';
         iconEl.style.filter = 'drop-shadow(0 0 30px #22c55e)';
       } else {
-        // ПРОИГРЫШ — только здесь списываем ставку
         score -= bet;
         resultEl.textContent = '😢 ПРОИГРЫШ −' + fmt(bet);
         resultEl.style.color = '#e63946';
@@ -1496,71 +1500,6 @@ function runGame(gameId){
         if (iconEl) iconEl.style.filter = '';
         if (playBtn) playBtn.disabled = false;
       }, 1800);
-    }
-  }, 80);
-}
-
-function runGame(gameId){
-  const cost = getGameCost(gameId);
-  if (score < cost) { showToast('Нужно ' + fmt(cost) + ' очков'); return; }
-  score -= cost;
-  increaseGameCost(gameId);
-
-  const iconEl = document.getElementById('gameIcon');
-  const resultEl = document.getElementById('gameResult');
-  if (!iconEl || !resultEl) return;
-
-  const emojiSets = {
-    roulette: ['◉','◐','◓','◑','◒'],
-    dice:     ['⚀','⚁','⚂','⚃','⚄','⚅'],
-    coin:     ['○','●'],
-    slots:    ['✿','❀','◆','✦','✧','◉'],
-    basket:   ['◉','◍','◎','●'],
-    mine:     ['◆','◇','◈','◉'],
-    wheel:    ['◉','◍','◎','◐','◑'],
-    darts:    ['◎','◉','⊙','◍'],
-    fishing:  ['◇','◆','◈','◉'],
-    cards:    ['♠','♥','♦','♣'],
-    shells:   ['◐','◑','◒','◓'],
-    craps:    ['◆','◆◆','◆◆◆'],
-    archery:  ['➤','→','⇒','⟹'],
-    penalty:  ['◉','⚽','◎'],
-    basket3:  ['◉','◎','◍'],
-    mines:    ['✸','✹','✺'],
-  };
-  const set = emojiSets[gameId] || ['?'];
-
-  // Анимация прокрутки
-  let ticks = 0;
-  const maxTicks = 14;
-  const interval = setInterval(() => {
-    iconEl.textContent = set[Math.floor(Math.random()*set.length)];
-    iconEl.style.transform = 'scale(' + (1 + Math.random()*0.2) + ') rotate(' + (Math.random()*40-20) + 'deg)';
-    ticks++;
-    if (ticks >= maxTicks) {
-      clearInterval(interval);
-      // Финальный результат
-      const win = Math.random() < 0.35; // 35% выигрыш
-      const finalIcon = set[Math.floor(Math.random()*set.length)];
-      iconEl.textContent = finalIcon;
-      iconEl.style.transform = 'scale(1) rotate(0deg)';
-      if (win) {
-        const reward = cost * (2 + Math.floor(Math.random()*3));
-        score += reward;
-        resultEl.textContent = '🎉 ВЫИГРЫШ! +' + fmt(reward);
-        resultEl.style.color = '#22c55e';
-        resultEl.style.textShadow = '0 0 20px rgba(34,197,94,0.9)';
-        iconEl.style.filter = 'drop-shadow(0 0 30px #22c55e)';
-      } else {
-        resultEl.textContent = '😢 ПРОИГРЫШ';
-        resultEl.style.color = '#e63946';
-        resultEl.style.textShadow = '0 0 20px rgba(230,57,70,0.9)';
-        iconEl.style.filter = 'drop-shadow(0 0 30px #e63946)';
-      }
-      updateUI(); scheduleSave();
-      setTimeout(() => {
-        if (iconEl) { iconEl.style.filter = ''; }
-      }, 2000);
     }
   }, 80);
 }
@@ -1652,9 +1591,8 @@ function loadAchievements(){
 
 function loadDaily(){
   const el = document.getElementById('dailyContent');
-  // Авто-сброс раз в неделю
   const now = new Date();
-  const day = now.getDay(); // 0 = вс
+  const day = now.getDay();
   const weekStart = new Date(now);
   weekStart.setDate(now.getDate() - day);
   const weekKey = weekStart.toISOString().split('T')[0];
@@ -1757,16 +1695,70 @@ async function loadReferral(){
   } catch(e) {}
 }
 
-function showRefThanks(f, a){
-  const o = document.getElementById('refThanksOverlay'); if (!o) return;
-  document.getElementById('refThanksNick').textContent = f || 'друг';
-  document.getElementById('refThanksCounter').textContent = a || 0;
-  o.classList.add('show');
-  setTimeout(closeRefThanks, 5200);
+/* ===== Хлопки / конфетти ===== */
+function launchConfetti(containerId, count) {
+  count = count || 28;
+  const box = document.getElementById(containerId);
+  if (!box) return;
+  box.innerHTML = '';
+  const emojis = ['🎉','🎊','👏','✨','💥','⭐','🥳','💫'];
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.fontSize = (18 + Math.random() * 22) + 'px';
+    el.style.animationDuration = (1.8 + Math.random() * 1.8) + 's';
+    el.style.animationDelay = (Math.random() * 0.6) + 's';
+    box.appendChild(el);
+  }
+  setTimeout(() => { box.innerHTML = ''; }, 4500);
 }
-function closeRefThanks(){ const o = document.getElementById('refThanksOverlay'); if (o) o.classList.remove('show'); }
-function showRefWelcome(n){ const o = document.getElementById('refWelcomeOverlay'); if (o) { document.getElementById('refWelcomeNick').textContent = n || 'Игрок'; o.classList.add('show'); } }
-function closeRefWelcome(){ const o = document.getElementById('refWelcomeOverlay'); if (o) o.classList.remove('show'); }
+
+/* ==== ПРИГЛАСИВШИЙ: показываем, что ему начислили IS ==== */
+function showRefThanks(friendNick, amount) {
+  const o = document.getElementById('refThanksOverlay');
+  if (!o) return;
+  document.getElementById('refThanksNick').textContent = friendNick || 'друг';
+  const counterEl = document.getElementById('refThanksCounter');
+  const progressEl = document.getElementById('refThanksProgress');
+
+  const target = Number(amount) || 0;
+  let cur = 0;
+  counterEl.textContent = '0';
+  progressEl.style.width = '0%';
+  const step = Math.max(1, Math.floor(target / 40));
+  const t = setInterval(() => {
+    cur += step;
+    if (cur >= target) { cur = target; clearInterval(t); }
+    counterEl.textContent = cur;
+    progressEl.style.width = Math.min(100, (cur / Math.max(target,1)) * 100) + '%';
+  }, 30);
+
+  o.classList.add('show');
+  launchConfetti('thanksConfetti', 34);
+  setTimeout(() => launchConfetti('thanksConfetti', 20), 1400);
+}
+
+function closeRefThanks() {
+  const o = document.getElementById('refThanksOverlay');
+  if (o) o.classList.remove('show');
+}
+
+/* ==== ПРИГЛАШЁННЫЙ: показываем текст про 100 IS ==== */
+function showRefWelcome(referrerNick) {
+  const o = document.getElementById('refWelcomeOverlay');
+  if (!o) return;
+  document.getElementById('refWelcomeNick').textContent = referrerNick || 'Игрок';
+  o.classList.add('show');
+  launchConfetti('welcomeConfetti', 34);
+  setTimeout(() => launchConfetti('welcomeConfetti', 20), 1400);
+}
+
+function closeRefWelcome() {
+  const o = document.getElementById('refWelcomeOverlay');
+  if (o) o.classList.remove('show');
+}
 
 function selectGender(g){
   selectedGender = g;
@@ -1806,11 +1798,11 @@ async function doRegister(){
     if (!r.ok || d.error) { showToast('✗ ' + (d.error || 'Ошибка')); return; }
     localStorage.removeItem('ingsoft_referrer_nickname');
     localStorage.removeItem('ingsoft_referrer_id');
+
     if (referrerNickname) {
       showRefWelcome(referrerNickname);
-      isBalance += 500;
-      updateUI();
     }
+
     showToast('✅ Регистрация успешна! Теперь войди.');
     showTab('login');
     document.getElementById('loginLogin').value = login;
@@ -1847,16 +1839,16 @@ async function doLogin(){
     earnedPromocodes = u.earned_promocodes || [];
     enterGame();
     showToast('🎉 С возвращением, ' + nickname + '!');
-setTimeout(async () => {
-  await loadReferral();
-  lastKnownReferralCount = myReferrals.length;
-  try {
-    const rr = await fetch(API_URL + '/referrals/check-new?token=' +
-      encodeURIComponent(currentToken) + '&since_id=0');
-    const dd = await rr.json();
-    if (dd.success) lastKnownReferralId = dd.max_id || 0;
-  } catch(e) {}
-}, 800);
+    setTimeout(async () => {
+      await loadReferral();
+      lastKnownReferralCount = myReferrals.length;
+      try {
+        const rr = await fetch(API_URL + '/referrals/check-new?token=' +
+          encodeURIComponent(currentToken) + '&since_id=0');
+        const dd = await rr.json();
+        if (dd.success) lastKnownReferralId = dd.max_id || 0;
+      } catch(e) {}
+    }, 800);
   } catch(e) { showToast('✗ Ошибка'); }
 }
 /* Автопополнение энергии: +1 каждую секунду */
@@ -1866,7 +1858,7 @@ function startEnergyRegen(){
     if (energy < maxEnergy) {
       energy = Math.min(maxEnergy, energy + 1);
       updateUI();
-      scheduleSave();  // <-- сохраняем на сервер
+      scheduleSave();
     }
   }, 1000);
 }
@@ -1876,13 +1868,10 @@ function enterGame(){
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
 
-  // Сброс дневного лимита тапов при новом дне
   const today = new Date().toISOString().split('T')[0];
   if (lastTapDate !== today) {
     lastTapDate = today;
     tapsToday = 0;
-    // ВАЖНО: Сбрасываем лимит обратно к 20 000 каждое утро
-    // (купленные бусты действуют только на 1 день)
     dailyTapLimit = 20000;
     scheduleSave();
   }
@@ -1895,7 +1884,7 @@ function enterGame(){
   saveToLocal();
   updateRefLink();
   sendHeartbeat();
-setTimeout(checkNewReferrals, 2500);
+  setTimeout(checkNewReferrals, 2500);
   if (window._pendingJoinCode) {
     setTimeout(async () => {
       const code = window._pendingJoinCode;
@@ -1936,11 +1925,9 @@ async function checkNewReferrals(){
     if (newOnes.length > 0) {
       for (const nf of newOnes) {
         const reward = computeReferralReward(d.count);
+        await refreshMyBalanceFromServer();
         showRefThanks(nf.nickname || 'друг', reward);
-        isBalance += reward;
       }
-      updateUI();
-      scheduleSave();
       lastKnownReferralId = d.max_id;
       lastKnownReferralCount = d.count;
       loadReferral();
@@ -1948,6 +1935,18 @@ async function checkNewReferrals(){
   } catch(e) {
     console.error('checkNewReferrals error', e);
   }
+}
+
+async function refreshMyBalanceFromServer(){
+  try {
+    const r = await fetch(API_URL + '/get-progress?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (d.found && d.user) {
+      isBalance = d.user.is_balance ?? isBalance;
+      score     = d.user.score ?? score;
+      updateUI();
+    }
+  } catch(e) {}
 }
 
 function computeReferralReward(n){
@@ -1981,16 +1980,16 @@ async function loadProgressByToken(token){
       if (u.role) currentUser.role = u.role;
       if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
       enterGame();
-setTimeout(async () => {
-  await loadReferral();
-  lastKnownReferralCount = myReferrals.length;
-  try {
-    const rr = await fetch(API_URL + '/referrals/check-new?token=' +
-      encodeURIComponent(currentToken) + '&since_id=0');
-    const dd = await rr.json();
-    if (dd.success) lastKnownReferralId = dd.max_id || 0;
-  } catch(e) {}
-}, 800);
+      setTimeout(async () => {
+        await loadReferral();
+        lastKnownReferralCount = myReferrals.length;
+        try {
+          const rr = await fetch(API_URL + '/referrals/check-new?token=' +
+            encodeURIComponent(currentToken) + '&since_id=0');
+          const dd = await rr.json();
+          if (dd.success) lastKnownReferralId = dd.max_id || 0;
+        } catch(e) {}
+      }, 800);
       return true;
     }
     localStorage.removeItem('ingsoft_token');
@@ -2386,8 +2385,8 @@ function init(){
     if (dr && !dr.dataset.b) { dr.dataset.b = '1'; dr.onclick = doRegister; }
   }
   bind(); setTimeout(bind, 200); setTimeout(bind, 800);
-lastKnownReferralId = 0;
-lastKnownReferralCount = 0;
+  lastKnownReferralId = 0;
+  lastKnownReferralCount = 0;
 
   const saved = localStorage.getItem('ingsoft_token');
   if (saved) { currentToken = saved; loadProgressByToken(saved); }
