@@ -748,8 +748,6 @@ let referrerNickname = null;
 let referrerId = null;
 let myReferrals = [];
 let myUserId = null;
-let lastKnownReferralCount = 0;
-let lastKnownReferralId = 0;
 let energyRegenInterval = null;
 let leaderboardPage = 0;
 const LEADERBOARD_PAGE_SIZE = 10;
@@ -1471,7 +1469,6 @@ function runGame(gameId){
     if (ticks >= maxTicks) {
       clearInterval(interval);
 
-      // 25% выигрыш, x2 награда. Ставка НЕ списывается при выигрыше.
       const win = Math.random() < 0.25;
 
       const finalIcon = set[Math.floor(Math.random()*set.length)];
@@ -1715,7 +1712,6 @@ function launchConfetti(containerId, count) {
   setTimeout(() => { box.innerHTML = ''; }, 4500);
 }
 
-/* ==== ПРИГЛАСИВШИЙ: показываем, что ему начислили IS ==== */
 function showRefThanks(friendNick, amount) {
   const o = document.getElementById('refThanksOverlay');
   if (!o) return;
@@ -1745,7 +1741,6 @@ function closeRefThanks() {
   if (o) o.classList.remove('show');
 }
 
-/* ==== ПРИГЛАШЁННЫЙ: показываем текст про 100 IS ==== */
 function showRefWelcome(referrerNick) {
   const o = document.getElementById('refWelcomeOverlay');
   if (!o) return;
@@ -1839,19 +1834,9 @@ async function doLogin(){
     earnedPromocodes = u.earned_promocodes || [];
     enterGame();
     showToast('🎉 С возвращением, ' + nickname + '!');
-    setTimeout(async () => {
-      await loadReferral();
-      lastKnownReferralCount = myReferrals.length;
-      try {
-        const rr = await fetch(API_URL + '/referrals/check-new?token=' +
-          encodeURIComponent(currentToken) + '&since_id=0');
-        const dd = await rr.json();
-        if (dd.success) lastKnownReferralId = dd.max_id || 0;
-      } catch(e) {}
-    }, 800);
   } catch(e) { showToast('✗ Ошибка'); }
 }
-/* Автопополнение энергии: +1 каждую секунду */
+
 function startEnergyRegen(){
   if (energyRegenInterval) clearInterval(energyRegenInterval);
   energyRegenInterval = setInterval(() => {
@@ -1884,7 +1869,10 @@ function enterGame(){
   saveToLocal();
   updateRefLink();
   sendHeartbeat();
-  setTimeout(checkNewReferrals, 2500);
+
+  // Показываем отложенные уведомления о новых рефералах
+  setTimeout(checkNewReferrals, 1500);
+
   if (window._pendingJoinCode) {
     setTimeout(async () => {
       const code = window._pendingJoinCode;
@@ -1904,36 +1892,60 @@ function enterGame(){
   }
 }
 
+
+/* ============ РЕФЕРАЛЬНЫЕ УВЕДОМЛЕНИЯ ============ */
+/* Логика: сервер хранит referral_seen_id — id последнего реферала, о котором
+   отправитель уже получил уведомление. Фронт спрашивает /referrals/pending,
+   показывает оверлеи по очереди и зовёт /referrals/mark-seen.
+   Работает независимо от того, онлайн отправитель или нет. */
+
+let _refCheckBusy = false;
+
 async function checkNewReferrals(){
   if (!currentToken) return;
+  if (_refCheckBusy) return;
+  _refCheckBusy = true;
   try {
-    const r = await fetch(
-      API_URL + '/referrals/check-new?token=' +
-      encodeURIComponent(currentToken) + '&since_id=' + lastKnownReferralId
-    );
+    const r = await fetch(API_URL + '/referrals/pending?token=' + encodeURIComponent(currentToken));
     const d = await r.json();
-    if (!d.success) return;
+    if (!d.success) { _refCheckBusy = false; return; }
 
-    const newOnes = d.new || [];
+    const pending = d.pending || [];
+    if (pending.length === 0) { _refCheckBusy = false; return; }
 
-    if (lastKnownReferralId === 0) {
-      lastKnownReferralId = d.max_id || 0;
-      lastKnownReferralCount = d.count || 0;
-      return;
-    }
+    // Подтягиваем баланс с сервера — там уже всё начислено
+    await refreshMyBalanceFromServer();
+    await loadReferral();
 
-    if (newOnes.length > 0) {
-      for (const nf of newOnes) {
-        const reward = computeReferralReward(d.count);
-        await refreshMyBalanceFromServer();
-        showRefThanks(nf.nickname || 'друг', reward);
+    // Считаем суммарный reward для отображения
+    const totalReward = computeReferralReward(pending.length);
+
+    let lastId = 0;
+    for (let i = 0; i < pending.length; i++) {
+      const nf = pending[i];
+      lastId = nf.id;
+      showRefThanks(nf.nickname || 'друг', totalReward);
+      // ждём 4 сек между оверлеями (или если один — просто показываем)
+      if (i < pending.length - 1) {
+        await new Promise(res => setTimeout(res, 4200));
       }
-      lastKnownReferralId = d.max_id;
-      lastKnownReferralCount = d.count;
-      loadReferral();
     }
+
+    // Отмечаем как просмотренные на сервере
+    try {
+      await fetch(API_URL + '/referrals/mark-seen', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ token: currentToken, last_id: lastId })
+      });
+    } catch(e) {}
+
+    await refreshMyBalanceFromServer();
+    loadReferral();
   } catch(e) {
     console.error('checkNewReferrals error', e);
+  } finally {
+    _refCheckBusy = false;
   }
 }
 
@@ -1958,6 +1970,7 @@ function computeReferralReward(n){
   if (n > 5 && n <= 100) return 100;
   return 300;
 }
+
 async function loadProgressByToken(token){
   try {
     const r = await fetch(API_URL + '/get-progress?token=' + token);
@@ -1980,16 +1993,6 @@ async function loadProgressByToken(token){
       if (u.role) currentUser.role = u.role;
       if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
       enterGame();
-      setTimeout(async () => {
-        await loadReferral();
-        lastKnownReferralCount = myReferrals.length;
-        try {
-          const rr = await fetch(API_URL + '/referrals/check-new?token=' +
-            encodeURIComponent(currentToken) + '&since_id=0');
-          const dd = await rr.json();
-          if (dd.success) lastKnownReferralId = dd.max_id || 0;
-        } catch(e) {}
-      }, 800);
       return true;
     }
     localStorage.removeItem('ingsoft_token');
@@ -2385,8 +2388,6 @@ function init(){
     if (dr && !dr.dataset.b) { dr.dataset.b = '1'; dr.onclick = doRegister; }
   }
   bind(); setTimeout(bind, 200); setTimeout(bind, 800);
-  lastKnownReferralId = 0;
-  lastKnownReferralCount = 0;
 
   const saved = localStorage.getItem('ingsoft_token');
   if (saved) { currentToken = saved; loadProgressByToken(saved); }
@@ -2396,11 +2397,11 @@ function init(){
   setInterval(saveToLocal, 5000);
   setInterval(refreshLeaderboard, 3000);
   setInterval(sendHeartbeat, 20000);
-  setInterval(checkNewReferrals, 10000);
+  setInterval(checkNewReferrals, 10000); // каждые 10 сек проверяем новые рефералы
   window.addEventListener('beforeunload', saveToLocal);
   initSlideshow();
 }
-/* ============ СЛАЙД-ШОУ (10 слайдов, авто-переключение) ============ */
+/* ============ СЛАЙД-ШОУ ============ */
 function initSlideshow(){
   const slides = document.querySelectorAll('.slide');
   const dotsWrap = document.getElementById('slideDots');
