@@ -113,7 +113,7 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .game-card { background:linear-gradient(145deg,rgba(139,92,246,0.12),rgba(15,12,41,0.6)); border:1px solid rgba(139,92,246,0.25); border-radius:20px; padding:18px 10px; text-align:center; cursor:pointer; }
 .game-card:hover { transform:translateY(-4px); border-color:rgba(255,215,0,0.5); }
 .games-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
-.game-card-icon { width:64px; height:64px; }
+.game-card-icon { width:64px; height:64px; margin:0 auto; }
 .game-card-icon svg { width:100%; height:100%; }
 .profile-avatar { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6,#4facfe); display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:900; margin:0 auto 18px; background-size:cover; background-position:center; }
 .profile-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(139,92,246,0.12); font-size:13px; }
@@ -162,7 +162,7 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .chat-member-time { font-size:10px; color:#94a3b8; }
 .chat-title-clickable { cursor:pointer; }
 .chat-title-clickable::after { content:' ▾'; font-size:14px; color:#a78bfa; }
-.game-result-text { font-size:24px; font-weight:900; color:#fff; margin-top:14px; min-height:32px; text-align:center; }
+.game-result-text { font-size:22px; font-weight:900; color:#fff; margin-top:14px; min-height:32px; text-align:center; }
 .game-result-text.win { color:#22c55e; text-shadow:0 0 20px rgba(34,197,94,1); }
 .game-result-text.lose { color:#e63946; text-shadow:0 0 20px rgba(230,57,70,1); }
 .game-sub-text { font-size:13px; color:#cbd5e1; margin-top:8px; min-height:18px; }
@@ -176,7 +176,7 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .history-item { display:flex; justify-content:space-between; align-items:center; padding:7px 10px; margin-bottom:4px; border-radius:8px; background:rgba(255,255,255,0.03); }
 .history-item.win { background:rgba(34,197,94,0.12); color:#86efac; }
 .history-item.lose { background:rgba(230,57,70,0.1); color:#fca5a5; }
-.casino-table { position:relative; background:radial-gradient(ellipse at center,rgba(34,197,94,0.18) 0%,rgba(15,23,42,0.95) 60%); border:2px solid; border-image:linear-gradient(135deg,#ffd700,#8b5cf6,#ec4899,#4facfe,#ffd700) 1; border-radius:20px; padding:20px 14px; text-align:center; margin-bottom:14px; min-height:300px; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; box-shadow:inset 0 0 60px rgba(0,0,0,0.7),0 0 40px rgba(139,92,246,0.4); }
+.casino-table { position:relative; background:radial-gradient(ellipse at center,rgba(34,197,94,0.18) 0%,rgba(15,23,42,0.95) 60%); border:2px solid; border-image:linear-gradient(135deg,#ffd700,#8b5cf6,#ec4899,#4facfe,#ffd700) 1; border-radius:20px; padding:20px 14px; text-align:center; margin-bottom:14px; min-height:340px; display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; box-shadow:inset 0 0 60px rgba(0,0,0,0.7),0 0 40px rgba(139,92,246,0.4); }
 .lights-row { position:absolute; top:0; left:0; right:0; height:6px; display:flex; justify-content:space-around; }
 .light-bulb { width:6px; height:6px; border-radius:50%; background:#ffd700; box-shadow:0 0 10px #ffd700; animation:lb 1.2s infinite; }
 .light-bulb:nth-child(2n) { animation-delay:0.2s; background:#ec4899; box-shadow:0 0 10px #ec4899; }
@@ -189,7 +189,7 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .g-result.win { border-color:rgba(34,197,94,0.7); color:#22c55e; box-shadow:0 0 30px rgba(34,197,94,0.5); }
 .g-result.lose { border-color:rgba(230,57,70,0.7); color:#e63946; box-shadow:0 0 30px rgba(230,57,70,0.5); }
 @keyframes bp { 0%{transform:scale(0.3);opacity:0;} 60%{transform:scale(1.12);opacity:1;} 100%{transform:scale(1);opacity:1;} }
-.dice-predict-btn { padding:6px 10px; font-size:11px; font-weight:800; border-radius:10px; border:1px solid rgba(139,92,246,0.5); background:rgba(139,92,246,0.15); color:#e0e7ff; cursor:pointer; }
+.dice-predict-btn { padding:8px 12px; font-size:12px; font-weight:800; border-radius:10px; border:1px solid rgba(139,92,246,0.5); background:rgba(139,92,246,0.15); color:#e0e7ff; cursor:pointer; }
 .dice-predict-btn.active { background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0518; border-color:#ffd700; }
 .mine-cell { width:34px; height:34px; background:linear-gradient(145deg,#8b5cf6,#4c1d95); border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,215,0,0.3); transition:all 0.2s; }
 .mine-cell.opened { background:#0a0518; cursor:default; }
@@ -204,8 +204,46 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .playing-card.red { color:#dc2626; }
 .playing-card .rank { font-size:20px; line-height:1; }
 .playing-card .suit { font-size:38px; line-height:1; }
+
+/* ========== НОВОЕ: слоты ========== */
+.slot-machine { display:flex; gap:8px; padding:14px 18px; background:linear-gradient(145deg,#1a1a2e,#0a0518); border-radius:18px; border:3px solid #ffd700; box-shadow:0 0 30px rgba(255,215,0,0.5); margin:10px auto; }
+.slot-reel { width:70px; height:100px; overflow:hidden; position:relative; background:radial-gradient(circle,#141c2e,#050210); border-radius:12px; border:2px solid rgba(139,92,246,0.6); box-shadow:inset 0 0 25px rgba(0,0,0,0.95); display:flex; align-items:center; justify-content:center; font-size:48px; }
+.slot-reel .sym { transition:transform 0.1s linear; }
+@keyframes slotDrop { from{transform:translateY(-100%);opacity:0;} to{transform:translateY(0);opacity:1;} }
+.slot-reel.spinning .sym { animation:slotDrop 0.1s linear infinite; }
+
+/* ========== НОВОЕ: инфо-блок игры ========== */
+.game-info { background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(30,58,95,0.25)); border:1px solid rgba(139,92,246,0.35); border-radius:12px; padding:12px 14px; margin-bottom:12px; font-size:12px; line-height:1.6; color:#cbd5e1; }
+.game-info b { color:#ffd700; }
+.game-info .tag { display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:800; margin-right:6px; }
+.game-info .tag.win { background:rgba(34,197,94,0.25); color:#22c55e; }
+.game-info .tag.lose { background:rgba(230,57,70,0.25); color:#e63946; }
+
+/* ========== НОВОЕ: кубики плоские ========== */
+.dice-flat { width:100px; height:100px; border-radius:16px; background:linear-gradient(145deg,#fff,#e5e7eb); border:3px solid #ffd700; box-shadow:0 6px 24px rgba(0,0,0,0.5),inset 0 0 20px rgba(0,0,0,0.15); display:flex; align-items:center; justify-content:center; transition:transform 0.5s; }
+.dice-flat.rolling { animation:diceRoll 0.35s linear infinite; }
+@keyframes diceRoll {
+  0% { transform:rotate(0deg) scale(1); }
+  25% { transform:rotate(90deg) scale(1.05); }
+  50% { transform:rotate(180deg) scale(1); }
+  75% { transform:rotate(270deg) scale(1.05); }
+  100% { transform:rotate(360deg) scale(1); }
+}
+.dice-dots { width:78px; height:78px; }
+.dice-dots circle { fill:#0a0518; }
+
+/* ========== НОВОЕ: стаканы ========== */
+.cups-wrap { display:flex; justify-content:center; gap:24px; margin:20px 0; position:relative; }
+.cup { width:70px; height:90px; background:linear-gradient(180deg,#dc2626,#7f1d1d); border-radius:0 0 40px 40px; border:3px solid #ffd700; cursor:pointer; position:relative; transition:transform 0.35s cubic-bezier(0.34,1.2,0.64,1); display:flex; align-items:flex-end; justify-content:center; }
+.cup::before { content:''; position:absolute; top:-4px; left:-4px; right:-4px; height:12px; background:linear-gradient(180deg,#ff8c8c,#dc2626); border-radius:50%; border:2px solid #ffd700; }
+.cup .ball-under { position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); width:36px; height:36px; border-radius:50%; background:radial-gradient(circle at 32% 28%,#fff,#cbd5e1 60%,#94a3b8); box-shadow:0 4px 12px rgba(0,0,0,0.5); display:none; }
+.cup.lifted { transform:translateY(-60px); }
+.cup.lifted .ball-under { display:block; }
+.cup.pickable { animation:cupPulse 1s infinite; }
+@keyframes cupPulse { 0%,100%{filter:drop-shadow(0 0 4px rgba(255,215,0,0.4));} 50%{filter:drop-shadow(0 0 14px rgba(255,215,0,0.9));} }
+
 button { cursor:pointer; }
-@media (max-width:480px) { .sidebar{width:54px;} .sidebar-label{font-size:6px;} .main{margin-left:54px;} .header-card{flex-wrap:wrap;gap:10px;padding:10px 14px;} .header-actions{margin-left:0;padding-left:0;border-left:none;width:100%;min-width:0;} .score-big{font-size:56px;} .tap-button{width:190px;height:190px;font-size:28px;} .quick-actions{grid-template-columns:repeat(2,1fr);padding:0 12px;} .modal-content{padding:18px;border-radius:24px 24px 0 0;} .mine-cell{width:26px;height:26px;} .playing-card{width:64px;height:92px;} .game-card-icon{width:54px;height:54px;} }
+@media (max-width:480px) { .sidebar{width:54px;} .sidebar-label{font-size:6px;} .main{margin-left:54px;} .header-card{flex-wrap:wrap;gap:10px;padding:10px 14px;} .header-actions{margin-left:0;padding-left:0;border-left:none;width:100%;min-width:0;} .score-big{font-size:56px;} .tap-button{width:190px;height:190px;font-size:28px;} .quick-actions{grid-template-columns:repeat(2,1fr);padding:0 12px;} .modal-content{padding:18px;border-radius:24px 24px 0 0;} .mine-cell{width:26px;height:26px;} .playing-card{width:64px;height:92px;} .game-card-icon{width:54px;height:54px;} .slot-reel{width:56px;height:82px;font-size:38px;} .dice-flat{width:80px;height:80px;} }
 </style>
 </head>
 <body>
@@ -230,8 +268,7 @@ button { cursor:pointer; }
     <div style="font-size:60px;margin-bottom:14px;">👋</div>
     <div style="font-size:22px;font-weight:900;margin-bottom:12px;">Ты зашёл по ссылке друга!</div>
     <div style="font-size:13px;color:#cbd5e1;line-height:1.7;margin-bottom:18px;">Тебя пригласил <b id="refWelcomeNick">Игрок</b> в <b>IngSoft Tap</b>!</div>
-    <button onclick="closeRefWelcome()" style="width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;color:#fff;padding:16px;border-radius:16px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:10px;">Начинаю!</button>
-    <button onclick="closeRefWelcome()" style="width:100%;background:transparent;border:1px solid rgba(139,92,246,0.4);color:#94a3b8;padding:12px;border-radius:16px;font-size:13px;cursor:pointer;">Закрыть</button>
+    <button onclick="closeRefWelcome()" style="width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;color:#fff;padding:16px;border-radius:16px;font-size:15px;font-weight:900;cursor:pointer;">Начинаю!</button>
   </div>
 </div>
 
@@ -483,6 +520,26 @@ const ICONS = {
   mines: `<svg viewBox="0 0 60 60"><rect x="4" y="4" width="52" height="52" rx="8" fill="#0a0a1e" stroke="#8b5cf6" stroke-width="2"/><circle cx="20" cy="20" r="6" fill="#0a0518" stroke="#e63946" stroke-width="2"/><line x1="16" y1="16" x2="12" y2="12" stroke="#e63946" stroke-width="2"/><line x1="24" y1="16" x2="28" y2="12" stroke="#e63946" stroke-width="2"/><line x1="16" y1="24" x2="12" y2="28" stroke="#e63946" stroke-width="2"/><line x1="24" y1="24" x2="28" y2="28" stroke="#e63946" stroke-width="2"/><path d="M38 38 L44 32 L50 38 L44 44 Z" fill="#4facfe" stroke="#fff"/></svg>`
 };
 
+/* ========== ОПИСАНИЯ ИГР ========== */
+const GAME_DESCRIPTIONS = {
+  roulette: '<b>Что это:</b> Крутится колесо с 12 цветными секторами.<br><span class="tag win">ПОБЕДА</span> если выпадет зелёный или крайний сектор — ×2.0<br><span class="tag lose">ПРОИГРЫШ</span> если выпадет красный/чёрный — теряешь ставку.',
+  dice: '<b>Что это:</b> Бросаются 2 кубика. Выбери ДО броска свой прогноз.<br><span class="tag win">ПОБЕДА</span> Сумма 3–7 или 8–11 — ×1.8 · Ровно 6 — ×5 · Ровно 12 — ×2 · Дубли 3+3 — ×50<br><span class="tag lose">ПРОИГРЫШ</span> Сумма не попала в твой прогноз — теряешь ставку.',
+  coin: '<b>Что это:</b> Подброс 3D-монетки.<br><span class="tag win">ПОБЕДА</span> Орёл — ×1.9<br><span class="tag lose">ПРОИГРЫШ</span> Решка — теряешь ставку.',
+  slots: '<b>Что это:</b> 3 барабана с 7 символами (🍒🍋💎7️⃣⭐🍀🔔).<br><span class="tag win">ПОБЕДА</span> Три одинаковых символа подряд — ×3.0<br><span class="tag lose">ПРОИГРЫШ</span> Символы разные — теряешь ставку.',
+  basket: '<b>Что это:</b> Бросок баскетбольного мяча в кольцо.<br><span class="tag win">ПОБЕДА</span> Мяч попал в кольцо — ×2.4<br><span class="tag lose">ПРОИГРЫШ</span> Промах — теряешь ставку.',
+  mine: '<b>Что это:</b> Курс криптовалюты меняется как на реальной бирже.<br><span class="tag win">ПОБЕДА</span> Курс вырос к моменту фиксации — ×2.8<br><span class="tag lose">ПРОИГРЫШ</span> Курс упал ниже старта — теряешь ставку.',
+  wheel: '<b>Что это:</b> Колесо Фортуны с 12 секторами.<br><span class="tag win">ПОБЕДА</span> Стрелка указывает на твой сектор — ×2.3<br><span class="tag lose">ПРОИГРЫШ</span> Мимо — теряешь ставку.',
+  darts: '<b>Что это:</b> Бросок дротика в мишень.<br><span class="tag win">ПОБЕДА</span> Дротик попал в яблочко — ×2.5<br><span class="tag lose">ПРОИГРЫШ</span> Дротик улетел мимо центра — теряешь ставку.',
+  fishing: '<b>Что это:</b> Ловля рыбы с крючком.<br><span class="tag win">ПОБЕДА</span> 🐟 Золотая рыба — ×2.0 · 🐠 Обычная — ×1.3<br><span class="tag lose">ПРОИГРЫШ</span> 🥾 Барахло (ботинок) — теряешь ставку.',
+  cards: '<b>Что это:</b> 3 карты рубашкой вверх.<br><span class="tag win">ПОБЕДА</span> Одна из карт — ♠A (туз пик) — ×2.4<br><span class="tag lose">ПРОИГРЫШ</span> Туз пик не выпал — теряешь ставку.',
+  shells: '<b>Что это:</b> Фокусник прячет шарик под стакан.<br><span class="tag win">ПОБЕДА</span> Ты угадал где шарик — ×2.9<br><span class="tag lose">ПРОИГРЫШ</span> Ты выбрал пустой стакан — теряешь ставку.',
+  craps: '<b>Что это:</b> Сумма двух кубиков. Угадай на какой стороне будет сумма.<br><span class="tag win">ПОБЕДА</span> Сумма совпала с прогнозом — ×2.6<br><span class="tag lose">ПРОИГРЫШ</span> Сумма не совпала — теряешь ставку.',
+  archery: '<b>Что это:</b> Стрельба из лука по мишени.<br><span class="tag win">ПОБЕДА</span> Стрела в яблочке — ×2.7<br><span class="tag lose">ПРОИГРЫШ</span> Мимо мишени — теряешь ставку.',
+  penalty: '<b>Что это:</b> Пенальти по воротам с вратарём.<br><span class="tag win">ПОБЕДА</span> Забил гол — ×2.3<br><span class="tag lose">ПРОИГРЫШ</span> Промах или вратарь отбил — теряешь ставку.',
+  basket3: '<b>Что это:</b> Сложный 3-очковый бросок.<br><span class="tag win">ПОБЕДА</span> Забросил — ×3.3<br><span class="tag lose">ПРОИГРЫШ</span> Промах — теряешь ставку.',
+  mines: '<b>Что это:</b> Поле из клеток. Некоторые — мины, некоторые — кристаллы.<br><span class="tag win">ПОБЕДА</span> Открыл клетку с кристаллом 💎 — ×3.1<br><span class="tag lose">ПРОИГРЫШ</span> Открыл клетку с миной 💣 — теряешь ставку.'
+};
+
 /* ============ ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ============ */
 const tg = window.Telegram?.WebApp;
 let telegramId=null, username=null, firstName=null;
@@ -583,22 +640,22 @@ for (let lvl = 0; lvl < 10; lvl++) {
 }
 
 const GAMES = [
-  {id:'roulette',name:'Рулетка',desc:'Крути колесо'},
-  {id:'dice',name:'Кости',desc:'Два кубика'},
-  {id:'coin',name:'Монетка',desc:'Орёл/решка'},
-  {id:'slots',name:'Слоты',desc:'Собери комбо'},
-  {id:'basket',name:'Баскетбол',desc:'Забрось мяч'},
-  {id:'mine',name:'Майнинг',desc:'Трейдинг'},
-  {id:'wheel',name:'Колесо',desc:'Крути фортуну'},
-  {id:'darts',name:'Дартс',desc:'Попади в цель'},
-  {id:'fishing',name:'Рыбалка',desc:'Поймай рыбу'},
-  {id:'cards',name:'Карты',desc:'Угадай карту'},
-  {id:'shells',name:'Фокусник',desc:'Где шарик?'},
-  {id:'craps',name:'Кости+',desc:'Сумма кубиков'},
-  {id:'archery',name:'Лучник',desc:'В яблочко'},
-  {id:'penalty',name:'Пенальти',desc:'Забей гол'},
-  {id:'basket3',name:'3-очковый',desc:'Сложный бросок'},
-  {id:'mines',name:'Сапёр',desc:'Открой клетки'},
+  {id:'roulette',name:'Рулетка',desc:'Крути колесо · ×2.0'},
+  {id:'dice',name:'Кости',desc:'2 кубика · до ×50'},
+  {id:'coin',name:'Монетка',desc:'Орёл/решка · ×1.9'},
+  {id:'slots',name:'Слоты',desc:'3 барабана · ×3.0'},
+  {id:'basket',name:'Баскетбол',desc:'Забрось мяч · ×2.4'},
+  {id:'mine',name:'Майнинг',desc:'Трейдинг · ×2.8'},
+  {id:'wheel',name:'Колесо',desc:'Крути фортуну · ×2.3'},
+  {id:'darts',name:'Дартс',desc:'В яблочко · ×2.5'},
+  {id:'fishing',name:'Рыбалка',desc:'Рыба · ×2.0'},
+  {id:'cards',name:'Карты',desc:'Туз пик · ×2.4'},
+  {id:'shells',name:'Фокусник',desc:'Найди шарик · ×2.9'},
+  {id:'craps',name:'Кости+',desc:'Сумма · ×2.6'},
+  {id:'archery',name:'Лучник',desc:'В яблочко · ×2.7'},
+  {id:'penalty',name:'Пенальти',desc:'Забей гол · ×2.3'},
+  {id:'basket3',name:'3-очковый',desc:'Сложный · ×3.3'},
+  {id:'mines',name:'Сапёр',desc:'Открой клетку · ×3.1'},
 ];
 
 /* ============ УТИЛИТЫ ============ */
@@ -612,6 +669,7 @@ function fmt(n){
 }
 function showToast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500); }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
 /* ============ ЛИДЕРБОРД ============ */
 async function fetchLeaderboardFromServer(){
@@ -726,9 +784,10 @@ function playGame(gameId){
   modal.innerHTML =
     '<div class="modal-content" style="max-width:620px;">' +
       '<div class="modal-header"><div class="modal-title">'+g.name+'</div><button class="modal-close" onclick="closePlaying()">×</button></div>' +
+      '<div class="game-info">'+(GAME_DESCRIPTIONS[gameId]||'')+'</div>' +
       '<div class="casino-table">' +
         '<div class="lights-row">'+'<div class="light-bulb"></div>'.repeat(14)+'</div>' +
-        '<div id="gameBoard" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:200px;"></div>' +
+        '<div id="gameBoard" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;min-height:220px;"></div>' +
         '<div class="game-result-text" id="gameResult" style="margin-top:10px;">Сделай ставку</div>' +
         '<div class="game-sub-text" id="gameSub">Выбери сумму и нажми «Играть»</div>' +
         '<div class="lights-row bottom">'+'<div class="light-bulb"></div>'.repeat(14)+'</div>' +
@@ -761,7 +820,6 @@ function playGame(gameId){
   document.body.appendChild(modal);
   buildGameBoard(gameId);
   loadGameHistory();
-  // Автообновление истории каждые 10 сек
   if (historyRefreshTimer) clearInterval(historyRefreshTimer);
   historyRefreshTimer = setInterval(() => {
     if (!document.getElementById('modal-playing')) { clearInterval(historyRefreshTimer); return; }
@@ -770,6 +828,7 @@ function playGame(gameId){
   }, 10000);
 }
 
+/* ============ КОНСТРУКТОР ИГРОВОГО ПОЛЯ ============ */
 function buildGameBoard(gameId){
   const board = document.getElementById('gameBoard');
   const predictBox = document.getElementById('gamePredictBox');
@@ -781,16 +840,38 @@ function buildGameBoard(gameId){
     board.innerHTML = '<div style="perspective:1000px;margin:20px auto;width:150px;height:150px;"><div id="coinEl" style="width:150px;height:150px;position:relative;transform-style:preserve-3d;transition:transform 3s cubic-bezier(0.25,0.9,0.35,1);"><div style="position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;background:radial-gradient(circle at 32% 28%,#fff9d6 0%,#ffd700 45%,#b8860b 90%);border:6px solid #ffd700;box-shadow:0 0 50px rgba(255,215,0,0.9);display:flex;align-items:center;justify-content:center;"><span style="font-size:56px;">🦅</span></div><div style="position:absolute;inset:0;border-radius:50%;backface-visibility:hidden;transform:rotateY(180deg);background:radial-gradient(circle at 32% 28%,#ffe9f2 0%,#f4a9c9 45%,#a855f7 90%);border:6px solid #ffd700;box-shadow:0 0 50px rgba(255,215,0,0.9);display:flex;align-items:center;justify-content:center;"><span style="font-size:56px;font-weight:900;color:#6d28d9;">1</span></div></div></div><div class="g-result" id="gRes"></div>';
   }
   else if (gameId === 'dice' || gameId === 'craps') {
-    board.innerHTML = '<div style="perspective:700px;display:flex;justify-content:center;gap:24px;margin:18px 0;"><div id="d1" style="width:80px;height:80px;transform-style:preserve-3d;transition:transform 2.1s cubic-bezier(0.15,0.9,0.15,1);position:relative;">'+diceFaces()+'</div><div id="d2" style="width:80px;height:80px;transform-style:preserve-3d;transition:transform 2.1s cubic-bezier(0.15,0.9,0.15,1);position:relative;">'+diceFaces()+'</div></div><div class="g-result" id="gRes"></div>';
+    board.innerHTML =
+      '<div style="display:flex;justify-content:center;gap:24px;margin:20px 0;">' +
+        '<div class="dice-flat" id="d1"></div>' +
+        '<div class="dice-flat" id="d2"></div>' +
+      '</div>' +
+      '<div style="text-align:center;font-size:14px;color:#a78bfa;font-weight:800;margin-bottom:6px;">Сумма: <span id="diceSum">—</span></div>' +
+      '<div class="g-result" id="gRes"></div>';
+    setDiceFace('d1', 1); setDiceFace('d2', 1);
     predictBox.style.display = 'block';
-    predictBox.innerHTML = '<div style="font-size:12px;font-weight:800;color:#a78bfa;margin-bottom:6px;text-align:center;">Прогноз:</div><div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;"><button class="dice-predict-btn active" data-pred="sum_3_7" onclick="setDicePredict(\'sum_3_7\',this)">3–7 · ×1.8</button><button class="dice-predict-btn" data-pred="sum_8_11" onclick="setDicePredict(\'sum_8_11\',this)">8–11 · ×1.8</button><button class="dice-predict-btn" data-pred="sum_1_9" onclick="setDicePredict(\'sum_1_9\',this)">1–9 · ×1.3</button><button class="dice-predict-btn" data-pred="total_6" onclick="setDicePredict(\'total_6\',this)">Ровно 6 · ×5</button><button class="dice-predict-btn" data-pred="total_12" onclick="setDicePredict(\'total_12\',this)">Ровно 12 · ×2</button><button class="dice-predict-btn" data-pred="exact_3_3" onclick="setDicePredict(\'exact_3_3\',this)">3+3 · ×50</button></div>';
+    predictBox.innerHTML =
+      '<div style="font-size:13px;font-weight:800;color:#a78bfa;margin-bottom:8px;text-align:center;">🎯 ВЫБЕРИ ПРОГНОЗ ДО БРОСКА:</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">' +
+        '<button class="dice-predict-btn active" data-pred="sum_3_7" onclick="setDicePredict(\'sum_3_7\',this)">Сумма 3–7<br><span style="font-size:10px;color:#22c55e;">×1.8</span></button>' +
+        '<button class="dice-predict-btn" data-pred="sum_8_11" onclick="setDicePredict(\'sum_8_11\',this)">Сумма 8–11<br><span style="font-size:10px;color:#22c55e;">×1.8</span></button>' +
+        '<button class="dice-predict-btn" data-pred="sum_1_9" onclick="setDicePredict(\'sum_1_9\',this)">Сумма 1–9<br><span style="font-size:10px;color:#22c55e;">×1.3</span></button>' +
+        '<button class="dice-predict-btn" data-pred="total_6" onclick="setDicePredict(\'total_6\',this)">Ровно 6<br><span style="font-size:10px;color:#22c55e;">×5.0</span></button>' +
+        '<button class="dice-predict-btn" data-pred="total_12" onclick="setDicePredict(\'total_12\',this)">Ровно 12<br><span style="font-size:10px;color:#22c55e;">×2.0</span></button>' +
+        '<button class="dice-predict-btn" data-pred="exact_3_3" onclick="setDicePredict(\'exact_3_3\',this)">Оба = 3<br><span style="font-size:10px;color:#ffd700;">×50</span></button>' +
+      '</div>';
     _dicePredict = 'sum_3_7';
   }
   else if (gameId === 'roulette' || gameId === 'wheel') {
     board.innerHTML = '<div style="position:relative;width:220px;height:220px;margin:10px auto;"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:28px;color:#ffd700;z-index:2;">▼</div><div id="wheelEl" style="width:220px;height:220px;border-radius:50%;position:relative;border:5px solid #ffd700;transition:transform 4.2s cubic-bezier(0.15,0.9,0.15,1);">'+wheelSvg()+'</div></div><div class="g-result" id="gRes"></div>';
   }
   else if (gameId === 'slots') {
-    board.innerHTML = '<div style="display:flex;gap:10px;padding:14px 18px;background:linear-gradient(145deg,#1a1a2e,#0a0518);border-radius:18px;border:3px solid #ffd700;margin:10px auto;"><div id="reel1" style="width:70px;height:96px;display:flex;align-items:center;justify-content:center;font-size:48px;background:#050210;border-radius:12px;border:2px solid rgba(139,92,246,0.6);">🍒</div><div id="reel2" style="width:70px;height:96px;display:flex;align-items:center;justify-content:center;font-size:48px;background:#050210;border-radius:12px;border:2px solid rgba(139,92,246,0.6);">🍋</div><div id="reel3" style="width:70px;height:96px;display:flex;align-items:center;justify-content:center;font-size:48px;background:#050210;border-radius:12px;border:2px solid rgba(139,92,246,0.6);">💎</div></div><div class="g-result" id="gRes"></div>';
+    board.innerHTML =
+      '<div class="slot-machine">' +
+        '<div class="slot-reel" id="reel1"><div class="sym">🍒</div></div>' +
+        '<div class="slot-reel" id="reel2"><div class="sym">🍒</div></div>' +
+        '<div class="slot-reel" id="reel3"><div class="sym">🍒</div></div>' +
+      '</div>' +
+      '<div class="g-result" id="gRes"></div>';
   }
   else if (gameId === 'basket' || gameId === 'basket3') {
     board.innerHTML = '<div style="position:relative;width:230px;height:250px;margin:0 auto;"><svg viewBox="0 0 230 250" style="position:absolute;inset:0;width:100%;height:100%;"><rect x="10" y="20" width="8" height="230" fill="#4a5568"/><rect x="18" y="30" width="90" height="70" fill="#e5e7eb" stroke="#0a0518" stroke-width="2"/><rect x="40" y="55" width="45" height="35" fill="none" stroke="#0a0518" stroke-width="2"/><rect x="48" y="80" width="70" height="10" fill="#e63946" rx="2"/><path d="M48 90 L58 130 L108 130 L118 90 Z" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2"/></svg><div id="bball" style="position:absolute;bottom:20px;left:60px;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8c42,#d2691e 60%,#8b4513);box-shadow:0 0 25px rgba(255,140,66,0.5);transition:all 1.3s cubic-bezier(0.34,0.9,0.5,1);"><svg viewBox="0 0 50 50" style="width:100%;height:100%;"><circle cx="25" cy="25" r="24" fill="none" stroke="#0a0518" stroke-width="2"/><path d="M2 25 Q25 45 48 25" stroke="#0a0518" stroke-width="1.5" fill="none"/><path d="M2 25 Q25 5 48 25" stroke="#0a0518" stroke-width="1.5" fill="none"/></svg></div></div><div class="g-result" id="gRes"></div>';
@@ -808,7 +889,14 @@ function buildGameBoard(gameId){
     board.innerHTML = '<div style="display:flex;justify-content:center;gap:14px;margin:20px 0;"><div class="playing-card back" id="card0"></div><div class="playing-card back" id="card1"></div><div class="playing-card back" id="card2"></div></div><div class="g-result" id="gRes"></div>';
   }
   else if (gameId === 'shells') {
-    board.innerHTML = '<div style="display:flex;justify-content:center;gap:24px;margin:20px 0;" id="cupsRow"><div class="cup" data-idx="0" onclick="pickCup(0)" style="width:70px;height:90px;background:linear-gradient(180deg,#dc2626,#7f1d1d);border-radius:0 0 40px 40px;border:3px solid #ffd700;cursor:pointer;transition:transform 0.4s;"></div><div class="cup" data-idx="1" onclick="pickCup(1)" style="width:70px;height:90px;background:linear-gradient(180deg,#dc2626,#7f1d1d);border-radius:0 0 40px 40px;border:3px solid #ffd700;cursor:pointer;transition:transform 0.4s;"></div><div class="cup" data-idx="2" onclick="pickCup(2)" style="width:70px;height:90px;background:linear-gradient(180deg,#dc2626,#7f1d1d);border-radius:0 0 40px 40px;border:3px solid #ffd700;cursor:pointer;transition:transform 0.4s;"></div></div><p style="font-size:12px;color:#a78bfa;margin-bottom:8px;">Нажми на стакан</p><div class="g-result" id="gRes"></div>';
+    board.innerHTML =
+      '<div class="cups-wrap" id="cupsRow">' +
+        '<div class="cup" data-idx="0" onclick="pickCup(0)"><div class="ball-under"></div></div>' +
+        '<div class="cup" data-idx="1" onclick="pickCup(1)"><div class="ball-under"></div></div>' +
+        '<div class="cup" data-idx="2" onclick="pickCup(2)"><div class="ball-under"></div></div>' +
+      '</div>' +
+      '<p id="shellsHint" style="font-size:12px;color:#a78bfa;margin-bottom:8px;text-align:center;min-height:18px;">Нажми «Играть» чтобы начать</p>' +
+      '<div class="g-result" id="gRes"></div>';
     _cupPick = null;
   }
   else if (gameId === 'penalty') {
@@ -832,10 +920,19 @@ function buildGameBoard(gameId){
   }
 }
 
-function diceFaces(){
-  const pip = (x, y) => '<circle cx="'+x+'" cy="'+y+'" r="5" fill="#0a0518"/>';
-  const face = (pips, transform) => '<div style="position:absolute;inset:0;background:linear-gradient(145deg,#fff,#e5e7eb);border-radius:12px;border:2px solid #ffd700;display:flex;align-items:center;justify-content:center;'+transform+'"><svg viewBox="0 0 80 80" style="width:100%;height:100%;">'+pips+'</svg></div>';
-  return face(pip(40,40),'transform:translateZ(40px);') + face(pip(25,25)+pip(55,25)+pip(25,40)+pip(55,40)+pip(25,55)+pip(55,55),'transform:rotateY(180deg) translateZ(40px);') + face(pip(25,25)+pip(40,40)+pip(55,55),'transform:rotateY(90deg) translateZ(40px);') + face(pip(25,25)+pip(55,25)+pip(25,55)+pip(55,55),'transform:rotateY(-90deg) translateZ(40px);') + face(pip(25,25)+pip(55,25)+pip(40,40)+pip(25,55)+pip(55,55),'transform:rotateX(90deg) translateZ(40px);') + face(pip(25,25)+pip(55,55),'transform:rotateX(-90deg) translateZ(40px);');
+/* КУБИК ПЛОСКИЙ — рисует SVG-точки */
+function setDiceFace(id, num){
+  const el = document.getElementById(id); if (!el) return;
+  const dots = {
+    1: [[40,40]],
+    2: [[25,25],[55,55]],
+    3: [[25,25],[40,40],[55,55]],
+    4: [[25,25],[55,25],[25,55],[55,55]],
+    5: [[25,25],[55,25],[40,40],[25,55],[55,55]],
+    6: [[25,25],[55,25],[25,40],[55,40],[25,55],[55,55]]
+  };
+  const pips = (dots[num]||[]).map(([x,y]) => '<circle cx="'+x+'" cy="'+y+'" r="6"/>').join('');
+  el.innerHTML = '<svg viewBox="0 0 80 80" class="dice-dots">'+pips+'</svg>';
 }
 
 function wheelSvg(){
@@ -898,33 +995,21 @@ function openMineCell(idx){
 
   if (isWin) {
     cell.classList.add('gem');
-    cell.innerHTML = '<svg viewBox="0 0 30 30" style="width:80%;height:80%;"><polygon points="15,3 27,10 27,20 15,27 3,20 3,10" fill="#4facfe" stroke="#fff" stroke-width="1"/><polygon points="15,3 20,10 15,15 10,10" fill="#a5f3fc" opacity="0.7"/></svg>';
-    // Показать ещё пару безопасных
-    const total = _minesSize * _minesSize;
-    for (let i = 0; i < total; i++){
-      if (i === idx) continue;
-      if (Math.random() < 0.15){
-        const c = document.querySelector('.mine-cell[data-idx="'+i+'"]');
-        if (c && !c.classList.contains('opened')){
-          c.classList.add('opened','gem');
-          c.innerHTML = '<svg viewBox="0 0 30 30" style="width:80%;height:80%;"><polygon points="15,3 27,10 27,20 15,27 3,20 3,10" fill="#4facfe" opacity="0.5"/></svg>';
-        }
-      }
-    }
+    cell.innerHTML = '<svg viewBox="0 0 30 30" style="width:80%;height:80%;"><polygon points="15,3 27,10 27,20 15,27 3,20 3,10" fill="#4facfe" stroke="#fff" stroke-width="1"/></svg>';
     score = _minesServerResult.new_score;
     const gRes = document.getElementById('gRes');
-    if (gRes) { gRes.classList.add('show','win'); gRes.textContent = '+' + fmt(payout) + ' очков (x' + _minesServerResult.multiplier + ')'; }
+    if (gRes) { gRes.classList.add('show','win'); gRes.textContent = '💎 +' + fmt(payout) + ' (×' + _minesServerResult.multiplier + ')'; }
     const resultEl = document.getElementById('gameResult');
     if (resultEl) { resultEl.textContent = 'ВЫИГРЫШ'; resultEl.className = 'game-result-text win'; }
     playWinSound(); launchWinConfetti();
   } else {
     cell.classList.add('mine');
-    cell.innerHTML = '<svg viewBox="0 0 30 30" style="width:70%;height:70%;"><circle cx="15" cy="15" r="10" fill="#0a0518" stroke="#e63946" stroke-width="2"/><line x1="8" y1="8" x2="3" y2="3" stroke="#e63946" stroke-width="2"/><line x1="22" y1="8" x2="27" y2="3" stroke="#e63946" stroke-width="2"/><line x1="8" y1="22" x2="3" y2="27" stroke="#e63946" stroke-width="2"/><line x1="22" y1="22" x2="27" y2="27" stroke="#e63946" stroke-width="2"/></svg>';
-    // Показать ещё несколько мин
+    cell.innerHTML = '<svg viewBox="0 0 30 30" style="width:70%;height:70%;"><circle cx="15" cy="15" r="10" fill="#0a0518" stroke="#e63946" stroke-width="2"/></svg>';
+    // показать несколько мин
     const total = _minesSize * _minesSize;
     for (let i = 0; i < total; i++){
       if (i === idx) continue;
-      if (Math.random() < 0.15){
+      if (Math.random() < 0.12){
         const c = document.querySelector('.mine-cell[data-idx="'+i+'"]');
         if (c && !c.classList.contains('opened')){
           c.classList.add('opened','mine');
@@ -934,13 +1019,12 @@ function openMineCell(idx){
     }
     score = _minesServerResult.new_score;
     const gRes = document.getElementById('gRes');
-    if (gRes) { gRes.classList.add('show','lose'); gRes.textContent = '−' + fmt(bet) + ' очков'; }
+    if (gRes) { gRes.classList.add('show','lose'); gRes.textContent = '💣 −' + fmt(bet); }
     const resultEl = document.getElementById('gameResult');
     if (resultEl) { resultEl.textContent = 'МИНА'; resultEl.className = 'game-result-text lose'; }
     playLoseSound();
   }
   updateUI(); scheduleSave();
-  // Разблокировать кнопку
   const playBtn = document.getElementById('playBtn');
   if (playBtn) { playBtn.disabled = false; playBtn.textContent = 'Играть снова'; }
   _gameRunning = false;
@@ -948,7 +1032,7 @@ function openMineCell(idx){
   setTimeout(loadGameHistory, 500);
 }
 function pickCup(idx){
-  if (_cupPick !== null || _gameRunning) return;
+  if (_cupPick !== null || !_minesActive) return;
   _cupPick = idx;
 }
 
@@ -991,6 +1075,7 @@ async function loadTopWins(){
   } catch(e) { box.innerHTML = '<div style="text-align:center;color:#e63946;padding:12px;">Ошибка</div>'; }
 }
 
+/* ========== ЗАПУСК ИГРЫ ========== */
 async function runGame(gameId){
   if (_gameRunning) return;
   const bet = parseInt(document.getElementById('betInput').value, 10);
@@ -1005,7 +1090,7 @@ async function runGame(gameId){
   _gameRunning = true;
   playBtn.disabled = true;
   playBtn.textContent = 'Играем...';
-  resultEl.textContent = 'Крутим...';
+  resultEl.textContent = '...';
   resultEl.className = 'game-result-text';
   subEl.textContent = '';
   const gRes = document.getElementById('gRes'); if (gRes){ gRes.classList.remove('show','win','lose'); gRes.innerHTML = ''; }
@@ -1040,25 +1125,33 @@ async function runGame(gameId){
     playBtn.textContent = 'Открой клетку';
     resultEl.textContent = 'Выбери клетку';
     resultEl.className = 'game-result-text';
-    // Ожидаем клик - _gameRunning = false
     _gameRunning = false;
     return;
   }
 
-  try {
-    if (gameId === 'coin') await animCoin(serverPromise, gRes);
-    else if (gameId === 'dice' || gameId === 'craps') await animDice(serverPromise, gRes);
-    else if (gameId === 'roulette' || gameId === 'wheel') await animWheel(serverPromise, gRes);
-    else if (gameId === 'slots') await animSlots(serverPromise, gRes);
-    else if (gameId === 'basket' || gameId === 'basket3') await animBasket(serverPromise, gRes);
-    else if (gameId === 'mine') await animMining(serverPromise, gRes);
-    else if (gameId === 'darts' || gameId === 'archery') await animDarts(serverPromise, gRes);
-    else if (gameId === 'fishing') await animFishing(serverPromise, gRes);
-    else if (gameId === 'cards') await animCards(serverPromise, gRes);
-    else if (gameId === 'shells') await animShells(serverPromise, gRes);
-    else if (gameId === 'penalty') await animPenalty(serverPromise, gRes);
-    else await animGeneric(serverPromise, gRes);
-  } catch(e) { console.error(e); }
+  // ОСОБЫЙ СЛУЧАЙ - SHELLS (ФОКУСНИК)
+  if (gameId === 'shells') {
+    await animShells(serverPromise, gRes);
+    return;
+  }
+
+  // ОСОБЫЙ СЛУЧАЙ - SLOTS
+  if (gameId === 'slots') {
+    await animSlots(serverPromise, gRes);
+  } else {
+    try {
+      if (gameId === 'coin') await animCoin(serverPromise, gRes);
+      else if (gameId === 'dice' || gameId === 'craps') await animDice(serverPromise, gRes);
+      else if (gameId === 'roulette' || gameId === 'wheel') await animWheel(serverPromise, gRes);
+      else if (gameId === 'basket' || gameId === 'basket3') await animBasket(serverPromise, gRes);
+      else if (gameId === 'mine') await animMining(serverPromise, gRes);
+      else if (gameId === 'darts' || gameId === 'archery') await animDarts(serverPromise, gRes);
+      else if (gameId === 'fishing') await animFishing(serverPromise, gRes);
+      else if (gameId === 'cards') await animCards(serverPromise, gRes);
+      else if (gameId === 'penalty') await animPenalty(serverPromise, gRes);
+      else await animGeneric(serverPromise, gRes);
+    } catch(e) { console.error(e); }
+  }
 
   const serverResult = await serverPromise;
 
@@ -1103,51 +1196,71 @@ async function animCoin(sp, gRes){
   void coin.offsetWidth;
   coin.style.transition = 'transform 3s cubic-bezier(0.25,0.9,0.35,1)';
   coin.style.transform = 'rotateY(' + rot + 'deg)';
-  await new Promise(res => setTimeout(res, 3100));
+  await sleep(3100);
   if (gRes) { gRes.classList.add('show', isHeads?'win':'lose'); gRes.textContent = isHeads ? 'ОРЁЛ' : 'РЕШКА'; }
 }
+
+/* НОВАЯ АНИМАЦИЯ КУБИКОВ — плоские, крутятся пока идёт запрос */
 async function animDice(sp, gRes){
   const d1 = document.getElementById('d1'), d2 = document.getElementById('d2');
+  const sumEl = document.getElementById('diceSum');
   if (!d1 || !d2) return;
-  const r = await sp; playSpinSound(2000);
-  const faceMap = {1:{rx:0,ry:0},6:{rx:0,ry:180},3:{rx:0,ry:-90},4:{rx:0,ry:90},5:{rx:-90,ry:0},2:{rx:90,ry:0}};
+  
+  // Запускаем визуальное кручение
+  d1.classList.add('rolling'); d2.classList.add('rolling');
+  
+  // Пока запрос не пришёл — крутим случайные грани
+  const interval = setInterval(() => {
+    setDiceFace('d1', 1 + Math.floor(Math.random() * 6));
+    setDiceFace('d2', 1 + Math.floor(Math.random() * 6));
+    if (sumEl) sumEl.textContent = '...';
+  }, 100);
+  
+  playSpinSound(1500);
+  
+  const r = await sp;
+  
+  clearInterval(interval);
+  d1.classList.remove('rolling'); d2.classList.remove('rolling');
+  
   const isWin = !!(r && r.success && r.win);
+  
+  // Определяем значения по прогнозу
   let sum;
   if (isWin) {
-    if (_dicePredict==='sum_3_7') sum = 3 + Math.floor(Math.random()*5);
-    else if (_dicePredict==='sum_8_11') sum = 8 + Math.floor(Math.random()*4);
-    else if (_dicePredict==='sum_1_9') sum = 1 + Math.floor(Math.random()*9);
-    else if (_dicePredict==='total_6') sum = 6;
-    else if (_dicePredict==='total_12') sum = 12;
-    else if (_dicePredict==='exact_3_3') sum = 6;
+    if (_dicePredict === 'sum_3_7') sum = 3 + Math.floor(Math.random() * 5);
+    else if (_dicePredict === 'sum_8_11') sum = 8 + Math.floor(Math.random() * 4);
+    else if (_dicePredict === 'sum_1_9') sum = 1 + Math.floor(Math.random() * 9);
+    else if (_dicePredict === 'total_6') sum = 6;
+    else if (_dicePredict === 'total_12') sum = 12;
+    else if (_dicePredict === 'exact_3_3') sum = 6;
     else sum = 7;
   } else {
-    if (_dicePredict==='sum_3_7') sum = 8 + Math.floor(Math.random()*4);
-    else if (_dicePredict==='sum_8_11') sum = 2 + Math.floor(Math.random()*6);
-    else if (_dicePredict==='sum_1_9') sum = 10 + Math.floor(Math.random()*3);
-    else if (_dicePredict==='total_6') sum = Math.random()<0.5?5:7;
-    else if (_dicePredict==='total_12') sum = 11;
-    else if (_dicePredict==='exact_3_3') sum = 7;
+    if (_dicePredict === 'sum_3_7') sum = 8 + Math.floor(Math.random() * 4);
+    else if (_dicePredict === 'sum_8_11') sum = 2 + Math.floor(Math.random() * 6);
+    else if (_dicePredict === 'sum_1_9') sum = 10 + Math.floor(Math.random() * 3);
+    else if (_dicePredict === 'total_6') sum = Math.random() < 0.5 ? 5 : 7;
+    else if (_dicePredict === 'total_12') sum = 11;
+    else if (_dicePredict === 'exact_3_3') sum = 7;
     else sum = 9;
   }
+  
   let v1, v2;
-  if (_dicePredict==='exact_3_3' && isWin) { v1=3; v2=3; }
+  if (_dicePredict === 'exact_3_3' && isWin) { v1 = 3; v2 = 3; }
   else {
     v1 = Math.max(1, Math.min(6, sum - Math.min(6, Math.max(1, sum-6))));
     v2 = sum - v1;
-    if (v2<1||v2>6) { v1 = Math.max(1, Math.min(6, sum-6)); v2 = sum-v1; }
+    if (v2 < 1 || v2 > 6) { v1 = Math.max(1, Math.min(6, sum-6)); v2 = sum - v1; }
   }
-  const f1 = faceMap[v1], f2 = faceMap[v2];
-  d1.style.transition='none'; d1.style.transform='rotateX(0) rotateY(0)';
-  d2.style.transition='none'; d2.style.transform='rotateX(0) rotateY(0)';
-  void d1.offsetWidth; void d2.offsetWidth;
-  d1.style.transition='transform 2.1s cubic-bezier(0.15,0.9,0.15,1)';
-  d2.style.transition='transform 2.1s cubic-bezier(0.15,0.9,0.15,1)';
-  d1.style.transform='rotateX('+(360*3+f1.rx)+'deg) rotateY('+(360*3+f1.ry)+'deg)';
-  d2.style.transform='rotateX('+(360*4+f2.rx)+'deg) rotateY('+(360*4+f2.ry)+'deg)';
-  await new Promise(res => setTimeout(res, 2200));
-  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = v1 + ' + ' + v2 + ' = ' + sum; }
+  
+  setDiceFace('d1', v1);
+  setDiceFace('d2', v2);
+  if (sumEl) sumEl.textContent = v1 + ' + ' + v2 + ' = ' + sum;
+  
+  await sleep(400);
+  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = 'Кубики: ' + v1 + ' и ' + v2 + ' (сумма ' + sum + ')'; }
 }
+
 async function animWheel(sp, gRes){
   const wheel = document.getElementById('wheelEl'); if (!wheel) return;
   const r = await sp; const isWin = !!(r && r.success && r.win);
@@ -1157,42 +1270,83 @@ async function animWheel(sp, gRes){
   void wheel.offsetWidth;
   wheel.style.transition='transform 4.2s cubic-bezier(0.15,0.9,0.15,1)';
   wheel.style.transform='rotate('+finalAngle+'deg)';
-  await new Promise(res => setTimeout(res, 4300));
+  await sleep(4300);
   if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ПОПАЛ!':'МИМО'; }
 }
+
+/* НОВАЯ АНИМАЦИЯ СЛОТОВ — реальный скролл сверху вниз */
 async function animSlots(sp, gRes){
   const reels = ['reel1','reel2','reel3'].map(id => document.getElementById(id));
   if (reels.some(r => !r)) return;
   const symbols = ['🍒','🍋','💎','7️⃣','⭐','🍀','🔔'];
-  const r = await sp; const isWin = !!(r && r.success && r.win);
-  playSpinSound(1600);
-  const intervals = reels.map(x => setInterval(() => { x.textContent = symbols[Math.floor(Math.random()*symbols.length)]; }, 70));
-  const delays = [1200,1700,2200];
-  for (let i=0; i<reels.length; i++){ setTimeout(()=>clearInterval(intervals[i]),delays[i]); }
-  await new Promise(res => setTimeout(res, 2300));
+  
+  // Сразу запускаем анимацию вращения для всех барабанов
+  reels.forEach(r => {
+    r.classList.add('spinning');
+  });
+  
+  playSpinSound(2200);
+  
+  // Пока запрос идёт — показываем случайные символы
+  const intervals = reels.map(reel => setInterval(() => {
+    const symEl = reel.querySelector('.sym') || reel;
+    symEl.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+  }, 70));
+  
+  const r = await sp;
+  const isWin = !!(r && r.success && r.win);
+  
+  // Определяем финальные символы
   let final;
-  if (isWin){ const s = symbols[Math.floor(Math.random()*symbols.length)]; final = [s,s,s]; }
-  else {
-    const i1 = Math.floor(Math.random()*symbols.length);
-    let i2 = Math.floor(Math.random()*symbols.length);
-    let i3 = Math.floor(Math.random()*symbols.length);
-    if (i1===i2 && i2===i3) i3 = (i3+1)%symbols.length;
-    final = [symbols[i1],symbols[i2],symbols[i3]];
+  if (isWin) {
+    const s = symbols[Math.floor(Math.random() * symbols.length)];
+    final = [s, s, s];
+  } else {
+    const i1 = Math.floor(Math.random() * symbols.length);
+    let i2 = Math.floor(Math.random() * symbols.length);
+    let i3 = Math.floor(Math.random() * symbols.length);
+    if (i1 === i2 && i2 === i3) i3 = (i3 + 1) % symbols.length;
+    final = [symbols[i1], symbols[i2], symbols[i3]];
   }
-  reels.forEach((x,i)=>x.textContent=final[i]);
-  if (gRes){ gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = final.join(' '); }
+  
+  // Останавливаем по одному с задержкой
+  const stops = [1400, 1900, 2400];
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      clearInterval(intervals[i]);
+      reels[i].classList.remove('spinning');
+      const symEl = reels[i].querySelector('.sym') || reels[i];
+      symEl.textContent = final[i];
+    }, stops[i]);
+  }
+  
+  await sleep(2700);
+  
+  // Финальная проверка
+  reels.forEach((r, i) => {
+    const symEl = r.querySelector('.sym') || r;
+    symEl.textContent = final[i];
+  });
+  
+  if (gRes) {
+    const allMatch = final[0] === final[1] && final[1] === final[2];
+    gRes.classList.add('show', allMatch ? 'win' : 'lose');
+    gRes.textContent = allMatch ? '🎰 ' + final.join(' ') + ' ВЫИГРЫШ ×3' : '🎰 ' + final.join(' ');
+  }
 }
+
 async function animBasket(sp, gRes){
   const ball = document.getElementById('bball'); if (!ball) return;
   const r = await sp; const isWin = !!(r && r.success && r.win);
   playSpinSound(900);
-  await new Promise(res => setTimeout(res, 300));
+  await sleep(300);
   ball.style.transition='all 1.3s cubic-bezier(0.34,0.9,0.5,1)';
   if (isWin) { ball.style.bottom='175px'; ball.style.left='65px'; ball.style.transform='rotate(720deg)'; }
   else { ball.style.bottom='100px'; ball.style.left='180px'; ball.style.transform='rotate(540deg)'; }
-  await new Promise(res => setTimeout(res, 1400));
-  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ЗАБРОСИЛ!':'МИМО'; }
+  await sleep(1400);
+  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ЗАБРОСИЛ! ×2.4':'МИМО'; }
 }
+
 async function animMining(sp, gRes){
   const priceEl = document.getElementById('miningPrice');
   const line = document.getElementById('miningLine');
@@ -1218,14 +1372,15 @@ async function animMining(sp, gRes){
     priceEl.textContent = '₿ ' + curVal.toFixed(2);
     if (current) current.textContent = curVal.toFixed(2);
     priceEl.style.color = curVal > startPrice ? '#22c55e' : '#e63946';
-    await new Promise(res => setTimeout(res, 60));
+    await sleep(60);
   }
   if (gRes){
     const diff = ((endPrice/startPrice-1)*100).toFixed(2);
     gRes.classList.add('show', isWin?'win':'lose');
-    gRes.textContent = (isWin?'+':'') + diff + '%';
+    gRes.textContent = (isWin?'📈 +':'📉 ') + diff + '%';
   }
 }
+
 async function animDarts(sp, gRes){
   const pin = document.getElementById('dartPin'); if (!pin) return;
   const r = await sp; const isWin = !!(r && r.success && r.win);
@@ -1237,9 +1392,10 @@ async function animDarts(sp, gRes){
   if (isWin) { tx = 46+Math.random()*8; ty = 46+Math.random()*8; }
   else { tx = 10+Math.random()*20; ty = 10+Math.random()*20; if (Math.random()<0.5) tx = 70+Math.random()*20; }
   pin.style.left = tx+'%'; pin.style.top = ty+'%';
-  await new Promise(res => setTimeout(res, 1000));
-  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'В ЯБЛОЧКО!':'МИМО'; }
+  await sleep(1000);
+  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'В ЯБЛОЧКО! ×2.5':'МИМО'; }
 }
+
 async function animFishing(sp, gRes){
   const hook = document.getElementById('fishHook');
   const catchEl = document.getElementById('fishCatch');
@@ -1248,9 +1404,9 @@ async function animFishing(sp, gRes){
   const mult = r.multiplier || 1;
   playSpinSound(700);
   hook.style.top = '70%';
-  await new Promise(res => setTimeout(res, 1400));
+  await sleep(1400);
   hook.style.top = '20%';
-  await new Promise(res => setTimeout(res, 1000));
+  await sleep(1000);
   let emoji, label;
   if (isWin){
     if (mult >= 2) { emoji = '🐟'; label = 'ЗОЛОТАЯ ×2'; }
@@ -1260,6 +1416,7 @@ async function animFishing(sp, gRes){
   catchEl.style.transform = 'translate(-50%, -50%) scale(1)';
   if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = label; }
 }
+
 async function animCards(sp, gRes){
   const r = await sp; const isWin = !!(r && r.success && r.win);
   const suits = ['♠','♥','♦','♣'];
@@ -1273,26 +1430,124 @@ async function animCards(sp, gRes){
     el.classList.remove('back');
     el.classList.add(isRed(cards[i].suit) ? 'red' : '');
     el.innerHTML = '<div class="rank">'+cards[i].rank+'</div><div class="suit">'+cards[i].suit+'</div>';
-    await new Promise(res => setTimeout(res, 300));
+    await sleep(300);
   }
-  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ВЫИГРЫШ!':'НЕ УГАДАЛ'; }
+  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ТУЗ ПИК! ×2.4':'НЕ УГАДАЛ'; }
 }
+
+/* НОВАЯ АНИМАЦИЯ ФОКУСНИКА — показ → перемешивание → выбор → результат */
 async function animShells(sp, gRes){
-  const r = await sp; const isWin = !!(r && r.success && r.win);
   const cups = document.querySelectorAll('.cup');
-  playSpinSound(900);
-  for (let k=0; k<3; k++){
-    cups.forEach((c,i) => { setTimeout(() => { c.style.transform = 'translateY(-30px)'; setTimeout(()=>c.style.transform='translateY(0)',200); }, i*120+k*300); });
-    await new Promise(res => setTimeout(res, 500));
+  if (cups.length < 3) return;
+  const hint = document.getElementById('shellsHint');
+  const resultEl = document.getElementById('gameResult');
+  const playBtn = document.getElementById('playBtn');
+  
+  // Сброс
+  cups.forEach(c => { 
+    c.classList.remove('lifted', 'pickable'); 
+    c.style.transition = 'transform 0.35s cubic-bezier(0.34,1.2,0.64,1)';
+    c.style.transform = 'translateY(0)';
+  });
+  
+  const r = await sp;
+  const isWin = !!(r && r.success && r.win);
+  
+  // ШАГ 1: Показать где шарик (под средним)
+  const realBallCup = 1;
+  if (hint) hint.textContent = '👀 Запоминай, где шарик...';
+  cups[realBallCup].classList.add('lifted');
+  await sleep(1500);
+  
+  // ШАГ 2: Опустить стакан
+  cups[realBallCup].classList.remove('lifted');
+  if (hint) hint.textContent = '🎩 Перемешиваем...';
+  await sleep(500);
+  
+  // ШАГ 3: Быстрое перемешивание (визуальное)
+  playSpinSound(1500);
+  const positions = ['translateX(0)', 'translateX(0)', 'translateX(0)'];
+  for (let k = 0; k < 12; k++){
+    // Свапаем два случайных визуально
+    const i = k % 3;
+    const j = (k + 1) % 3;
+    // Меняем позиции
+    const oldI = positions[i];
+    const oldJ = positions[j];
+    positions[i] = oldJ;
+    positions[j] = oldI;
+    cups[i].style.transform = positions[i] + ' translateY(0)';
+    cups[j].style.transform = positions[j] + ' translateY(0)';
+    await sleep(80);
   }
-  const winCup = isWin ? (_cupPick !== null ? _cupPick : 0) : [0,1,2].filter(i => i !== _cupPick)[0];
-  if (winCup !== undefined && cups[winCup]){
-    cups[winCup].style.transform = 'translateY(-40px)';
-    cups[winCup].innerHTML = '<span style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);font-size:34px;">⚪</span>';
+  
+  // Возвращаем на место
+  cups.forEach(c => { c.style.transform = 'translateY(0)'; });
+  await sleep(300);
+  
+  // ШАГ 4: Ждём выбор
+  _cupPick = null;
+  _minesActive = true; // используем тот же флаг для разрешения клика
+  cups.forEach(c => c.classList.add('pickable'));
+  if (hint) hint.textContent = '👇 Выбери стакан!';
+  if (resultEl) resultEl.textContent = 'Твой ход';
+  
+  // Ждём клика
+  await new Promise(resolve => {
+    const check = setInterval(() => {
+      if (_cupPick !== null) { clearInterval(check); resolve(); }
+    }, 100);
+  });
+  _minesActive = false;
+  cups.forEach(c => c.classList.remove('pickable'));
+  
+  const pickedCup = _cupPick;
+  
+  // ШАГ 5: Открываем
+  if (hint) hint.textContent = '🎭 Смотрим...';
+  cups[pickedCup].classList.add('lifted');
+  await sleep(600);
+  
+  if (isWin) {
+    // шарик действительно здесь
+    if (hint) hint.textContent = '⚪ Шарик тут!';
+  } else {
+    // показываем где был
+    await sleep(400);
+    cups[realBallCup].classList.add('lifted');
+    if (hint) hint.textContent = '❌ Шарик был в другом стакане';
   }
-  await new Promise(res => setTimeout(res, 1000));
-  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ШАРИК ТУТ!':'МИМО'; }
+  await sleep(900);
+  
+  // ШАГ 6: Финальный результат
+  if (gRes) {
+    gRes.classList.add('show', isWin ? 'win' : 'lose');
+    gRes.textContent = isWin ? '⚪ УГАДАЛ! ×2.9' : '❌ НЕ УГАДАЛ';
+  }
+  if (resultEl) {
+    resultEl.textContent = isWin ? 'ВЫИГРЫШ' : 'ПРОИГРЫШ';
+    resultEl.className = 'game-result-text ' + (isWin ? 'win' : 'lose');
+  }
+  
+  // Финализируем
+  const serverResult = r;
+  if (serverResult && serverResult.success) {
+    score = serverResult.new_score;
+    const balEl = document.getElementById('gameBalance'); if (balEl) balEl.textContent = fmt(score);
+    const subEl = document.getElementById('gameSub');
+    if (subEl) subEl.textContent = serverResult.win ? '+' + fmt(serverResult.payout) + ' очков!' : '−' + fmt(serverResult.bet) + ' очков';
+    updateUI(); scheduleSave();
+    if (serverResult.win) { launchWinConfetti(); playWinSound(); }
+    else playLoseSound();
+  }
+  
+  setTimeout(() => {
+    if (playBtn) { playBtn.disabled = false; playBtn.textContent = 'Играть снова'; }
+    _gameRunning = false;
+    loadGameHistory();
+  }, 1500);
 }
+
 async function animPenalty(sp, gRes){
   const goalie = document.getElementById('goalie');
   const ball = document.getElementById('penBall');
@@ -1304,18 +1559,19 @@ async function animPenalty(sp, gRes){
   if (ronaldo) ronaldo.style.opacity = '0.3';
   const goalieDir = isWin ? (Math.random()<0.5?'15%':'85%') : '50%';
   goalie.style.left = goalieDir;
-  await new Promise(res => setTimeout(res, 400));
+  await sleep(400);
   ball.style.transition = 'all 1s cubic-bezier(0.34,0.9,0.5,1)';
   if (isWin) { ball.style.bottom='130px'; ball.style.left = (parseFloat(goalieDir)<50?'75%':'25%'); }
   else { ball.style.bottom='180px'; ball.style.left='50%'; ball.style.opacity='0.3'; }
-  await new Promise(res => setTimeout(res, 1200));
+  await sleep(1200);
   if (ronaldo) ronaldo.style.opacity = '1';
-  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ГОООЛ!':'МИМО'; }
+  if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ГОООЛ! ×2.3':'МИМО'; }
 }
+
 async function animGeneric(sp, gRes){
   const r = await sp; const isWin = !!(r && r.success && r.win);
   playSpinSound(800);
-  await new Promise(res => setTimeout(res, 700));
+  await sleep(700);
   if (gRes) { gRes.classList.add('show', isWin?'win':'lose'); gRes.textContent = isWin?'ПОБЕДА!':'ПРОИГРЫШ'; }
 }
 
@@ -1495,7 +1751,7 @@ document.getElementById('tapBtn').addEventListener('click', () => {
 function buildSidebar(){
   const isFem = gender === 'female';
   const items = [
-    {icon:'●',label:'Главная',action:'closeAllModals?.()||document.querySelectorAll(\'.modal\').forEach(m=>m.classList.remove(\'active\'))'},
+    {icon:'●',label:'Главная',action:'document.querySelectorAll(\'.modal\').forEach(m=>m.classList.remove(\'active\'))'},
     {icon:'⬢',label:'Игры',action:'openModal(\'games\')'},
     {icon:'★',label:'Топ',action:'openModal(\'leaderboard\')'},
     {icon:'✦',label:'Квесты',action:'openModal(\'quests\')'},
@@ -1550,7 +1806,6 @@ function loadAchievements(){ const el = document.getElementById('achList'); if (
 function loadDaily(){
   const el = document.getElementById('dailyContent'); const now = new Date();
   const today = now.toISOString().split('T')[0]; const can = lastDailyClaim !== today;
-  const nextDay = can ? (dailyStreak % 7) : (dailyStreak - 1) % 7;
   let h = '<div class="daily-grid">';
   for (let i = 0; i < 7; i++) { const cl = i < (dailyStreak % 7); h += '<div class="daily-day '+(cl?'claimed':'')+'"><div>'+(cl?'✓':'◆')+'</div><div style="font-size:9px;">Д'+(i+1)+'</div><div class="daily-reward">'+fmt(DAILY_REWARDS[i].coins)+'</div></div>'; }
   h += '</div>';
@@ -1702,7 +1957,7 @@ async function checkNewReferrals(){
     await loadReferral();
     const totalReward = computeReferralReward(pending.length);
     let lastId = 0;
-    for (let i = 0; i < pending.length; i++) { const nf = pending[i]; lastId = nf.id; showRefThanks(nf.nickname||'друг', totalReward); if (i < pending.length - 1) await new Promise(res => setTimeout(res, 4200)); }
+    for (let i = 0; i < pending.length; i++) { const nf = pending[i]; lastId = nf.id; showRefThanks(nf.nickname||'друг', totalReward); if (i < pending.length - 1) await sleep(4200); }
     try { await fetch(API_URL + '/referrals/mark-seen', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken,last_id:lastId})}); } catch(e) {}
     loadReferral();
   } catch(e) {} finally { _refCheckBusy = false; }
