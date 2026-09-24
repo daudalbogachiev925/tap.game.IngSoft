@@ -432,6 +432,8 @@ let historyRefreshTimer=null;
 
 const API_URL = 'https://138.124.14.130.nip.io';
 const ONLINE_WINDOW_MS = 5*60*1000;
+const MAX_BET = 999999999999999; // Без верхнего лимита
+const MIN_BET = 1000;
 
 try {
   const s1 = localStorage.getItem('ingsoft_referrer_nickname'); if (s1) referrerNickname = s1;
@@ -620,14 +622,14 @@ function playGame(gameId){
       '<div id="gamePredictBox" style="margin-bottom:12px;display:none;"></div>' +
       '<div id="minesButtons" style="display:none;gap:8px;margin-bottom:12px;"></div>' +
       '<div style="margin-bottom:12px;">' +
-        '<input type="number" id="betInput" class="promo-input" placeholder="Ставка" value="1000" min="1000" max="1000000" style="text-align:center;text-transform:none;letter-spacing:0;">' +
+        '<input type="number" id="betInput" class="promo-input" placeholder="Ставка" value="1000" min="1000" max="999999999999999" style="text-align:center;text-transform:none;letter-spacing:0;">' +
         '<div class="bet-row">' +
           '<button class="bet-chip" onclick="setBet(1000)">1K</button>' +
-          '<button class="bet-chip" onclick="setBet(5000)">5K</button>' +
           '<button class="bet-chip" onclick="setBet(10000)">10K</button>' +
-          '<button class="bet-chip" onclick="setBet(50000)">50K</button>' +
           '<button class="bet-chip" onclick="setBet(100000)">100K</button>' +
-          '<button class="bet-chip" onclick="setBet(500000)">500K</button>' +
+          '<button class="bet-chip" onclick="setBet(1000000)">1M</button>' +
+          '<button class="bet-chip" onclick="setBet(10000000)">10M</button>' +
+          '<button class="bet-chip" onclick="setBet(100000000)">100M</button>' +
           '<button class="bet-chip double" onclick="doubleBet()">×2</button>' +
           '<button class="bet-chip allin" onclick="allInBet()">ALL-IN</button>' +
         '</div>' +
@@ -853,7 +855,7 @@ function updateMinesButtons(){
 async function minesTakePrize(){
   if (!_minesBetCommitted || _minesOpened === 0) return;
   const payout = Math.floor(_minesBet * _minesMultiplier);
-  score += payout - _minesBet;
+  score += payout;
   updateUI(); scheduleSave();
   playWinSound(); launchWinConfetti();
   const gRes = document.getElementById('gRes');
@@ -861,7 +863,7 @@ async function minesTakePrize(){
   const resultEl = document.getElementById('gameResult');
   if (resultEl){ resultEl.textContent = 'ВЫИГРЫШ ×' + _minesMultiplier.toFixed(2); resultEl.className = 'game-result-text win'; }
   const subEl = document.getElementById('gameSub');
-  if (subEl) subEl.textContent = '+' + fmt(payout) + ' очков (прибыль ' + fmt(payout - _minesBet) + ')';
+  if (subEl) subEl.textContent = '+' + fmt(payout) + ' очков';
   _minesActive = false;
   _minesBetCommitted = false;
   const box = document.getElementById('minesButtons'); if (box) box.style.display = 'none';
@@ -927,8 +929,8 @@ function pickCup(idx){
 }
 
 function setBet(val){ const inp = document.getElementById('betInput'); if (inp) inp.value = val; }
-function doubleBet(){ const inp = document.getElementById('betInput'); if (!inp) return; const cur = parseInt(inp.value,10)||1000; inp.value = Math.min(1000000, cur*2); }
-function allInBet(){ const inp = document.getElementById('betInput'); if (!inp) return; inp.value = Math.min(1000000, Math.max(1000, score)); }
+function doubleBet(){ const inp = document.getElementById('betInput'); if (!inp) return; const cur = parseInt(inp.value,10)||1000; inp.value = Math.min(score, cur*2); }
+function allInBet(){ const inp = document.getElementById('betInput'); if (!inp) return; inp.value = Math.max(1000, Math.floor(score)); }
 function closePlaying(){ const m = document.getElementById('modal-playing'); if (m) m.remove(); _currentGameId = null; _gameRunning = false; _cupActive = false; _cupPick = null; if (historyRefreshTimer) clearInterval(historyRefreshTimer); }
 
 async function loadGameHistory(){
@@ -956,8 +958,8 @@ async function loadTopWins(){
 async function runGame(gameId){
   if (_gameRunning) return;
   const bet = parseInt(document.getElementById('betInput').value, 10);
-  if (isNaN(bet) || bet < 1000 || bet > 1000000) { showToast('Ставка от 1 000 до 1 000 000'); return; }
-  if (score < bet) { showToast('Недостаточно очков'); return; }
+  if (isNaN(bet) || bet < 1000) { showToast('Минимальная ставка 1 000'); return; }
+  if (bet > score) { showToast('Недостаточно очков'); return; }
 
   const resultEl = document.getElementById('gameResult');
   const subEl = document.getElementById('gameSub');
@@ -1102,17 +1104,13 @@ async function animWheel(sp, gRes){
   const resultLbl = document.getElementById('wheelResult');
   const r = await sp; const isWin = !!(r && r.success && r.win);
   playSpinSound(3000);
-  // Финальный сектор (всегда красные если победа, чтобы визуально стрелка указывала на нужное)
   let finalSector;
   if (isWin) {
-    // чётный сектор = красный (в нашем случае все чётные)
     finalSector = [2,4,6,8,10,12][Math.floor(Math.random()*6)];
   } else {
     finalSector = [1,3,5,7,9,11][Math.floor(Math.random()*6)];
   }
   const sectorAngle = 360 / 12;
-  // Стрелка сверху (под углом -90). Нам надо чтобы центр сектора совпал с ней
-  // sectorAngle * (finalSector-1) - начальный угол сектора
   const stopAngle = -( (finalSector - 0.5) * sectorAngle );
   const totalRot = 360 * 5 + stopAngle;
   wheel.style.transition='none'; wheel.style.transform='rotate(0deg)';
@@ -1253,11 +1251,9 @@ async function animCards(sp, gRes){
   playSpinSound(900);
   const cards = [0,1,2].map(() => ({ suit: suits[Math.floor(Math.random()*suits.length)], rank: ranks[Math.floor(Math.random()*ranks.length)] }));
   if (isWin) {
-    // Один из трёх — ТУЗ ЛЮБОЙ МАСТИ
     const idx = Math.floor(Math.random()*3);
     cards[idx] = { suit: suits[Math.floor(Math.random()*suits.length)], rank: 'A' };
   } else {
-    // Убеждаемся что тузов НЕТ
     cards.forEach(c => { if (c.rank === 'A') c.rank = ranks[Math.floor(Math.random()*ranks.length)]; });
   }
   for (let i=0; i<3; i++){
@@ -1325,7 +1321,6 @@ async function animShells(sp, gRes){
   const ballCupIndex = 1;
   const r = await sp;
   const isWin = !!(r && r.success && r.win);
-  // Показать шарик
   if (hint) hint.textContent = '👀 Запоминай...';
   const marker = cups[ballCupIndex].querySelector('.ball-marker');
   if (marker) marker.style.display = 'block';
@@ -1334,7 +1329,6 @@ async function animShells(sp, gRes){
   if (hint) hint.textContent = '🎩 Перемешиваю...';
   await sleep(400);
   playSpinSound(1400);
-  // Быстрое перемешивание
   for (let k = 0; k < 12; k++){
     const i = Math.floor(Math.random() * 3);
     let j = Math.floor(Math.random() * 3);
@@ -1346,7 +1340,6 @@ async function animShells(sp, gRes){
   }
   const finalSlotOfBall = positions[ballCupIndex];
   await sleep(200);
-  // Ждём клик
   _cupPick = null; _cupActive = true;
   if (hint) hint.textContent = '👇 Выбери стакан!';
   if (resultEl) resultEl.textContent = 'Твой ход';
