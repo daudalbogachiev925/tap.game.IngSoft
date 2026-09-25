@@ -9,13 +9,12 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
 html, body { background:#0a0a0f; color:#fff; font-family:'Inter','Segoe UI',-apple-system,sans-serif; min-height:100vh; overflow-x:hidden; }
-body { display:flex; justify-content:center; }
 body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:none;
   background: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(139,92,246,0.35), transparent 55%),
               radial-gradient(ellipse 100% 60% at 100% 100%, rgba(79,172,254,0.25), transparent 55%),
               linear-gradient(180deg,#0a0518 0%,#0f0c29 25%,#0d1a3a 60%,#0a0518 100%); }
-.app { display:flex; min-height:100vh; position:relative; z-index:1; width:100%; max-width:620px; box-shadow:0 0 80px rgba(139,92,246,0.15); }
-.sidebar { width:64px; background:linear-gradient(180deg,rgba(10,5,24,0.85),rgba(15,12,41,0.9)); border-right:1px solid rgba(139,92,246,0.2); padding:10px 0; display:flex; flex-direction:column; gap:6px; position:sticky; top:0; align-self:flex-start; height:100vh; z-index:500; overflow-y:auto; backdrop-filter:blur(25px); }
+.app { display:flex; min-height:100vh; position:relative; z-index:1; }
+.sidebar { width:64px; background:linear-gradient(180deg,rgba(10,5,24,0.85),rgba(15,12,41,0.9)); border-right:1px solid rgba(139,92,246,0.2); padding:10px 0; display:flex; flex-direction:column; gap:6px; position:fixed; left:0; top:0; height:100vh; z-index:500; overflow-y:auto; backdrop-filter:blur(25px); }
 .sidebar-logo { padding:10px 4px; text-align:center; background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(139,92,246,0.4),rgba(79,172,254,0.3)); border-radius:14px; margin:4px 8px 12px; box-shadow:0 0 30px rgba(139,92,246,0.5); display:flex; align-items:center; justify-content:center; }
 .sidebar-logo svg { height:30px; width:30px; filter:drop-shadow(0 0 12px rgba(255,255,255,0.7)); }
 .sidebar-item { display:flex; flex-direction:column; align-items:center; padding:8px 2px; cursor:pointer; border-radius:12px; margin:0 8px; transition:all 0.3s; }
@@ -23,7 +22,7 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .sidebar-icon { font-size:18px; }
 .sidebar-label { font-size:8px; color:#94a3b8; margin-top:3px; font-weight:700; text-align:center; }
 .sidebar-item:hover .sidebar-label { color:#fff; }
-.main { flex:1; padding-bottom:80px; overflow-x:hidden; }
+.main { flex:1; margin-left:64px; padding-bottom:80px; }
 .header { display:flex; align-items:center; justify-content:center; padding:14px 18px; background:rgba(10,5,24,0.6); backdrop-filter:blur(30px); position:sticky; top:0; z-index:400; border-bottom:1px solid rgba(139,92,246,0.2); }
 .header-card { display:flex; align-items:center; gap:16px; background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(30,58,95,0.3)); border:1px solid rgba(139,92,246,0.35); border-radius:24px; padding:12px 24px; }
 .avatar { width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6,#4facfe); display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:24px; box-shadow:0 8px 30px rgba(139,92,246,0.6); background-size:cover; background-position:center; }
@@ -136,6 +135,7 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .promo-input { width:100%; padding:16px; border-radius:14px; border:1px solid rgba(139,92,246,0.4); background:rgba(10,5,24,0.8); color:#fff; font-size:14px; text-align:center; margin-bottom:14px; outline:none; text-transform:uppercase; letter-spacing:3px; font-weight:700; }
 .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(120px); background:linear-gradient(135deg,#8b5cf6,#ec4899); color:white; padding:14px 28px; border-radius:16px; transition:transform 0.35s; z-index:3000; font-size:13px; font-weight:700; max-width:90%; text-align:center; }
 .toast.show { transform:translateX(-50%) translateY(0); }
+.toast.error { background:linear-gradient(135deg,#e63946,#7f1d1d); }
 .reg-screen { position:fixed; inset:0; background:linear-gradient(160deg,#0f0c29,#0a0518); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:20px; overflow-y:auto; }
 .reg-input { width:100%; padding:16px; border-radius:14px; border:1px solid rgba(139,92,246,0.4); background:rgba(10,5,24,0.8); color:#fff; font-size:15px; margin-bottom:12px; outline:none; }
 .reg-btn { width:100%; padding:16px; border-radius:16px; border:none; background:linear-gradient(135deg,#8b5cf6,#ec4899); color:#fff; font-size:16px; font-weight:800; cursor:pointer; }
@@ -203,7 +203,26 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .card-front .suit { font-size:42px; line-height:1; }
 .card-front .rank-b { position:absolute; bottom:6px; right:8px; transform:rotate(180deg); font-size:16px; }
 button { cursor:pointer; }
-@media (max-width:480px) { .sidebar{width:54px;} .sidebar-label{font-size:6px;} .header-card{flex-wrap:wrap;gap:10px;padding:10px 14px;} .header-actions{margin-left:0;padding-left:0;border-left:none;width:100%;min-width:0;} .score-big{font-size:56px;} .tap-button{width:190px;height:190px;font-size:28px;} .quick-actions{grid-template-columns:repeat(2,1fr);padding:0 12px;} .modal-content{padding:18px;border-radius:24px 24px 0 0;} .playing-card{width:68px;height:98px;} .card-front .suit{font-size:36px;} .game-card-icon{width:54px;height:54px;} }
+.tab-btn { flex:1; padding:12px; border-radius:12px; border:1px solid rgba(139,92,246,0.4); background:rgba(139,92,246,0.08); color:#e0e7ff; font-size:13px; font-weight:800; cursor:pointer; transition:all 0.2s; }
+.tab-btn.active { background:linear-gradient(135deg,#8b5cf6,#4facfe); border-color:#a78bfa; color:#fff; box-shadow:0 4px 20px rgba(139,92,246,0.5); }
+.group-badge { display:inline-block; padding:2px 8px; border-radius:8px; font-size:9px; font-weight:800; margin-left:6px; }
+.group-badge.member { background:rgba(34,197,94,0.25); color:#22c55e; border:1px solid rgba(34,197,94,0.5); }
+.group-badge.owner { background:rgba(255,215,0,0.25); color:#ffd700; border:1px solid rgba(255,215,0,0.6); }
+.promo-company { background:linear-gradient(145deg,rgba(139,92,246,0.12),rgba(15,12,41,0.7)); border:1px solid rgba(139,92,246,0.3); border-radius:18px; padding:16px; margin-bottom:14px; }
+.promo-company-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.promo-company-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+.promo-company-name { font-size:15px; font-weight:900; }
+.promo-company-desc { font-size:11px; color:#94a3b8; margin-top:2px; }
+.promo-progress { height:10px; background:rgba(0,0,0,0.35); border-radius:6px; overflow:hidden; margin:10px 0 6px; }
+.promo-progress-fill { height:100%; background:linear-gradient(90deg,#8b5cf6,#4facfe); transition:width 0.3s; }
+.promo-progress-text { font-size:11px; color:#94a3b8; display:flex; justify-content:space-between; margin-bottom:10px; }
+.promo-codes { display:grid; grid-template-columns:repeat(auto-fill,minmax(74px,1fr)); gap:6px; }
+.promo-code { padding:10px 6px; border-radius:10px; border:1px solid rgba(139,92,246,0.4); background:rgba(139,92,246,0.1); text-align:center; cursor:pointer; transition:all 0.2s; font-size:11px; font-weight:800; }
+.promo-code:hover { background:rgba(139,92,246,0.25); transform:translateY(-2px); }
+.promo-code.claimed { background:linear-gradient(135deg,rgba(34,197,94,0.3),rgba(34,197,94,0.15)); border-color:#22c55e; color:#86efac; }
+.promo-code.blocked { opacity:0.35; cursor:not-allowed; }
+.promo-code .val { font-size:14px; color:#ffd700; }
+@media (max-width:480px) { .sidebar{width:54px;} .sidebar-label{font-size:6px;} .main{margin-left:54px;} .header-card{flex-wrap:wrap;gap:10px;padding:10px 14px;} .header-actions{margin-left:0;padding-left:0;border-left:none;width:100%;min-width:0;} .score-big{font-size:56px;} .tap-button{width:190px;height:190px;font-size:28px;} .quick-actions{grid-template-columns:repeat(2,1fr);padding:0 12px;} .modal-content{padding:18px;border-radius:24px 24px 0 0;} .playing-card{width:68px;height:98px;} .card-front .suit{font-size:36px;} .game-card-icon{width:54px;height:54px;} }
 </style>
 </head>
 <body>
@@ -212,13 +231,7 @@ button { cursor:pointer; }
   <div style="text-align:center;max-width:420px;width:100%;padding-top:20px;">
     <div style="background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(139,92,246,0.15));border:1px solid rgba(236,72,153,0.4);border-radius:22px;padding:18px 32px;margin-bottom:18px;display:inline-block;">
       <svg viewBox="0 0 60 60" style="height:52px;width:52px;display:block;">
-        <defs>
-          <linearGradient id="logoAuthGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#ec4899"/>
-            <stop offset="0.5" stop-color="#8b5cf6"/>
-            <stop offset="1" stop-color="#4facfe"/>
-          </linearGradient>
-        </defs>
+        <defs><linearGradient id="logoAuthGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ec4899"/><stop offset="0.5" stop-color="#8b5cf6"/><stop offset="1" stop-color="#4facfe"/></linearGradient></defs>
         <circle cx="30" cy="30" r="26" fill="none" stroke="url(#logoAuthGrad)" stroke-width="4"/>
         <circle cx="30" cy="30" r="16" fill="none" stroke="url(#logoAuthGrad)" stroke-width="3" opacity="0.7"/>
         <circle cx="30" cy="30" r="6" fill="url(#logoAuthGrad)"/>
@@ -261,13 +274,7 @@ button { cursor:pointer; }
 <aside class="sidebar">
   <div class="sidebar-logo">
     <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ec4899"/>
-          <stop offset="0.5" stop-color="#8b5cf6"/>
-          <stop offset="1" stop-color="#4facfe"/>
-        </linearGradient>
-      </defs>
+      <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ec4899"/><stop offset="0.5" stop-color="#8b5cf6"/><stop offset="1" stop-color="#4facfe"/></linearGradient></defs>
       <circle cx="30" cy="30" r="26" fill="none" stroke="url(#logoGrad)" stroke-width="4"/>
       <circle cx="30" cy="30" r="16" fill="none" stroke="url(#logoGrad)" stroke-width="3" opacity="0.7"/>
       <circle cx="30" cy="30" r="6" fill="url(#logoGrad)"/>
@@ -374,10 +381,12 @@ button { cursor:pointer; }
   <div style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.12));border:1px solid rgba(255,215,0,0.6);border-radius:18px;padding:18px;margin-bottom:18px;text-align:center;">
     <div style="font-size:11px;color:#b8a060;text-transform:uppercase;letter-spacing:2px;font-weight:700;">Приглашено друзей</div>
     <div style="font-size:48px;font-weight:900;color:#ffd700;margin:8px 0;" id="bonusFriendCount">0</div>
-    <div style="font-size:12px;color:#94a3b8;">Заработано: <b style="color:#ffd700;" id="bonusTotalEarned">0 IS</b></div>
+    <div style="font-size:12px;color:#94a3b8;">Заработано всего: <b style="color:#ffd700;" id="bonusTotalEarned">0 IS</b></div>
   </div>
-  <div style="font-size:14px;font-weight:800;color:#a78bfa;margin-bottom:12px;">Награды:</div>
-  <div id="bonusTable"></div>
+  <div style="font-size:14px;font-weight:800;color:#a78bfa;margin-bottom:12px;">Как это работает:</div>
+  <div class="item-row" style="padding:14px;"><div class="item-info"><div class="item-name" style="font-size:13px;">👥 За 1–100 друга</div><div class="item-desc">+100 IS за каждого</div></div><div style="font-size:15px;font-weight:900;color:#22c55e;">+100 IS</div></div>
+  <div class="item-row" style="padding:14px;"><div class="item-info"><div class="item-name" style="font-size:13px;">🚀 Свыше 100 друзей</div><div class="item-desc">+450 IS за каждого следующего</div></div><div style="font-size:15px;font-weight:900;color:#ffd700;">+450 IS</div></div>
+  <div id="bonusTable" style="margin-top:14px;"></div>
 </div></div>
 
 <div class="modal" id="modal-daily"><div class="modal-content">
@@ -408,8 +417,9 @@ button { cursor:pointer; }
 </div></div>
 
 <div class="modal" id="modal-promocodes"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">Промокоды</div><button class="modal-close" onclick="closeModal('promocodes')">×</button></div>
-  <p style="color:#94a3b8;font-size:13px;margin-bottom:16px;text-align:center;">Промокоды появятся позже</p>
+  <div class="modal-header"><div class="modal-title">Промокоды партнёров</div><button class="modal-close" onclick="closeModal('promocodes')">×</button></div>
+  <p style="color:#94a3b8;font-size:12px;margin-bottom:14px;line-height:1.6;">Нажми на код, чтобы активировать. Скидки одной компании суммируются, но не выше лимита компании.</p>
+  <div id="promoCompaniesList"></div>
 </div></div>
 
 <div class="modal" id="modal-wallet"><div class="modal-content">
@@ -432,9 +442,13 @@ button { cursor:pointer; }
   </div>
 </div></div>
 
-<!-- ======== ГРУППЫ ======== -->
+<!-- ГРУППЫ -->
 <div class="modal" id="modal-groups"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">Группы</div><button class="modal-close" onclick="closeModal('groups')">×</button></div>
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button class="tab-btn active" id="tabMyGroups" onclick="switchGroupsTab('my')">Мои группы</button>
+    <button class="tab-btn" id="tabAllGroups" onclick="switchGroupsTab('all')">Все группы</button>
+  </div>
   <div style="display:flex;gap:8px;margin-bottom:14px;">
     <button class="btn-buy" style="flex:1;padding:13px;font-size:12px;" onclick="openCreateGroupModal()">➕ Создать</button>
     <button class="btn-buy green" style="flex:1;padding:13px;font-size:12px;" onclick="openJoinGroupModal()">🔗 Войти по коду</button>
@@ -505,6 +519,64 @@ try {
 
 const PROMOS = {'INGSOFT':{coins:50000,desc:'+50 000'},'DAUD':{coins:100000,desc:'+100 000'},'WELCOME':{coins:10000,desc:'+10 000'},'BOOST2':{mult:2,desc:'Множитель x2'},'GIFT':{coins:500000,desc:'+500 000'},'VIP':{coins:1000000,mult:3,desc:'+1 000 000 и x3'},'MEGA':{coins:5000000,desc:'+5 000 000'}};
 const DAILY_REWARDS=[{coins:100},{coins:200},{coins:300},{coins:500},{coins:1000},{coins:2000},{coins:5000}];
+
+// ============ КОМПАНИИ-ПАРТНЁРЫ (промокоды) ============
+const PROMO_COMPANIES = [
+  {
+    id: 'ingsoft',
+    name: 'IngSoft',
+    desc: 'Компьютерная техника',
+    icon: '💻',
+    color: '#8b5cf6',
+    maxTotal: 5,
+    hint: 'Можно комбинировать любые коды, но не более 5% за заказ',
+    codes: [
+      {code:'INGSOFT1', value:1},
+      {code:'INGSOFT2', value:2},
+      {code:'INGSOFT3', value:3},
+      {code:'INGSOFT4', value:4},
+      {code:'INGSOFT5', value:5}
+    ]
+  },
+  {
+    id: 'matrx',
+    name: 'Игротека MATRX',
+    desc: 'Игровая техника и аксессуары',
+    icon: '🎮',
+    color: '#ec4899',
+    maxTotal: 50,
+    hint: 'Каждый код активируется отдельно',
+    codes: [
+      {code:'MATRX10', value:10},
+      {code:'MATRX20', value:20},
+      {code:'MATRX25', value:25},
+      {code:'MATRX30', value:30},
+      {code:'MATRX40', value:40},
+      {code:'MATRX50', value:50}
+    ]
+  },
+  {
+    id: 'sushi',
+    name: 'IngSushiExpress',
+    desc: 'Доставка суши и роллов',
+    icon: '🍣',
+    color: '#22c55e',
+    maxTotal: 10,
+    hint: 'Можно комбинировать любые коды, но не более 10% за заказ',
+    codes: [
+      {code:'SUSHI1', value:1},
+      {code:'SUSHI2', value:2},
+      {code:'SUSHI3', value:3},
+      {code:'SUSHI4', value:4},
+      {code:'SUSHI5', value:5},
+      {code:'SUSHI6', value:6},
+      {code:'SUSHI7', value:7},
+      {code:'SUSHI8', value:8},
+      {code:'SUSHI9', value:9},
+      {code:'SUSHI10', value:10}
+    ]
+  }
+];
 
 const IS_SHOP = [
   {id:'unlim5',icon:'∞',name:'Безлимит 5 мин',desc:'Тапай без лимита',price:250,apply:()=>{unlimitedUntil=Date.now()+5*60*1000;}},
@@ -613,9 +685,64 @@ function fmt(n){
   if (n>=1e3) return (n/1e3).toFixed(2)+'K';
   return Math.floor(n).toLocaleString();
 }
-function showToast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500); }
+function showToast(msg, isError){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.toggle('error', !!isError); el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500); }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+/* ============ ПРОМОКОДЫ ПАРТНЁРОВ ============ */
+function renderPromoCompanies(){
+  const box = document.getElementById('promoCompaniesList');
+  if (!box) return;
+  box.innerHTML = PROMO_COMPANIES.map(c => {
+    const claimed = claimedPromos.filter(p => c.codes.some(x => x.code === p));
+    const total = claimed.reduce((acc, code) => {
+      const cc = c.codes.find(x => x.code === code);
+      return acc + (cc ? cc.value : 0);
+    }, 0);
+    const pct = Math.min(100, (total / c.maxTotal) * 100);
+    const codesHTML = c.codes.map(x => {
+      const isClaimed = claimedPromos.includes(x.code);
+      const wouldExceed = !isClaimed && (total + x.value > c.maxTotal);
+      const cls = isClaimed ? 'promo-code claimed' : (wouldExceed ? 'promo-code blocked' : 'promo-code');
+      return '<div class="'+cls+'" onclick="activatePartnerPromo(\''+c.id+'\',\''+x.code+'\')"><div class="val">'+x.value+'%</div>'+x.code+(isClaimed?' ✓':'')+'</div>';
+    }).join('');
+    return '<div class="promo-company">'+
+      '<div class="promo-company-header">'+
+        '<div class="promo-company-icon" style="background:linear-gradient(135deg,'+c.color+'44,'+c.color+'22);border:1px solid '+c.color+'66;">'+c.icon+'</div>'+
+        '<div style="flex:1;">'+
+          '<div class="promo-company-name">'+c.name+'</div>'+
+          '<div class="promo-company-desc">'+c.desc+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="promo-progress"><div class="promo-progress-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+c.color+',#4facfe);"></div></div>'+
+      '<div class="promo-progress-text"><span>Активировано: <b style="color:#ffd700;">'+total+'%</b></span><span>Лимит: '+c.maxTotal+'%</span></div>'+
+      '<div style="font-size:11px;color:#94a3b8;margin-bottom:10px;">💡 '+c.hint+'</div>'+
+      '<div class="promo-codes">'+codesHTML+'</div>'+
+    '</div>';
+  }).join('');
+}
+
+function activatePartnerPromo(companyId, code){
+  const company = PROMO_COMPANIES.find(c => c.id === companyId);
+  if (!company) return;
+  const item = company.codes.find(x => x.code === code);
+  if (!item) return;
+  if (claimedPromos.includes(code)) { showToast('Этот код уже активирован', true); return; }
+  const claimed = claimedPromos.filter(p => company.codes.some(x => x.code === p));
+  const total = claimed.reduce((acc, c) => {
+    const cc = company.codes.find(x => x.code === c);
+    return acc + (cc ? cc.value : 0);
+  }, 0);
+  if (total + item.value > company.maxTotal){
+    showToast('Лимит компании: ' + company.maxTotal + '%. У вас уже ' + total + '%', true);
+    return;
+  }
+  claimedPromos.push(code);
+  scheduleSave();
+  renderPromoCompanies();
+  showToast('✓ ' + company.name + ': +' + item.value + '% активирован');
+}
+/* ============ КОНЕЦ ПРОМОКОДОВ ============ */
 
 /* ========== ГРУППЫ ========== */
 let groupMessageInterval = null;
@@ -624,10 +751,24 @@ let currentGroupName = '';
 let currentGroupOwnerId = null;
 let myGroupPerms = {};
 let _groupMembersCache = [];
+let _currentGroupsTab = 'my';
+let _myGroupsCache = [];
+let _allGroupsCache = [];
 
 async function openGroupsModal() {
   openModal('groups');
+  _currentGroupsTab = 'my';
+  document.getElementById('tabMyGroups')?.classList.add('active');
+  document.getElementById('tabAllGroups')?.classList.remove('active');
   await loadGroupsList();
+}
+
+function switchGroupsTab(tab){
+  _currentGroupsTab = tab;
+  document.getElementById('tabMyGroups')?.classList.toggle('active', tab==='my');
+  document.getElementById('tabAllGroups')?.classList.toggle('active', tab==='all');
+  if (tab === 'my') renderGroupsList(_myGroupsCache);
+  else renderGroupsList(_allGroupsCache);
 }
 
 async function loadGroupsList() {
@@ -635,23 +776,49 @@ async function loadGroupsList() {
   if (!el) return;
   el.innerHTML = '<div style="text-align:center;color:#64748b;padding:14px;">Загрузка...</div>';
   try {
-    const r = await fetch(API_URL + '/groups/list?token=' + encodeURIComponent(currentToken));
-    const d = await r.json();
-    if (!d.success) { el.innerHTML = '<p style="text-align:center;color:#e63946;">Ошибка</p>'; return; }
-    if (!d.chats || !d.chats.length) {
-      el.innerHTML = '<div style="text-align:center;padding:26px 10px;color:#64748b;font-size:13px;line-height:1.6;">У тебя пока нет групп.<br>Создай первую или войди по коду!</div>';
-      return;
+    const [r1, r2] = await Promise.all([
+      fetch(API_URL + '/groups/list?token=' + encodeURIComponent(currentToken)),
+      fetch(API_URL + '/groups/all?token=' + encodeURIComponent(currentToken))
+    ]);
+    const d1 = await r1.json();
+    const d2 = await r2.json();
+    _myGroupsCache = (d1.success && d1.chats) ? d1.chats : [];
+    _allGroupsCache = (d2.success && d2.chats) ? d2.chats : [];
+    renderGroupsList(_currentGroupsTab === 'my' ? _myGroupsCache : _allGroupsCache);
+  } catch(e) {
+    el.innerHTML = '<p style="text-align:center;color:#e63946;">Ошибка загрузки</p>';
+  }
+}
+
+function renderGroupsList(chats){
+  const el = document.getElementById('groupsList');
+  if (!el) return;
+  if (!chats || !chats.length){
+    if (_currentGroupsTab === 'my'){
+      el.innerHTML = '<div style="text-align:center;padding:26px 10px;color:#64748b;font-size:13px;line-height:1.6;">У тебя пока нет групп.<br>Создай первую или перейди во вкладку «Все группы»!</div>';
+    } else {
+      el.innerHTML = '<div style="text-align:center;padding:26px 10px;color:#64748b;font-size:13px;line-height:1.6;">Пока никто не создал ни одной группы.<br>Стань первым!</div>';
     }
-    el.innerHTML = d.chats.map(c =>
-      '<div class="item-row" style="cursor:pointer;padding:14px;" onclick="openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')">' +
-        '<div class="item-info">' +
-          '<div class="item-name">' + escapeHtml(c.name) + (c.is_owner ? ' <span style="color:#ffd700;">👑</span>' : '') + '</div>' +
-          '<div class="item-desc">Код: ' + escapeHtml(c.invite_code) + '</div>' +
-        '</div>' +
-        '<span style="color:#a78bfa;font-size:18px;">›</span>' +
-      '</div>'
-    ).join('');
-  } catch(e) { el.innerHTML = '<p style="text-align:center;color:#e63946;">Ошибка загрузки</p>'; }
+    return;
+  }
+  el.innerHTML = chats.map(c => {
+    const inGroup = c.is_member !== false;
+    const memberCount = c.member_count || 0;
+    let badge = '';
+    if (c.is_owner) badge = '<span class="group-badge owner">👑 ВЛАДЕЛЕЦ</span>';
+    else if (inGroup) badge = '<span class="group-badge member">✓ В ГРУППЕ</span>';
+    const canOpen = inGroup;
+    const onclick = canOpen
+      ? 'onclick="openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')"'
+      : 'onclick="showToast(\'Вы не состоите в этой группе. Войдите по коду.\', true)"';
+    return '<div class="item-row" style="cursor:pointer;padding:14px;' + (canOpen?'':'opacity:0.6;') + '" ' + onclick + '>' +
+      '<div class="item-info">' +
+        '<div class="item-name">' + escapeHtml(c.name) + badge + '</div>' +
+        '<div class="item-desc">' + memberCount + ' участн. · Код: ' + escapeHtml(c.invite_code) + '</div>' +
+      '</div>' +
+      '<span style="color:#a78bfa;font-size:18px;">' + (canOpen ? '›' : '🔒') + '</span>' +
+    '</div>';
+  }).join('');
 }
 
 function openCreateGroupModal() {
@@ -673,11 +840,13 @@ async function createGroup(name) {
       body: JSON.stringify({token: currentToken, name})
     });
     const d = await r.json();
-    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
     showToast('Группа создана!');
     await loadGroupsList();
+    _currentGroupsTab = 'my';
+    switchGroupsTab('my');
     openGroupChat(d.chat_id, d.name, d.invite_code);
-  } catch(e) { showToast('Ошибка соединения'); }
+  } catch(e) { showToast('Ошибка соединения', true); }
 }
 
 async function joinGroup(code) {
@@ -687,11 +856,11 @@ async function joinGroup(code) {
       body: JSON.stringify({token: currentToken, invite_code: code})
     });
     const d = await r.json();
-    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
     showToast(d.already ? 'Ты уже в этой группе' : 'Присоединился!');
     await loadGroupsList();
     openGroupChat(d.chat_id, d.name, code);
-  } catch(e) { showToast('Ошибка соединения'); }
+  } catch(e) { showToast('Ошибка соединения', true); }
 }
 
 async function openGroupChat(id, name, code) {
@@ -702,8 +871,7 @@ async function openGroupChat(id, name, code) {
   document.getElementById('groupChatTitle').textContent = name;
   document.getElementById('groupMembersList').classList.remove('show');
   document.getElementById('groupMessages').innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>';
-  if (code) document.getElementById('groupCodeLbl').textContent = code;
-  else document.getElementById('groupCodeLbl').textContent = '—';
+  document.getElementById('groupCodeLbl').textContent = code || '—';
   loadGroupMessages(true);
   if (groupMessageInterval) clearInterval(groupMessageInterval);
   groupMessageInterval = setInterval(() => loadGroupMessages(false), 3000);
@@ -762,9 +930,9 @@ async function sendGroupMessage() {
       body: JSON.stringify({token: currentToken, chat_id: currentGroupId, text})
     });
     const d = await r.json();
-    if (!d.success) { showToast(d.error || 'Ошибка'); input.value = text; return; }
+    if (!d.success) { showToast(d.error || 'Ошибка', true); input.value = text; return; }
     loadGroupMessages(true);
-  } catch(e) { showToast('Ошибка соединения'); input.value = text; }
+  } catch(e) { showToast('Ошибка соединения', true); input.value = text; }
 }
 
 async function toggleGroupMembers() {
@@ -801,9 +969,7 @@ async function loadGroupMembers() {
 
 function copyGroupCode() {
   const code = document.getElementById('groupCodeLbl').textContent;
-  if (code && code !== '—') {
-    navigator.clipboard.writeText(code).then(() => showToast('Код скопирован'));
-  }
+  if (code && code !== '—') navigator.clipboard.writeText(code).then(() => showToast('Код скопирован'));
 }
 
 function shareGroupLink() {
@@ -811,11 +977,8 @@ function shareGroupLink() {
   if (!code || code === '—') return;
   const link = window.location.origin + window.location.pathname + '?group=' + code;
   const text = 'Присоединяйся к группе "' + currentGroupName + '" в IngSoft Tap!';
-  if (navigator.share) {
-    navigator.share({title: 'IngSoft Tap', text: text, url: link}).catch(()=>{});
-  } else {
-    window.open('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text), '_blank');
-  }
+  if (navigator.share) navigator.share({title: 'IngSoft Tap', text: text, url: link}).catch(()=>{});
+  else window.open('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text), '_blank');
 }
 
 function openMemberPerms(userId) {
@@ -847,11 +1010,11 @@ async function saveMemberPerms(userId) {
         is_admin: !!is_admin, perms: {can_delete_messages, can_edit, can_kick, can_pin}})
     });
     const d = await r.json();
-    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
     showToast('Сохранено');
     closeModal('member-perms');
     loadGroupMembers();
-  } catch(e) { showToast('Ошибка'); }
+  } catch(e) { showToast('Ошибка', true); }
 }
 
 async function kickMember(userId) {
@@ -862,12 +1025,12 @@ async function kickMember(userId) {
       body: JSON.stringify({token: currentToken, chat_id: currentGroupId, user_id: userId})
     });
     const d = await r.json();
-    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
     showToast('Кикнут');
     closeModal('member-perms');
     loadGroupMembers();
     loadGroupMessages(true);
-  } catch(e) { showToast('Ошибка'); }
+  } catch(e) { showToast('Ошибка', true); }
 }
 
 async function deleteGroupMsg(mid) {
@@ -878,9 +1041,9 @@ async function deleteGroupMsg(mid) {
       body: JSON.stringify({token: currentToken, chat_id: currentGroupId, message_id: mid})
     });
     const d = await r.json();
-    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
     loadGroupMessages(true);
-  } catch(e) { showToast('Ошибка'); }
+  } catch(e) { showToast('Ошибка', true); }
 }
 
 async function editGroupMsg(mid) {
@@ -892,9 +1055,9 @@ async function editGroupMsg(mid) {
       body: JSON.stringify({token: currentToken, chat_id: currentGroupId, message_id: mid, text: newText.trim()})
     });
     const d = await r.json();
-    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
     loadGroupMessages(true);
-  } catch(e) { showToast('Ошибка'); }
+  } catch(e) { showToast('Ошибка', true); }
 }
 
 /* ==== LEADERBOARD ==== */
@@ -965,7 +1128,8 @@ function playGame(gameId){
       '<div id="gamePredictBox" style="margin-bottom:12px;display:none;"></div>' +
       '<div id="minesButtons" style="display:none;gap:8px;margin-bottom:12px;"></div>' +
       '<div style="margin-bottom:12px;">' +
-        '<input type="number" id="betInput" class="promo-input" placeholder="Ставка" value="1000" min="1000" max="999999999999999" style="text-align:center;text-transform:none;letter-spacing:0;">' +
+        '<input type="number" id="betInput" class="promo-input" placeholder="Ставка" value="1000" min="1000" max="999999999999999" style="text-align:center;text-transform:none;letter-spacing:0;" oninput="validateBetInput()">' +
+        '<div id="betError" style="color:#e63946;font-size:11px;text-align:center;font-weight:700;margin:-8px 0 10px;min-height:14px;"></div>' +
         '<div class="bet-row">' +
           '<button class="bet-chip" onclick="setBet(1000)">1K</button>' +
           '<button class="bet-chip" onclick="setBet(10000)">10K</button>' +
@@ -1225,7 +1389,7 @@ async function minesContinue(){
 }
 
 function openMineCell(idx){
-  if (!_minesBetCommitted || !_minesActive) { showToast('Сначала нажми «Играть»'); return; }
+  if (!_minesBetCommitted || !_minesActive) { showToast('Сначала нажми «Играть»', true); return; }
   const cell = document.querySelector('.mine-cell[data-idx="'+idx+'"]');
   if (!cell || cell.classList.contains('opened')) return;
   const isMine = _minesMinePositions.includes(idx);
@@ -1271,9 +1435,36 @@ function pickCup(idx){
   _cupPick = idx;
 }
 
-function setBet(val){ const inp = document.getElementById('betInput'); if (inp) inp.value = val; }
-function doubleBet(){ const inp = document.getElementById('betInput'); if (!inp) return; const cur = parseInt(inp.value,10)||1000; inp.value = Math.min(score, cur*2); }
-function allInBet(){ const inp = document.getElementById('betInput'); if (!inp) return; inp.value = Math.max(1000, Math.floor(score)); }
+function setBet(val){
+  const inp = document.getElementById('betInput');
+  if (inp) inp.value = val;
+  validateBetInput();
+}
+function doubleBet(){ const inp = document.getElementById('betInput'); if (!inp) return; const cur = parseInt(inp.value,10)||1000; inp.value = Math.min(score, cur*2); validateBetInput(); }
+function allInBet(){ const inp = document.getElementById('betInput'); if (!inp) return; inp.value = Math.max(1000, Math.floor(score)); validateBetInput(); }
+
+function validateBetInput(){
+  const inp = document.getElementById('betInput');
+  const errEl = document.getElementById('betError');
+  if (!inp || !errEl) return;
+  const raw = inp.value.trim();
+  errEl.textContent = '';
+  inp.style.borderColor = '';
+  if (raw === '') return;
+  const val = parseInt(raw, 10);
+  if (isNaN(val)) return;
+  if (val < 1000){
+    errEl.textContent = 'Минимальная ставка — 1 000 очков';
+    inp.style.borderColor = '#e63946';
+    return;
+  }
+  if (val > score){
+    errEl.textContent = 'У вас только ' + fmt(score) + ' очков';
+    inp.style.borderColor = '#e63946';
+    return;
+  }
+}
+
 function closePlaying(){ const m = document.getElementById('modal-playing'); if (m) m.remove(); _currentGameId = null; _gameRunning = false; _cupActive = false; _cupPick = null; if (historyRefreshTimer) clearInterval(historyRefreshTimer); }
 
 async function loadGameHistory(){
@@ -1301,8 +1492,8 @@ async function loadTopWins(){
 async function runGame(gameId){
   if (_gameRunning) return;
   const bet = parseInt(document.getElementById('betInput').value, 10);
-  if (isNaN(bet) || bet < 1000) { showToast('Минимальная ставка 1 000'); return; }
-  if (bet > score) { showToast('Недостаточно очков'); return; }
+  if (isNaN(bet) || bet < 1000) { validateBetInput(); showToast('Минимальная ставка 1 000', true); return; }
+  if (bet > score) { showToast('Недостаточно очков', true); return; }
 
   const resultEl = document.getElementById('gameResult');
   const subEl = document.getElementById('gameSub');
@@ -1448,11 +1639,8 @@ async function animWheel(sp, gRes){
   const r = await sp; const isWin = !!(r && r.success && r.win);
   playSpinSound(3000);
   let finalSector;
-  if (isWin) {
-    finalSector = [2,4,6,8,10,12][Math.floor(Math.random()*6)];
-  } else {
-    finalSector = [1,3,5,7,9,11][Math.floor(Math.random()*6)];
-  }
+  if (isWin) finalSector = [2,4,6,8,10,12][Math.floor(Math.random()*6)];
+  else finalSector = [1,3,5,7,9,11][Math.floor(Math.random()*6)];
   const sectorAngle = 360 / 12;
   const stopAngle = -( (finalSector - 0.5) * sectorAngle );
   const totalRot = 360 * 5 + stopAngle;
@@ -1791,12 +1979,12 @@ async function loadChatStats(){
   } catch(e) {}
 }
 async function sendChatMessage(){
-  if (!currentToken) { showToast('Войди в аккаунт'); return; }
+  if (!currentToken) { showToast('Войди в аккаунт', true); return; }
   const input = document.getElementById('chatInput'); const text = input.value.trim(); if (!text) return; input.value = '';
   try { const r = await fetch(API_URL + '/send-message', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken,text:text})}); const d = await r.json();
-    if (!d.success) { showToast(d.error||'Ошибка'); input.value = text; return; }
+    if (!d.success) { showToast(d.error||'Ошибка', true); input.value = text; return; }
     loadChatMessages(true);
-  } catch(e) { showToast('Ошибка соединения'); input.value = text; }
+  } catch(e) { showToast('Ошибка соединения', true); input.value = text; }
 }
 
 /* ==== UI ==== */
@@ -1813,6 +2001,7 @@ function openModal(name){
   if (name === 'referral') { updateRefLink(); loadReferral(); if (window._ri) clearInterval(window._ri); window._ri = setInterval(loadReferral, 5000); }
   if (name === 'referral-bonus') { loadReferral(); }
   if (name === 'games') loadGames();
+  if (name === 'promocodes') renderPromoCompanies();
   if (name === 'leaderboard') { leaderboardPage = 0; renderFullLeaderboard(getSortedLeaderboard()); refreshLeaderboard(); }
 }
 function closeModal(name){
@@ -1854,11 +2043,11 @@ function updateUI(){
 }
 
 document.getElementById('tapBtn').addEventListener('click', () => {
-  if (energy <= 0) { showToast('Энергия кончилась'); return; }
+  if (energy <= 0) { showToast('Энергия кончилась', true); return; }
   const today = new Date().toISOString().split('T')[0];
   if (lastTapDate !== today) { lastTapDate = today; tapsToday = 0; dailyTapLimit = 20000; }
   const unlimited = Date.now() < unlimitedUntil;
-  if (!unlimited && tapsToday >= dailyTapLimit) { showToast('Лимит тапов'); return; }
+  if (!unlimited && tapsToday >= dailyTapLimit) { showToast('Лимит тапов', true); return; }
   const mult = Date.now() < isBoostMultUntil ? 2 : 1;
   score += multiplier * mult; energy -= 1; totalTaps += 1; tapsToday += 1;
   const nl = Math.floor(score/10000) + 1;
@@ -1891,10 +2080,23 @@ function buildSidebar(){
 }
 
 function loadISShop(){ const el = document.getElementById('isShopGrid'); if (!el) return; el.innerHTML = IS_SHOP.map(item => '<div class="is-shop-item" onclick="buyIS(\''+item.id+'\')"><div class="isi-icon">'+item.icon+'</div><div class="isi-name">'+item.name+'</div><div class="isi-desc">'+item.desc+'</div><div class="isi-price">IS '+item.price+'</div></div>').join(''); }
-function buyIS(id){ const item = IS_SHOP.find(x => x.id === id); if (!item) return; if (isBalance < item.price) { showToast('Мало IS'); return; } isBalance -= item.price; item.apply(); updateUI(); scheduleSave(); loadISShop(); showToast('Куплено'); }
+function buyIS(id){ const item = IS_SHOP.find(x => x.id === id); if (!item) return; if (isBalance < item.price) { showToast('Мало IS', true); return; } isBalance -= item.price; item.apply(); updateUI(); scheduleSave(); loadISShop(); showToast('Куплено'); }
 function loadISTasks(){ const el = document.getElementById('isTasksList'); if (!el) return; el.innerHTML = '<div style="text-align:center;color:#64748b;padding:20px;">Задания появятся позже</div>'; }
 function loadQuests(){ const el = document.getElementById('questsList'); if (!el) return; el.innerHTML = QUESTS.map(q => { const cl = claimedQuests.includes(q.id); const can = q.check() && !cl; let btn = cl ? '<button class="btn-buy" disabled>Забрано</button>' : (can ? '<button class="btn-buy green" onclick="claimQuest(\''+q.id+'\')">Забрать</button>' : '<button class="btn-buy" disabled>Не выполнено</button>'); return '<div class="item-row"><div class="item-info"><div class="item-name">'+q.name+'</div><div class="item-desc">'+q.desc+'</div></div>'+btn+'</div>'; }).join(''); }
-async function claimQuest(id){ const q = QUESTS.find(x => x.id === id); if (!q) return; if (claimedQuests.includes(id)) { showToast('Уже'); return; } if (!q.check()) { showToast('Не выполнено'); return; } try { const r = await fetch(API_URL + '/claim-quest', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken,quest_id:id,reward:q.reward})}); const d = await r.json(); if (!d.success) { showToast(d.error||'Ошибка'); return; } claimedQuests = d.claimed || claimedQuests.concat(id); score = d.new_score; updateUI(); loadQuests(); showToast('+' + fmt(q.reward)); } catch(e) { showToast('Ошибка'); } }
+async function claimQuest(id){
+  const q = QUESTS.find(x => x.id === id); if (!q) return;
+  if (claimedQuests.includes(id)) { showToast('Уже', true); return; }
+  if (!q.check()) { showToast('Не выполнено', true); return; }
+  try {
+    const r = await fetch(API_URL + '/claim-quest', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken,quest_id:id,reward:q.reward})});
+    const d = await r.json();
+    if (!d.success) { showToast(d.error||'Ошибка', true); return; }
+    claimedQuests = d.claimed || claimedQuests.concat(id);
+    score = d.new_score;
+    updateUI(); loadQuests();
+    showToast('+' + fmt(q.reward));
+  } catch(e) { showToast('Ошибка', true); }
+}
 function loadBoosts(){ const el = document.getElementById('boostsList'); if (!el) return; el.innerHTML = BOOSTS.slice(0, 20).map(b => { const owned = upgrades[b.id]; const can = score >= b.price && !owned; let btn = owned ? '<button class="btn-buy" disabled>Куплено</button>' : (can ? '<button class="btn-buy green" onclick="buyBoost(\''+b.id+'\')">'+fmt(b.price)+'</button>' : '<button class="btn-buy" disabled>'+fmt(b.price)+'</button>'); return '<div class="item-row"><div class="item-info"><div class="item-name">'+b.name+'</div><div class="item-desc">'+b.desc+'</div></div>'+btn+'</div>'; }).join(''); }
 function buyBoost(id){ const b = BOOSTS.find(x=>x.id===id); if (!b || score < b.price || upgrades[b.id]) return; score -= b.price; upgrades[b.id] = true; b.apply(); updateUI(); scheduleSave(); loadBoosts(); }
 function loadAchievements(){ const el = document.getElementById('achList'); if (!el) return; el.innerHTML = ACHIEVEMENTS.map(a => '<div class="achieve-item '+(a.check()?'unlocked':'locked')+'"><div class="achieve-icon">'+a.icon+'</div><div class="achieve-text"><div class="achieve-name">'+a.name+'</div><div class="achieve-desc">'+a.desc+'</div></div></div>').join(''); }
@@ -1903,7 +2105,7 @@ function claimDaily(){ const today = new Date().toISOString().split('T')[0]; if 
 function loadStats(){ document.getElementById('statsContent').innerHTML = '<div class="profile-row"><span>Очки</span><span>'+fmt(score)+'</span></div><div class="profile-row"><span>Тапов</span><span>'+fmt(totalTaps)+'</span></div><div class="profile-row"><span>Уровень</span><span>'+level+'</span></div><div class="profile-row"><span>Место</span><span>#'+(myGlobalRank||'—')+'</span></div><div class="profile-row"><span>Друзей</span><span>'+myReferrals.length+'</span></div>'; }
 function loadProfile(){ const av = avatarData ? '<div class="profile-avatar" style="background-image:url('+avatarData+');"></div>' : '<div class="profile-avatar">'+(nickname||'?')[0].toUpperCase()+'</div>'; document.getElementById('profileContent').innerHTML = av + '<div style="text-align:center;font-size:21px;font-weight:800;">'+(nickname||'Игрок')+'</div><div class="profile-row"><span>Очки</span><span>'+fmt(score)+'</span></div><div class="profile-row"><span>Место</span><span>#'+(myGlobalRank||'—')+'</span></div><div class="profile-row"><span>Уровень</span><span>'+level+'</span></div>'; }
 function loadWallet(){ document.getElementById('walletVal').textContent = walletBalance.toFixed(2) + ' ₽'; }
-function redeemPromo(){ const code = document.getElementById('promoInput').value.trim().toUpperCase(); if (!code) return; if (claimedPromos.includes(code)) { showToast('Уже активирован'); return; } const p = PROMOS[code]; if (!p) { showToast('Неверный'); return; } if (p.coins) score += p.coins; if (p.mult) multiplier = Math.max(multiplier, p.mult); claimedPromos.push(code); updateUI(); scheduleSave(); document.getElementById('promoInput').value = ''; showToast('+ ' + p.desc); }
+function redeemPromo(){ const code = document.getElementById('promoInput').value.trim().toUpperCase(); if (!code) return; if (claimedPromos.includes(code)) { showToast('Уже активирован', true); return; } const p = PROMOS[code]; if (!p) { showToast('Неверный', true); return; } if (p.coins) score += p.coins; if (p.mult) multiplier = Math.max(multiplier, p.mult); claimedPromos.push(code); updateUI(); scheduleSave(); document.getElementById('promoInput').value = ''; showToast('+ ' + p.desc); }
 function logout(){ if (!confirm('Выйти?')) return; localStorage.removeItem('ingsoft_token'); location.reload(); }
 async function updateRefLink(){ const el = document.getElementById('refLink'); if (!el) return; if (!currentToken) { el.textContent = '—'; return; } try { const r = await fetch(API_URL + '/my-id?token=' + encodeURIComponent(currentToken)); const d = await r.json(); if (d.success && d.id) el.textContent = window.location.origin + window.location.pathname + '?ref=' + d.id; } catch(e) {} }
 function copyRefLink(){ const l = document.getElementById('refLink').textContent; if (l && l !== '—') navigator.clipboard.writeText(l).then(()=>showToast('Скопировано')); }
@@ -1920,40 +2122,55 @@ async function loadReferral(){
       const bc = document.getElementById('bonusFriendCount'); if (bc) bc.textContent = myReferrals.length;
       const bt = document.getElementById('bonusTotalEarned'); if (bt) bt.textContent = computeReferralReward(myReferrals.length) + ' IS';
       const bonusTable = document.getElementById('bonusTable');
-      if (bonusTable) { const tiers = [{n:1,r:100,d:'За 1 друга'},{n:5,r:450,d:'За 5'},{n:10,r:100,d:'За каждого 6-10'}]; bonusTable.innerHTML = tiers.map(t => { const done = myReferrals.length >= t.n; return '<div class="item-row" style="padding:10px 14px;"><div class="item-info"><div class="item-name" style="font-size:13px;">' + (done?'[x]':'[ ]') + ' ' + t.d + '</div></div><div style="font-size:13px;font-weight:900;color:' + (done?'#22c55e':'#ffd700') + ';">+' + t.r + ' IS</div></div>'; }).join(''); }
+      if (bonusTable) {
+        // прогресс-таблица до 100, потом 450
+        const n = myReferrals.length;
+        const upTo100 = Math.min(n, 100);
+        const over100 = Math.max(0, n - 100);
+        let rows = '';
+        rows += '<div class="item-row" style="padding:12px;"><div class="item-info"><div class="item-name" style="font-size:13px;">📊 До 100 друзей</div><div class="item-desc">' + upTo100 + ' × 100 IS</div></div><div style="font-size:14px;font-weight:900;color:#22c55e;">+' + (upTo100*100) + ' IS</div></div>';
+        if (over100 > 0){
+          rows += '<div class="item-row" style="padding:12px;"><div class="item-info"><div class="item-name" style="font-size:13px;">🚀 Свыше 100</div><div class="item-desc">' + over100 + ' × 450 IS</div></div><div style="font-size:14px;font-weight:900;color:#ffd700;">+' + (over100*450) + ' IS</div></div>';
+        }
+        bonusTable.innerHTML = rows;
+      }
     }
   } catch(e) {}
 }
-function computeReferralReward(n){ if (n<=0) return 0; if (n===1) return 100; if (n===2) return 150; if (n>=3&&n<=4) return 150; if (n===5) return 450; if (n>5&&n<=100) return 100; return 300; }
+function computeReferralReward(n){
+  if (n <= 0) return 0;
+  if (n <= 100) return n * 100;
+  return 100 * 100 + (n - 100) * 450;
+}
 function selectGender(g){ selectedGender = g; const m = document.getElementById('genderMale'), f = document.getElementById('genderFemale'); if (m && f) { if (g === 'male') { m.style.borderColor = '#8b5cf6'; f.style.borderColor = 'rgba(236,72,153,0.3)'; } else { f.style.borderColor = '#ec4899'; m.style.borderColor = 'rgba(139,92,246,0.3)'; } } }
 function showTab(tab){ const isL = tab === 'login'; document.getElementById('formLogin').style.display = isL ? 'block' : 'none'; document.getElementById('formRegister').style.display = isL ? 'none' : 'block'; }
 async function doRegister(){
   const login = document.getElementById('regLogin').value.trim(); const password = document.getElementById('regPassword').value;
   const nick = document.getElementById('regNickname').value.trim(); const phone = document.getElementById('regPhone').value.trim();
   const region = document.getElementById('regRegion').value; const full_name = document.getElementById('regFullName').value.trim();
-  if (!login || login.length < 3) { showToast('Логин ≥ 3'); return; }
-  if (!password || password.length < 6) { showToast('Пароль ≥ 6'); return; }
-  if (!nick || nick.length < 2) { showToast('Ник ≥ 2'); return; }
-  if (!phone || phone.length < 10) { showToast('Телефон'); return; }
-  if (!region) { showToast('Регион'); return; }
-  if (!full_name) { showToast('ФИО'); return; }
-  if (!selectedGender) { showToast('Пол'); return; }
+  if (!login || login.length < 3) { showToast('Логин ≥ 3', true); return; }
+  if (!password || password.length < 6) { showToast('Пароль ≥ 6', true); return; }
+  if (!nick || nick.length < 2) { showToast('Ник ≥ 2', true); return; }
+  if (!phone || phone.length < 10) { showToast('Телефон', true); return; }
+  if (!region) { showToast('Регион', true); return; }
+  if (!full_name) { showToast('ФИО', true); return; }
+  if (!selectedGender) { showToast('Пол', true); return; }
   try {
     const r = await fetch(API_URL + '/register', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login,password,nickname:nick,gender:selectedGender,region,phone,full_name,telegram_id:telegramId,referrer_nickname:referrerNickname,referrer_id:referrerId})});
     const d = await r.json();
-    if (!r.ok || d.error) { showToast(d.error||'Ошибка'); return; }
+    if (!r.ok || d.error) { showToast(d.error||'Ошибка', true); return; }
     localStorage.removeItem('ingsoft_referrer_nickname'); localStorage.removeItem('ingsoft_referrer_id');
     showToast('Успех! Войди.');
     showTab('login'); document.getElementById('loginLogin').value = login;
-  } catch(e) { showToast('Ошибка соединения'); }
+  } catch(e) { showToast('Ошибка соединения', true); }
 }
 async function doLogin(){
   const login = document.getElementById('loginLogin').value.trim(); const password = document.getElementById('loginPassword').value;
-  if (!login || !password) { showToast('Заполни все'); return; }
+  if (!login || !password) { showToast('Заполни все', true); return; }
   try {
     const r = await fetch(API_URL + '/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login,password})});
     const d = await r.json();
-    if (!r.ok || d.error) { showToast(d.error||'Ошибка'); return; }
+    if (!r.ok || d.error) { showToast(d.error||'Ошибка', true); return; }
     const u = d.user;
     currentToken = u.token; currentUser = u; myUserId = u.id;
     if (u.role) currentUser.role = u.role;
@@ -1971,7 +2188,7 @@ async function doLogin(){
     walletBalance = u.wallet_balance ?? 0; walletTotal = u.wallet_total ?? 0;
     earnedPromocodes = u.earned_promocodes || [];
     enterGame(); showToast('С возвращением, ' + nickname + '!');
-  } catch(e) { showToast('Ошибка'); }
+  } catch(e) { showToast('Ошибка', true); }
 }
 function startEnergyRegen(){ if (energyRegenInterval) clearInterval(energyRegenInterval); energyRegenInterval = setInterval(() => { if (energy < maxEnergy) { energy = Math.min(maxEnergy, energy + 1); updateUI(); scheduleSave(); } }, 1000); }
 function enterGame(){
@@ -2017,7 +2234,6 @@ function init(){
     if (/^\d+$/.test(cp)) { ri = parseInt(cp,10); if (ri>0 && ri<9000000000) { referrerId = ri; localStorage.setItem('ingsoft_referrer_id', String(ri)); } }
     else { const lu = cp.lastIndexOf('_'); if (lu > 0) { const pi = cp.slice(lu+1); if (/^\d+$/.test(pi)) { rn = cp.slice(0,lu); ri = parseInt(pi,10); if (ri>0 && ri<9000000000) { referrerId = ri; localStorage.setItem('ingsoft_referrer_id', String(ri)); } } else rn = cp; } else rn = cp; rn = decodeURIComponent(rn); if (rn && /^[a-zA-Z0-9_а-яА-ЯёЁ\-]+$/.test(rn)) { referrerNickname = rn; localStorage.setItem('ingsoft_referrer_nickname', rn); } }
   }
-  // Подхватить ссылку-приглашение в группу
   let inviteCode = null;
   try { const up = new URLSearchParams(window.location.search); if (up.get('group')) inviteCode = up.get('group'); } catch(e) {}
   function bind(){ const bl = document.getElementById('tabLogin'), br = document.getElementById('tabRegister'); if (bl && !bl.dataset.b) { bl.dataset.b = '1'; bl.onclick = () => showTab('login'); } if (br && !br.dataset.b) { br.dataset.b = '1'; br.onclick = () => showTab('register'); } const dl = document.getElementById('btnDoLogin'); if (dl && !dl.dataset.b) { dl.dataset.b = '1'; dl.onclick = doLogin; } const dr = document.getElementById('btnDoRegister'); if (dr && !dr.dataset.b) { dr.dataset.b = '1'; dr.onclick = doRegister; } }
@@ -2026,7 +2242,6 @@ function init(){
   if (saved) {
     currentToken = saved; loadProgressByToken(saved).then(ok => { if (ok && inviteCode) { setTimeout(() => openJoinGroupModal(inviteCode), 1500); } });
   } else { document.getElementById('authScreen').style.display = 'flex'; }
-  // Если не залогинен, но есть код — запомним и предложим после входа
   if (inviteCode) {
     const tryOpen = setInterval(() => {
       if (currentToken && document.getElementById('app').style.display !== 'none') {
