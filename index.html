@@ -252,6 +252,18 @@ button { cursor:pointer; }
 .sub-content.active { display: block; }
 .promo-company-info { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
 .promo-company-info b { color: #a78bfa; }
+.partner-info-block { font-size: 12px; color: #cbd5e1; line-height: 1.6; }
+.partner-info-title { font-size: 16px; font-weight: 900; margin-bottom: 10px; }
+.partner-info-row { margin-bottom: 8px; }
+.partner-info-row b { color: #a78bfa; }
+.partner-features { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+.partner-feature { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: #e0e7ff; }
+.partner-feature-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.partner-extra { font-size: 12px; color: #cbd5e1; margin-bottom: 6px; }
+.partner-extra b { color: #a78bfa; }
+.partner-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.partner-link { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(139,92,246,0.4); background: rgba(139,92,246,0.1); color: #e0e7ff; font-size: 11px; font-weight: 700; text-decoration: none; transition: background 0.2s; }
+.partner-link:hover { background: rgba(139,92,246,0.25); }
 
 </style>
 </head>
@@ -594,37 +606,46 @@ const PROMO_COMPANIES = [
     color: '#8b5cf6',
     maxTotal: 5,
     hint: 'Можно комбинировать любые коды, но не более 5% за заказ',
-    info: 'Адрес: Ингушетия, Назрань, Московская 17B.<br><br>' +
-          'WhatsApp: <a href="https://wa.me/message/C63IVKWGGP5IL1" target="_blank" style="color:#a78bfa;">Ссылка</a><br>' +
-          'Магазин: <a href="https://t.me/c/3508095534/21" target="_blank" style="color:#a78bfa;">Telegram</a><br>' +
-          'Instagram: <a href="https://www.instagram.com/ing_soft" target="_blank" style="color:#a78bfa;">@ing_soft</a><br><br>' +
-          'О компании: IngSoft — Компания работает как оптовый поставщик компьютерной техники и программного обеспечения, а также внедряет системы безопасности. В ассортименте: Компьютеры и оргтехника, Программное обеспечение (1С), Системы безопасности.<br><br>' +
-          'Компания имеет статус партнёра Microsoft и сертификаты «1С:Профессионал» и «1С:Специалист». Среди заказчиков — государственные учреждения.',
+    address: 'Ингушетия, г. Назрань, ул. Московская, 17B',
+    about: 'Оптовый поставщик компьютерной техники и программного обеспечения, внедрение систем безопасности.',
+    features: [
+      'Компьютеры, серверы, сетевое оборудование',
+      'Внедрение и обслуживание «1С»',
+      'Видеонаблюдение и системы безопасности',
+      'ИТ-аутсорсинг, разработка сайтов',
+      'Партнёр Microsoft, сертификаты «1С:Профессионал» и «1С:Специалист»'
+    ],
+    links: [
+      {label: 'WhatsApp', url: 'https://wa.me/message/C63IVKWGGP5IL1', icon: '💬'},
+      {label: 'Telegram', url: 'https://t.me/c/3508095534/21', icon: '✈️'},
+      {label: 'Instagram', url: 'https://www.instagram.com/ing_soft', icon: '📷'}
+    ],
     codes: [
-      {code:'INGSOFT1', value:1},
-      {code:'INGSOFT2', value:2},
-      {code:'INGSOFT3', value:3},
-      {code:'INGSOFT4', value:4},
-      {code:'INGSOFT5', value:5}
+      {code:'INGSOFT1', value:1},{code:'INGSOFT2', value:2},
+      {code:'INGSOFT3', value:3},{code:'INGSOFT4', value:4},{code:'INGSOFT5', value:5}
     ]
   },
   {
     id: 'matrx',
     name: 'Игротека MATRX',
-    desc: 'Игровая техника и аксессуары',
+    desc: 'Комфортная игровая зона',
     icon: '🎮',
     color: '#ec4899',
     maxTotal: 50,
     hint: 'Каждый код активируется отдельно',
-    info: 'Адрес: Ингушетия, Назрань, Московская 17B.<br><br>' +
-          'О игротеке: Комфортная атмосфера, 45 ПК, любой вид игры скачан на компьютер. Приходите играть с друзьями, участвовать в турнирах и просто отлично проводить время!',
+    address: 'Ингушетия, г. Назрань, ул. Московская, 17B',
+    about: 'Игротека с комфортной атмосферой и 45 мощными ПК. Любая игра уже скачана — приходи и играй!',
+    features: [
+      '45 игровых ПК с топовыми играми',
+      'Комфортная атмосфера и удобные кресла',
+      'Любой вид игры уже установлен',
+      'Идеально для компании друзей'
+    ],
+    links: [],
     codes: [
-      {code:'MATRX10', value:10},
-      {code:'MATRX20', value:20},
-      {code:'MATRX25', value:25},
-      {code:'MATRX30', value:30},
-      {code:'MATRX40', value:40},
-      {code:'MATRX50', value:50}
+      {code:'MATRX10', value:10},{code:'MATRX20', value:20},
+      {code:'MATRX25', value:25},{code:'MATRX30', value:30},
+      {code:'MATRX40', value:40},{code:'MATRX50', value:50}
     ]
   },
   {
@@ -635,42 +656,49 @@ const PROMO_COMPANIES = [
     color: '#22c55e',
     maxTotal: 10,
     hint: 'Можно комбинировать любые коды, но не более 10% за заказ',
-    info: 'Адрес: Ингушетия, Назрань, ул. Чеченская, 34/3.<br><br>' +
-          'О компании: Кафе SushiExpressIng — это вкуснейшие суши и роллы, приготовленные с любовью из свежайших ингредиентов. Мы радуем наших гостей быстрой доставкой, широким выбором блюд японской кухни и приятными ценами. Заходите в гости или заказывайте домой — мы всегда рады вас угостить!',
+    address: 'Ингушетия, г. Назрань, ул. Чеченская, 34/3',
+    about: 'Кафе-доставка суши и роллов. Свежие ингредиенты, авторские соусы и быстрая доставка по Назрани.',
+    features: [
+      'Свежие суши и роллы каждый день',
+      'Авторские соусы и сеты',
+      'Быстрая доставка по городу',
+      'Уютное кафе и самовывоз'
+    ],
+    links: [],
     codes: [
-      {code:'SUSHI1', value:1},
-      {code:'SUSHI2', value:2},
-      {code:'SUSHI3', value:3},
-      {code:'SUSHI4', value:4},
-      {code:'SUSHI5', value:5},
-      {code:'SUSHI6', value:6},
-      {code:'SUSHI7', value:7},
-      {code:'SUSHI8', value:8},
-      {code:'SUSHI9', value:9},
-      {code:'SUSHI10', value:10}
+      {code:'SUSHI1', value:1},{code:'SUSHI2', value:2},{code:'SUSHI3', value:3},
+      {code:'SUSHI4', value:4},{code:'SUSHI5', value:5},{code:'SUSHI6', value:6},
+      {code:'SUSHI7', value:7},{code:'SUSHI8', value:8},{code:'SUSHI9', value:9},{code:'SUSHI10', value:10}
     ]
   },
   {
     id: 'klimate',
     name: 'Klimate Komfort',
-    desc: 'Инженерные системы',
+    desc: 'Отопление, канализация, электрика, кондиционирование',
     icon: '🛠️',
-    color: '#f59e0b',
-    maxTotal: 100,
-    hint: 'Скидки на монтаж и оборудование',
-    info: 'Адрес: Карабулак, ул. Орджоникидзе, 34.<br><br>' +
-          'Режим работы: Пн–Чт 8:00–17:00, Сб–Вс 8:00–17:00 (пятница — выходной)<br>' +
-          'Телефон: 8 (928) 096-66-47<br>' +
-          'WhatsApp: <a href="https://wa.me/79280966647" target="_blank" style="color:#a78bfa;">Ссылка</a><br>' +
-          'Магазин: <a href="https://shop.klimatekomfort.ru" target="_blank" style="color:#a78bfa;">shop.klimatekomfort.ru</a><br>' +
-          'Сайт услуг: <a href="https://klimatekomfort.ru" target="_blank" style="color:#a78bfa;">klimatekomfort.ru</a><br>' +
-          'Instagram: <a href="https://www.instagram.com/klimate.komfort" target="_blank" style="color:#a78bfa;">@klimate.komfort</a><br><br>' +
-          'О компании: Компания из Карабулака, занимается монтажом инженерных систем под ключ. Работает с 2019 года, более 470 выполненных объектов по всей Республике Ингушетия.<br><br>' +
-          'Услуги: Отопление, Канализация, Электрика, Кондиционирование.<br><br>' +
-          'Преимущества: Гарантия 3 года, Бесплатный выезд мастера, Прозрачная смета, Рассрочка 0% без банков.',
+    color: '#0ea5e9',
+    maxTotal: 15,
+    hint: 'Скидка на монтаж инженерных систем под ключ',
+    address: 'Карабулак, ул. Орджоникидзе, 34',
+    about: 'Монтаж инженерных систем под ключ в Ингушетии с 2019 года. Более 470 выполненных объектов: Назрань, Магас, Карабулак, Сунжа и другие.',
+    features: [
+      'Гарантия 3 года на работы и оборудование',
+      'Бесплатный выезд мастера и смета в день обращения',
+      'Прозрачная смета до последнего самореза',
+      'Собственная рассрочка 0% без банков',
+      'Свой штат мастеров — без субподрядчиков',
+      'Собственный интернет-магазин оборудования'
+    ],
+    links: [
+      {label: 'WhatsApp', url: 'https://wa.me/79280966647', icon: '💬'},
+      {label: 'Магазин', url: 'https://shop.klimatekomfort.ru', icon: '🛒'},
+      {label: 'Сайт услуг', url: 'https://klimatekomfort.ru', icon: '🌐'},
+      {label: 'Instagram', url: 'https://www.instagram.com/klimate.komfort', icon: '📷'}
+    ],
+    schedule: 'Пн–Чт 8:00–17:00, Сб–Вс 8:00–17:00 (пятница — выходной)',
+    phone: '8 (928) 096-66-47',
     codes: [
-      {code:'KLIMATE10', value:10},
-      {code:'KLIMATE20', value:20}
+      {code:'KLIMATE5', value:5},{code:'KLIMATE10', value:10},{code:'KLIMATE15', value:15}
     ]
   }
 ];
@@ -840,11 +868,33 @@ function renderPromoCompanies(){
     // Генерация информации (если открыт подпункт "Информация о...")
     let infoHtml = '';
     if (isExpanded && activeSub === 'info') {
+      let linksHtml = '';
+      if (c.links && c.links.length) {
+        linksHtml = '<div class="partner-links">' + c.links.map(l =>
+          '<a href="' + l.url + '" target="_blank" class="partner-link">' +
+            '<span>' + l.icon + '</span><span>' + l.label + '</span>' +
+          '</a>'
+        ).join('') + '</div>';
+      }
+      let featuresHtml = '';
+      if (c.features && c.features.length) {
+        featuresHtml = '<div class="partner-features">' + c.features.map(f =>
+          '<div class="partner-feature"><span class="partner-feature-dot" style="background:' + c.color + ';"></span><span>' + f + '</span></div>'
+        ).join('') + '</div>';
+      }
+      let extraHtml = '';
+      if (c.schedule) extraHtml += '<div class="partner-extra"><b>🕒 Режим работы:</b> ' + c.schedule + '</div>';
+      if (c.phone) extraHtml += '<div class="partner-extra"><b>📞 Телефон:</b> <a href="tel:' + c.phone.replace(/[^0-9+]/g,'') + '" style="color:#a78bfa;">' + c.phone + '</a></div>';
+
       infoHtml = '<div class="sub-content active" id="sub-info-'+c.id+'">' +
-        '<div class="promo-company-info">' +
-          '<p><b>Компания:</b> ' + c.name + '</p>' +
-          '<p><b>Описание:</b> ' + c.desc + '</p>' +
-          '<p><b>Условия:</b> ' + c.hint + '</p>' +
+        '<div class="partner-info-block">' +
+          '<div class="partner-info-title" style="color:' + c.color + ';">' + c.name + '</div>' +
+          '<div class="partner-info-row"><b>📍 Адрес:</b> ' + (c.address || '—') + '</div>' +
+          '<div class="partner-info-row"><b>📝 О компании:</b> ' + c.about + '</div>' +
+          (featuresHtml ? '<div class="partner-info-row" style="margin-top:10px;"><b>✨ Что предлагаем:</b></div>' + featuresHtml : '') +
+          (extraHtml ? '<div style="margin-top:10px;">' + extraHtml + '</div>' : '') +
+          (linksHtml ? '<div style="margin-top:12px;"><b style="color:#a78bfa;font-size:12px;">🔗 Контакты:</b>' + linksHtml + '</div>' : '') +
+          '<div class="partner-info-row" style="margin-top:12px;padding-top:10px;border-top:1px dashed rgba(139,92,246,0.2);"><b>🎁 Условия:</b> ' + c.hint + '</div>' +
         '</div>' +
       '</div>';
     }
