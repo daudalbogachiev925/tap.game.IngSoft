@@ -1111,7 +1111,13 @@ async function openGroupChat(id, name, code) {
   if (!id) { showToast('Ошибка: не передан ID группы', true); return; }
   currentGroupId = id;
   currentGroupName = name || 'Группа';
-  document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+  
+  // 1. Сначала ЗАКРЫВАЕМ все модалки, КРОМЕ той, что открываем
+  document.querySelectorAll('.modal').forEach(m => {
+    if (m.id !== 'modal-group-chat') m.classList.remove('active');
+  });
+  
+  // 2. Потом ОТКРЫВАЕМ нужную
   document.getElementById('modal-group-chat').classList.add('active');
   document.getElementById('groupChatTitle').textContent = currentGroupName;
   document.getElementById('groupMembersList').classList.remove('show');
@@ -1122,22 +1128,6 @@ async function openGroupChat(id, name, code) {
   
   if (groupMessageInterval) clearInterval(groupMessageInterval);
   groupMessageInterval = setInterval(() => loadGroupMessages(false), 3000);
-}
-
-async function leaveGroup() {
-  if (!currentGroupId || !currentToken) return;
-  if (!confirm('Выйти из группы «' + currentGroupName + '»?')) return;
-  try {
-    const r = await fetch(API_URL + '/groups/leave', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({token: currentToken, chat_id: currentGroupId})
-    });
-    const d = await r.json();
-    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
-    showToast('Вы вышли из группы');
-    closeGroupChat();
-    await loadGroupsList();
-  } catch(e) { showToast('Ошибка соединения', true); }
 }
 
 async function deleteGroup() {
