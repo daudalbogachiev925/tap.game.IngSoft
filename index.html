@@ -235,6 +235,24 @@ button { cursor:pointer; }
 .promo-code.blocked { opacity:0.35; cursor:not-allowed; }
 .promo-code .val { font-size:14px; color:#ffd700; }
 @media (max-width:480px) { .sidebar{width:54px;} .sidebar-label{font-size:6px;} .main{margin-left:54px;} .header-card{flex-wrap:wrap;gap:10px;padding:10px 14px;} .header-actions{margin-left:0;padding-left:0;border-left:none;width:100%;min-width:0;} .score-big{font-size:56px;} .tap-button{width:190px;height:190px;font-size:28px;} .quick-actions{grid-template-columns:repeat(2,1fr);padding:0 12px;} .modal-content{padding:18px;border-radius:24px 24px 0 0;} .playing-card{width:68px;height:98px;} .card-front .suit{font-size:36px;} .game-card-icon{width:54px;height:54px;} }
+/* --- НОВЫЕ СТИЛИ ДЛЯ ПАРТНЁРОВ --- */
+.partner-accordion { margin-bottom: 12px; border: 1px solid rgba(139,92,246,0.3); border-radius: 16px; overflow: hidden; background: linear-gradient(145deg,rgba(139,92,246,0.1),rgba(15,12,41,0.7)); }
+.partner-header { display: flex; align-items: center; gap: 12px; padding: 16px; cursor: pointer; transition: background 0.2s; }
+.partner-header:hover { background: rgba(139,92,246,0.15); }
+.partner-logo-img { height: 32px; width: 32px; object-fit: contain; border-radius: 8px; }
+.partner-icon-emoji { font-size: 24px; width: 32px; text-align: center; }
+.partner-title { flex: 1; font-size: 15px; font-weight: 800; color: #fff; }
+.partner-arrow { color: #a78bfa; font-size: 18px; transition: transform 0.3s; }
+.partner-header.expanded .partner-arrow { transform: rotate(180deg); }
+.partner-body { display: none; padding: 0 16px 16px; flex-direction: column; gap: 8px; }
+.partner-body.active { display: flex; }
+.sub-item-btn { background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.3); border-radius: 10px; padding: 12px; color: #e0e7ff; font-size: 13px; font-weight: 700; cursor: pointer; text-align: left; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+.sub-item-btn:hover { background: rgba(139,92,246,0.3); }
+.sub-content { display: none; padding: 12px; background: rgba(10,5,24,0.6); border-radius: 10px; margin-top: 4px; }
+.sub-content.active { display: block; }
+.promo-company-info { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
+.promo-company-info b { color: #a78bfa; }
+
 </style>
 </head>
 <body>
@@ -454,7 +472,7 @@ button { cursor:pointer; }
 
 <div class="modal" id="modal-promocodes"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">Промокоды партнёров</div><button class="modal-close" onclick="closeModal('promocodes')">×</button></div>
-  <p style="color:#94a3b8;font-size:12px;margin-bottom:14px;line-height:1.6;">Нажми на код, чтобы активировать. Скидки одной компании суммируются, но не выше лимита компании.</p>
+  <p style="color:#94a3b8;font-size:12px;margin-bottom:14px;line-height:1.6;">Выберите партнёра, чтобы посмотреть свои промокоды или узнать информацию.</p>
   <div id="promoCompaniesList"></div>
 </div></div>
 
@@ -726,36 +744,100 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;',
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
 /* ============ ПРОМОКОДЫ ПАРТНЁРОВ ============ */
+/* ==== НОВАЯ ЛОГИКА ПРОМОКОДОВ ПАРТНЁРОВ ==== */
+let _expandedPartner = null;
+let _activeSubItem = {}; // Хранит, какой подпункт открыт: 'codes' или 'info'
+
 function renderPromoCompanies(){
   const box = document.getElementById('promoCompaniesList');
   if (!box) return;
+  
   box.innerHTML = PROMO_COMPANIES.map(c => {
-    const claimed = claimedPromos.filter(p => c.codes.some(x => x.code === p));
-    const total = claimed.reduce((acc, code) => {
-      const cc = c.codes.find(x => x.code === code);
-      return acc + (cc ? cc.value : 0);
-    }, 0);
-    const pct = Math.min(100, (total / c.maxTotal) * 100);
-    const codesHTML = c.codes.map(x => {
-      const isClaimed = claimedPromos.includes(x.code);
-      const wouldExceed = !isClaimed && (total + x.value > c.maxTotal);
-      const cls = isClaimed ? 'promo-code claimed' : (wouldExceed ? 'promo-code blocked' : 'promo-code');
-      return '<div class="'+cls+'" onclick="activatePartnerPromo(\''+c.id+'\',\''+x.code+'\')"><div class="val">'+x.value+'%</div>'+x.code+(isClaimed?' ✓':'')+'</div>';
-    }).join('');
-    return '<div class="promo-company">'+
-      '<div class="promo-company-header">'+
-        '<div class="promo-company-icon" style="background:linear-gradient(135deg,'+c.color+'44,'+c.color+'22);border:1px solid '+c.color+'66;">'+c.icon+'</div>'+
-        '<div style="flex:1;">'+
-          '<div class="promo-company-name">'+c.name+'</div>'+
-          '<div class="promo-company-desc">'+c.desc+'</div>'+
-        '</div>'+
-      '</div>'+
-      '<div class="promo-progress"><div class="promo-progress-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+c.color+',#4facfe);"></div></div>'+
-      '<div class="promo-progress-text"><span>Активировано: <b style="color:#ffd700;">'+total+'%</b></span><span>Лимит: '+c.maxTotal+'%</span></div>'+
-      '<div style="font-size:11px;color:#94a3b8;margin-bottom:10px;">💡 '+c.hint+'</div>'+
-      '<div class="promo-codes">'+codesHTML+'</div>'+
+    const isExpanded = _expandedPartner === c.id;
+    const activeSub = _activeSubItem[c.id] || null;
+    
+    // Логотип (для IngSoft используем картинку, для остальных - emoji)
+    let logoHtml = '';
+    if (c.id === 'ingsoft') {
+      logoHtml = '<img src="ingsoft-logo.png" alt="IngSoft" class="partner-logo-img" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"> <span class="partner-icon-emoji" style="display:none;">💻</span>';
+    } else {
+      logoHtml = '<span class="partner-icon-emoji">' + c.icon + '</span>';
+    }
+
+    // Генерация промокодов (если открыт подпункт "Смотреть свои промокоды")
+    let codesHtml = '';
+    if (isExpanded && activeSub === 'codes') {
+      const claimed = claimedPromos.filter(p => c.codes.some(x => x.code === p));
+      const total = claimed.reduce((acc, code) => {
+        const cc = c.codes.find(x => x.code === code);
+        return acc + (cc ? cc.value : 0);
+      }, 0);
+      const pct = Math.min(100, (total / c.maxTotal) * 100);
+      
+      const codesGrid = c.codes.map(x => {
+        const isClaimed = claimedPromos.includes(x.code);
+        const wouldExceed = !isClaimed && (total + x.value > c.maxTotal);
+        const cls = isClaimed ? 'promo-code claimed' : (wouldExceed ? 'promo-code blocked' : 'promo-code');
+        return '<div class="' + cls + '" onclick="activatePartnerPromo(\'' + c.id + '\',\'' + x.code + '\')"><div class="val">' + x.value + '%</div>' + x.code + (isClaimed?' ✓':'') + '</div>';
+      }).join('');
+
+      codesHtml = '<div class="sub-content active" id="sub-codes-'+c.id+'">' +
+        '<div class="promo-progress"><div class="promo-progress-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+c.color+',#4facfe);"></div></div>' +
+        '<div class="promo-progress-text"><span>Активировано: <b style="color:#ffd700;">'+total+'%</b></span><span>Лимит: '+c.maxTotal+'%</span></div>' +
+        '<div class="promo-codes">' + codesGrid + '</div>' +
+      '</div>';
+    }
+
+    // Генерация информации (если открыт подпункт "Информация о...")
+    let infoHtml = '';
+    if (isExpanded && activeSub === 'info') {
+      infoHtml = '<div class="sub-content active" id="sub-info-'+c.id+'">' +
+        '<div class="promo-company-info">' +
+          '<p><b>Компания:</b> ' + c.name + '</p>' +
+          '<p><b>Описание:</b> ' + c.desc + '</p>' +
+          '<p><b>Условия:</b> ' + c.hint + '</p>' +
+        '</div>' +
+      '</div>';
+    }
+
+    return '<div class="partner-accordion">' +
+      '<div class="partner-header ' + (isExpanded ? 'expanded' : '') + '" onclick="togglePartner(\'' + c.id + '\')">' +
+        logoHtml +
+        '<div class="partner-title">' + c.name + '</div>' +
+        '<div class="partner-arrow">▼</div>' +
+      '</div>' +
+      '<div class="partner-body ' + (isExpanded ? 'active' : '') + '">' +
+        '<button class="sub-item-btn" onclick="toggleSubItem(\'' + c.id + '\', \'codes\')">' +
+          '<span>Смотреть свои промокоды</span><span>' + (activeSub === 'codes' ? '▲' : '▼') + '</span>' +
+        '</button>' +
+        '<button class="sub-item-btn" onclick="toggleSubItem(\'' + c.id + '\', \'info\')">' +
+          '<span>Информация о ' + c.name + '</span><span>' + (activeSub === 'info' ? '▲' : '▼') + '</span>' +
+        '</button>' +
+        codesHtml +
+        infoHtml +
+      '</div>' +
     '</div>';
   }).join('');
+}
+
+function togglePartner(companyId) {
+  if (_expandedPartner === companyId) {
+    _expandedPartner = null;
+    _activeSubItem[companyId] = null;
+  } else {
+    _expandedPartner = companyId;
+    _activeSubItem[companyId] = null; // Сброс активного подпункта при открытии новой компании
+  }
+  renderPromoCompanies();
+}
+
+function toggleSubItem(companyId, type) {
+  if (_activeSubItem[companyId] === type) {
+    _activeSubItem[companyId] = null; // Закрыть, если уже открыто
+  } else {
+    _activeSubItem[companyId] = type; // Открыть выбранный тип
+  }
+  renderPromoCompanies();
 }
 
 function activatePartnerPromo(companyId, code){
