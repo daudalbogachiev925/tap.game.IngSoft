@@ -73,6 +73,18 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .is-shop-item .isi-desc { font-size:10px; color:#94a3b8; margin-bottom:8px; }
 .is-shop-item .isi-price { display:inline-block; padding:5px 12px; background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0518; font-weight:900; font-size:12px; border-radius:10px; }
 .btn-is { background:linear-gradient(135deg,#ffd700,#ff8c00); border:none; color:#0a0518; padding:9px 16px; border-radius:12px; font-weight:900; font-size:12px; cursor:pointer; }
+.ad-carousel { margin:22px 18px 12px; border-radius:22px; overflow:hidden; position:relative; height:180px; box-shadow:0 10px 40px rgba(139,92,246,0.35); }
+.ad-track { display:flex; transition:transform 0.55s cubic-bezier(0.4,0,0.2,1); height:100%; }
+.ad-slide { min-width:100%; padding:24px 22px; display:flex; flex-direction:column; justify-content:center; color:#fff; box-sizing:border-box; position:relative; overflow:hidden; }
+.ad-slide::after { content:''; position:absolute; top:-40px; right:-40px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.12); }
+.ad-icon { font-size:44px; margin-bottom:6px; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.3)); }
+.ad-title { font-size:22px; font-weight:900; letter-spacing:0.5px; }
+.ad-desc { font-size:13px; opacity:0.92; margin-top:4px; font-weight:600; }
+.ad-cta { display:inline-block; margin-top:12px; padding:8px 16px; border-radius:10px; background:rgba(255,255,255,0.22); border:1px solid rgba(255,255,255,0.4); font-size:11px; font-weight:800; cursor:pointer; align-self:flex-start; }
+.ad-cta:hover { background:rgba(255,255,255,0.35); }
+.ad-dots { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); display:flex; gap:6px; z-index:5; }
+.ad-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.4); cursor:pointer; transition:all 0.3s; }
+.ad-dot.active { background:#fff; width:22px; border-radius:4px; }
 .player-stats-bar { display:flex; justify-content:space-around; margin:12px 18px; padding:12px 14px; background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(15,12,41,0.6)); border:1px solid rgba(34,197,94,0.3); border-radius:16px; font-size:13px; font-weight:700; flex-wrap:wrap; gap:8px; }
 .ps-num { display:inline-block; min-width:26px; padding:2px 8px; border-radius:8px; background:rgba(0,0,0,0.35); font-weight:900; text-align:center; }
 .top-panel { margin:22px 18px 12px; background:linear-gradient(145deg,rgba(139,92,246,0.15),rgba(15,12,41,0.7)); border:1px solid rgba(139,92,246,0.3); border-radius:22px; padding:18px; }
@@ -315,7 +327,31 @@ button { cursor:pointer; }
   <button class="quick-btn" onclick="openModal('games')"><span class="quick-icon">⬢</span>Игры</button>
   <button class="quick-btn" onclick="openModal('boosts')"><span class="quick-icon">▲</span>Бусты</button>
   <button class="quick-btn" onclick="openModal('daily')"><span class="quick-icon">◆</span>Награды</button>
-  <button class="quick-btn" onclick="openModal('promo')"><span class="quick-icon">✎</span>Промокод</button>
+<button class="quick-btn" onclick="openModal('promocodes')"><span class="quick-icon">✎</span>Промокод</button>
+</div>
+
+<div class="ad-carousel" id="adCarousel">
+  <div class="ad-track" id="adTrack">
+    <div class="ad-slide" style="background:linear-gradient(135deg,#8b5cf6 0%,#6d28d9 60%,#3b0764 100%);">
+      <div class="ad-icon">💻</div>
+      <div class="ad-title">IngSoft</div>
+      <div class="ad-desc">Компьютерная техника — скидки до 5% по промокодам</div>
+      <div class="ad-cta" onclick="openModal('promocodes')">Получить скидку →</div>
+    </div>
+    <div class="ad-slide" style="background:linear-gradient(135deg,#ec4899 0%,#be185d 60%,#500724 100%);">
+      <div class="ad-icon">🎮</div>
+      <div class="ad-title">Игротека MATRX</div>
+      <div class="ad-desc">Игровая техника — скидки до 50%</div>
+      <div class="ad-cta" onclick="openModal('promocodes')">Смотреть коды →</div>
+    </div>
+    <div class="ad-slide" style="background:linear-gradient(135deg,#22c55e 0%,#15803d 60%,#052e16 100%);">
+      <div class="ad-icon">🍣</div>
+      <div class="ad-title">IngSushiExpress</div>
+      <div class="ad-desc">Доставка суши — скидки до 10%</div>
+      <div class="ad-cta" onclick="openModal('promocodes')">Заказать со скидкой →</div>
+    </div>
+  </div>
+  <div class="ad-dots" id="adDots"></div>
 </div>
 
 <div class="player-stats-bar">
@@ -1987,6 +2023,47 @@ async function sendChatMessage(){
   } catch(e) { showToast('Ошибка соединения', true); input.value = text; }
 }
 
+
+/* ==== КАРУСЕЛЬ РЕКЛАМЫ ==== */
+let _adIndex = 0;
+let _adTimer = null;
+function initAdCarousel(){
+  const track = document.getElementById('adTrack');
+  const dots = document.getElementById('adDots');
+  if (!track || !dots) return;
+  const total = track.children.length;
+  dots.innerHTML = '';
+  for (let i = 0; i < total; i++){
+    const d = document.createElement('div');
+    d.className = 'ad-dot' + (i === 0 ? ' active' : '');
+    d.onclick = (function(idx){ return function(){ goAdSlide(idx); }; })(i);
+    dots.appendChild(d);
+  }
+  window.goAdSlide = function(i){
+    _adIndex = i;
+    track.style.transform = 'translateX(-' + (i * 100) + '%)';
+    [...dots.children].forEach((d, idx) => d.classList.toggle('active', idx === i));
+  };
+  if (_adTimer) clearInterval(_adTimer);
+  _adTimer = setInterval(() => {
+    _adIndex = (_adIndex + 1) % total;
+    window.goAdSlide(_adIndex);
+  }, 4500);
+  // Свайп
+  let startX = 0, dragging = false;
+  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; dragging = true; });
+  track.addEventListener('touchend', e => {
+    if (!dragging) return;
+    dragging = false;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 40){
+      if (dx < 0) _adIndex = Math.min(total - 1, _adIndex + 1);
+      else _adIndex = Math.max(0, _adIndex - 1);
+      window.goAdSlide(_adIndex);
+    }
+  });
+}
+
 /* ==== UI ==== */
 function openModal(name){
   document.getElementById('modal-' + name)?.classList.add('active');
@@ -2073,8 +2150,7 @@ function buildSidebar(){
     {icon:'◆',label:'Награды',action:'openModal(\'daily\')'},
     {icon:'▤',label:'Статистика',action:'openModal(\'stats\')'},
     {icon:'◉',label:'Профиль',action:'openModal(\'profile\')'},
-    {icon:'✎',label:'Промокод',action:'openModal(\'promo\')'},
-  ];
+    {icon:'✎',label:'Промокод',action:'openModal(\'promocodes\')'},  ];
   const sb = document.getElementById('sidebarItems'); if (!sb) return;
   sb.innerHTML = items.map(it => '<div class="sidebar-item" onclick="'+it.action+'"><div class="sidebar-icon">'+it.icon+'</div><div class="sidebar-label">'+it.label+'</div></div>').join('');
 }
@@ -2196,7 +2272,7 @@ function enterGame(){
   document.getElementById('app').style.display = 'flex';
   const today = new Date().toISOString().split('T')[0];
   if (lastTapDate !== today) { lastTapDate = today; tapsToday = 0; dailyTapLimit = 20000; scheduleSave(); }
-  updateUI(); startEnergyRegen(); buildSidebar(); loadISShop(); refreshLeaderboard(); saveToLocal(); updateRefLink(); sendHeartbeat();
+  updateUI(); startEnergyRegen(); buildSidebar(); loadISShop(); refreshLeaderboard(); saveToLocal(); updateRefLink(); sendHeartbeat(); initAdCarousel();
 }
 async function loadProgressByToken(token){
   try {
