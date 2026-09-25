@@ -9,20 +9,21 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
 html, body { background:#0a0a0f; color:#fff; font-family:'Inter','Segoe UI',-apple-system,sans-serif; min-height:100vh; overflow-x:hidden; }
+body { display:flex; justify-content:center; }
 body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:none;
   background: radial-gradient(ellipse 120% 80% at 50% 0%, rgba(139,92,246,0.35), transparent 55%),
               radial-gradient(ellipse 100% 60% at 100% 100%, rgba(79,172,254,0.25), transparent 55%),
               linear-gradient(180deg,#0a0518 0%,#0f0c29 25%,#0d1a3a 60%,#0a0518 100%); }
-.app { display:flex; min-height:100vh; position:relative; z-index:1; }
-.sidebar { width:64px; background:linear-gradient(180deg,rgba(10,5,24,0.85),rgba(15,12,41,0.9)); border-right:1px solid rgba(139,92,246,0.2); padding:10px 0; display:flex; flex-direction:column; gap:6px; position:fixed; left:0; top:0; height:100vh; z-index:500; overflow-y:auto; backdrop-filter:blur(25px); }
-.sidebar-logo { padding:12px 4px; text-align:center; background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(139,92,246,0.4),rgba(79,172,254,0.3)); border-radius:14px; margin:4px 8px 12px; box-shadow:0 0 30px rgba(139,92,246,0.5); }
-.sidebar-logo img { height:28px; max-width:100%; filter:drop-shadow(0 0 15px rgba(255,255,255,0.9)); }
+.app { display:flex; min-height:100vh; position:relative; z-index:1; width:100%; max-width:620px; box-shadow:0 0 80px rgba(139,92,246,0.15); }
+.sidebar { width:64px; background:linear-gradient(180deg,rgba(10,5,24,0.85),rgba(15,12,41,0.9)); border-right:1px solid rgba(139,92,246,0.2); padding:10px 0; display:flex; flex-direction:column; gap:6px; position:sticky; top:0; align-self:flex-start; height:100vh; z-index:500; overflow-y:auto; backdrop-filter:blur(25px); }
+.sidebar-logo { padding:10px 4px; text-align:center; background:linear-gradient(135deg,rgba(236,72,153,0.3),rgba(139,92,246,0.4),rgba(79,172,254,0.3)); border-radius:14px; margin:4px 8px 12px; box-shadow:0 0 30px rgba(139,92,246,0.5); display:flex; align-items:center; justify-content:center; }
+.sidebar-logo svg { height:30px; width:30px; filter:drop-shadow(0 0 12px rgba(255,255,255,0.7)); }
 .sidebar-item { display:flex; flex-direction:column; align-items:center; padding:8px 2px; cursor:pointer; border-radius:12px; margin:0 8px; transition:all 0.3s; }
 .sidebar-item:hover { background:rgba(139,92,246,0.15); transform:translateX(3px); }
 .sidebar-icon { font-size:18px; }
 .sidebar-label { font-size:8px; color:#94a3b8; margin-top:3px; font-weight:700; text-align:center; }
 .sidebar-item:hover .sidebar-label { color:#fff; }
-.main { flex:1; margin-left:64px; padding-bottom:80px; }
+.main { flex:1; padding-bottom:80px; overflow-x:hidden; }
 .header { display:flex; align-items:center; justify-content:center; padding:14px 18px; background:rgba(10,5,24,0.6); backdrop-filter:blur(30px); position:sticky; top:0; z-index:400; border-bottom:1px solid rgba(139,92,246,0.2); }
 .header-card { display:flex; align-items:center; gap:16px; background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(30,58,95,0.3)); border:1px solid rgba(139,92,246,0.35); border-radius:24px; padding:12px 24px; }
 .avatar { width:60px; height:60px; border-radius:50%; background:linear-gradient(135deg,#ec4899,#8b5cf6,#4facfe); display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; font-size:24px; box-shadow:0 8px 30px rgba(139,92,246,0.6); background-size:cover; background-position:center; }
@@ -202,7 +203,7 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .card-front .suit { font-size:42px; line-height:1; }
 .card-front .rank-b { position:absolute; bottom:6px; right:8px; transform:rotate(180deg); font-size:16px; }
 button { cursor:pointer; }
-@media (max-width:480px) { .sidebar{width:54px;} .sidebar-label{font-size:6px;} .main{margin-left:54px;} .header-card{flex-wrap:wrap;gap:10px;padding:10px 14px;} .header-actions{margin-left:0;padding-left:0;border-left:none;width:100%;min-width:0;} .score-big{font-size:56px;} .tap-button{width:190px;height:190px;font-size:28px;} .quick-actions{grid-template-columns:repeat(2,1fr);padding:0 12px;} .modal-content{padding:18px;border-radius:24px 24px 0 0;} .playing-card{width:68px;height:98px;} .card-front .suit{font-size:36px;} .game-card-icon{width:54px;height:54px;} }
+@media (max-width:480px) { .sidebar{width:54px;} .sidebar-label{font-size:6px;} .header-card{flex-wrap:wrap;gap:10px;padding:10px 14px;} .header-actions{margin-left:0;padding-left:0;border-left:none;width:100%;min-width:0;} .score-big{font-size:56px;} .tap-button{width:190px;height:190px;font-size:28px;} .quick-actions{grid-template-columns:repeat(2,1fr);padding:0 12px;} .modal-content{padding:18px;border-radius:24px 24px 0 0;} .playing-card{width:68px;height:98px;} .card-front .suit{font-size:36px;} .game-card-icon{width:54px;height:54px;} }
 </style>
 </head>
 <body>
@@ -210,7 +211,18 @@ button { cursor:pointer; }
 <div id="authScreen" class="reg-screen">
   <div style="text-align:center;max-width:420px;width:100%;padding-top:20px;">
     <div style="background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(139,92,246,0.15));border:1px solid rgba(236,72,153,0.4);border-radius:22px;padding:18px 32px;margin-bottom:18px;display:inline-block;">
-      <img src="logo.png" alt="IngSoft" style="height:48px;display:block;" onerror="this.style.display='none'">
+      <svg viewBox="0 0 60 60" style="height:52px;width:52px;display:block;">
+        <defs>
+          <linearGradient id="logoAuthGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ec4899"/>
+            <stop offset="0.5" stop-color="#8b5cf6"/>
+            <stop offset="1" stop-color="#4facfe"/>
+          </linearGradient>
+        </defs>
+        <circle cx="30" cy="30" r="26" fill="none" stroke="url(#logoAuthGrad)" stroke-width="4"/>
+        <circle cx="30" cy="30" r="16" fill="none" stroke="url(#logoAuthGrad)" stroke-width="3" opacity="0.7"/>
+        <circle cx="30" cy="30" r="6" fill="url(#logoAuthGrad)"/>
+      </svg>
     </div>
     <h1 style="font-size:26px;margin-bottom:8px;">IngSoft Tap</h1>
     <p style="color:#94a3b8;font-size:13px;margin-bottom:22px;">Данные для входа в чат</p>
@@ -247,7 +259,20 @@ button { cursor:pointer; }
 
 <div class="app" id="app" style="display:none;">
 <aside class="sidebar">
-  <div class="sidebar-logo"><img src="logo.png" alt="IngSoft" onerror="this.style.display='none'"></div>
+  <div class="sidebar-logo">
+    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ec4899"/>
+          <stop offset="0.5" stop-color="#8b5cf6"/>
+          <stop offset="1" stop-color="#4facfe"/>
+        </linearGradient>
+      </defs>
+      <circle cx="30" cy="30" r="26" fill="none" stroke="url(#logoGrad)" stroke-width="4"/>
+      <circle cx="30" cy="30" r="16" fill="none" stroke="url(#logoGrad)" stroke-width="3" opacity="0.7"/>
+      <circle cx="30" cy="30" r="6" fill="url(#logoGrad)"/>
+    </svg>
+  </div>
   <div id="sidebarItems"></div>
 </aside>
 <main class="main">
@@ -393,7 +418,7 @@ button { cursor:pointer; }
 </div></div>
 
 <div class="modal" id="modal-chat"><div class="modal-content" style="display:flex;flex-direction:column;max-height:88vh;">
-  <div class="modal-header"><div class="modal-title"><span id="chatTitle" class="chat-title-clickable" onclick="toggleChatMembers()">Чат</span></div><button class="modal-close" onclick="closeModal('chat')">×</button></div>
+  <div class="modal-header"><div class="modal-title"><span id="chatTitle" class="chat-title-clickable" onclick="toggleChatMembers()">Чат</span></div><button class="modal-close" onclick="closeChatModal()">×</button></div>
   <div class="chat-members-list" id="chatMembersList"></div>
   <div class="chat-stats-bar">
     <span>Всего: <b id="csTotal">0</b></span>
@@ -405,6 +430,44 @@ button { cursor:pointer; }
     <input type="text" id="chatInput" class="promo-input" placeholder="Сообщение..." maxlength="500" onkeydown="if(event.key==='Enter')sendChatMessage()">
     <button class="btn-buy" onclick="sendChatMessage()" style="padding:14px 20px;">➤</button>
   </div>
+</div></div>
+
+<!-- ======== ГРУППЫ ======== -->
+<div class="modal" id="modal-groups"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">Группы</div><button class="modal-close" onclick="closeModal('groups')">×</button></div>
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button class="btn-buy" style="flex:1;padding:13px;font-size:12px;" onclick="openCreateGroupModal()">➕ Создать</button>
+    <button class="btn-buy green" style="flex:1;padding:13px;font-size:12px;" onclick="openJoinGroupModal()">🔗 Войти по коду</button>
+  </div>
+  <div id="groupsList"></div>
+</div></div>
+
+<div class="modal" id="modal-group-chat"><div class="modal-content" style="display:flex;flex-direction:column;max-height:88vh;">
+  <div class="modal-header">
+    <div class="modal-title" id="groupChatTitle">Группа</div>
+    <div style="display:flex;gap:6px;">
+      <button class="modal-close" onclick="toggleGroupMembers()" title="Участники">👥</button>
+      <button class="modal-close" onclick="closeGroupChat()">×</button>
+    </div>
+  </div>
+  <div style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(30,58,95,0.25));border:1px solid rgba(139,92,246,0.4);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;flex-wrap:wrap;">
+    <div style="color:#94a3b8;">Код: <b id="groupCodeLbl" style="color:#a78bfa;font-family:monospace;user-select:text;">—</b></div>
+    <div style="display:flex;gap:6px;">
+      <button class="btn-buy" style="padding:6px 10px;font-size:11px;" onclick="copyGroupCode()">📋 Копировать</button>
+      <button class="btn-buy green" style="padding:6px 10px;font-size:11px;" onclick="shareGroupLink()">🔗 Ссылка</button>
+    </div>
+  </div>
+  <div id="groupMembersList" class="chat-members-list"></div>
+  <div id="groupMessages" class="chat-messages"><div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div></div>
+  <div class="chat-input-row">
+    <input type="text" id="groupInput" class="promo-input" placeholder="Сообщение..." maxlength="500" onkeydown="if(event.key==='Enter')sendGroupMessage()">
+    <button class="btn-buy" onclick="sendGroupMessage()" style="padding:14px 20px;">➤</button>
+  </div>
+</div></div>
+
+<div class="modal" id="modal-member-perms"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title" id="memberPermsTitle">Права участника</div><button class="modal-close" onclick="closeModal('member-perms')">×</button></div>
+  <div id="memberPermsBody"></div>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -432,7 +495,7 @@ let historyRefreshTimer=null;
 
 const API_URL = 'https://138.124.14.130.nip.io';
 const ONLINE_WINDOW_MS = 5*60*1000;
-const MAX_BET = 999999999999999; // Без верхнего лимита
+const MAX_BET = 999999999999999;
 const MIN_BET = 1000;
 
 try {
@@ -553,6 +616,286 @@ function fmt(n){
 function showToast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500); }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+/* ========== ГРУППЫ ========== */
+let groupMessageInterval = null;
+let currentGroupId = null;
+let currentGroupName = '';
+let currentGroupOwnerId = null;
+let myGroupPerms = {};
+let _groupMembersCache = [];
+
+async function openGroupsModal() {
+  openModal('groups');
+  await loadGroupsList();
+}
+
+async function loadGroupsList() {
+  const el = document.getElementById('groupsList');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;color:#64748b;padding:14px;">Загрузка...</div>';
+  try {
+    const r = await fetch(API_URL + '/groups/list?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (!d.success) { el.innerHTML = '<p style="text-align:center;color:#e63946;">Ошибка</p>'; return; }
+    if (!d.chats || !d.chats.length) {
+      el.innerHTML = '<div style="text-align:center;padding:26px 10px;color:#64748b;font-size:13px;line-height:1.6;">У тебя пока нет групп.<br>Создай первую или войди по коду!</div>';
+      return;
+    }
+    el.innerHTML = d.chats.map(c =>
+      '<div class="item-row" style="cursor:pointer;padding:14px;" onclick="openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')">' +
+        '<div class="item-info">' +
+          '<div class="item-name">' + escapeHtml(c.name) + (c.is_owner ? ' <span style="color:#ffd700;">👑</span>' : '') + '</div>' +
+          '<div class="item-desc">Код: ' + escapeHtml(c.invite_code) + '</div>' +
+        '</div>' +
+        '<span style="color:#a78bfa;font-size:18px;">›</span>' +
+      '</div>'
+    ).join('');
+  } catch(e) { el.innerHTML = '<p style="text-align:center;color:#e63946;">Ошибка загрузки</p>'; }
+}
+
+function openCreateGroupModal() {
+  const name = prompt('Название группы:');
+  if (!name || !name.trim()) return;
+  createGroup(name.trim());
+}
+
+function openJoinGroupModal(prefillCode) {
+  const code = prompt('Введи код приглашения:', prefillCode || '');
+  if (!code || !code.trim()) return;
+  joinGroup(code.trim());
+}
+
+async function createGroup(name) {
+  try {
+    const r = await fetch(API_URL + '/groups/create', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, name})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    showToast('Группа создана!');
+    await loadGroupsList();
+    openGroupChat(d.chat_id, d.name, d.invite_code);
+  } catch(e) { showToast('Ошибка соединения'); }
+}
+
+async function joinGroup(code) {
+  try {
+    const r = await fetch(API_URL + '/groups/join', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, invite_code: code})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    showToast(d.already ? 'Ты уже в этой группе' : 'Присоединился!');
+    await loadGroupsList();
+    openGroupChat(d.chat_id, d.name, code);
+  } catch(e) { showToast('Ошибка соединения'); }
+}
+
+async function openGroupChat(id, name, code) {
+  currentGroupId = id;
+  currentGroupName = name;
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+  document.getElementById('modal-group-chat').classList.add('active');
+  document.getElementById('groupChatTitle').textContent = name;
+  document.getElementById('groupMembersList').classList.remove('show');
+  document.getElementById('groupMessages').innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>';
+  if (code) document.getElementById('groupCodeLbl').textContent = code;
+  else document.getElementById('groupCodeLbl').textContent = '—';
+  loadGroupMessages(true);
+  if (groupMessageInterval) clearInterval(groupMessageInterval);
+  groupMessageInterval = setInterval(() => loadGroupMessages(false), 3000);
+}
+
+function closeGroupChat() {
+  document.getElementById('modal-group-chat').classList.remove('active');
+  document.getElementById('modal-member-perms').classList.remove('active');
+  if (groupMessageInterval) { clearInterval(groupMessageInterval); groupMessageInterval = null; }
+  currentGroupId = null;
+  openGroupsModal();
+}
+
+async function loadGroupMessages(fullReload) {
+  if (!currentGroupId || !currentToken) return;
+  const box = document.getElementById('groupMessages');
+  try {
+    const r = await fetch(API_URL + '/groups/messages?token=' + encodeURIComponent(currentToken) + '&chat_id=' + currentGroupId);
+    const d = await r.json();
+    if (!d.success) { box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">' + (d.error || 'Нет доступа') + '</div>'; return; }
+    myGroupPerms = d.my_perms || {};
+    const msgs = d.messages || [];
+    if (!msgs.length) {
+      box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Сообщений пока нет. Напиши первое!</div>';
+      return;
+    }
+    const myName = nickname || firstName;
+    const isOwner = myGroupPerms.is_owner;
+    const canDel = isOwner || myGroupPerms.can_delete_messages;
+    const canEdit = isOwner || myGroupPerms.can_edit;
+    box.innerHTML = msgs.map(m => {
+      const isMe = m.nickname === myName;
+      const time = new Date(m.created_at).toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'});
+      let actions = '';
+      if (isMe && (canEdit || canDel)) {
+        if (canEdit) actions += '<span onclick="editGroupMsg(' + m.id + ')" style="cursor:pointer;font-size:12px;color:#94a3b8;margin-right:8px;" title="Редактировать">✎</span>';
+        if (canDel) actions += '<span onclick="deleteGroupMsg(' + m.id + ')" style="cursor:pointer;font-size:12px;color:#e63946;" title="Удалить">✕</span>';
+      } else if (!isMe && canDel) {
+        actions += '<span onclick="deleteGroupMsg(' + m.id + ')" style="cursor:pointer;font-size:12px;color:#e63946;margin-left:8px;" title="Удалить">✕</span>';
+      }
+      return '<div class="chat-msg ' + (isMe?'':'other') + '"><div class="chat-bubble ' + (isMe?'me':'other') + '"><div class="chat-author">' + (isMe?'Ты':escapeHtml(m.nickname||'Игрок')) + ' · ' + time + '</div><div class="chat-text">' + escapeHtml(m.text) + '</div>' + (actions ? '<div style="text-align:right;margin-top:2px;">' + actions + '</div>' : '') + '</div></div>';
+    }).join('');
+    if (fullReload) box.scrollTop = box.scrollHeight;
+  } catch(e) {}
+}
+
+async function sendGroupMessage() {
+  if (!currentGroupId || !currentToken) return;
+  const input = document.getElementById('groupInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  try {
+    const r = await fetch(API_URL + '/groups/send', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, chat_id: currentGroupId, text})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка'); input.value = text; return; }
+    loadGroupMessages(true);
+  } catch(e) { showToast('Ошибка соединения'); input.value = text; }
+}
+
+async function toggleGroupMembers() {
+  const box = document.getElementById('groupMembersList');
+  if (!box) return;
+  if (box.classList.contains('show')) { box.classList.remove('show'); return; }
+  box.classList.add('show');
+  await loadGroupMembers();
+}
+
+async function loadGroupMembers() {
+  if (!currentGroupId || !currentToken) return;
+  const box = document.getElementById('groupMembersList');
+  box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>';
+  try {
+    const r = await fetch(API_URL + '/groups/members?token=' + encodeURIComponent(currentToken) + '&chat_id=' + currentGroupId);
+    const d = await r.json();
+    if (!d.success) { box.innerHTML = '<div style="text-align:center;color:#e63946;font-size:12px;padding:14px;">Ошибка</div>'; return; }
+    _groupMembersCache = d.members || [];
+    const owner = _groupMembersCache.find(m => m.is_owner);
+    currentGroupOwnerId = owner ? owner.id : null;
+    const isOwner = myGroupPerms.is_owner;
+    box.innerHTML = _groupMembersCache.map(m => {
+      const role = m.is_owner ? '👑 Владелец' : (m.is_admin ? '⭐ Админ' : 'Участник');
+      const time = new Date(m.joined_at).toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit'});
+      let btn = '';
+      if (isOwner && !m.is_owner) {
+        btn = '<button class="btn-buy" style="padding:5px 10px;font-size:11px;" onclick="openMemberPerms(' + m.id + ')" title="Права">⚙</button>';
+      }
+      return '<div class="chat-member-row"><div class="chat-member-avatar">' + (m.nickname?m.nickname[0].toUpperCase():'?') + '</div><div class="chat-member-name">' + escapeHtml(m.nickname||'Игрок') + '<div style="font-size:10px;color:#94a3b8;font-weight:600;">' + role + ' · с ' + time + '</div></div>' + btn + '</div>';
+    }).join('');
+  } catch(e) {}
+}
+
+function copyGroupCode() {
+  const code = document.getElementById('groupCodeLbl').textContent;
+  if (code && code !== '—') {
+    navigator.clipboard.writeText(code).then(() => showToast('Код скопирован'));
+  }
+}
+
+function shareGroupLink() {
+  const code = document.getElementById('groupCodeLbl').textContent;
+  if (!code || code === '—') return;
+  const link = window.location.origin + window.location.pathname + '?group=' + code;
+  const text = 'Присоединяйся к группе "' + currentGroupName + '" в IngSoft Tap!';
+  if (navigator.share) {
+    navigator.share({title: 'IngSoft Tap', text: text, url: link}).catch(()=>{});
+  } else {
+    window.open('https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text), '_blank');
+  }
+}
+
+function openMemberPerms(userId) {
+  const m = _groupMembersCache.find(x => x.id === userId);
+  if (!m) return;
+  document.getElementById('memberPermsTitle').textContent = 'Права: ' + (m.nickname || 'Игрок');
+  const chk = (id, val, label) => '<div class="item-row" style="padding:12px;"><div class="item-info"><div class="item-name" style="font-size:13px;">' + label + '</div></div><input type="checkbox" id="' + id + '" ' + (val?'checked':'') + ' style="width:22px;height:22px;cursor:pointer;"></div>';
+  document.getElementById('memberPermsBody').innerHTML =
+    chk('permIsAdmin', m.is_admin, '⭐ Админ') +
+    chk('permDel', m.can_delete_messages, '🗑 Удалять сообщения') +
+    chk('permEdit', m.can_edit, '✎ Редактировать сообщения') +
+    chk('permKick', m.can_kick, '🚪 Кикать участников') +
+    chk('permPin', m.can_pin, '📌 Закреплять сообщения') +
+    '<button class="btn-buy green" style="width:100%;padding:14px;margin-top:12px;" onclick="saveMemberPerms(' + userId + ')">Сохранить</button>' +
+    '<button class="btn-buy" style="width:100%;padding:14px;margin-top:8px;background:linear-gradient(135deg,#e63946,#7f1d1d);" onclick="kickMember(' + userId + ')">🚪 Кикнуть из группы</button>';
+  openModal('member-perms');
+}
+
+async function saveMemberPerms(userId) {
+  const is_admin = document.getElementById('permIsAdmin').checked ? 1 : 0;
+  const can_delete_messages = document.getElementById('permDel').checked;
+  const can_edit = document.getElementById('permEdit').checked;
+  const can_kick = document.getElementById('permKick').checked;
+  const can_pin = document.getElementById('permPin').checked;
+  try {
+    const r = await fetch(API_URL + '/groups/set-admin', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, chat_id: currentGroupId, user_id: userId,
+        is_admin: !!is_admin, perms: {can_delete_messages, can_edit, can_kick, can_pin}})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    showToast('Сохранено');
+    closeModal('member-perms');
+    loadGroupMembers();
+  } catch(e) { showToast('Ошибка'); }
+}
+
+async function kickMember(userId) {
+  if (!confirm('Кикнуть участника из группы?')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/kick', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, chat_id: currentGroupId, user_id: userId})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    showToast('Кикнут');
+    closeModal('member-perms');
+    loadGroupMembers();
+    loadGroupMessages(true);
+  } catch(e) { showToast('Ошибка'); }
+}
+
+async function deleteGroupMsg(mid) {
+  if (!confirm('Удалить сообщение?')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/message/delete', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, chat_id: currentGroupId, message_id: mid})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    loadGroupMessages(true);
+  } catch(e) { showToast('Ошибка'); }
+}
+
+async function editGroupMsg(mid) {
+  const newText = prompt('Новый текст:');
+  if (!newText || !newText.trim()) return;
+  try {
+    const r = await fetch(API_URL + '/groups/message/edit', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, chat_id: currentGroupId, message_id: mid, text: newText.trim()})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка'); return; }
+    loadGroupMessages(true);
+  } catch(e) { showToast('Ошибка'); }
+}
 
 /* ==== LEADERBOARD ==== */
 async function fetchLeaderboardFromServer(){
@@ -1535,6 +1878,7 @@ function buildSidebar(){
     {icon:'✦',label:'Квесты',action:'openModal(\'quests\')'},
     {icon:'▲',label:'Бусты',action:'openModal(\'boosts\')'},
     {icon:'✦',label: isFem?'Чат девчонок':'Чат парней', action:'openChatModal()'},
+    {icon:'◈',label:'Группы',action:'openGroupsModal()'},
     {icon:'✧',label:'Достижения',action:'openModal(\'achievements\')'},
     {icon:'❖',label:'Друзья',action:'openModal(\'referral\')'},
     {icon:'◆',label:'Награды',action:'openModal(\'daily\')'},
@@ -1673,10 +2017,25 @@ function init(){
     if (/^\d+$/.test(cp)) { ri = parseInt(cp,10); if (ri>0 && ri<9000000000) { referrerId = ri; localStorage.setItem('ingsoft_referrer_id', String(ri)); } }
     else { const lu = cp.lastIndexOf('_'); if (lu > 0) { const pi = cp.slice(lu+1); if (/^\d+$/.test(pi)) { rn = cp.slice(0,lu); ri = parseInt(pi,10); if (ri>0 && ri<9000000000) { referrerId = ri; localStorage.setItem('ingsoft_referrer_id', String(ri)); } } else rn = cp; } else rn = cp; rn = decodeURIComponent(rn); if (rn && /^[a-zA-Z0-9_а-яА-ЯёЁ\-]+$/.test(rn)) { referrerNickname = rn; localStorage.setItem('ingsoft_referrer_nickname', rn); } }
   }
+  // Подхватить ссылку-приглашение в группу
+  let inviteCode = null;
+  try { const up = new URLSearchParams(window.location.search); if (up.get('group')) inviteCode = up.get('group'); } catch(e) {}
   function bind(){ const bl = document.getElementById('tabLogin'), br = document.getElementById('tabRegister'); if (bl && !bl.dataset.b) { bl.dataset.b = '1'; bl.onclick = () => showTab('login'); } if (br && !br.dataset.b) { br.dataset.b = '1'; br.onclick = () => showTab('register'); } const dl = document.getElementById('btnDoLogin'); if (dl && !dl.dataset.b) { dl.dataset.b = '1'; dl.onclick = doLogin; } const dr = document.getElementById('btnDoRegister'); if (dr && !dr.dataset.b) { dr.dataset.b = '1'; dr.onclick = doRegister; } }
   bind(); setTimeout(bind, 200); setTimeout(bind, 800);
   const saved = localStorage.getItem('ingsoft_token');
-  if (saved) { currentToken = saved; loadProgressByToken(saved); } else { document.getElementById('authScreen').style.display = 'flex'; }
+  if (saved) {
+    currentToken = saved; loadProgressByToken(saved).then(ok => { if (ok && inviteCode) { setTimeout(() => openJoinGroupModal(inviteCode), 1500); } });
+  } else { document.getElementById('authScreen').style.display = 'flex'; }
+  // Если не залогинен, но есть код — запомним и предложим после входа
+  if (inviteCode) {
+    const tryOpen = setInterval(() => {
+      if (currentToken && document.getElementById('app').style.display !== 'none') {
+        clearInterval(tryOpen);
+        openJoinGroupModal(inviteCode);
+      }
+    }, 1000);
+    setTimeout(() => clearInterval(tryOpen), 30000);
+  }
   setInterval(() => { updateUI(); }, 1000);
   setInterval(saveToLocal, 5000);
   setInterval(refreshLeaderboard, 3000);
