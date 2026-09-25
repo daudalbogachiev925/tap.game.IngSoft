@@ -1058,10 +1058,26 @@ function renderGroupsList(chats){
         '<div class="item-name">' + escapeHtml(c.name) + badge + '</div>' +
         '<div class="item-desc">' + memberCount + ' участн. · Код: ' + escapeHtml(c.invite_code) + '</div>' +
       '</div>' +
-      '<button type="button" class="btn-buy green" style="padding:8px 14px;font-size:12px;flex-shrink:0;cursor:pointer;position:relative;z-index:10;" ' +
-        'onclick="event.stopPropagation(); openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')">Войти</button>' +
+      '<button type="button" class="btn-buy green" style="padding:10px 18px;font-size:13px;font-weight:900;flex-shrink:0;cursor:pointer;position:relative;z-index:9999;pointer-events:auto;" ' +
+        'data-group-id="' + c.id + '" ' +
+        'data-group-name="' + escapeHtml(c.name) + '" ' +
+        'data-group-code="' + escapeHtml(c.invite_code) + '">Войти</button>' +
     '</div>';
   }).join('');
+  
+  // Навешиваем обработчики ПОСЛЕ отрисовки — это надёжнее, чем onclick в HTML
+  const buttons = el.querySelectorAll('button[data-group-id]');
+  buttons.forEach(btn => {
+    btn.onclick = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const gid = parseInt(this.getAttribute('data-group-id'), 10);
+      const gname = this.getAttribute('data-group-name');
+      const gcode = this.getAttribute('data-group-code');
+      console.log('Клик по кнопке Войти:', gid, gname, gcode);
+      openGroupChat(gid, gname, gcode);
+    };
+  });
 }
 
 function openCreateGroupModal() {
@@ -1112,13 +1128,16 @@ async function openGroupChat(id, name, code) {
   currentGroupId = id;
   currentGroupName = name || 'Группа';
   
-  // 1. Сначала ЗАКРЫВАЕМ все модалки, КРОМЕ той, что открываем
+  // Закрываем все модалки, кроме группы
   document.querySelectorAll('.modal').forEach(m => {
     if (m.id !== 'modal-group-chat') m.classList.remove('active');
   });
   
-  // 2. Потом ОТКРЫВАЕМ нужную
-  document.getElementById('modal-group-chat').classList.add('active');
+  // Открываем группу
+  const modalEl = document.getElementById('modal-group-chat');
+  if (!modalEl) { showToast('Ошибка: не найдено окно группы', true); return; }
+  modalEl.classList.add('active');
+  
   document.getElementById('groupChatTitle').textContent = currentGroupName;
   document.getElementById('groupMembersList').classList.remove('show');
   document.getElementById('groupMessages').innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>';
