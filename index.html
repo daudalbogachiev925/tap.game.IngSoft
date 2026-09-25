@@ -519,8 +519,9 @@ button { cursor:pointer; }
 </div></div>
 
 <!-- ГРУППЫ -->
+<!-- ГРУППЫ -->
 <div class="modal" id="modal-groups"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">Группы</div><button class="modal-close" onclick="closeModal('groups')">×</button></div>
+  <div class="modal-header"><div class="modal-title">Мои группы</div><button class="modal-close" onclick="closeModal('groups')">×</button></div>
   <div style="display:flex;gap:8px;margin-bottom:14px;">
     <button class="btn-buy" style="flex:1;padding:13px;font-size:12px;" onclick="openCreateGroupModal()">➕ Создать</button>
     <button class="btn-buy green" style="flex:1;padding:13px;font-size:12px;" onclick="openJoinGroupModal()">🔗 Войти по коду</button>
@@ -529,14 +530,16 @@ button { cursor:pointer; }
 </div></div>
 
 <div class="modal" id="modal-group-chat"><div class="modal-content" style="display:flex;flex-direction:column;max-height:88vh;">
-  <div class="modal-header">
+<div class="modal-header">
     <div class="modal-title" id="groupChatTitle">Группа</div>
     <div style="display:flex;gap:6px;">
       <button class="modal-close" onclick="addMemberToGroup()" title="Добавить по нику">➕</button>
       <button class="modal-close" onclick="toggleGroupMembers()" title="Участники">👥</button>
+      <button class="modal-close" onclick="leaveGroup()" title="Выйти из группы" style="background:rgba(230,57,70,0.2);border-color:#e63946;color:#e63946;">🚪</button>
+      <button class="modal-close" onclick="deleteGroup()" title="Удалить группу" style="background:rgba(230,57,70,0.2);border-color:#e63946;color:#e63946;">🗑</button>
       <button class="modal-close" onclick="closeGroupChat()">×</button>
     </div>
-  </div>
+</div>
   <div style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(30,58,95,0.25));border:1px solid rgba(139,92,246,0.4);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;flex-wrap:wrap;">
     <div style="color:#94a3b8;">Код: <b id="groupCodeLbl" style="color:#a78bfa;font-family:monospace;user-select:text;">—</b></div>
     <div style="display:flex;gap:6px;">
@@ -1038,36 +1041,24 @@ async function loadGroupsList() {
     const d1 = await r1.json();
     _myGroupsCache = (d1 && d1.success && Array.isArray(d1.chats)) ? d1.chats : [];
   } catch(e) { console.error('[groups/list]', e); _myGroupsCache = []; }
-  _allGroupsCache = [];
   renderGroupsList(_myGroupsCache);
 }
 function renderGroupsList(chats){
   const el = document.getElementById('groupsList');
   if (!el) return;
   if (!chats || !chats.length){
-    if (_currentGroupsTab === 'my'){
-      el.innerHTML = '<div style="text-align:center;padding:26px 10px;color:#64748b;font-size:13px;line-height:1.6;">У тебя пока нет групп.<br>Создай первую или перейди во вкладку «Все группы»!</div>';
-    } else {
-      el.innerHTML = '<div style="text-align:center;padding:26px 10px;color:#64748b;font-size:13px;line-height:1.6;">Пока никто не создал ни одной группы.<br>Стань первым!</div>';
-    }
+    el.innerHTML = '<div style="text-align:center;padding:26px 10px;color:#64748b;font-size:13px;line-height:1.6;">У тебя пока нет групп.<br>Создай первую или войди по коду!</div>';
     return;
   }
   el.innerHTML = chats.map(c => {
-    const inGroup = c.is_member !== false;
     const memberCount = c.member_count || 0;
-    let badge = '';
-    if (c.is_owner) badge = '<span class="group-badge owner">👑 ВЛАДЕЛЕЦ</span>';
-    else if (inGroup) badge = '<span class="group-badge member">✓ В ГРУППЕ</span>';
-    const canOpen = inGroup;
-    const onclick = canOpen
-      ? 'onclick="openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')"'
-      : 'onclick="showToast(\'Вы не состоите в этой группе. Войдите по коду.\', true)"';
-    return '<div class="item-row" style="cursor:pointer;padding:14px;' + (canOpen?'':'opacity:0.6;') + '" ' + onclick + '>' +
+    const badge = c.is_owner ? '<span class="group-badge owner">👑 ВЛАДЕЛЕЦ</span>' : '<span class="group-badge member">✓ В ГРУППЕ</span>';
+    return '<div class="item-row" style="cursor:pointer;padding:14px;" onclick="openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')">' +
       '<div class="item-info">' +
         '<div class="item-name">' + escapeHtml(c.name) + badge + '</div>' +
         '<div class="item-desc">' + memberCount + ' участн. · Код: ' + escapeHtml(c.invite_code) + '</div>' +
       '</div>' +
-      '<span style="color:#a78bfa;font-size:18px;">' + (canOpen ? '›' : '🔒') + '</span>' +
+      '<span style="color:#a78bfa;font-size:18px;">›</span>' +
     '</div>';
   }).join('');
 }
@@ -1123,10 +1114,45 @@ async function openGroupChat(id, name, code) {
   document.getElementById('groupMembersList').classList.remove('show');
   document.getElementById('groupMessages').innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>';
   document.getElementById('groupCodeLbl').textContent = code || '—';
-  loadGroupMessages(true);
+  
+  await loadGroupMessages(true);
+  
   if (groupMessageInterval) clearInterval(groupMessageInterval);
   groupMessageInterval = setInterval(() => loadGroupMessages(false), 3000);
 }
+
+async function leaveGroup() {
+  if (!currentGroupId || !currentToken) return;
+  if (!confirm('Выйти из группы «' + currentGroupName + '»?')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/leave', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, chat_id: currentGroupId})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
+    showToast('Вы вышли из группы');
+    closeGroupChat();
+    await loadGroupsList();
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function deleteGroup() {
+  if (!currentGroupId || !currentToken) return;
+  if (!confirm('УДАЛИТЬ группу «' + currentGroupName + '»? Это действие необратимо!')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/delete', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, chat_id: currentGroupId})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка (только владелец может удалить)', true); return; }
+    showToast('Группа удалена');
+    closeGroupChat();
+    await loadGroupsList();
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
 
 async function addMemberToGroup() {
   if (!currentGroupId || !currentToken) return;
