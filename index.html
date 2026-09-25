@@ -522,8 +522,8 @@ button { cursor:pointer; }
 <div class="modal" id="modal-groups"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">Группы</div><button class="modal-close" onclick="closeModal('groups')">×</button></div>
   <div style="display:flex;gap:8px;margin-bottom:14px;">
-    <button class="tab-btn active" id="tabMyGroups" onclick="switchGroupsTab('my')">Мои группы</button>
-    <button class="tab-btn" id="tabAllGroups" onclick="switchGroupsTab('all')">Все группы</button>
+    <button class="tab-btn active" id="tabMyGroups" style="pointer-events:none;">Мои группы</button>
+    <button class="btn-buy" style="flex:1;padding:12px;font-size:12px;background:linear-gradient(135deg,#e63946,#7f1d1d);" onclick="cleanupGroups()">🗑 Очистить список</button>
   </div>
   <div style="display:flex;gap:8px;margin-bottom:14px;">
     <button class="btn-buy" style="flex:1;padding:13px;font-size:12px;" onclick="openCreateGroupModal()">➕ Создать</button>
@@ -1005,11 +1005,34 @@ async function openGroupsModal() {
 }
 
 function switchGroupsTab(tab){
-  _currentGroupsTab = tab;
-  document.getElementById('tabMyGroups')?.classList.toggle('active', tab==='my');
-  document.getElementById('tabAllGroups')?.classList.toggle('active', tab==='all');
-  if (tab === 'my') renderGroupsList(_myGroupsCache);
-  else renderGroupsList(_allGroupsCache);
+  _currentGroupsTab = 'my';
+  renderGroupsList(_myGroupsCache);
+}
+
+async function cleanupGroups() {
+  if (!currentToken) return;
+  const keep = prompt(
+    'Оставь только группы, названия которых совпадают с тем, что ты введёшь.\n' +
+    'Например: Друзья — тогда всё остальное удалится.\n' +
+    'Оставь пустым — удалятся ВСЕ твои группы.\n\n' +
+    'Название:'
+  );
+  if (keep === null) return;
+  const keepName = keep.trim().toLowerCase();
+  const keepIds = keepName
+    ? _myGroupsCache.filter(c => (c.name||'').toLowerCase() === keepName).map(c => c.id)
+    : [];
+  if (!confirm('Удалить ' + (_myGroupsCache.length - keepIds.length) + ' групп? Действие необратимо.')) return;
+  try {
+    const r = await fetch(API_URL + '/groups/cleanup', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, keep_ids: keepIds})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
+    showToast('Удалено групп: ' + d.deleted);
+    await loadGroupsList();
+  } catch(e) { showToast('Ошибка соединения', true); }
 }
 
 async function loadGroupsList() {
@@ -1021,12 +1044,8 @@ async function loadGroupsList() {
     const d1 = await r1.json();
     _myGroupsCache = (d1 && d1.success && Array.isArray(d1.chats)) ? d1.chats : [];
   } catch(e) { console.error('[groups/list]', e); _myGroupsCache = []; }
-  try {
-    const r2 = await fetch(API_URL + '/groups/all?token=' + encodeURIComponent(currentToken));
-    const d2 = await r2.json();
-    _allGroupsCache = (d2 && d2.success && Array.isArray(d2.chats)) ? d2.chats : [];
-  } catch(e) { console.error('[groups/all]', e); _allGroupsCache = []; }
-  renderGroupsList(_currentGroupsTab === 'my' ? _myGroupsCache : _allGroupsCache);
+  _allGroupsCache = [];
+  renderGroupsList(_myGroupsCache);
 }
 function renderGroupsList(chats){
   const el = document.getElementById('groupsList');
