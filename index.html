@@ -536,6 +536,7 @@ button { cursor:pointer; }
   <div class="modal-header">
     <div class="modal-title" id="groupChatTitle">Группа</div>
     <div style="display:flex;gap:6px;">
+      <button class="modal-close" onclick="addMemberToGroup()" title="Добавить по нику">➕</button>
       <button class="modal-close" onclick="toggleGroupMembers()" title="Участники">👥</button>
       <button class="modal-close" onclick="closeGroupChat()">×</button>
     </div>
@@ -616,8 +617,8 @@ const PROMO_COMPANIES = [
       'Партнёр Microsoft, сертификаты «1С:Профессионал» и «1С:Специалист»'
     ],
     links: [
+      {label: 'Сайт', url: 'https://ingsoft.ru/', icon: '🌐'},
       {label: 'WhatsApp', url: 'https://wa.me/message/C63IVKWGGP5IL1', icon: '💬'},
-      {label: 'Telegram', url: 'https://t.me/c/3508095534/21', icon: '✈️'},
       {label: 'Instagram', url: 'https://www.instagram.com/ing_soft', icon: '📷'}
     ],
     codes: [
@@ -680,7 +681,7 @@ const PROMO_COMPANIES = [
     maxTotal: 15,
     hint: 'Скидка на монтаж инженерных систем под ключ',
     address: 'Карабулак, ул. Орджоникидзе, 34',
-    about: 'Монтаж инженерных систем под ключ в Ингушетии с 2019 года. Более 470 выполненных объектов: Назрань, Магас, Карабулак, Сунжа и другие.',
+    about: 'Монтаж инженерных систем под ключ в Ингушетии с 2019 года. Более 470 выполненных объектов.',
     features: [
       'Гарантия 3 года на работы и оборудование',
       'Бесплатный выезд мастера и смета в день обращения',
@@ -972,6 +973,29 @@ let _currentGroupsTab = 'my';
 let _myGroupsCache = [];
 let _allGroupsCache = [];
 
+let _groupPollInterval = null;
+let _lastKnownGroupIds = new Set();
+let _groupPollFirstRun = true;
+
+async function pollNewGroups() {
+  if (!currentToken) return;
+  try {
+    const r = await fetch(API_URL + '/groups/list?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (!d || !d.success || !Array.isArray(d.chats)) return;
+    const currentIds = new Set(d.chats.map(x => x.id));
+    if (!_groupPollFirstRun) {
+      d.chats.forEach(c => {
+        if (!_lastKnownGroupIds.has(c.id)) {
+          showToast('🎉 Вас добавили в группу: ' + c.name);
+        }
+      });
+    }
+    _lastKnownGroupIds = currentIds;
+    _groupPollFirstRun = false;
+  } catch(e) {}
+}
+
 async function openGroupsModal() {
   openModal('groups');
   _currentGroupsTab = 'my';
@@ -993,20 +1017,17 @@ async function loadGroupsList() {
   if (!el) return;
   el.innerHTML = '<div style="text-align:center;color:#64748b;padding:14px;">Загрузка...</div>';
   try {
-    const [r1, r2] = await Promise.all([
-      fetch(API_URL + '/groups/list?token=' + encodeURIComponent(currentToken)),
-      fetch(API_URL + '/groups/all?token=' + encodeURIComponent(currentToken))
-    ]);
+    const r1 = await fetch(API_URL + '/groups/list?token=' + encodeURIComponent(currentToken));
     const d1 = await r1.json();
+    _myGroupsCache = (d1 && d1.success && Array.isArray(d1.chats)) ? d1.chats : [];
+  } catch(e) { console.error('[groups/list]', e); _myGroupsCache = []; }
+  try {
+    const r2 = await fetch(API_URL + '/groups/all?token=' + encodeURIComponent(currentToken));
     const d2 = await r2.json();
-    _myGroupsCache = (d1.success && d1.chats) ? d1.chats : [];
-    _allGroupsCache = (d2.success && d2.chats) ? d2.chats : [];
-    renderGroupsList(_currentGroupsTab === 'my' ? _myGroupsCache : _allGroupsCache);
-  } catch(e) {
-    el.innerHTML = '<p style="text-align:center;color:#e63946;">Ошибка загрузки</p>';
-  }
+    _allGroupsCache = (d2 && d2.success && Array.isArray(d2.chats)) ? d2.chats : [];
+  } catch(e) { console.error('[groups/all]', e); _allGroupsCache = []; }
+  renderGroupsList(_currentGroupsTab === 'my' ? _myGroupsCache : _allGroupsCache);
 }
-
 function renderGroupsList(chats){
   const el = document.getElementById('groupsList');
   if (!el) return;
@@ -1059,8 +1080,8 @@ async function createGroup(name) {
     const d = await r.json();
     if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
     showToast('Группа создана!');
-    await loadGroupsList();
     _currentGroupsTab = 'my';
+    await loadGroupsList();
     switchGroupsTab('my');
     openGroupChat(d.chat_id, d.name, d.invite_code);
   } catch(e) { showToast('Ошибка соединения', true); }
@@ -1094,12 +1115,28 @@ async function openGroupChat(id, name, code) {
   groupMessageInterval = setInterval(() => loadGroupMessages(false), 3000);
 }
 
+async function addMemberToGroup() {
+  if (!currentGroupId || !currentToken) return;
+  const nick = prompt('Введите никнейм игрока для добавления:');
+  if (!nick || !nick.trim()) return;
+  try {
+    const r = await fetch(API_URL + '/groups/add-member', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({token: currentToken, chat_id: currentGroupId, nickname: nick.trim()})
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
+    showToast('✓ ' + d.nickname + ' добавлен');
+    loadGroupMembers();
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
 function closeGroupChat() {
   document.getElementById('modal-group-chat').classList.remove('active');
   document.getElementById('modal-member-perms').classList.remove('active');
   if (groupMessageInterval) { clearInterval(groupMessageInterval); groupMessageInterval = null; }
   currentGroupId = null;
-  openGroupsModal();
+  setTimeout(() => { openGroupsModal(); }, 60);
 }
 
 async function loadGroupMessages(fullReload) {
@@ -2454,6 +2491,8 @@ function enterGame(){
   const today = new Date().toISOString().split('T')[0];
   if (lastTapDate !== today) { lastTapDate = today; tapsToday = 0; dailyTapLimit = 20000; scheduleSave(); }
   updateUI(); startEnergyRegen(); buildSidebar(); loadISShop(); refreshLeaderboard(); saveToLocal(); updateRefLink(); sendHeartbeat(); initAdCarousel();
+  if (_groupPollInterval) clearInterval(_groupPollInterval);
+  _groupPollInterval = setInterval(pollNewGroups, 15000);
 }
 async function loadProgressByToken(token){
   try {
