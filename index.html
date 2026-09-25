@@ -361,8 +361,13 @@ button { cursor:pointer; }
       <div class="ad-desc">Компьютерная техника — скидки до 5% по промокодам</div>
       <div class="ad-cta" onclick="openModal('promocodes')">Получить скидку →</div>
     </div>
-    <div class="ad-slide" style="background:linear-gradient(135deg,#ec4899 0%,#be185d 60%,#500724 100%);">
-      <div class="ad-icon">🎮</div>
+    <div class="ad-slide" style="background:linear-gradient(135deg, #000000 0%, #0a1a0a 50%, #003300 100%); position:relative; overflow:hidden;">
+      <!-- Водяной знак на фоне (матрица) -->
+      <img src="matrix-logo.png" alt="Matrix Logo" style="position:absolute; right:-40px; bottom:-40px; height:180px; opacity:0.1; pointer-events:none; filter: grayscale(100%) brightness(200%);">
+      
+      <!-- Основной логотип вместо эмодзи -->
+      <img src="matrix-logo.png" alt="MATRIX" style="height:40px; object-fit:contain; align-self:flex-start; margin-bottom:10px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));">
+      
       <div class="ad-title">Игротека MATRX</div>
       <div class="ad-desc">Игровая техника — скидки до 50%</div>
       <div class="ad-cta" onclick="openModal('promocodes')">Смотреть коды →</div>
@@ -772,6 +777,8 @@ function renderPromoCompanies(){
       logoHtml = '<img src="ingsoft-logo.png" alt="IngSoft" class="partner-logo-img" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"> <span class="partner-icon-emoji" style="display:none;">💻</span>';
     } else if (c.id === 'sushi') {
       logoHtml = '<img src="sushi-logo.png" alt="IngSushiExpress" class="partner-logo-img" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"> <span class="partner-icon-emoji" style="display:none;">🍣</span>';
+    } else if (c.id === 'matrx') {
+      logoHtml = '<img src="matrix-logo.png" alt="MATRX" class="partner-logo-img" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"> <span class="partner-icon-emoji" style="display:none;">🎮</span>';
     } else {
       logoHtml = '<span class="partner-icon-emoji">' + c.icon + '</span>';
     }
