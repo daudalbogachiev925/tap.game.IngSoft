@@ -1053,12 +1053,13 @@ function renderGroupsList(chats){
   el.innerHTML = chats.map(c => {
     const memberCount = c.member_count || 0;
     const badge = c.is_owner ? '<span class="group-badge owner">👑 ВЛАДЕЛЕЦ</span>' : '<span class="group-badge member">✓ В ГРУППЕ</span>';
-    return '<div class="item-row" style="padding:14px;">' +
-      '<div class="item-info">' +
+    return '<div class="item-row" style="padding:14px; display:flex; align-items:center; gap:8px;">' +
+      '<div class="item-info" style="flex:1; min-width:0;">' +
         '<div class="item-name">' + escapeHtml(c.name) + badge + '</div>' +
         '<div class="item-desc">' + memberCount + ' участн. · Код: ' + escapeHtml(c.invite_code) + '</div>' +
       '</div>' +
-      '<button class="btn-buy green" style="padding:8px 14px;font-size:12px;" onclick="openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')">Войти</button>' +
+      '<button type="button" class="btn-buy green" style="padding:8px 14px;font-size:12px;flex-shrink:0;cursor:pointer;position:relative;z-index:10;" ' +
+        'onclick="event.stopPropagation(); openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')">Войти</button>' +
     '</div>';
   }).join('');
 }
