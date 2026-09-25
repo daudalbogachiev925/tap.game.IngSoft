@@ -22,6 +22,8 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .sidebar-icon { font-size:18px; }
 .sidebar-label { font-size:8px; color:#94a3b8; margin-top:3px; font-weight:700; text-align:center; }
 .sidebar-item:hover .sidebar-label { color:#fff; }
+.sidebar-item.admin-item { background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.1)); border:1px solid rgba(255,215,0,0.5); }
+.sidebar-item.admin-item .sidebar-label { color:#ffd700; }
 .main { flex:1; margin-left:64px; padding-bottom:80px; }
 .header { display:flex; align-items:center; justify-content:center; padding:14px 18px; background:rgba(10,5,24,0.6); backdrop-filter:blur(30px); position:sticky; top:0; z-index:400; border-bottom:1px solid rgba(139,92,246,0.2); }
 .header-card { display:flex; align-items:center; gap:16px; background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(30,58,95,0.3)); border:1px solid rgba(139,92,246,0.35); border-radius:24px; padding:12px 24px; }
@@ -121,6 +123,7 @@ body::before { content:''; position:fixed; inset:0; z-index:-3; pointer-events:n
 .btn-buy:disabled { opacity:0.35; cursor:not-allowed; }
 .btn-buy.green { background:linear-gradient(135deg,#22c55e,#16a34a); }
 .btn-buy.gold { background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0518; }
+.btn-buy.red { background:linear-gradient(135deg,#e63946,#7f1d1d); }
 .game-card { background:linear-gradient(145deg,rgba(139,92,246,0.12),rgba(15,12,41,0.6)); border:1px solid rgba(139,92,246,0.25); border-radius:20px; padding:18px 10px; text-align:center; cursor:pointer; }
 .game-card:hover { transform:translateY(-4px); border-color:rgba(255,215,0,0.5); }
 .games-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
@@ -220,6 +223,7 @@ button { cursor:pointer; }
 .group-badge { display:inline-block; padding:2px 8px; border-radius:8px; font-size:9px; font-weight:800; margin-left:6px; }
 .group-badge.member { background:rgba(34,197,94,0.25); color:#22c55e; border:1px solid rgba(34,197,94,0.5); }
 .group-badge.owner { background:rgba(255,215,0,0.25); color:#ffd700; border:1px solid rgba(255,215,0,0.6); }
+.group-badge.owner-game { background:linear-gradient(135deg,#ffd700,#ff8c00); color:#0a0518; border:1px solid #fff; }
 .promo-company { background:linear-gradient(145deg,rgba(139,92,246,0.12),rgba(15,12,41,0.7)); border:1px solid rgba(139,92,246,0.3); border-radius:18px; padding:16px; margin-bottom:14px; }
 .promo-company-header { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
 .promo-company-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; }
@@ -235,7 +239,7 @@ button { cursor:pointer; }
 .promo-code.blocked { opacity:0.35; cursor:not-allowed; }
 .promo-code .val { font-size:14px; color:#ffd700; }
 @media (max-width:480px) { .sidebar{width:54px;} .sidebar-label{font-size:6px;} .main{margin-left:54px;} .header-card{flex-wrap:wrap;gap:10px;padding:10px 14px;} .header-actions{margin-left:0;padding-left:0;border-left:none;width:100%;min-width:0;} .score-big{font-size:56px;} .tap-button{width:190px;height:190px;font-size:28px;} .quick-actions{grid-template-columns:repeat(2,1fr);padding:0 12px;} .modal-content{padding:18px;border-radius:24px 24px 0 0;} .playing-card{width:68px;height:98px;} .card-front .suit{font-size:36px;} .game-card-icon{width:54px;height:54px;} }
-/* --- НОВЫЕ СТИЛИ ДЛЯ ПАРТНЁРОВ --- */
+/* --- СТИЛИ ДЛЯ ПАРТНЁРОВ --- */
 .partner-accordion { margin-bottom: 12px; border: 1px solid rgba(139,92,246,0.3); border-radius: 16px; overflow: hidden; background: linear-gradient(145deg,rgba(139,92,246,0.1),rgba(15,12,41,0.7)); }
 .partner-header { display: flex; align-items: center; gap: 12px; padding: 16px; cursor: pointer; transition: background 0.2s; }
 .partner-header:hover { background: rgba(139,92,246,0.15); }
@@ -264,7 +268,15 @@ button { cursor:pointer; }
 .partner-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 .partner-link { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 10px; border: 1px solid rgba(139,92,246,0.4); background: rgba(139,92,246,0.1); color: #e0e7ff; font-size: 11px; font-weight: 700; text-decoration: none; transition: background 0.2s; }
 .partner-link:hover { background: rgba(139,92,246,0.25); }
-
+/* --- АДМИН-ПАНЕЛЬ --- */
+.admin-section { margin-bottom: 20px; }
+.admin-section-title { font-size: 15px; font-weight: 900; color: #ffd700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.admin-input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,215,0,0.3); background: rgba(10,5,24,0.8); color: #fff; font-size: 13px; margin-bottom: 8px; outline: none; }
+.admin-input::placeholder { color: #64748b; }
+.admin-btn { background: linear-gradient(135deg,#ffd700,#ff8c00); border: none; color: #0a0518; padding: 12px 20px; border-radius: 12px; font-weight: 900; font-size: 13px; cursor: pointer; width: 100%; margin-bottom: 8px; }
+.admin-btn.green { background: linear-gradient(135deg,#22c55e,#16a34a); color: #fff; }
+.admin-btn.red { background: linear-gradient(135deg,#e63946,#7f1d1d); color: #fff; }
+.admin-btn.blue { background: linear-gradient(135deg,#4facfe,#8b5cf6); color: #fff; }
 </style>
 </head>
 <body>
@@ -519,7 +531,6 @@ button { cursor:pointer; }
 </div></div>
 
 <!-- ГРУППЫ -->
-<!-- ГРУППЫ -->
 <div class="modal" id="modal-groups"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">Мои группы</div><button class="modal-close" onclick="closeModal('groups')">×</button></div>
   <div style="display:flex;gap:8px;margin-bottom:14px;">
@@ -560,6 +571,105 @@ button { cursor:pointer; }
   <div id="memberPermsBody"></div>
 </div></div>
 
+<!-- АДМИН-ПАНЕЛЬ -->
+<div class="modal" id="modal-admin"><div class="modal-content" style="max-width:640px;">
+  <div class="modal-header"><div class="modal-title">👑 Админ-панель</div><button class="modal-close" onclick="closeModal('admin')">×</button></div>
+  
+  <div class="admin-section">
+    <div class="admin-section-title">💰 Начислить очки игроку</div>
+    <input type="text" id="adminScoreNick" class="admin-input" placeholder="Ник игрока">
+    <input type="number" id="adminScoreAmount" class="admin-input" placeholder="Сумма (можно отрицательную)" value="1000">
+    <button class="admin-btn green" onclick="adminAddScore()">Начислить</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-section-title">🎫 Выдать промокод игроку</div>
+    <input type="text" id="adminPromoNick" class="admin-input" placeholder="Ник игрока">
+    <input type="text" id="adminPromoCode" class="admin-input" placeholder="Код (например, GIFT2026)">
+    <button class="admin-btn blue" onclick="adminAddPromo()">Выдать промокод</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-section-title">🏪 Добавить промокод в магазин IS</div>
+    <input type="text" id="adminShopCode" class="admin-input" placeholder="Код">
+    <input type="number" id="adminShopCoins" class="admin-input" placeholder="Очки (0 если нет)" value="0">
+    <input type="number" id="adminShopMult" class="admin-input" placeholder="Множитель (1 если нет)" value="1">
+    <input type="text" id="adminShopDesc" class="admin-input" placeholder="Описание (необязательно)">
+    <button class="admin-btn" onclick="adminAddShopPromo()">Добавить в магазин</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-section-title">📜 Добавить задание (квест)</div>
+    <input type="text" id="adminQuestId" class="admin-input" placeholder="ID квеста (уникальный)">
+    <input type="text" id="adminQuestName" class="admin-input" placeholder="Название">
+    <input type="text" id="adminQuestDesc" class="admin-input" placeholder="Описание">
+    <input type="number" id="adminQuestReward" class="admin-input" placeholder="Награда (очки)" value="1000">
+    <select id="adminQuestType" class="admin-input">
+      <option value="total_taps">Всего тапов</option>
+      <option value="score">Очки</option>
+      <option value="level">Уровень</option>
+    </select>
+    <input type="number" id="adminQuestValue" class="admin-input" placeholder="Значение условия" value="1000">
+    <button class="admin-btn" onclick="adminAddQuest()">Добавить задание</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-section-title">⚡ Добавить буст</div>
+    <input type="text" id="adminBoostId" class="admin-input" placeholder="ID буста (уникальный)">
+    <input type="text" id="adminBoostName" class="admin-input" placeholder="Название">
+    <input type="text" id="adminBoostDesc" class="admin-input" placeholder="Описание">
+    <input type="number" id="adminBoostPrice" class="admin-input" placeholder="Цена (очки)" value="10000">
+    <select id="adminBoostType" class="admin-input">
+      <option value="multiplier">Множитель</option>
+      <option value="energy">Энергия</option>
+      <option value="autotap">Автоклик</option>
+    </select>
+    <input type="number" id="adminBoostValue" class="admin-input" placeholder="Значение" value="2">
+    <button class="admin-btn" onclick="adminAddBoost()">Добавить буст</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-section-title">🏢 Добавить компанию в карусель</div>
+    <input type="text" id="adminCompId" class="admin-input" placeholder="ID компании (уникальный)">
+    <input type="text" id="adminCompName" class="admin-input" placeholder="Название">
+    <input type="text" id="adminCompDesc" class="admin-input" placeholder="Краткое описание">
+    <input type="text" id="adminCompIcon" class="admin-input" placeholder="Иконка (эмодзи)" value="🏢">
+    <input type="color" id="adminCompColor" class="admin-input" value="#8b5cf6" style="height:40px;">
+    <input type="number" id="adminCompMaxTotal" class="admin-input" placeholder="Макс. скидка (%)" value="10">
+    <input type="text" id="adminCompHint" class="admin-input" placeholder="Подсказка по кодам">
+    <input type="text" id="adminCompAddress" class="admin-input" placeholder="Адрес">
+    <input type="text" id="adminCompAbout" class="admin-input" placeholder="О компании">
+    <input type="text" id="adminCompFeatures" class="admin-input" placeholder="Особенности (через запятую)">
+    <input type="text" id="adminCompLinks" class="admin-input" placeholder="Ссылки (название|url, через запятую)">
+    <input type="text" id="adminCompSchedule" class="admin-input" placeholder="Режим работы">
+    <input type="text" id="adminCompPhone" class="admin-input" placeholder="Телефон">
+    <input type="text" id="adminCompCodes" class="admin-input" placeholder="Коды (код:значение, через запятую)">
+    <button class="admin-btn" onclick="adminAddCompany()">Добавить компанию</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-section-title">🚫 Заблокировать игрока в чате</div>
+    <input type="text" id="adminBanNick" class="admin-input" placeholder="Ник игрока">
+    <input type="text" id="adminBanReason" class="admin-input" placeholder="Причина">
+    <button class="admin-btn red" onclick="adminBanChat()">Заблокировать</button>
+    <button class="admin-btn green" onclick="adminUnbanChat()">Разблокировать</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-section-title">🗑 Удалить группу</div>
+    <input type="text" id="adminDelGroupName" class="admin-input" placeholder="Название группы">
+    <input type="text" id="adminDelGroupReason" class="admin-input" placeholder="Причина удаления">
+    <button class="admin-btn red" onclick="adminDeleteGroup()">Удалить группу</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-section-title">📊 Список данных</div>
+    <button class="admin-btn blue" onclick="adminLoadData()">Загрузить списки</button>
+    <div id="adminDataList" style="margin-top:10px;font-size:12px;color:#cbd5e1;max-height:300px;overflow-y:auto;"></div>
+  </div>
+
+</div></div>
+
 <div class="toast" id="toast"></div>
 </main>
 </div>
@@ -582,6 +692,7 @@ const LEADERBOARD_PAGE_SIZE = 10;
 let leaderboardCache=[], leaderboardOnlineCount=0, leaderboardOfflineCount=0, leaderboardTotalCount=0;
 let myGlobalRank=null;
 let historyRefreshTimer=null;
+let isOwner = false;
 
 const API_URL = 'https://138.124.14.130.nip.io';
 const ONLINE_WINDOW_MS = 5*60*1000;
@@ -596,110 +707,44 @@ try {
 const PROMOS = {'INGSOFT':{coins:50000,desc:'+50 000'},'DAUD':{coins:100000,desc:'+100 000'},'WELCOME':{coins:10000,desc:'+10 000'},'BOOST2':{mult:2,desc:'Множитель x2'},'GIFT':{coins:500000,desc:'+500 000'},'VIP':{coins:1000000,mult:3,desc:'+1 000 000 и x3'},'MEGA':{coins:5000000,desc:'+5 000 000'}};
 const DAILY_REWARDS=[{coins:100},{coins:200},{coins:300},{coins:500},{coins:1000},{coins:2000},{coins:5000}];
 
-// ============ КОМПАНИИ-ПАРТНЁРЫ (промокоды) ============
 const PROMO_COMPANIES = [
   {
-    id: 'ingsoft',
-    name: 'IngSoft',
-    desc: 'Компьютерная техника',
-    icon: '💻',
-    color: '#8b5cf6',
-    maxTotal: 5,
-    hint: 'Можно комбинировать любые коды, но не более 5% за заказ',
+    id: 'ingsoft', name: 'IngSoft', desc: 'Компьютерная техника', icon: '💻', color: '#8b5cf6',
+    maxTotal: 5, hint: 'Можно комбинировать любые коды, но не более 5% за заказ',
     address: 'Ингушетия, г. Назрань, ул. Московская, 17B',
     about: 'Оптовый поставщик компьютерной техники и программного обеспечения, внедрение систем безопасности.',
-    features: [
-      'Компьютеры, серверы, сетевое оборудование',
-      'Внедрение и обслуживание «1С»',
-      'Видеонаблюдение и системы безопасности',
-      'ИТ-аутсорсинг, разработка сайтов',
-      'Партнёр Microsoft, сертификаты «1С:Профессионал» и «1С:Специалист»'
-    ],
-    links: [
-      {label: 'Сайт', url: 'https://ingsoft.ru/', icon: '🌐'},
-      {label: 'WhatsApp', url: 'https://wa.me/message/C63IVKWGGP5IL1', icon: '💬'},
-      {label: 'Instagram', url: 'https://www.instagram.com/ing_soft', icon: '📷'}
-    ],
-    codes: [
-      {code:'INGSOFT1', value:1},{code:'INGSOFT2', value:2},
-      {code:'INGSOFT3', value:3},{code:'INGSOFT4', value:4},{code:'INGSOFT5', value:5}
-    ]
+    features: ['Компьютеры, серверы, сетевое оборудование','Внедрение и обслуживание «1С»','Видеонаблюдение и системы безопасности','ИТ-аутсорсинг, разработка сайтов','Партнёр Microsoft, сертификаты «1С:Профессионал» и «1С:Специалист»'],
+    links: [{label:'Сайт',url:'https://ingsoft.ru/',icon:'🌐'},{label:'WhatsApp',url:'https://wa.me/message/C63IVKWGGP5IL1',icon:'💬'},{label:'Instagram',url:'https://www.instagram.com/ing_soft',icon:'📷'}],
+    codes: [{code:'INGSOFT1',value:1},{code:'INGSOFT2',value:2},{code:'INGSOFT3',value:3},{code:'INGSOFT4',value:4},{code:'INGSOFT5',value:5}]
   },
   {
-    id: 'matrx',
-    name: 'Игротека MATRX',
-    desc: 'Комфортная игровая зона',
-    icon: '🎮',
-    color: '#ec4899',
-    maxTotal: 50,
-    hint: 'Каждый код активируется отдельно',
+    id: 'matrx', name: 'Игротека MATRX', desc: 'Комфортная игровая зона', icon: '🎮', color: '#ec4899',
+    maxTotal: 50, hint: 'Каждый код активируется отдельно',
     address: 'Ингушетия, г. Назрань, ул. Московская, 17B',
     about: 'Игротека с комфортной атмосферой и 45 мощными ПК. Любая игра уже скачана — приходи и играй!',
-    features: [
-      '45 игровых ПК с топовыми играми',
-      'Комфортная атмосфера и удобные кресла',
-      'Любой вид игры уже установлен',
-      'Идеально для компании друзей'
-    ],
+    features: ['45 игровых ПК с топовыми играми','Комфортная атмосфера и удобные кресла','Любой вид игры уже установлен','Идеально для компании друзей'],
     links: [],
-    codes: [
-      {code:'MATRX10', value:10},{code:'MATRX20', value:20},
-      {code:'MATRX25', value:25},{code:'MATRX30', value:30},
-      {code:'MATRX40', value:40},{code:'MATRX50', value:50}
-    ]
+    codes: [{code:'MATRX10',value:10},{code:'MATRX20',value:20},{code:'MATRX25',value:25},{code:'MATRX30',value:30},{code:'MATRX40',value:40},{code:'MATRX50',value:50}]
   },
   {
-    id: 'sushi',
-    name: 'IngSushiExpress',
-    desc: 'Доставка суши и роллов',
-    icon: '🍣',
-    color: '#22c55e',
-    maxTotal: 10,
-    hint: 'Можно комбинировать любые коды, но не более 10% за заказ',
+    id: 'sushi', name: 'IngSushiExpress', desc: 'Доставка суши и роллов', icon: '🍣', color: '#22c55e',
+    maxTotal: 10, hint: 'Можно комбинировать любые коды, но не более 10% за заказ',
     address: 'Ингушетия, г. Назрань, ул. Чеченская, 34/3',
     about: 'Кафе-доставка суши и роллов. Свежие ингредиенты, авторские соусы и быстрая доставка по Назрани.',
-    features: [
-      'Свежие суши и роллы каждый день',
-      'Авторские соусы и сеты',
-      'Быстрая доставка по городу',
-      'Уютное кафе и самовывоз'
-    ],
+    features: ['Свежие суши и роллы каждый день','Авторские соусы и сеты','Быстрая доставка по городу','Уютное кафе и самовывоз'],
     links: [],
-    codes: [
-      {code:'SUSHI1', value:1},{code:'SUSHI2', value:2},{code:'SUSHI3', value:3},
-      {code:'SUSHI4', value:4},{code:'SUSHI5', value:5},{code:'SUSHI6', value:6},
-      {code:'SUSHI7', value:7},{code:'SUSHI8', value:8},{code:'SUSHI9', value:9},{code:'SUSHI10', value:10}
-    ]
+    codes: [{code:'SUSHI1',value:1},{code:'SUSHI2',value:2},{code:'SUSHI3',value:3},{code:'SUSHI4',value:4},{code:'SUSHI5',value:5},{code:'SUSHI6',value:6},{code:'SUSHI7',value:7},{code:'SUSHI8',value:8},{code:'SUSHI9',value:9},{code:'SUSHI10',value:10}]
   },
   {
-    id: 'klimate',
-    name: 'Klimate Komfort',
-    desc: 'Отопление, канализация, электрика, кондиционирование',
-    icon: '🛠️',
-    color: '#0ea5e9',
-    maxTotal: 15,
-    hint: 'Скидка на монтаж инженерных систем под ключ',
+    id: 'klimate', name: 'Klimate Komfort', desc: 'Отопление, канализация, электрика, кондиционирование', icon: '🛠️', color: '#0ea5e9',
+    maxTotal: 15, hint: 'Скидка на монтаж инженерных систем под ключ',
     address: 'Карабулак, ул. Орджоникидзе, 34',
     about: 'Монтаж инженерных систем под ключ в Ингушетии с 2019 года. Более 470 выполненных объектов.',
-    features: [
-      'Гарантия 3 года на работы и оборудование',
-      'Бесплатный выезд мастера и смета в день обращения',
-      'Прозрачная смета до последнего самореза',
-      'Собственная рассрочка 0% без банков',
-      'Свой штат мастеров — без субподрядчиков',
-      'Собственный интернет-магазин оборудования'
-    ],
-    links: [
-      {label: 'WhatsApp', url: 'https://wa.me/79280966647', icon: '💬'},
-      {label: 'Магазин', url: 'https://shop.klimatekomfort.ru', icon: '🛒'},
-      {label: 'Сайт услуг', url: 'https://klimatekomfort.ru', icon: '🌐'},
-      {label: 'Instagram', url: 'https://www.instagram.com/klimate.komfort', icon: '📷'}
-    ],
+    features: ['Гарантия 3 года на работы и оборудование','Бесплатный выезд мастера и смета в день обращения','Прозрачная смета до последнего самореза','Собственная рассрочка 0% без банков','Свой штат мастеров — без субподрядчиков','Собственный интернет-магазин оборудования'],
+    links: [{label:'WhatsApp',url:'https://wa.me/79280966647',icon:'💬'},{label:'Магазин',url:'https://shop.klimatekomfort.ru',icon:'🛒'},{label:'Сайт услуг',url:'https://klimatekomfort.ru',icon:'🌐'},{label:'Instagram',url:'https://www.instagram.com/klimate.komfort',icon:'📷'}],
     schedule: 'Пн–Чт 8:00–17:00, Сб–Вс 8:00–17:00 (пятница — выходной)',
     phone: '8 (928) 096-66-47',
-    codes: [
-      {code:'KLIMATE5', value:5},{code:'KLIMATE10', value:10},{code:'KLIMATE15', value:15}
-    ]
+    codes: [{code:'KLIMATE5',value:5},{code:'KLIMATE10',value:10},{code:'KLIMATE15',value:15}]
   }
 ];
 
@@ -815,19 +860,15 @@ function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;',
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
 /* ============ ПРОМОКОДЫ ПАРТНЁРОВ ============ */
-/* ==== НОВАЯ ЛОГИКА ПРОМОКОДОВ ПАРТНЁРОВ ==== */
 let _expandedPartner = null;
-let _activeSubItem = {}; // Хранит, какой подпункт открыт: 'codes' или 'info'
+let _activeSubItem = {};
 
 function renderPromoCompanies(){
   const box = document.getElementById('promoCompaniesList');
   if (!box) return;
-  
   box.innerHTML = PROMO_COMPANIES.map(c => {
     const isExpanded = _expandedPartner === c.id;
     const activeSub = _activeSubItem[c.id] || null;
-    
-    // Логотип (для IngSoft и Sushi используем картинки, для остальных - emoji)
     let logoHtml = '';
     if (c.id === 'ingsoft') {
       logoHtml = '<img src="ingsoft-logo.png" alt="IngSoft" class="partner-logo-img" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"> <span class="partner-icon-emoji" style="display:none;">💻</span>';
@@ -840,8 +881,6 @@ function renderPromoCompanies(){
     } else {
       logoHtml = '<span class="partner-icon-emoji">' + c.icon + '</span>';
     }
-
-    // Генерация промокодов (если открыт подпункт "Смотреть свои промокоды")
     let codesHtml = '';
     if (isExpanded && activeSub === 'codes') {
       const claimed = claimedPromos.filter(p => c.codes.some(x => x.code === p));
@@ -850,22 +889,18 @@ function renderPromoCompanies(){
         return acc + (cc ? cc.value : 0);
       }, 0);
       const pct = Math.min(100, (total / c.maxTotal) * 100);
-      
       const codesGrid = c.codes.map(x => {
         const isClaimed = claimedPromos.includes(x.code);
         const wouldExceed = !isClaimed && (total + x.value > c.maxTotal);
         const cls = isClaimed ? 'promo-code claimed' : (wouldExceed ? 'promo-code blocked' : 'promo-code');
         return '<div class="' + cls + '" onclick="activatePartnerPromo(\'' + c.id + '\',\'' + x.code + '\')"><div class="val">' + x.value + '%</div>' + x.code + (isClaimed?' ✓':'') + '</div>';
       }).join('');
-
       codesHtml = '<div class="sub-content active" id="sub-codes-'+c.id+'">' +
         '<div class="promo-progress"><div class="promo-progress-fill" style="width:'+pct+'%;background:linear-gradient(90deg,'+c.color+',#4facfe);"></div></div>' +
         '<div class="promo-progress-text"><span>Активировано: <b style="color:#ffd700;">'+total+'%</b></span><span>Лимит: '+c.maxTotal+'%</span></div>' +
         '<div class="promo-codes">' + codesGrid + '</div>' +
       '</div>';
     }
-
-    // Генерация информации (если открыт подпункт "Информация о...")
     let infoHtml = '';
     if (isExpanded && activeSub === 'info') {
       let linksHtml = '';
@@ -885,7 +920,6 @@ function renderPromoCompanies(){
       let extraHtml = '';
       if (c.schedule) extraHtml += '<div class="partner-extra"><b>🕒 Режим работы:</b> ' + c.schedule + '</div>';
       if (c.phone) extraHtml += '<div class="partner-extra"><b>📞 Телефон:</b> <a href="tel:' + c.phone.replace(/[^0-9+]/g,'') + '" style="color:#a78bfa;">' + c.phone + '</a></div>';
-
       infoHtml = '<div class="sub-content active" id="sub-info-'+c.id+'">' +
         '<div class="partner-info-block">' +
           '<div class="partner-info-title" style="color:' + c.color + ';">' + c.name + '</div>' +
@@ -898,7 +932,6 @@ function renderPromoCompanies(){
         '</div>' +
       '</div>';
     }
-
     return '<div class="partner-accordion">' +
       '<div class="partner-header ' + (isExpanded ? 'expanded' : '') + '" onclick="togglePartner(\'' + c.id + '\')">' +
         logoHtml +
@@ -925,16 +958,16 @@ function togglePartner(companyId) {
     _activeSubItem[companyId] = null;
   } else {
     _expandedPartner = companyId;
-    _activeSubItem[companyId] = null; // Сброс активного подпункта при открытии новой компании
+    _activeSubItem[companyId] = null;
   }
   renderPromoCompanies();
 }
 
 function toggleSubItem(companyId, type) {
   if (_activeSubItem[companyId] === type) {
-    _activeSubItem[companyId] = null; // Закрыть, если уже открыто
+    _activeSubItem[companyId] = null;
   } else {
-    _activeSubItem[companyId] = type; // Открыть выбранный тип
+    _activeSubItem[companyId] = type;
   }
   renderPromoCompanies();
 }
@@ -1052,7 +1085,10 @@ function renderGroupsList(chats){
   }
   el.innerHTML = chats.map(c => {
     const memberCount = c.member_count || 0;
-    const badge = c.is_owner ? '<span class="group-badge owner">👑 ВЛАДЕЛЕЦ</span>' : '<span class="group-badge member">✓ В ГРУППЕ</span>';
+    let badge = '';
+    if (c.is_owner) badge = '<span class="group-badge owner">👑 ВЛАДЕЛЕЦ</span>';
+    else badge = '<span class="group-badge member">✓ В ГРУППЕ</span>';
+    if (isOwner) badge += ' <span class="group-badge owner-game">👑 ВЛАДЕЛЕЦ ИГРЫ</span>';
     return '<div class="item-row" style="padding:14px; display:flex; align-items:center; gap:8px;">' +
       '<div class="item-info" style="flex:1; min-width:0;">' +
         '<div class="item-name">' + escapeHtml(c.name) + badge + '</div>' +
@@ -1064,8 +1100,6 @@ function renderGroupsList(chats){
         'data-group-code="' + escapeHtml(c.invite_code) + '">Войти</button>' +
     '</div>';
   }).join('');
-  
-  // Навешиваем обработчики ПОСЛЕ отрисовки — это надёжнее, чем onclick в HTML
   const buttons = el.querySelectorAll('button[data-group-id]');
   buttons.forEach(btn => {
     btn.onclick = function(e) {
@@ -1074,7 +1108,6 @@ function renderGroupsList(chats){
       const gid = parseInt(this.getAttribute('data-group-id'), 10);
       const gname = this.getAttribute('data-group-name');
       const gcode = this.getAttribute('data-group-code');
-      console.log('Клик по кнопке Войти:', gid, gname, gcode);
       openGroupChat(gid, gname, gcode);
     };
   });
@@ -1123,28 +1156,20 @@ async function joinGroup(code) {
 }
 
 async function openGroupChat(id, name, code) {
-  console.log('[openGroupChat] id=', id, 'name=', name, 'code=', code);
   if (!id) { showToast('Ошибка: не передан ID группы', true); return; }
   currentGroupId = id;
   currentGroupName = name || 'Группа';
-  
-  // Закрываем все модалки, кроме группы
   document.querySelectorAll('.modal').forEach(m => {
     if (m.id !== 'modal-group-chat') m.classList.remove('active');
   });
-  
-  // Открываем группу
   const modalEl = document.getElementById('modal-group-chat');
   if (!modalEl) { showToast('Ошибка: не найдено окно группы', true); return; }
   modalEl.classList.add('active');
-  
   document.getElementById('groupChatTitle').textContent = currentGroupName;
   document.getElementById('groupMembersList').classList.remove('show');
   document.getElementById('groupMessages').innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>';
   document.getElementById('groupCodeLbl').textContent = code || '—';
-  
   await loadGroupMessages(true);
-  
   if (groupMessageInterval) clearInterval(groupMessageInterval);
   groupMessageInterval = setInterval(() => loadGroupMessages(false), 3000);
 }
@@ -1164,7 +1189,6 @@ async function deleteGroup() {
     await loadGroupsList();
   } catch(e) { showToast('Ошибка соединения', true); }
 }
-
 
 async function addMemberToGroup() {
   if (!currentGroupId || !currentToken) return;
@@ -1204,9 +1228,9 @@ async function loadGroupMessages(fullReload) {
       return;
     }
     const myName = nickname || firstName;
-    const isOwner = myGroupPerms.is_owner;
-    const canDel = isOwner || myGroupPerms.can_delete_messages;
-    const canEdit = isOwner || myGroupPerms.can_edit;
+    const isOwnerGroup = myGroupPerms.is_owner;
+    const canDel = isOwnerGroup || myGroupPerms.can_delete_messages;
+    const canEdit = isOwnerGroup || myGroupPerms.can_edit;
     box.innerHTML = msgs.map(m => {
       const isMe = m.nickname === myName;
       const time = new Date(m.created_at).toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'});
@@ -1217,7 +1241,9 @@ async function loadGroupMessages(fullReload) {
       } else if (!isMe && canDel) {
         actions += '<span onclick="deleteGroupMsg(' + m.id + ')" style="cursor:pointer;font-size:12px;color:#e63946;margin-left:8px;" title="Удалить">✕</span>';
       }
-      return '<div class="chat-msg ' + (isMe?'':'other') + '"><div class="chat-bubble ' + (isMe?'me':'other') + '"><div class="chat-author">' + (isMe?'Ты':escapeHtml(m.nickname||'Игрок')) + ' · ' + time + '</div><div class="chat-text">' + escapeHtml(m.text) + '</div>' + (actions ? '<div style="text-align:right;margin-top:2px;">' + actions + '</div>' : '') + '</div></div>';
+      let authorName = escapeHtml(m.nickname||'Игрок');
+      if (m.nickname === 'Daud(владелец)') authorName = '👑 ' + authorName;
+      return '<div class="chat-msg ' + (isMe?'':'other') + '"><div class="chat-bubble ' + (isMe?'me':'other') + '"><div class="chat-author">' + (isMe?'Ты':authorName) + ' · ' + time + '</div><div class="chat-text">' + escapeHtml(m.text) + '</div>' + (actions ? '<div style="text-align:right;margin-top:2px;">' + actions + '</div>' : '') + '</div></div>';
     }).join('');
     if (fullReload) box.scrollTop = box.scrollHeight;
   } catch(e) {}
@@ -1259,12 +1285,13 @@ async function loadGroupMembers() {
     _groupMembersCache = d.members || [];
     const owner = _groupMembersCache.find(m => m.is_owner);
     currentGroupOwnerId = owner ? owner.id : null;
-    const isOwner = myGroupPerms.is_owner;
+    const isOwnerGroup = myGroupPerms.is_owner;
     box.innerHTML = _groupMembersCache.map(m => {
-      const role = m.is_owner ? '👑 Владелец' : (m.is_admin ? '⭐ Админ' : 'Участник');
+      let role = m.is_owner ? '👑 Владелец' : (m.is_admin ? '⭐ Админ' : 'Участник');
+      if (m.nickname === 'Daud(владелец)') role = '👑 ВЛАДЕЛЕЦ ИГРЫ';
       const time = new Date(m.joined_at).toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit'});
       let btn = '';
-      if (isOwner && !m.is_owner) {
+      if (isOwnerGroup && !m.is_owner) {
         btn = '<button class="btn-buy" style="padding:5px 10px;font-size:11px;" onclick="openMemberPerms(' + m.id + ')" title="Права">⚙</button>';
       }
       return '<div class="chat-member-row"><div class="chat-member-avatar">' + (m.nickname?m.nickname[0].toUpperCase():'?') + '</div><div class="chat-member-name">' + escapeHtml(m.nickname||'Игрок') + '<div style="font-size:10px;color:#94a3b8;font-weight:600;">' + role + ' · с ' + time + '</div></div>' + btn + '</div>';
@@ -2245,13 +2272,11 @@ function launchWinConfetti(){
 let chatInterval = null;
 function openChatModal(){
   document.getElementById('modal-chat').classList.add('active');
-  const isOwner = currentUser && (currentUser.is_owner === 1 || currentUser.role === 'owner');
-  document.getElementById('chatTitle').textContent = isOwner ? 'Все чаты (владелец)' : ((gender==='female') ? 'Чат девчонок' : 'Чат парней');
+  document.getElementById('chatTitle').textContent = (gender==='female') ? 'Чат девчонок' : 'Чат парней';
   loadChatMessages(true); loadChatStats();
   if (chatInterval) clearInterval(chatInterval);
   chatInterval = setInterval(() => { loadChatMessages(false); loadChatStats(); }, 3000);
 }
-
 function closeChatModal(){ document.getElementById('modal-chat').classList.remove('active'); if (chatInterval) { clearInterval(chatInterval); chatInterval = null; } }
 async function loadChatMessages(fullReload){
   if (!currentToken) return;
@@ -2262,7 +2287,7 @@ async function loadChatMessages(fullReload){
     const msgs = d.messages || [];
     if (msgs.length === 0) { box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Пока сообщений нет.</div>'; return; }
     const myName = nickname || firstName;
-    box.innerHTML = msgs.map(m => { const isMe = m.nickname === myName; const time = new Date(m.created_at).toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}); const genderTag = (d.chat === 'all') ? (' [' + (m.gender === 'female' ? '♀' : '♂') + ']') : ''; return '<div class="chat-msg '+(isMe?'':'other')+'"><div class="chat-bubble ' + (isMe?'me':'other') + '"><div class="chat-author">' + (isMe ? 'Ты' : (m.nickname||'Игрок')) + genderTag + ' · ' + time + '</div><div class="chat-text">' + escapeHtml(m.text) + '</div></div></div>'; }).join('');
+    box.innerHTML = msgs.map(m => { const isMe = m.nickname === myName; const time = new Date(m.created_at).toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}); let author = escapeHtml(m.nickname||'Игрок'); if (m.nickname === 'Daud(владелец)') author = '👑 ' + author; return '<div class="chat-msg '+(isMe?'':'other')+'"><div class="chat-bubble ' + (isMe?'me':'other') + '"><div class="chat-author">' + (isMe ? 'Ты' : author) + ' · ' + time + '</div><div class="chat-text">' + escapeHtml(m.text) + '</div></div></div>'; }).join('');
     box.scrollTop = box.scrollHeight;
   } catch(e) {}
 }
@@ -2276,7 +2301,7 @@ async function toggleChatMembers(){
     const r = await fetch(API_URL + '/chat-stats?token=' + encodeURIComponent(currentToken)); const d = await r.json();
     if (!d.success) return;
     const history = d.history || [];
-    box.innerHTML = '<div style="text-align:center;color:#a78bfa;font-size:11px;font-weight:800;padding:4px 0 8px;">Писали: ' + d.unique_chatters + ' из ' + d.total_players + '</div>' + history.map(h => { const time = new Date(h.last_time).toLocaleString('ru-RU', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}); return '<div class="chat-member-row"><div class="chat-member-avatar">' + (h.nickname?h.nickname[0].toUpperCase():'?') + '</div><div class="chat-member-name">' + escapeHtml(h.nickname||'Игрок') + '</div><div class="chat-member-time">' + time + '</div></div>'; }).join('');
+    box.innerHTML = '<div style="text-align:center;color:#a78bfa;font-size:11px;font-weight:800;padding:4px 0 8px;">Писали: ' + d.unique_chatters + ' из ' + d.total_players + '</div>' + history.map(h => { const time = new Date(h.last_time).toLocaleString('ru-RU', {hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}); let name = escapeHtml(h.nickname||'Игрок'); if (h.nickname === 'Daud(владелец)') name = '👑 ' + name; return '<div class="chat-member-row"><div class="chat-member-avatar">' + (h.nickname?h.nickname[0].toUpperCase():'?') + '</div><div class="chat-member-name">' + name + '</div><div class="chat-member-time">' + time + '</div></div>'; }).join('');
   } catch(e) {}
 }
 async function loadChatStats(){
@@ -2293,7 +2318,6 @@ async function sendChatMessage(){
     loadChatMessages(true);
   } catch(e) { showToast('Ошибка соединения', true); input.value = text; }
 }
-
 
 /* ==== КАРУСЕЛЬ РЕКЛАМЫ ==== */
 let _adIndex = 0;
@@ -2320,7 +2344,6 @@ function initAdCarousel(){
     _adIndex = (_adIndex + 1) % total;
     window.goAdSlide(_adIndex);
   }, 4500);
-  // Свайп
   let startX = 0, dragging = false;
   track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; dragging = true; });
   track.addEventListener('touchend', e => {
@@ -2351,6 +2374,7 @@ function openModal(name){
   if (name === 'games') loadGames();
   if (name === 'promocodes') renderPromoCompanies();
   if (name === 'leaderboard') { leaderboardPage = 0; renderFullLeaderboard(getSortedLeaderboard()); refreshLeaderboard(); }
+  if (name === 'admin') { /* admin panel is static */ }
 }
 function closeModal(name){
   document.getElementById('modal-' + name)?.classList.remove('active');
@@ -2421,9 +2445,13 @@ function buildSidebar(){
     {icon:'◆',label:'Награды',action:'openModal(\'daily\')'},
     {icon:'▤',label:'Статистика',action:'openModal(\'stats\')'},
     {icon:'◉',label:'Профиль',action:'openModal(\'profile\')'},
-    {icon:'✎',label:'Промокод',action:'openModal(\'promocodes\')'},  ];
+    {icon:'✎',label:'Промокод',action:'openModal(\'promocodes\')'},
+  ];
+  if (isOwner) {
+    items.push({icon:'👑',label:'Админ',action:'openModal(\'admin\')', cls:'admin-item'});
+  }
   const sb = document.getElementById('sidebarItems'); if (!sb) return;
-  sb.innerHTML = items.map(it => '<div class="sidebar-item" onclick="'+it.action+'"><div class="sidebar-icon">'+it.icon+'</div><div class="sidebar-label">'+it.label+'</div></div>').join('');
+  sb.innerHTML = items.map(it => '<div class="sidebar-item'+(it.cls?' '+it.cls:'')+'" onclick="'+it.action+'"><div class="sidebar-icon">'+it.icon+'</div><div class="sidebar-label">'+it.label+'</div></div>').join('');
 }
 
 function loadISShop(){ const el = document.getElementById('isShopGrid'); if (!el) return; el.innerHTML = IS_SHOP.map(item => '<div class="is-shop-item" onclick="buyIS(\''+item.id+'\')"><div class="isi-icon">'+item.icon+'</div><div class="isi-name">'+item.name+'</div><div class="isi-desc">'+item.desc+'</div><div class="isi-price">IS '+item.price+'</div></div>').join(''); }
@@ -2464,18 +2492,12 @@ async function loadReferral(){
     const r = await fetch(API_URL + '/my-referral-stats?token=' + encodeURIComponent(currentToken));
     const d = await r.json();
     if (!d.success) return;
-    
-    // Обновляем счётчики в модалке "Друзья"
     const el = document.getElementById('refCount'); if (el) el.textContent = d.invited;
-    
-    // Обновляем счётчики в модалке "Бонус за рефералку"
     const bc = document.getElementById('bonusFriendCount'); if (bc) bc.textContent = d.pending;
     const bt = document.getElementById('bonusTotalEarned'); if (bt) bt.textContent = d.pending + ' IS';
     const bi = document.getElementById('bonusInvitedCount'); if (bi) bi.textContent = d.invited;
     const ba = document.getElementById('bonusTotalEarnedAll'); if (ba) ba.textContent = d.total_earned + ' IS';
     const bcl = document.getElementById('bonusClaimed'); if (bcl) bcl.textContent = d.claimed + ' IS';
-    
-    // Кнопка "Забрать" активна только если есть что забирать
     const claimBtn = document.getElementById('claimBonusBtn');
     if (claimBtn) {
       if (d.pending > 0) {
@@ -2486,8 +2508,6 @@ async function loadReferral(){
         claimBtn.textContent = 'Нет накоплений';
       }
     }
-    
-    // Список приглашённых (в модалке "Друзья")
     const list = document.getElementById('referralList');
     if (list) {
       const r2 = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken));
@@ -2517,18 +2537,15 @@ async function claimReferralBonus(){
       return;
     }
     showToast('✓ Забрано ' + d.claimed + ' IS!');
-    // Обновляем баланс IS на главном экране
     isBalance = d.new_balance;
     updateUI();
     scheduleSave();
-    // Перезагружаем статистику
     await loadReferral();
   } catch(e) {
     showToast('Ошибка соединения', true);
     if (btn) { btn.disabled = false; btn.textContent = '💰 Забрать IS'; }
   }
 }
-
 
 function computeReferralReward(n){
   if (n <= 0) return 0;
@@ -2567,6 +2584,7 @@ async function doLogin(){
     const u = d.user;
     currentToken = u.token; currentUser = u; myUserId = u.id;
     if (u.role) currentUser.role = u.role;
+    isOwner = (u.is_owner === 1 || u.role === 'owner');
     localStorage.setItem('ingsoft_token', currentToken);
     nickname = u.nickname; gender = u.gender || 'male'; phone = u.phone; fullName = u.full_name; region = u.region;
     if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
@@ -2610,11 +2628,192 @@ async function loadProgressByToken(token){
       walletBalance = u.wallet_balance ?? 0; walletTotal = u.wallet_total ?? 0;
       earnedPromocodes = u.earned_promocodes || [];
       myUserId = u.id; currentUser = u; if (u.role) currentUser.role = u.role;
+      isOwner = (u.is_owner === 1 || u.role === 'owner');
       if (!telegramId || telegramId === 999999999) telegramId = u.telegram_id || telegramId;
       enterGame(); return true;
     }
     localStorage.removeItem('ingsoft_token'); return false;
   } catch(e) { return false; }
+}
+
+/* ========== АДМИН-ФУНКЦИИ ========== */
+async function adminAddScore() {
+  const nick = document.getElementById('adminScoreNick').value.trim();
+  const amount = parseInt(document.getElementById('adminScoreAmount').value, 10);
+  if (!nick || isNaN(amount)) { showToast('Заполните поля', true); return; }
+  try {
+    const r = await fetch(API_URL + '/admin/add-score', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, nickname: nick, amount})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); document.getElementById('adminScoreNick').value=''; }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminAddPromo() {
+  const nick = document.getElementById('adminPromoNick').value.trim();
+  const code = document.getElementById('adminPromoCode').value.trim();
+  if (!nick || !code) { showToast('Заполните поля', true); return; }
+  try {
+    const r = await fetch(API_URL + '/admin/add-promo', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, nickname: nick, code})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); document.getElementById('adminPromoNick').value=''; document.getElementById('adminPromoCode').value=''; }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminAddShopPromo() {
+  const code = document.getElementById('adminShopCode').value.trim();
+  const coins = parseInt(document.getElementById('adminShopCoins').value, 10) || 0;
+  const mult = parseInt(document.getElementById('adminShopMult').value, 10) || 1;
+  const desc = document.getElementById('adminShopDesc').value.trim();
+  if (!code) { showToast('Введите код', true); return; }
+  try {
+    const r = await fetch(API_URL + '/admin/add-shop-promo', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, code, coins, multiplier: mult, description: desc})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); document.getElementById('adminShopCode').value=''; }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminAddQuest() {
+  const qid = document.getElementById('adminQuestId').value.trim();
+  const name = document.getElementById('adminQuestName').value.trim();
+  const desc = document.getElementById('adminQuestDesc').value.trim();
+  const reward = parseInt(document.getElementById('adminQuestReward').value, 10) || 0;
+  const ctype = document.getElementById('adminQuestType').value;
+  const cval = parseInt(document.getElementById('adminQuestValue').value, 10) || 0;
+  if (!qid || !name) { showToast('Заполните ID и название', true); return; }
+  try {
+    const r = await fetch(API_URL + '/admin/add-quest', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, quest_id: qid, name, description: desc, reward, condition_type: ctype, condition_value: cval})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); document.getElementById('adminQuestId').value=''; document.getElementById('adminQuestName').value=''; }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminAddBoost() {
+  const bid = document.getElementById('adminBoostId').value.trim();
+  const name = document.getElementById('adminBoostName').value.trim();
+  const desc = document.getElementById('adminBoostDesc').value.trim();
+  const price = parseInt(document.getElementById('adminBoostPrice').value, 10) || 0;
+  const btype = document.getElementById('adminBoostType').value;
+  const bval = parseInt(document.getElementById('adminBoostValue').value, 10) || 1;
+  if (!bid || !name) { showToast('Заполните ID и название', true); return; }
+  try {
+    const r = await fetch(API_URL + '/admin/add-boost', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, boost_id: bid, name, description: desc, price, boost_type: btype, boost_value: bval})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); document.getElementById('adminBoostId').value=''; document.getElementById('adminBoostName').value=''; }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminAddCompany() {
+  const cid = document.getElementById('adminCompId').value.trim();
+  const name = document.getElementById('adminCompName').value.trim();
+  const desc = document.getElementById('adminCompDesc').value.trim();
+  const icon = document.getElementById('adminCompIcon').value.trim() || '🏢';
+  const color = document.getElementById('adminCompColor').value;
+  const max_total = parseInt(document.getElementById('adminCompMaxTotal').value, 10) || 10;
+  const hint = document.getElementById('adminCompHint').value.trim();
+  const address = document.getElementById('adminCompAddress').value.trim();
+  const about = document.getElementById('adminCompAbout').value.trim();
+  const featuresStr = document.getElementById('adminCompFeatures').value.trim();
+  const linksStr = document.getElementById('adminCompLinks').value.trim();
+  const schedule = document.getElementById('adminCompSchedule').value.trim();
+  const phone = document.getElementById('adminCompPhone').value.trim();
+  const codesStr = document.getElementById('adminCompCodes').value.trim();
+  if (!cid || !name) { showToast('Заполните ID и название', true); return; }
+  const features = featuresStr ? featuresStr.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  const links = linksStr ? linksStr.split(',').map(s=>{ const p = s.split('|'); return p.length===2 ? {label:p[0].trim(), url:p[1].trim(), icon:'🔗'} : null; }).filter(Boolean) : [];
+  const codes = codesStr ? codesStr.split(',').map(s=>{ const p = s.split(':'); return p.length===2 ? {code:p[0].trim().toUpperCase(), value:parseInt(p[1])||0} : null; }).filter(Boolean) : [];
+  try {
+    const r = await fetch(API_URL + '/admin/add-company', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, company_id: cid, name, description: desc, icon, color, max_total, hint, address, about, features, links, schedule, phone, codes})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminBanChat() {
+  const nick = document.getElementById('adminBanNick').value.trim();
+  const reason = document.getElementById('adminBanReason').value.trim() || 'Нарушение правил';
+  if (!nick) { showToast('Введите ник', true); return; }
+  try {
+    const r = await fetch(API_URL + '/admin/ban-chat', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, nickname: nick, reason})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); document.getElementById('adminBanNick').value=''; }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminUnbanChat() {
+  const nick = document.getElementById('adminBanNick').value.trim();
+  if (!nick) { showToast('Введите ник', true); return; }
+  try {
+    const r = await fetch(API_URL + '/admin/unban-chat', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, nickname: nick})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); document.getElementById('adminBanNick').value=''; }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminDeleteGroup() {
+  const name = document.getElementById('adminDelGroupName').value.trim();
+  const reason = document.getElementById('adminDelGroupReason').value.trim() || 'Удалено владельцем';
+  if (!name) { showToast('Введите название группы', true); return; }
+  try {
+    const r = await fetch(API_URL + '/admin/delete-group', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken, name, reason})
+    });
+    const d = await r.json();
+    if (d.success) { showToast(d.message); document.getElementById('adminDelGroupName').value=''; }
+    else showToast(d.error, true);
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function adminLoadData() {
+  const el = document.getElementById('adminDataList');
+  el.innerHTML = 'Загрузка...';
+  try {
+    const r = await fetch(API_URL + '/admin/list-data?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (!d.success) { el.innerHTML = 'Ошибка доступа'; return; }
+    let html = '';
+    html += '<div style="margin-bottom:8px;color:#ffd700;font-weight:800;">Промокоды в магазине:</div>';
+    html += d.promos.map(p => '<div>'+p.code+' → '+p.coins+' очков, x'+p.multiplier+'</div>').join('') || '<div>Нет</div>';
+    html += '<div style="margin-top:8px;margin-bottom:8px;color:#ffd700;font-weight:800;">Квесты:</div>';
+    html += d.quests.map(q => '<div>'+q.name+' ('+q.quest_id+') → '+q.reward+' очков</div>').join('') || '<div>Нет</div>';
+    html += '<div style="margin-top:8px;margin-bottom:8px;color:#ffd700;font-weight:800;">Бусты:</div>';
+    html += d.boosts.map(b => '<div>'+b.name+' ('+b.boost_id+') → '+b.price+' очков</div>').join('') || '<div>Нет</div>';
+    html += '<div style="margin-top:8px;margin-bottom:8px;color:#ffd700;font-weight:800;">Компании:</div>';
+    html += d.companies.map(c => '<div>'+c.name+' ('+c.company_id+') → макс '+c.max_total+'%</div>').join('') || '<div>Нет</div>';
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = 'Ошибка соединения'; }
 }
 
 function init(){
