@@ -351,37 +351,32 @@ button { cursor:pointer; }
 <div class="ad-carousel" id="adCarousel">
   <div class="ad-track" id="adTrack">
     <div class="ad-slide" style="background:linear-gradient(135deg,#1a1a1a 0%,#4a0000 100%); position:relative; overflow:hidden;">
-      <!-- Логотип на заднем фоне (водяной знак) -->
       <img src="ingsoft-logo.png" alt="IngSoft Logo" style="position:absolute; right:-40px; bottom:-40px; height:180px; opacity:0.1; pointer-events:none; filter: grayscale(100%) brightness(200%);">
-      
-      <!-- Основной логотип вместо компьютера -->
       <img src="ingsoft-logo.png" alt="IngSoft" style="height:40px; object-fit:contain; align-self:flex-start; margin-bottom:10px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));">
-      
       <div class="ad-title">IngSoft</div>
       <div class="ad-desc">Компьютерная техника — скидки до 5% по промокодам</div>
       <div class="ad-cta" onclick="openModal('promocodes')">Получить скидку →</div>
     </div>
     <div class="ad-slide" style="background:linear-gradient(135deg, #000000 0%, #0a1a0a 50%, #003300 100%); position:relative; overflow:hidden;">
-      <!-- Водяной знак на фоне (матрица) -->
       <img src="matrix-logo.png" alt="Matrix Logo" style="position:absolute; right:-40px; bottom:-40px; height:180px; opacity:0.1; pointer-events:none; filter: grayscale(100%) brightness(200%);">
-      
-      <!-- Основной логотип вместо эмодзи -->
       <img src="matrix-logo.png" alt="MATRIX" style="height:40px; object-fit:contain; align-self:flex-start; margin-bottom:10px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));">
-      
       <div class="ad-title">Игротека MATRX</div>
       <div class="ad-desc">Игровая техника — скидки до 50%</div>
       <div class="ad-cta" onclick="openModal('promocodes')">Смотреть коды →</div>
     </div>
     <div class="ad-slide" style="background:linear-gradient(135deg, #1b0c25 0%, #4a154b 50%, #a6215e 100%); position:relative; overflow:hidden;">
-      <!-- Водяной знак на фоне -->
       <img src="sushi-logo.png" alt="Sushi Logo" style="position:absolute; right:-40px; bottom:-40px; height:180px; opacity:0.1; pointer-events:none; filter: grayscale(100%) brightness(200%);">
-      
-      <!-- Основной логотип вместо эмодзи -->
       <img src="sushi-logo.png" alt="IngSushiExpress" style="height:40px; object-fit:contain; align-self:flex-start; margin-bottom:10px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));">
-      
       <div class="ad-title">IngSushiExpress</div>
       <div class="ad-desc">Доставка суши — скидки до 10%</div>
       <div class="ad-cta" onclick="openModal('promocodes')">Заказать со скидкой →</div>
+    </div>
+    <div class="ad-slide" style="background:linear-gradient(135deg, #0a1a3a 0%, #1b3b6f 50%, #a63c00 100%); position:relative; overflow:hidden;">
+      <img src="klimate-logo.png" alt="Klimate Komfort Logo" style="position:absolute; right:-40px; bottom:-40px; height:180px; opacity:0.1; pointer-events:none; filter: grayscale(100%) brightness(200%);">
+      <img src="klimate-logo.png" alt="Klimate Komfort" style="height:40px; object-fit:contain; align-self:flex-start; margin-bottom:10px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.8));">
+      <div class="ad-title">Klimate Komfort</div>
+      <div class="ad-desc">Отопление, канализация, электрика — монтаж под ключ</div>
+      <div class="ad-cta" onclick="openModal('promocodes')">Узнать больше →</div>
     </div>
   </div>
   <div class="ad-dots" id="adDots"></div>
@@ -599,6 +594,12 @@ const PROMO_COMPANIES = [
     color: '#8b5cf6',
     maxTotal: 5,
     hint: 'Можно комбинировать любые коды, но не более 5% за заказ',
+    info: 'Адрес: Ингушетия, Назрань, Московская 17B.<br><br>' +
+          'WhatsApp: <a href="https://wa.me/message/C63IVKWGGP5IL1" target="_blank" style="color:#a78bfa;">Ссылка</a><br>' +
+          'Магазин: <a href="https://t.me/c/3508095534/21" target="_blank" style="color:#a78bfa;">Telegram</a><br>' +
+          'Instagram: <a href="https://www.instagram.com/ing_soft" target="_blank" style="color:#a78bfa;">@ing_soft</a><br><br>' +
+          'О компании: IngSoft — Компания работает как оптовый поставщик компьютерной техники и программного обеспечения, а также внедряет системы безопасности. В ассортименте: Компьютеры и оргтехника, Программное обеспечение (1С), Системы безопасности.<br><br>' +
+          'Компания имеет статус партнёра Microsoft и сертификаты «1С:Профессионал» и «1С:Специалист». Среди заказчиков — государственные учреждения.',
     codes: [
       {code:'INGSOFT1', value:1},
       {code:'INGSOFT2', value:2},
@@ -615,6 +616,8 @@ const PROMO_COMPANIES = [
     color: '#ec4899',
     maxTotal: 50,
     hint: 'Каждый код активируется отдельно',
+    info: 'Адрес: Ингушетия, Назрань, Московская 17B.<br><br>' +
+          'О игротеке: Комфортная атмосфера, 45 ПК, любой вид игры скачан на компьютер. Приходите играть с друзьями, участвовать в турнирах и просто отлично проводить время!',
     codes: [
       {code:'MATRX10', value:10},
       {code:'MATRX20', value:20},
@@ -632,6 +635,8 @@ const PROMO_COMPANIES = [
     color: '#22c55e',
     maxTotal: 10,
     hint: 'Можно комбинировать любые коды, но не более 10% за заказ',
+    info: 'Адрес: Ингушетия, Назрань, ул. Чеченская, 34/3.<br><br>' +
+          'О компании: Кафе SushiExpressIng — это вкуснейшие суши и роллы, приготовленные с любовью из свежайших ингредиентов. Мы радуем наших гостей быстрой доставкой, широким выбором блюд японской кухни и приятными ценами. Заходите в гости или заказывайте домой — мы всегда рады вас угостить!',
     codes: [
       {code:'SUSHI1', value:1},
       {code:'SUSHI2', value:2},
@@ -643,6 +648,29 @@ const PROMO_COMPANIES = [
       {code:'SUSHI8', value:8},
       {code:'SUSHI9', value:9},
       {code:'SUSHI10', value:10}
+    ]
+  },
+  {
+    id: 'klimate',
+    name: 'Klimate Komfort',
+    desc: 'Инженерные системы',
+    icon: '🛠️',
+    color: '#f59e0b',
+    maxTotal: 100,
+    hint: 'Скидки на монтаж и оборудование',
+    info: 'Адрес: Карабулак, ул. Орджоникидзе, 34.<br><br>' +
+          'Режим работы: Пн–Чт 8:00–17:00, Сб–Вс 8:00–17:00 (пятница — выходной)<br>' +
+          'Телефон: 8 (928) 096-66-47<br>' +
+          'WhatsApp: <a href="https://wa.me/79280966647" target="_blank" style="color:#a78bfa;">Ссылка</a><br>' +
+          'Магазин: <a href="https://shop.klimatekomfort.ru" target="_blank" style="color:#a78bfa;">shop.klimatekomfort.ru</a><br>' +
+          'Сайт услуг: <a href="https://klimatekomfort.ru" target="_blank" style="color:#a78bfa;">klimatekomfort.ru</a><br>' +
+          'Instagram: <a href="https://www.instagram.com/klimate.komfort" target="_blank" style="color:#a78bfa;">@klimate.komfort</a><br><br>' +
+          'О компании: Компания из Карабулака, занимается монтажом инженерных систем под ключ. Работает с 2019 года, более 470 выполненных объектов по всей Республике Ингушетия.<br><br>' +
+          'Услуги: Отопление, Канализация, Электрика, Кондиционирование.<br><br>' +
+          'Преимущества: Гарантия 3 года, Бесплатный выезд мастера, Прозрачная смета, Рассрочка 0% без банков.',
+    codes: [
+      {code:'KLIMATE10', value:10},
+      {code:'KLIMATE20', value:20}
     ]
   }
 ];
@@ -779,6 +807,8 @@ function renderPromoCompanies(){
       logoHtml = '<img src="sushi-logo.png" alt="IngSushiExpress" class="partner-logo-img" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"> <span class="partner-icon-emoji" style="display:none;">🍣</span>';
     } else if (c.id === 'matrx') {
       logoHtml = '<img src="matrix-logo.png" alt="MATRX" class="partner-logo-img" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"> <span class="partner-icon-emoji" style="display:none;">🎮</span>';
+    } else if (c.id === 'klimate') {
+      logoHtml = '<img src="klimate-logo.png" alt="Klimate Komfort" class="partner-logo-img" onerror="this.style.display=\'none\'; this.nextElementSibling.style.display=\'block\';"> <span class="partner-icon-emoji" style="display:none;">🛠️</span>';
     } else {
       logoHtml = '<span class="partner-icon-emoji">' + c.icon + '</span>';
     }
