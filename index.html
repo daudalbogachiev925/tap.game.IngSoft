@@ -522,10 +522,6 @@ button { cursor:pointer; }
 <div class="modal" id="modal-groups"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">Группы</div><button class="modal-close" onclick="closeModal('groups')">×</button></div>
   <div style="display:flex;gap:8px;margin-bottom:14px;">
-    <button class="tab-btn active" id="tabMyGroups" style="pointer-events:none;">Мои группы</button>
-    <button class="btn-buy" style="flex:1;padding:12px;font-size:12px;background:linear-gradient(135deg,#e63946,#7f1d1d);" onclick="cleanupGroups()">🗑 Очистить список</button>
-  </div>
-  <div style="display:flex;gap:8px;margin-bottom:14px;">
     <button class="btn-buy" style="flex:1;padding:13px;font-size:12px;" onclick="openCreateGroupModal()">➕ Создать</button>
     <button class="btn-buy green" style="flex:1;padding:13px;font-size:12px;" onclick="openJoinGroupModal()">🔗 Войти по коду</button>
   </div>
@@ -999,8 +995,6 @@ async function pollNewGroups() {
 async function openGroupsModal() {
   openModal('groups');
   _currentGroupsTab = 'my';
-  document.getElementById('tabMyGroups')?.classList.add('active');
-  document.getElementById('tabAllGroups')?.classList.remove('active');
   await loadGroupsList();
 }
 
