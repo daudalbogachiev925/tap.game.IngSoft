@@ -455,21 +455,21 @@ button { cursor:pointer; }
 <div class="modal" id="modal-referral-bonus"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">Бонус за рефералку</div><button class="modal-close" onclick="closeModal('referral-bonus')">×</button></div>
   <div style="background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(255,140,0,0.12));border:1px solid rgba(255,215,0,0.6);border-radius:18px;padding:18px;margin-bottom:18px;text-align:center;">
-    <div style="font-size:11px;color:#b8a060;text-transform:uppercase;letter-spacing:2px;font-weight:700;">Приглашено друзей</div>
+    <div style="font-size:11px;color:#b8a060;text-transform:uppercase;letter-spacing:2px;font-weight:700;">Накоплено IS</div>
     <div style="font-size:48px;font-weight:900;color:#ffd700;margin:8px 0;" id="bonusFriendCount">0</div>
-    <div style="font-size:12px;color:#94a3b8;">Заработано всего: <b style="color:#ffd700;" id="bonusTotalEarned">0 IS</b></div>
+    <div style="font-size:12px;color:#94a3b8;">Доступно к выводу: <b style="color:#ffd700;" id="bonusTotalEarned">0 IS</b></div>
   </div>
+  <button class="btn-buy green" style="width:100%;padding:16px;font-size:15px;font-weight:900;margin-bottom:14px;" onclick="claimReferralBonus()" id="claimBonusBtn">💰 Забрать IS</button>
   <div style="font-size:14px;font-weight:800;color:#a78bfa;margin-bottom:12px;">Как это работает:</div>
   <div class="item-row" style="padding:14px;"><div class="item-info"><div class="item-name" style="font-size:13px;">👥 За 1–100 друга</div><div class="item-desc">+100 IS за каждого</div></div><div style="font-size:15px;font-weight:900;color:#22c55e;">+100 IS</div></div>
   <div class="item-row" style="padding:14px;"><div class="item-info"><div class="item-name" style="font-size:13px;">🚀 Свыше 100 друзей</div><div class="item-desc">+450 IS за каждого следующего</div></div><div style="font-size:15px;font-weight:900;color:#ffd700;">+450 IS</div></div>
   <div id="bonusTable" style="margin-top:14px;"></div>
+  <div style="margin-top:16px;padding:14px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:14px;">
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span style="color:#94a3b8;">Приглашено друзей:</span><b id="bonusInvitedCount" style="color:#a78bfa;">0</b></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span style="color:#94a3b8;">Всего заработано:</span><b id="bonusTotalEarnedAll" style="color:#22c55e;">0 IS</b></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:#94a3b8;">Уже забрано:</span><b id="bonusClaimed" style="color:#ffd700;">0 IS</b></div>
+  </div>
 </div></div>
-
-<div class="modal" id="modal-daily"><div class="modal-content">
-  <div class="modal-header"><div class="modal-title">Награды</div><button class="modal-close" onclick="closeModal('daily')">×</button></div>
-  <div id="dailyContent"></div>
-</div></div>
-
 <div class="modal" id="modal-stats"><div class="modal-content">
   <div class="modal-header"><div class="modal-title">Статистика</div><button class="modal-close" onclick="closeModal('stats')">×</button></div>
   <div id="statsContent"></div>
@@ -2445,33 +2445,79 @@ function logout(){ if (!confirm('Выйти?')) return; localStorage.removeItem(
 async function updateRefLink(){ const el = document.getElementById('refLink'); if (!el) return; if (!currentToken) { el.textContent = '—'; return; } try { const r = await fetch(API_URL + '/my-id?token=' + encodeURIComponent(currentToken)); const d = await r.json(); if (d.success && d.id) el.textContent = window.location.origin + window.location.pathname + '?ref=' + d.id; } catch(e) {} }
 function copyRefLink(){ const l = document.getElementById('refLink').textContent; if (l && l !== '—') navigator.clipboard.writeText(l).then(()=>showToast('Скопировано')); }
 function shareRefLink(){ const l = document.getElementById('refLink').textContent; if (l && l !== '—') window.open('https://t.me/share/url?url='+encodeURIComponent(l)+'&text='+encodeURIComponent('Заходи в IngSoft Tap!'), '_blank'); }
+
 async function loadReferral(){
   if (!currentToken) return;
   try {
-    const r = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken)); const d = await r.json();
-    if (d.success) {
-      myReferrals = d.referrals || [];
-      const el = document.getElementById('refCount'); if (el) el.textContent = myReferrals.length;
-      const list = document.getElementById('referralList');
-      if (list) list.innerHTML = myReferrals.length ? myReferrals.map(r => '<div style="padding:12px;margin-bottom:6px;background:linear-gradient(90deg,rgba(139,92,246,0.15),rgba(30,58,95,0.2));border:1px solid rgba(139,92,246,0.3);border-radius:12px;display:flex;gap:10px;align-items:center;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;">'+(r.nickname?r.nickname[0].toUpperCase():'?')+'</div><div style="flex:1;font-size:13px;">'+(r.nickname||'Игрок')+'</div></div>').join('') : '<p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Никого не пригласил</p>';
-      const bc = document.getElementById('bonusFriendCount'); if (bc) bc.textContent = myReferrals.length;
-      const bt = document.getElementById('bonusTotalEarned'); if (bt) bt.textContent = computeReferralReward(myReferrals.length) + ' IS';
-      const bonusTable = document.getElementById('bonusTable');
-      if (bonusTable) {
-        // прогресс-таблица до 100, потом 450
-        const n = myReferrals.length;
-        const upTo100 = Math.min(n, 100);
-        const over100 = Math.max(0, n - 100);
-        let rows = '';
-        rows += '<div class="item-row" style="padding:12px;"><div class="item-info"><div class="item-name" style="font-size:13px;">📊 До 100 друзей</div><div class="item-desc">' + upTo100 + ' × 100 IS</div></div><div style="font-size:14px;font-weight:900;color:#22c55e;">+' + (upTo100*100) + ' IS</div></div>';
-        if (over100 > 0){
-          rows += '<div class="item-row" style="padding:12px;"><div class="item-info"><div class="item-name" style="font-size:13px;">🚀 Свыше 100</div><div class="item-desc">' + over100 + ' × 450 IS</div></div><div style="font-size:14px;font-weight:900;color:#ffd700;">+' + (over100*450) + ' IS</div></div>';
-        }
-        bonusTable.innerHTML = rows;
+    const r = await fetch(API_URL + '/my-referral-stats?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (!d.success) return;
+    
+    // Обновляем счётчики в модалке "Друзья"
+    const el = document.getElementById('refCount'); if (el) el.textContent = d.invited;
+    
+    // Обновляем счётчики в модалке "Бонус за рефералку"
+    const bc = document.getElementById('bonusFriendCount'); if (bc) bc.textContent = d.pending;
+    const bt = document.getElementById('bonusTotalEarned'); if (bt) bt.textContent = d.pending + ' IS';
+    const bi = document.getElementById('bonusInvitedCount'); if (bi) bi.textContent = d.invited;
+    const ba = document.getElementById('bonusTotalEarnedAll'); if (ba) ba.textContent = d.total_earned + ' IS';
+    const bcl = document.getElementById('bonusClaimed'); if (bcl) bcl.textContent = d.claimed + ' IS';
+    
+    // Кнопка "Забрать" активна только если есть что забирать
+    const claimBtn = document.getElementById('claimBonusBtn');
+    if (claimBtn) {
+      if (d.pending > 0) {
+        claimBtn.disabled = false;
+        claimBtn.textContent = '💰 Забрать ' + d.pending + ' IS';
+      } else {
+        claimBtn.disabled = true;
+        claimBtn.textContent = 'Нет накоплений';
       }
     }
-  } catch(e) {}
+    
+    // Список приглашённых (в модалке "Друзья")
+    const list = document.getElementById('referralList');
+    if (list) {
+      const r2 = await fetch(API_URL + '/my-referrals?token=' + encodeURIComponent(currentToken));
+      const d2 = await r2.json();
+      if (d2.success) {
+        myReferrals = d2.referrals || [];
+        list.innerHTML = myReferrals.length ? myReferrals.map(r => '<div style="padding:12px;margin-bottom:6px;background:linear-gradient(90deg,rgba(139,92,246,0.15),rgba(30,58,95,0.2));border:1px solid rgba(139,92,246,0.3);border-radius:12px;display:flex;gap:10px;align-items:center;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:800;">'+(r.nickname?r.nickname[0].toUpperCase():'?')+'</div><div style="flex:1;font-size:13px;">'+(r.nickname||'Игрок')+'</div></div>').join('') : '<p style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Никого не пригласил</p>';
+      }
+    }
+  } catch(e) { console.error('[loadReferral]', e); }
 }
+
+async function claimReferralBonus(){
+  if (!currentToken) return;
+  const btn = document.getElementById('claimBonusBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Забираем...'; }
+  try {
+    const r = await fetch(API_URL + '/claim-referral-bonus', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({token: currentToken})
+    });
+    const d = await r.json();
+    if (!d.success) {
+      showToast(d.error || 'Ошибка', true);
+      if (btn) { btn.disabled = false; btn.textContent = '💰 Забрать IS'; }
+      return;
+    }
+    showToast('✓ Забрано ' + d.claimed + ' IS!');
+    // Обновляем баланс IS на главном экране
+    isBalance = d.new_balance;
+    updateUI();
+    scheduleSave();
+    // Перезагружаем статистику
+    await loadReferral();
+  } catch(e) {
+    showToast('Ошибка соединения', true);
+    if (btn) { btn.disabled = false; btn.textContent = '💰 Забрать IS'; }
+  }
+}
+
+
 function computeReferralReward(n){
   if (n <= 0) return 0;
   if (n <= 100) return n * 100;
