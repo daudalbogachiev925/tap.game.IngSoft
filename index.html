@@ -2245,11 +2245,13 @@ function launchWinConfetti(){
 let chatInterval = null;
 function openChatModal(){
   document.getElementById('modal-chat').classList.add('active');
-  document.getElementById('chatTitle').textContent = (gender==='female') ? 'Чат девчонок' : 'Чат парней';
+  const isOwner = currentUser && (currentUser.is_owner === 1 || currentUser.role === 'owner');
+  document.getElementById('chatTitle').textContent = isOwner ? 'Все чаты (владелец)' : ((gender==='female') ? 'Чат девчонок' : 'Чат парней');
   loadChatMessages(true); loadChatStats();
   if (chatInterval) clearInterval(chatInterval);
   chatInterval = setInterval(() => { loadChatMessages(false); loadChatStats(); }, 3000);
 }
+
 function closeChatModal(){ document.getElementById('modal-chat').classList.remove('active'); if (chatInterval) { clearInterval(chatInterval); chatInterval = null; } }
 async function loadChatMessages(fullReload){
   if (!currentToken) return;
@@ -2260,7 +2262,7 @@ async function loadChatMessages(fullReload){
     const msgs = d.messages || [];
     if (msgs.length === 0) { box.innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Пока сообщений нет.</div>'; return; }
     const myName = nickname || firstName;
-    box.innerHTML = msgs.map(m => { const isMe = m.nickname === myName; const time = new Date(m.created_at).toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}); return '<div class="chat-msg '+(isMe?'':'other')+'"><div class="chat-bubble ' + (isMe?'me':'other') + '"><div class="chat-author">' + (isMe ? 'Ты' : (m.nickname||'Игрок')) + ' · ' + time + '</div><div class="chat-text">' + escapeHtml(m.text) + '</div></div></div>'; }).join('');
+    box.innerHTML = msgs.map(m => { const isMe = m.nickname === myName; const time = new Date(m.created_at).toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}); const genderTag = (d.chat === 'all') ? (' [' + (m.gender === 'female' ? '♀' : '♂') + ']') : ''; return '<div class="chat-msg '+(isMe?'':'other')+'"><div class="chat-bubble ' + (isMe?'me':'other') + '"><div class="chat-author">' + (isMe ? 'Ты' : (m.nickname||'Игрок')) + genderTag + ' · ' + time + '</div><div class="chat-text">' + escapeHtml(m.text) + '</div></div></div>'; }).join('');
     box.scrollTop = box.scrollHeight;
   } catch(e) {}
 }
