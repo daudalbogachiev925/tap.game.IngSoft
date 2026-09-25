@@ -1053,12 +1053,12 @@ function renderGroupsList(chats){
   el.innerHTML = chats.map(c => {
     const memberCount = c.member_count || 0;
     const badge = c.is_owner ? '<span class="group-badge owner">👑 ВЛАДЕЛЕЦ</span>' : '<span class="group-badge member">✓ В ГРУППЕ</span>';
-    return '<div class="item-row" style="cursor:pointer;padding:14px;" onclick="openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')">' +
+    return '<div class="item-row" style="padding:14px;">' +
       '<div class="item-info">' +
         '<div class="item-name">' + escapeHtml(c.name) + badge + '</div>' +
         '<div class="item-desc">' + memberCount + ' участн. · Код: ' + escapeHtml(c.invite_code) + '</div>' +
       '</div>' +
-      '<span style="color:#a78bfa;font-size:18px;">›</span>' +
+      '<button class="btn-buy green" style="padding:8px 14px;font-size:12px;" onclick="openGroupChat(' + c.id + ',' + JSON.stringify(c.name) + ',' + JSON.stringify(c.invite_code) + ')">Войти</button>' +
     '</div>';
   }).join('');
 }
@@ -1106,11 +1106,13 @@ async function joinGroup(code) {
 }
 
 async function openGroupChat(id, name, code) {
+  console.log('[openGroupChat] id=', id, 'name=', name, 'code=', code);
+  if (!id) { showToast('Ошибка: не передан ID группы', true); return; }
   currentGroupId = id;
-  currentGroupName = name;
+  currentGroupName = name || 'Группа';
   document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
   document.getElementById('modal-group-chat').classList.add('active');
-  document.getElementById('groupChatTitle').textContent = name;
+  document.getElementById('groupChatTitle').textContent = currentGroupName;
   document.getElementById('groupMembersList').classList.remove('show');
   document.getElementById('groupMessages').innerHTML = '<div style="text-align:center;color:#64748b;font-size:12px;padding:14px;">Загрузка...</div>';
   document.getElementById('groupCodeLbl').textContent = code || '—';
