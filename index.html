@@ -694,7 +694,7 @@ let myGlobalRank=null;
 let historyRefreshTimer=null;
 let isOwner = false;
 
-const API_URL = 'https://138.124.14.130.nip.io';
+const API_URL = 'http://138.124.14.130:5000';
 const ONLINE_WINDOW_MS = 5*60*1000;
 const MAX_BET = 999999999999999;
 const MIN_BET = 1000;
@@ -1085,10 +1085,10 @@ function renderGroupsList(chats){
   }
   el.innerHTML = chats.map(c => {
     const memberCount = c.member_count || 0;
-    let badge = '';
-    if (c.is_owner) badge = '<span class="group-badge owner">👑 ВЛАДЕЛЕЦ</span>';
-    else badge = '<span class="group-badge member">✓ В ГРУППЕ</span>';
-    if (isOwner) badge += ' <span class="group-badge owner-game">👑 ВЛАДЕЛЕЦ ИГРЫ</span>';
+let badge = '';
+if (c.is_owner) badge = '<span class="group-badge owner">владелец группы</span>';
+else badge = '<span class="group-badge member">в группе</span>';
+if (isOwner) badge += ' <span class="group-badge owner-game">👑 ВЛАДЕЛЕЦ ИГРЫ</span>';
     return '<div class="item-row" style="padding:14px; display:flex; align-items:center; gap:8px;">' +
       '<div class="item-info" style="flex:1; min-width:0;">' +
         '<div class="item-name">' + escapeHtml(c.name) + badge + '</div>' +
@@ -1286,16 +1286,18 @@ async function loadGroupMembers() {
     const owner = _groupMembersCache.find(m => m.is_owner);
     currentGroupOwnerId = owner ? owner.id : null;
     const isOwnerGroup = myGroupPerms.is_owner;
-    box.innerHTML = _groupMembersCache.map(m => {
-      let role = m.is_owner ? '👑 Владелец' : (m.is_admin ? '⭐ Админ' : 'Участник');
-      if (m.nickname === 'Daud(владелец)') role = '👑 ВЛАДЕЛЕЦ ИГРЫ';
-      const time = new Date(m.joined_at).toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit'});
-      let btn = '';
-      if (isOwnerGroup && !m.is_owner) {
-        btn = '<button class="btn-buy" style="padding:5px 10px;font-size:11px;" onclick="openMemberPerms(' + m.id + ')" title="Права">⚙</button>';
-      }
-      return '<div class="chat-member-row"><div class="chat-member-avatar">' + (m.nickname?m.nickname[0].toUpperCase():'?') + '</div><div class="chat-member-name">' + escapeHtml(m.nickname||'Игрок') + '<div style="font-size:10px;color:#94a3b8;font-weight:600;">' + role + ' · с ' + time + '</div></div>' + btn + '</div>';
-    }).join('');
+box.innerHTML = _groupMembersCache.map(m => {
+  let role = 'Участник';
+  if (m.is_owner) role = 'владелец группы';
+  if (m.is_admin) role = 'админ';
+  if (m.nickname === 'Daud(владелец)') role = '👑 ВЛАДЕЛЕЦ ИГРЫ';
+  const time = new Date(m.joined_at).toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit'});
+  let btn = '';
+  if (isOwnerGroup && !m.is_owner) {
+    btn = '<button class="btn-buy" style="padding:5px 10px;font-size:11px;" onclick="openMemberPerms(' + m.id + ')" title="Права">⚙</button>';
+  }
+  return '<div class="chat-member-row"><div class="chat-member-avatar">' + (m.nickname?m.nickname[0].toUpperCase():'?') + '</div><div class="chat-member-name">' + escapeHtml(m.nickname||'Игрок') + '<div style="font-size:10px;color:#94a3b8;font-weight:600;">' + role + ' · с ' + time + '</div></div>' + btn + '</div>';
+}).join('');
   } catch(e) {}
 }
 
