@@ -277,6 +277,76 @@ button { cursor:pointer; }
 .admin-btn.green { background: linear-gradient(135deg,#22c55e,#16a34a); color: #fff; }
 .admin-btn.red { background: linear-gradient(135deg,#e63946,#7f1d1d); color: #fff; }
 .admin-btn.blue { background: linear-gradient(135deg,#4facfe,#8b5cf6); color: #fff; }
+
+/* --- АККОРДЕОНЫ АДМИН-ПАНЕЛИ --- */
+.admin-accordion {
+  margin-bottom: 12px;
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(255,215,0,0.08), rgba(15,12,41,0.7));
+}
+.admin-accordion-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffd700;
+}
+.admin-accordion-header:hover {
+  background: rgba(255,215,0,0.15);
+}
+.admin-accordion-header .admin-arrow {
+  margin-left: auto;
+  color: #ffd700;
+  font-size: 18px;
+  transition: transform 0.3s;
+}
+.admin-accordion-header.expanded .admin-arrow {
+  transform: rotate(180deg);
+}
+.admin-accordion-body {
+  display: none;
+  padding: 0 16px 16px;
+  flex-direction: column;
+  gap: 8px;
+}
+.admin-accordion-body.active {
+  display: flex;
+}
+.admin-sub-item {
+  background: rgba(255,215,0,0.08);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: 10px;
+  padding: 12px;
+  color: #e0e7ff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+.admin-sub-item:hover {
+  background: rgba(255,215,0,0.2);
+}
+.admin-sub-content {
+  display: none;
+  padding: 12px;
+  background: rgba(10,5,24,0.6);
+  border-radius: 10px;
+  margin-top: 4px;
+}
+.admin-sub-content.active {
+  display: block;
+}
+
 </style>
 </head>
 <body>
@@ -571,101 +641,155 @@ button { cursor:pointer; }
   <div id="memberPermsBody"></div>
 </div></div>
 
-<!-- АДМИН-ПАНЕЛЬ -->
+<!-- АДМИН-ПАНЕЛЬ (АККОРДЕОН) -->
 <div class="modal" id="modal-admin"><div class="modal-content" style="max-width:640px;">
   <div class="modal-header"><div class="modal-title">👑 Админ-панель</div><button class="modal-close" onclick="closeModal('admin')">×</button></div>
-  
-  <div class="admin-section">
-    <div class="admin-section-title">💰 Начислить очки игроку</div>
-    <input type="text" id="adminScoreNick" class="admin-input" placeholder="Ник игрока">
-    <input type="number" id="adminScoreAmount" class="admin-input" placeholder="Сумма (можно отрицательную)" value="1000">
-    <button class="admin-btn green" onclick="adminAddScore()">Начислить</button>
+
+  <!-- 1. ИГРОКИ -->
+  <div class="admin-accordion">
+    <div class="admin-accordion-header" onclick="toggleAdminAccordion(this)">
+      <span>👤 Игроки</span>
+      <span class="admin-arrow">▼</span>
+    </div>
+    <div class="admin-accordion-body">
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">💰 Начислить очки <span>▼</span></button>
+      <div class="admin-sub-content">
+        <input type="text" id="adminScoreNick" class="admin-input" placeholder="Ник игрока">
+        <input type="number" id="adminScoreAmount" class="admin-input" placeholder="Сумма (можно отрицательную)" value="1000">
+        <button class="admin-btn green" onclick="adminAddScore()">Начислить</button>
+      </div>
+
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">🎫 Выдать промокод <span>▼</span></button>
+      <div class="admin-sub-content">
+        <input type="text" id="adminPromoNick" class="admin-input" placeholder="Ник игрока">
+        <input type="text" id="adminPromoCode" class="admin-input" placeholder="Код (например, GIFT2026)">
+        <button class="admin-btn blue" onclick="adminAddPromo()">Выдать промокод</button>
+      </div>
+
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">🚫 Блокировка в чате <span>▼</span></button>
+      <div class="admin-sub-content">
+        <input type="text" id="adminBanNick" class="admin-input" placeholder="Ник игрока">
+        <input type="text" id="adminBanReason" class="admin-input" placeholder="Причина">
+        <button class="admin-btn red" onclick="adminBanChat()">Заблокировать</button>
+        <button class="admin-btn green" onclick="adminUnbanChat()">Разблокировать</button>
+      </div>
+    </div>
   </div>
 
-  <div class="admin-section">
-    <div class="admin-section-title">🎫 Выдать промокод игроку</div>
-    <input type="text" id="adminPromoNick" class="admin-input" placeholder="Ник игрока">
-    <input type="text" id="adminPromoCode" class="admin-input" placeholder="Код (например, GIFT2026)">
-    <button class="admin-btn blue" onclick="adminAddPromo()">Выдать промокод</button>
+  <!-- 2. МАГАЗИН IS -->
+  <div class="admin-accordion">
+    <div class="admin-accordion-header" onclick="toggleAdminAccordion(this)">
+      <span>🏪 Магазин IS</span>
+      <span class="admin-arrow">▼</span>
+    </div>
+    <div class="admin-accordion-body">
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">➕ Добавить промокод <span>▼</span></button>
+      <div class="admin-sub-content">
+        <input type="text" id="adminShopCode" class="admin-input" placeholder="Код">
+        <input type="number" id="adminShopCoins" class="admin-input" placeholder="Очки (0 если нет)" value="0">
+        <input type="number" id="adminShopMult" class="admin-input" placeholder="Множитель (1 если нет)" value="1">
+        <input type="text" id="adminShopDesc" class="admin-input" placeholder="Описание (необязательно)">
+        <button class="admin-btn" onclick="adminAddShopPromo()">Добавить в магазин</button>
+      </div>
+    </div>
   </div>
 
-  <div class="admin-section">
-    <div class="admin-section-title">🏪 Добавить промокод в магазин IS</div>
-    <input type="text" id="adminShopCode" class="admin-input" placeholder="Код">
-    <input type="number" id="adminShopCoins" class="admin-input" placeholder="Очки (0 если нет)" value="0">
-    <input type="number" id="adminShopMult" class="admin-input" placeholder="Множитель (1 если нет)" value="1">
-    <input type="text" id="adminShopDesc" class="admin-input" placeholder="Описание (необязательно)">
-    <button class="admin-btn" onclick="adminAddShopPromo()">Добавить в магазин</button>
+  <!-- 3. КВЕСТЫ И БУСТЫ -->
+  <div class="admin-accordion">
+    <div class="admin-accordion-header" onclick="toggleAdminAccordion(this)">
+      <span>📜 Квесты и Бусты</span>
+      <span class="admin-arrow">▼</span>
+    </div>
+    <div class="admin-accordion-body">
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">📜 Добавить квест <span>▼</span></button>
+      <div class="admin-sub-content">
+        <input type="text" id="adminQuestId" class="admin-input" placeholder="ID квеста (уникальный)">
+        <input type="text" id="adminQuestName" class="admin-input" placeholder="Название">
+        <input type="text" id="adminQuestDesc" class="admin-input" placeholder="Описание">
+        <input type="number" id="adminQuestReward" class="admin-input" placeholder="Награда (очки)" value="1000">
+        <select id="adminQuestType" class="admin-input">
+          <option value="total_taps">Всего тапов</option>
+          <option value="score">Очки</option>
+          <option value="level">Уровень</option>
+        </select>
+        <input type="number" id="adminQuestValue" class="admin-input" placeholder="Значение условия" value="1000">
+        <button class="admin-btn" onclick="adminAddQuest()">Добавить задание</button>
+      </div>
+
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">⚡ Добавить буст <span>▼</span></button>
+      <div class="admin-sub-content">
+        <input type="text" id="adminBoostId" class="admin-input" placeholder="ID буста (уникальный)">
+        <input type="text" id="adminBoostName" class="admin-input" placeholder="Название">
+        <input type="text" id="adminBoostDesc" class="admin-input" placeholder="Описание">
+        <input type="number" id="adminBoostPrice" class="admin-input" placeholder="Цена (очки)" value="10000">
+        <select id="adminBoostType" class="admin-input">
+          <option value="multiplier">Множитель</option>
+          <option value="energy">Энергия</option>
+          <option value="autotap">Автоклик</option>
+        </select>
+        <input type="number" id="adminBoostValue" class="admin-input" placeholder="Значение" value="2">
+        <button class="admin-btn" onclick="adminAddBoost()">Добавить буст</button>
+      </div>
+    </div>
   </div>
 
-  <div class="admin-section">
-    <div class="admin-section-title">📜 Добавить задание (квест)</div>
-    <input type="text" id="adminQuestId" class="admin-input" placeholder="ID квеста (уникальный)">
-    <input type="text" id="adminQuestName" class="admin-input" placeholder="Название">
-    <input type="text" id="adminQuestDesc" class="admin-input" placeholder="Описание">
-    <input type="number" id="adminQuestReward" class="admin-input" placeholder="Награда (очки)" value="1000">
-    <select id="adminQuestType" class="admin-input">
-      <option value="total_taps">Всего тапов</option>
-      <option value="score">Очки</option>
-      <option value="level">Уровень</option>
-    </select>
-    <input type="number" id="adminQuestValue" class="admin-input" placeholder="Значение условия" value="1000">
-    <button class="admin-btn" onclick="adminAddQuest()">Добавить задание</button>
+  <!-- 4. КОМПАНИИ -->
+  <div class="admin-accordion">
+    <div class="admin-accordion-header" onclick="toggleAdminAccordion(this)">
+      <span>🏢 Компании</span>
+      <span class="admin-arrow">▼</span>
+    </div>
+    <div class="admin-accordion-body">
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">➕ Добавить компанию <span>▼</span></button>
+      <div class="admin-sub-content">
+        <input type="text" id="adminCompId" class="admin-input" placeholder="ID компании (уникальный)">
+        <input type="text" id="adminCompName" class="admin-input" placeholder="Название">
+        <input type="text" id="adminCompDesc" class="admin-input" placeholder="Краткое описание">
+        <input type="text" id="adminCompIcon" class="admin-input" placeholder="Иконка (эмодзи)" value="🏢">
+        <input type="color" id="adminCompColor" class="admin-input" value="#8b5cf6" style="height:40px;">
+        <input type="number" id="adminCompMaxTotal" class="admin-input" placeholder="Макс. скидка (%)" value="10">
+        <input type="text" id="adminCompHint" class="admin-input" placeholder="Подсказка по кодам">
+        <input type="text" id="adminCompAddress" class="admin-input" placeholder="Адрес">
+        <input type="text" id="adminCompAbout" class="admin-input" placeholder="О компании">
+        <input type="text" id="adminCompFeatures" class="admin-input" placeholder="Особенности (через запятую)">
+        <input type="text" id="adminCompLinks" class="admin-input" placeholder="Ссылки (название|url, через запятую)">
+        <input type="text" id="adminCompSchedule" class="admin-input" placeholder="Режим работы">
+        <input type="text" id="adminCompPhone" class="admin-input" placeholder="Телефон">
+        <input type="text" id="adminCompCodes" class="admin-input" placeholder="Коды (код:значение, через запятую)">
+        <button class="admin-btn" onclick="adminAddCompany()">Добавить компанию</button>
+      </div>
+    </div>
   </div>
 
-  <div class="admin-section">
-    <div class="admin-section-title">⚡ Добавить буст</div>
-    <input type="text" id="adminBoostId" class="admin-input" placeholder="ID буста (уникальный)">
-    <input type="text" id="adminBoostName" class="admin-input" placeholder="Название">
-    <input type="text" id="adminBoostDesc" class="admin-input" placeholder="Описание">
-    <input type="number" id="adminBoostPrice" class="admin-input" placeholder="Цена (очки)" value="10000">
-    <select id="adminBoostType" class="admin-input">
-      <option value="multiplier">Множитель</option>
-      <option value="energy">Энергия</option>
-      <option value="autotap">Автоклик</option>
-    </select>
-    <input type="number" id="adminBoostValue" class="admin-input" placeholder="Значение" value="2">
-    <button class="admin-btn" onclick="adminAddBoost()">Добавить буст</button>
+  <!-- 5. ГРУППЫ -->
+  <div class="admin-accordion">
+    <div class="admin-accordion-header" onclick="toggleAdminAccordion(this)">
+      <span>🗑 Группы</span>
+      <span class="admin-arrow">▼</span>
+    </div>
+    <div class="admin-accordion-body">
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">🗑 Удалить группу <span>▼</span></button>
+      <div class="admin-sub-content">
+        <input type="text" id="adminDelGroupName" class="admin-input" placeholder="Название группы">
+        <input type="text" id="adminDelGroupReason" class="admin-input" placeholder="Причина удаления">
+        <button class="admin-btn red" onclick="adminDeleteGroup()">Удалить группу</button>
+      </div>
+    </div>
   </div>
 
-  <div class="admin-section">
-    <div class="admin-section-title">🏢 Добавить компанию в карусель</div>
-    <input type="text" id="adminCompId" class="admin-input" placeholder="ID компании (уникальный)">
-    <input type="text" id="adminCompName" class="admin-input" placeholder="Название">
-    <input type="text" id="adminCompDesc" class="admin-input" placeholder="Краткое описание">
-    <input type="text" id="adminCompIcon" class="admin-input" placeholder="Иконка (эмодзи)" value="🏢">
-    <input type="color" id="adminCompColor" class="admin-input" value="#8b5cf6" style="height:40px;">
-    <input type="number" id="adminCompMaxTotal" class="admin-input" placeholder="Макс. скидка (%)" value="10">
-    <input type="text" id="adminCompHint" class="admin-input" placeholder="Подсказка по кодам">
-    <input type="text" id="adminCompAddress" class="admin-input" placeholder="Адрес">
-    <input type="text" id="adminCompAbout" class="admin-input" placeholder="О компании">
-    <input type="text" id="adminCompFeatures" class="admin-input" placeholder="Особенности (через запятую)">
-    <input type="text" id="adminCompLinks" class="admin-input" placeholder="Ссылки (название|url, через запятую)">
-    <input type="text" id="adminCompSchedule" class="admin-input" placeholder="Режим работы">
-    <input type="text" id="adminCompPhone" class="admin-input" placeholder="Телефон">
-    <input type="text" id="adminCompCodes" class="admin-input" placeholder="Коды (код:значение, через запятую)">
-    <button class="admin-btn" onclick="adminAddCompany()">Добавить компанию</button>
-  </div>
-
-  <div class="admin-section">
-    <div class="admin-section-title">🚫 Заблокировать игрока в чате</div>
-    <input type="text" id="adminBanNick" class="admin-input" placeholder="Ник игрока">
-    <input type="text" id="adminBanReason" class="admin-input" placeholder="Причина">
-    <button class="admin-btn red" onclick="adminBanChat()">Заблокировать</button>
-    <button class="admin-btn green" onclick="adminUnbanChat()">Разблокировать</button>
-  </div>
-
-  <div class="admin-section">
-    <div class="admin-section-title">🗑 Удалить группу</div>
-    <input type="text" id="adminDelGroupName" class="admin-input" placeholder="Название группы">
-    <input type="text" id="adminDelGroupReason" class="admin-input" placeholder="Причина удаления">
-    <button class="admin-btn red" onclick="adminDeleteGroup()">Удалить группу</button>
-  </div>
-
-  <div class="admin-section">
-    <div class="admin-section-title">📊 Список данных</div>
-    <button class="admin-btn blue" onclick="adminLoadData()">Загрузить списки</button>
-    <div id="adminDataList" style="margin-top:10px;font-size:12px;color:#cbd5e1;max-height:300px;overflow-y:auto;"></div>
+  <!-- 6. ДАННЫЕ -->
+  <div class="admin-accordion">
+    <div class="admin-accordion-header" onclick="toggleAdminAccordion(this)">
+      <span>📊 Список данных</span>
+      <span class="admin-arrow">▼</span>
+    </div>
+    <div class="admin-accordion-body">
+      <button class="admin-sub-item" onclick="toggleAdminSub(this)">📊 Загрузить списки <span>▼</span></button>
+      <div class="admin-sub-content">
+        <button class="admin-btn blue" onclick="adminLoadData()">Загрузить списки</button>
+        <div id="adminDataList" style="margin-top:10px;font-size:12px;color:#cbd5e1;max-height:300px;overflow-y:auto;"></div>
+      </div>
+    </div>
   </div>
 
 </div></div>
@@ -2863,6 +2987,32 @@ function init(){
   setInterval(sendHeartbeat, 20000);
   window.addEventListener('beforeunload', saveToLocal);
 }
+
+// ========== АККОРДЕОНЫ АДМИН-ПАНЕЛИ ==========
+function toggleAdminAccordion(header) {
+  const body = header.nextElementSibling;
+  const isActive = body.classList.contains('active');
+  document.querySelectorAll('.admin-accordion-body').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.admin-accordion-header').forEach(h => h.classList.remove('expanded'));
+  if (!isActive) {
+    body.classList.add('active');
+    header.classList.add('expanded');
+  }
+}
+
+function toggleAdminSub(btn) {
+  const content = btn.nextElementSibling;
+  const isActive = content.classList.contains('active');
+  const parentBody = btn.closest('.admin-accordion-body');
+  parentBody.querySelectorAll('.admin-sub-content').forEach(c => c.classList.remove('active'));
+  parentBody.querySelectorAll('.admin-sub-item').forEach(b => b.innerHTML = b.innerHTML.replace('▲', '▼'));
+  if (!isActive) {
+    content.classList.add('active');
+    btn.innerHTML = btn.innerHTML.replace('▼', '▲');
+  }
+}
+// ========== КОНЕЦ ВСТАВКИ ==========
+
 init();
 </script>
 </body>
