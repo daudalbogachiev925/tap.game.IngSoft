@@ -641,6 +641,18 @@ button { cursor:pointer; }
   <div id="memberPermsBody"></div>
 </div></div>
 
+<!-- ЖАЛОБА НА ИГРОКА -->
+<div class="modal" id="modal-report"><div class="modal-content">
+  <div class="modal-header"><div class="modal-title">🚨 Пожаловаться на игрока</div><button class="modal-close" onclick="closeModal('report')">×</button></div>
+  <p style="color:#94a3b8;font-size:12px;margin-bottom:14px;line-height:1.6;">Если игрок оскорбляет вас или нарушает правила — оставьте жалобу. Администрация рассмотрит её.</p>
+  <input type="text" id="reportNick" class="promo-input" placeholder="Ник игрока" maxlength="30" style="text-transform:none;letter-spacing:0;">
+  <textarea id="reportReason" class="promo-input" placeholder="Причина жалобы (опишите ситуацию)" maxlength="500" rows="4" style="text-transform:none;letter-spacing:0;resize:vertical;min-height:100px;"></textarea>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-buy red" style="flex:1;padding:16px;font-size:15px;font-weight:900;background:linear-gradient(135deg,#e63946,#7f1d1d);" onclick="submitReport()">🚨 Отправить</button>
+    <button class="btn-buy" style="flex:1;padding:16px;font-size:15px;font-weight:900;background:rgba(255,255,255,0.1);" onclick="closeModal('report')">← Назад</button>
+  </div>
+</div></div>
+
 <!-- АДМИН-ПАНЕЛЬ (АККОРДЕОН) -->
 <div class="modal" id="modal-admin"><div class="modal-content" style="max-width:640px;">
   <div class="modal-header"><div class="modal-title">👑 Админ-панель</div><button class="modal-close" onclick="closeModal('admin')">×</button></div>
@@ -773,6 +785,23 @@ button { cursor:pointer; }
         <input type="text" id="adminDelGroupName" class="admin-input" placeholder="Название группы">
         <input type="text" id="adminDelGroupReason" class="admin-input" placeholder="Причина удаления">
         <button class="admin-btn red" onclick="adminDeleteGroup()">Удалить группу</button>
+      </div>
+    </div>
+  </div>
+  <!-- 6. ЖАЛОБЫ -->
+  <div class="admin-accordion">
+    <div class="admin-accordion-header" onclick="toggleAdminAccordion(this)">
+      <span>🚨 Жалобы на игроков <span id="adminReportsBadge" style="display:none;background:#e63946;color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;margin-left:6px;">0</span></span>
+      <span class="admin-arrow">▼</span>
+    </div>
+    <div class="admin-accordion-body">
+      <button class="admin-sub-item" onclick="toggleAdminSub(this); loadAdminReports()">📋 Список жалоб <span>▼</span></button>
+      <div class="admin-sub-content">
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <button class="admin-btn" style="flex:1;font-size:11px;padding:8px;" onclick="loadAdminReports()">🔄 Обновить</button>
+          <button class="admin-btn red" style="flex:1;font-size:11px;padding:8px;" onclick="clearAdminReports()">🗑 Очистить все</button>
+        </div>
+        <div id="adminReportsList" style="max-height:400px;overflow-y:auto;"></div>
       </div>
     </div>
   </div>
@@ -2573,6 +2602,7 @@ function buildSidebar(){
     {icon:'▲',label:'Бусты',action:'openModal(\'boosts\')'},
     {icon:'✦',label: isFem?'Чат девчонок':'Чат парней', action:'openChatModal()'},
     {icon:'◈',label:'Группы',action:'openGroupsModal()'},
+    {icon:'🚨',label:'Жалоба',action:'openModal(\'report\')'},
     {icon:'✧',label:'Достижения',action:'openModal(\'achievements\')'},
     {icon:'❖',label:'Друзья',action:'openModal(\'referral\')'},
     {icon:'◆',label:'Награды',action:'openModal(\'daily\')'},
@@ -2746,6 +2776,7 @@ function enterGame(){
   updateUI(); startEnergyRegen(); buildSidebar(); loadISShop(); refreshLeaderboard(); saveToLocal(); updateRefLink(); sendHeartbeat(); initAdCarousel();
   if (_groupPollInterval) clearInterval(_groupPollInterval);
   _groupPollInterval = setInterval(pollNewGroups, 15000);
+if (isOwner) { checkNewReports(); setInterval(checkNewReports, 30000); }
 }
 async function loadProgressByToken(token){
   try {
@@ -2950,6 +2981,109 @@ async function adminLoadData() {
     html += d.companies.map(c => '<div>'+c.name+' ('+c.company_id+') → макс '+c.max_total+'%</div>').join('') || '<div>Нет</div>';
     el.innerHTML = html;
   } catch(e) { el.innerHTML = 'Ошибка соединения'; }
+}
+
+/* ========== ЖАЛОБЫ ========== */
+async function submitReport() {
+  if (!currentToken) { showToast('Войдите в аккаунт', true); return; }
+  const nick = document.getElementById('reportNick').value.trim();
+  const reason = document.getElementById('reportReason').value.trim();
+  if (!nick || nick.length < 2) { showToast('Введите ник игрока', true); return; }
+  if (!reason || reason.length < 5) { showToast('Опишите причину (мин. 5 символов)', true); return; }
+  try {
+    const r = await fetch(API_URL + '/report-player', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ token: currentToken, target_nickname: nick, reason })
+    });
+    const d = await r.json();
+    if (!d.success) { showToast(d.error || 'Ошибка', true); return; }
+    showToast('✓ Жалоба отправлена!');
+    document.getElementById('reportNick').value = '';
+    document.getElementById('reportReason').value = '';
+    closeModal('report');
+  } catch(e) { showToast('Ошибка соединения', true); }
+}
+
+async function loadAdminReports() {
+  const el = document.getElementById('adminReportsList');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;color:#64748b;padding:14px;">Загрузка...</div>';
+  try {
+    const r = await fetch(API_URL + '/admin/reports?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (!d.success) { el.innerHTML = '<div style="color:#e63946;text-align:center;padding:14px;">Ошибка доступа</div>'; return; }
+    if (!d.reports || !d.reports.length) {
+      el.innerHTML = '<div style="text-align:center;color:#64748b;padding:14px;">Жалоб пока нет</div>';
+      document.getElementById('adminReportsBadge').style.display = 'none';
+      return;
+    }
+    const newCount = d.reports.filter(r => !r.seen).length;
+    const badge = document.getElementById('adminReportsBadge');
+    if (newCount > 0) { badge.textContent = newCount; badge.style.display = 'inline-block'; }
+    else { badge.style.display = 'none'; }
+    el.innerHTML = d.reports.map(r => {
+      const time = new Date(r.created_at).toLocaleString('ru-RU', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      const borderColor = r.seen ? 'rgba(139,92,246,0.3)' : '#e63946';
+      const bg = r.seen ? 'rgba(139,92,246,0.08)' : 'rgba(230,57,70,0.15)';
+      return '<div style="padding:12px;margin-bottom:8px;border:1px solid ' + borderColor + ';border-radius:12px;background:' + bg + ';">' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">' +
+          '<b style="color:#e63946;font-size:13px;">🚨 на ' + escapeHtml(r.target_nickname) + '</b>' +
+          '<span style="font-size:10px;color:#94a3b8;">' + time + '</span>' +
+        '</div>' +
+        '<div style="font-size:11px;color:#94a3b8;margin-bottom:4px;">От: <b style="color:#a78bfa;">' + escapeHtml(r.reporter_nickname || 'Аноним') + '</b></div>' +
+        '<div style="font-size:12px;color:#cbd5e1;line-height:1.5;">' + escapeHtml(r.reason) + '</div>' +
+        '<div style="display:flex;gap:6px;margin-top:8px;">' +
+          (r.seen ? '' : '<button class="btn-buy green" style="flex:1;font-size:11px;padding:6px;" onclick="markReportSeen(' + r.id + ')">✓ Прочитано</button>') +
+          '<button class="btn-buy red" style="flex:1;font-size:11px;padding:6px;" onclick="deleteReport(' + r.id + ')">🗑 Удалить</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  } catch(e) { el.innerHTML = '<div style="color:#e63946;text-align:center;padding:14px;">Ошибка соединения</div>'; }
+}
+
+async function markReportSeen(id) {
+  try {
+    await fetch(API_URL + '/admin/report-seen', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ token: currentToken, report_id: id })
+    });
+    loadAdminReports();
+  } catch(e) {}
+}
+
+async function deleteReport(id) {
+  if (!confirm('Удалить жалобу?')) return;
+  try {
+    await fetch(API_URL + '/admin/report-delete', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ token: currentToken, report_id: id })
+    });
+    loadAdminReports();
+  } catch(e) {}
+}
+
+async function clearAdminReports() {
+  if (!confirm('Удалить ВСЕ жалобы?')) return;
+  try {
+    await fetch(API_URL + '/admin/reports-clear', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ token: currentToken })
+    });
+    loadAdminReports();
+  } catch(e) {}
+}
+
+async function checkNewReports() {
+  if (!currentToken || !isOwner) return;
+  try {
+    const r = await fetch(API_URL + '/admin/reports?token=' + encodeURIComponent(currentToken));
+    const d = await r.json();
+    if (d.success && d.reports) {
+      const newCount = d.reports.filter(r => !r.seen).length;
+      const badge = document.getElementById('adminReportsBadge');
+      if (badge && newCount > 0) { badge.textContent = newCount; badge.style.display = 'inline-block'; }
+    }
+  } catch(e) {}
 }
 
 function init(){
